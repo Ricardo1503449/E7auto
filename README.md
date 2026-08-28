@@ -1,31 +1,31 @@
 # E7auto
 
-E7auto is a Windows x64, fail-closed shop automation application built with Python 3.12, Qt Widgets, OpenCV, MSS, and standard Win32 window/input APIs.
+E7auto 是一款面向 Windows x64 的安全停止型商店自动化应用，使用 Python 3.12、Qt Widgets、OpenCV、MSS 以及标准 Win32 窗口与输入 API 构建。
 
-The checked-in source configuration is fully calibrated for the validated target machine and has `calibration_complete: true`. Configuration loading still fails closed and sends no input whenever that gate, a required template, or safety-critical geometry is missing. The existing standalone executable is intentionally stale and must not be treated as the final build.
+当前检入源码的配置已针对经过验证的目标主机完成全部校准，并设置了 `calibration_complete: true`。当该校准门控、必要模板或安全关键几何信息缺失时，配置加载仍会安全失败，并且不会发送任何输入。现有独立可执行文件有意保持为旧版本，不应将其视为最终构建。
 
-The executable name `EpicSeven.exe`, exact title `第七史诗`, DPI-aware physical client baseline `2322 x 1306`, refresh cost, templates, complete Sky Stone digits `0-9`, entry/exit/refresh/dialog/Sky Stone/inventory/insufficient-gold ROIs and click points, the six non-overlapping inventory slots, downward scroll sequence (`-120` repeated 6 times), stable empty-scan timing (`100 ms`, 3 frames, 3000 ms timeout), operator-confirmed `18 px` overlay offset `(-252,-145)`, overlay capture exclusion, and foreground live `购买金币` recognition are now recorded. The running game is located by the exact window title plus executable name, so its installation directory does not need to be configured. The terminal check passed 5/5 frames at confidence `0.9999991492` with zero input and no persisted screenshots. The four existing wait caps were user-reviewed and retained unchanged. Fixed top/bottom navigation anchors are not part of the design. Post-purchase success is recognized dynamically in the matched inventory slot and does not use an absolute full-window result ROI.
+目前已经记录以下配置：可执行文件名 `EpicSeven.exe`、精确窗口标题 `第七史诗`、支持 DPI 感知的物理客户区基准 `2322 x 1306`、刷新费用、模板、完整的天空石数字 `0-9`、进入/退出/刷新/对话框/天空石/商品列表/金币不足的 ROI 与点击点、六个互不重叠的商品槽位、向下滚动序列（`-120` 重复 6 次）、空列表稳定扫描时序（`100 ms`、3 帧、3000 ms 超时）、经操作者确认的 `18 px` 悬浮窗偏移 `(-252,-145)`、悬浮窗截图排除，以及前台实时 `购买金币` 识别。程序通过精确窗口标题和可执行文件名定位正在运行的游戏，因此无需配置游戏安装目录。终止条件检查在不发送输入且不保存截图的情况下，以 `0.9999991492` 的置信度连续通过 5/5 帧。现有四项等待上限均已由用户审核并保持不变。设计中不使用固定的顶部/底部导航锚点。购买成功状态根据匹配到的商品槽位动态识别，不依赖相对于整个窗口的绝对结果 ROI。
 
-The production scroll path is locked to six `-120` events spaced `100 ms` apart, followed by an `800 ms` settle. Before bottom scanning, the inventory must show both more than `300 px` upward phase translation and more than `30%` pixels changing above difference threshold `8`; otherwise the run stops as `scroll_verification_failed`. Production also requires genuine administrator elevation and exact cursor-position read-back before any click or wheel event is considered dispatched.
+生产环境滚动路径固定为六次 `-120` 滚轮事件，事件间隔 `100 ms`，随后等待 `800 ms` 稳定。在扫描底部商品前，商品列表必须同时满足：向上相位平移超过 `300 px`，并且差异阈值 `8` 以上的变化像素超过 `30%`；否则运行将以 `scroll_verification_failed` 停止。生产环境还要求真正的管理员权限，并且在任何点击或滚轮事件被认定为已发送之前，必须精确回读鼠标指针位置。
 
-## Safety boundaries
+## 安全边界
 
-- No anti-cheat bypass, injection, process-memory reading, or payment behavior.
-- Only standard Windows window management, screen capture, mouse wheel/click, and `RegisterHotKey` APIs are used.
-- Runtime captures exist in memory only. There is no screenshot writer, screenshot directory, or debug screenshot option.
-- Tests use fakes and synthetic arrays; they do not instantiate live input/capture/window services.
-- The overlay is click-through and requires exact `WDA_EXCLUDEFROMCAPTURE` read-back. Press F6 to pause automation and enter drag mode; press F6 again to save the absolute screen position, restore click-through/capture exclusion, and resume. Missing, invalid, or off-screen saved state falls back to the calibrated client-relative default position.
-- The observed game process runs at High integrity. The final standalone build therefore requests Windows administrator elevation at startup; refusing the UAC prompt prevents the application from running or sending input. Source-level live commissioning must likewise be started through a genuine Windows `RunAs`/administrator process. A Codex sandbox approval by itself is not Windows elevation.
+- 不包含反作弊绕过、注入、进程内存读取或支付行为。
+- 仅使用标准 Windows 窗口管理、屏幕捕获、鼠标滚轮/点击和 `RegisterHotKey` API。
+- 运行时截图仅存在于内存中，不提供截图写入器、截图目录或调试截图选项。
+- 测试使用替代实现和合成数组，不会实例化真实的输入、截图或窗口服务。
+- 悬浮窗可穿透鼠标，并要求精确回读 `WDA_EXCLUDEFROMCAPTURE`。按 F6 可暂停自动化并进入拖动模式；再次按 F6 会保存悬浮窗的绝对屏幕位置、恢复鼠标穿透和截图排除，然后继续运行。当保存状态缺失、无效或位于屏幕外时，程序会回退到经过校准的客户区相对默认位置。
+- 已观察到的游戏进程运行于 High 完整性级别。因此最终独立构建会在启动时请求 Windows 管理员权限；拒绝 UAC 提示将阻止应用运行或发送输入。源码级实时校准同样必须通过真正的 Windows `RunAs`/管理员进程启动。仅批准 Codex 沙箱权限并不等同于获得 Windows 管理员权限。
 
-## Development setup
+## 开发环境配置
 
-The only supported source interpreter is:
+源码唯一支持的解释器为：
 
 ```powershell
 D:\E7auto\.venv\Scripts\python.exe
 ```
 
-Install exactly the locked dependencies without using user site-packages:
+安装锁定的精确依赖，并禁用用户级 site-packages：
 
 ```powershell
 py -3.12 -m venv .venv
@@ -33,7 +33,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 ```
 
-The first command is the only permitted use of system Python. Run and test with:
+只有第一条命令允许使用系统 Python。运行和测试命令如下：
 
 ```powershell
 .\.venv\Scripts\python.exe -m e7auto
@@ -41,30 +41,31 @@ The first command is the only permitted use of system Python. Run and test with:
 .\.venv\Scripts\python.exe scripts\verify_environment.py
 ```
 
-## User-visible behavior
+## 用户可见行为
 
-The main window contains the refresh-currency limit input, one `购买友情点数` checkbox, and the start button. Sacred Covenant Bookmarks and Mystic Medals are always purchased; Friendship Points are purchased only for runs where the checkbox was selected. A valid start resets all per-run counts, registers bare F5 and F6, starts the elapsed timer, restores the last valid saved overlay position (or the calibrated default on first launch), and minimizes the main window. The overlay centers `已耗时：x时x分x秒`, every target count, `已消耗天空石：spent / limit`, `已经x次未出货`, `当前状态：xxx`, and the permanent `F5结束 / F6移动` hint in one shared content column. Status is `已启动` before confirmed shop entry, `刷新ing...` while operating in the shop, `转运ing...` after a strategy exit reaches the main screen for its recovery wait, `重连中` while the network recovery path is active, and `已停止` after termination. Network recovery time is excluded from recognition timeout budgets; after recovery, the prior activity status is restored and all existing stable-frame and exact-balance gates remain unchanged. The displayed no-target streak increments after each fully scanned refreshed inventory without Covenant Bookmarks or Mystic Medals, continues across the unchanged `13/13/13/10` strategy stage boundaries, and resets only when either mandatory target is found. Its production size is measured once for maximum values and remains fixed for the entire run; elapsed updates repaint only their label. At termination the timer freezes and the last immutable snapshot remains visible.
+主窗口包含刷新货币上限输入框、一个 `购买友情点数` 复选框和开始按钮。圣约书签和神秘奖牌始终会购买；只有在本次运行开始前勾选复选框时才会购买友情点数。一次有效启动会重置本轮所有计数，注册无修饰键的 F5 和 F6，启动计时器，恢复上次保存的有效悬浮窗位置（首次运行则使用校准后的默认位置），并最小化主窗口。悬浮窗会在同一内容列中居中显示 `已耗时：x时x分x秒`、各目标计数、`已消耗天空石：spent / limit`、`已经x次未出货`、`当前状态：xxx` 以及永久显示的 `F5结束 / F6移动` 提示。确认进入商店前状态为 `已启动`；在商店操作时为 `刷新ing...`；策略退出到主界面并进入恢复等待后为 `转运ing...`；网络恢复路径活动时为 `重连中`；终止后为 `已停止`。网络恢复所用时间不计入识别超时预算；恢复后会还原此前的活动状态，所有既有稳定帧和精确余额门控保持不变。每次完整扫描刷新后的商品列表且未发现圣约书签或神秘奖牌时，界面显示的连续未出货次数会增加；该计数会跨越保持不变的 `13/13/13/10` 策略阶段边界，只有发现任一必买目标时才会重置。生产环境悬浮窗尺寸会根据最大显示值测量一次，并在整轮运行中保持固定；耗时更新只重绘对应标签。终止时计时器冻结，最后一份不可变状态快照继续显示。
 
-Detailed stop reasons and recognition/input events are written only to per-run UTF-8 text files under `logs`. Retention is bounded by both age and file count.
+详细停止原因和识别/输入事件只写入 `logs` 下每轮运行对应的 UTF-8 文本文件。日志保留同时受文件时间和文件数量限制。
 
-A refresh is counted only when the stable top-right Sky Stone balance changes from its pre-refresh value to exactly `before - 3`. An unchanged value is allowed to remain pending until timeout; a stable different delta terminates fail-closed. The exact post-refresh value is reused only while the engine remains in the same certain in-shop state; entry/re-entry, strategy or network recovery, ambiguity, and refresh retry/failure invalidate it and force a fresh stable read. Frames showing the exact expected post-refresh value simultaneously accumulate the next top viewport's unchanged three-frame stability, but no inventory action occurs before the balance gate succeeds; an unstable concurrent result falls back to the original independent top scan. Inventory matching prepares BGR once per captured frame, omits disabled targets and already completed current-inventory slots before template work, and summarizes repeated purchased-state skips. Aggregate performance-stage logs report capture/vision timing without persisting screenshots.
+只有当右上角稳定的天空石余额从刷新前数值精确变为 `before - 3` 时，本次刷新才会计数。数值未变化时允许继续等待直至超时；稳定但差值不正确时会安全停止。精确的刷新后数值仅在引擎仍处于同一个确定的商店状态时复用；进入/重新进入、策略恢复或网络恢复、状态不确定、刷新重试或失败都会使其失效，并强制重新稳定读取。显示精确预期刷新后余额的帧会同时累积下一次顶部视口所需的三帧不变稳定性，但在余额门控成功前不会执行任何商品操作；如果并发结果不稳定，则回退到原有的独立顶部扫描。商品匹配会对每个捕获帧只准备一次 BGR 数据，并在模板计算前排除未启用的目标以及当前商品列表中已经完成的槽位，同时汇总重复的已购买状态跳过事件。汇总性能阶段日志会记录截图/视觉处理耗时，但不会保存截图。
 
-The consecutive no-target policy applies only to inventories produced by successful refreshes. Without an available Covenant Bookmark or Mystic Medal it runs `13 refreshes -> exit, wait 5 seconds on the main screen, re-enter -> 13 refreshes -> exit, wait 3 minutes, re-enter -> 13 refreshes -> exit, wait 5 seconds, re-enter -> 10 refreshes -> stop`. Detecting either mandatory target resets the policy to the first 13-refresh stage; Friendship Points and already-purchased states do not reset it. The currency limit remains an independent hard ceiling and is checked before any recovery wait or exit. Strategy exhaustion stops as `refresh_strategy_exhausted` and retains the final overlay.
-Only the 3-minute main-screen recovery can trigger the game's UI-hidden standby state. After that wait, automation sends one fully guarded click at the calibrated client center `(1161,653)` to restore the main-screen UI before locating and clicking the shop icon. The two 5-second recoveries do not send this wake click.
+连续未发现目标的策略只适用于成功刷新后产生的商品列表。如果没有可购买的圣约书签或神秘奖牌，则执行：`刷新 13 次 -> 退出，在主界面等待 5 秒后重新进入 -> 刷新 13 次 -> 退出，在主界面等待 3 分钟后重新进入 -> 刷新 13 次 -> 退出，在主界面等待 5 秒后重新进入 -> 刷新 10 次 -> 停止`。发现任一必买目标会将策略重置到第一个 13 次刷新阶段；友情点数和已购买状态不会重置策略。货币上限仍是独立的硬性限制，并会在任何恢复等待或退出前检查。策略耗尽时以 `refresh_strategy_exhausted` 停止，并保留最终悬浮窗。
 
-## Calibration and release
+只有主界面上的 3 分钟恢复等待可能触发游戏隐藏界面的待机状态。等待结束后，自动化会在经过完整安全检查后点击校准的客户区中心 `(1161,653)`，恢复主界面 UI，然后定位并点击商店图标。两次 5 秒恢复不会发送该唤醒点击。
 
-- [Internal calibration guide](docs/CALIBRATION.md)
-- [Architecture and state-machine notes](docs/ARCHITECTURE.md)
-- [Clean Windows release checklist](docs/RELEASE_CHECKLIST.md)
+## 校准与发布
 
-Build a standalone directory with:
+- [内部校准指南](docs/CALIBRATION.md)
+- [架构与状态机说明](docs/ARCHITECTURE.md)
+- [纯净 Windows 发布检查清单](docs/RELEASE_CHECKLIST.md)
+
+使用以下命令构建独立目录：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\build-standalone.ps1
 .\.venv\Scripts\python.exe scripts\verify_release.py
 ```
 
-The build script embeds a `requireAdministrator` UAC manifest. The existing `dist` directory predates this correction and remains a stale historical artifact until live validation is complete.
+构建脚本会嵌入 `requireAdministrator` UAC 清单。现有 `dist` 目录早于该修正，在完成实时验证前仍应视为过时的历史产物。
 
-Onefile is intentionally deferred until the standalone directory passes real-machine calibration and clean-Windows validation.
+在独立目录通过真实主机校准和纯净 Windows 验证之前，暂不采用单文件打包。
