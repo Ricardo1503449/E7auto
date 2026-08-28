@@ -5,11 +5,12 @@ $python = Join-Path $projectRoot ".venv\Scripts\python.exe"
 if (-not (Test-Path -LiteralPath $python)) {
     throw "Missing project interpreter: $python"
 }
-$readme = Join-Path $projectRoot "docs\README.txt"
-if (-not (Test-Path -LiteralPath $readme -PathType Leaf)) {
-    throw "Missing packaged README: $readme"
+$usageFileName = (([char]0x4F7F, [char]0x7528, [char]0x8BF4, [char]0x660E) -join '') + ".txt"
+$usageGuide = Join-Path (Join-Path $projectRoot "docs") $usageFileName
+if (-not (Test-Path -LiteralPath $usageGuide -PathType Leaf)) {
+    throw "Missing packaged usage guide: $usageGuide"
 }
-$readmeInclude = "$readme=README.txt"
+$usageGuideInclude = "$usageGuide=$usageFileName"
 $sourceConfig = Join-Path $projectRoot "config\internal.yaml"
 if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
     throw "Missing source configuration: $sourceConfig"
@@ -43,7 +44,7 @@ try {
         --include-package=e7auto `
         --include-data-file=$releaseConfig=config/internal.yaml `
         --include-data-dir=assets/templates=assets/templates `
-        --include-data-file=$readmeInclude `
+        --include-data-file=$usageGuideInclude `
         --assume-yes-for-downloads `
         launcher.py
     if ($LASTEXITCODE -ne 0) {

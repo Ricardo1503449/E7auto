@@ -10,6 +10,9 @@ from pathlib import Path
 import yaml
 
 
+USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
+
+
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -360,8 +363,8 @@ def main() -> int:
             problems.append("executable is not PE32+ AMD64")
     if not (release / "config" / "internal.yaml").is_file():
         problems.append("missing internal configuration")
-    if not (release / "README.txt").is_file():
-        problems.append("missing end-user README")
+    if not (release / USAGE_GUIDE_FILENAME).is_file():
+        problems.append(f"missing end-user usage guide: {USAGE_GUIDE_FILENAME}")
     template_dir = release / "assets" / "templates"
     if not template_dir.is_dir():
         problems.append("missing templates directory")
