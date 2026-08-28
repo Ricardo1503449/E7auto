@@ -1,0 +1,67 @@
+schema_version: 1
+method: exact source RGB with deterministic binary alpha masks
+source_path: C:\Users\lxy\AppData\Local\Temp\codex-clipboard-d7eb2cbf-dc22-47d9-8648-9b5d861554dc.png
+source_size:
+  width: 2411
+  height: 777
+source_sha256: 3545657776c62d08ffc6cbf9f34e88e4b599f90451aa3dbaa970b11b92673e86
+templates:
+- output_path: refresh_confirm_prompt.png
+  role: prompt_identity
+  crop:
+    x: 1001
+    y: 242
+    width: 426
+    height: 41
+  output_size:
+    width: 426
+    height: 41
+  mask:
+    color_space: OpenCV HSV
+    max_saturation: 20
+    min_value: 120
+    min_component_area: 20
+    component_areas:
+    - 22
+    - 345
+    - 482
+    - 246
+    - 110
+    - 463
+    - 550
+    - 353
+    - 374
+    - 266
+    - 201
+    - 497
+    - 139
+    - 212
+    - 104
+    - 21
+    - 178
+    - 46
+    - 42
+    - 186
+    - 41
+    - 26
+    foreground_pixels: 4904
+    transparent_pixels: 12562
+  output_sha256: d34a22b420c364975b9f781d9b629449c48fea21e90ca02ddb0851b76e5fa36a
+- output_path: refresh_confirm_button.png
+  role: confirm_button
+  crop:
+    x: 1228
+    y: 457
+    width: 361
+    height: 111
+  output_size:
+    width: 361
+    height: 111
+  mask:
+    edge_method: OpenCV Canny
+    canny_low: 30
+    canny_high: 90
+    contour_area: 37038.0
+    foreground_pixels: 37445
+    transparent_pixels: 2626
+  output_sha256: 5f5c48d60247e3da6b6d6abf19f5f5198d96e9465f8afeb76881f8f01854d13b

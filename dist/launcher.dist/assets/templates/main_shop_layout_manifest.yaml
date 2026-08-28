@@ -1,0 +1,68 @@
+schema_version: 1
+status: operator_confirmed_passed
+date: '2026-08-28'
+method: operator-supplied stop-state screenshot cropped in memory to the exact fixed-size client
+baseline_client_size:
+  width: 2322
+  height: 1306
+source:
+  path: C:\Users\lxy\AppData\Local\Temp\codex-clipboard-8ae56e2b-ba57-4b1a-9584-58c1a6c967d0.png
+  size:
+    width: 2422
+    height: 1462
+  sha256: 778d96c033ea72db81dd0d1a1b1277aaa8e921a7e6fbb6151cf4a23ae3fafe19
+  client_crop:
+    x: 52
+    y: 103
+    width: 2322
+    height: 1306
+template:
+  path: main_shop_icon.png
+  size:
+    width: 126
+    height: 105
+  sha256: f95e1594cff9459a994705e6531c87eff1512b08a77bdc0dfd0189025f361e1e
+threshold: 0.93
+production_before:
+  roi:
+    x: 25
+    y: 525
+    width: 165
+    height: 145
+  confidence: 0.8788575604557991
+  detected: false
+expanded_search:
+  roi:
+    x: 25
+    y: 525
+    width: 165
+    height: 175
+  location:
+    x: 39
+    y: 571
+  center:
+    x: 102
+    y: 623
+  confidence: 0.9999774787156639
+  detected: true
+calibrated_original:
+  location:
+    x: 39
+    y: 542
+  center:
+    x: 102
+    y: 594
+vertical_shift_px: 29
+shop_negative_controls:
+  shop_top:
+    source_sha256: 184f655559b82a4e9e67b24ef52092dd4c616cf3512d2a22d53b514902625234
+    confidence: 0.9120213761925697
+  shop_bottom:
+    source_sha256: 24e0a1be8a49f244663d3b681270cba4d191b7c81c364f8be560aa7e3a0be3db
+    confidence: 0.912775382399559
+click:
+  use_recognized_anchor: true
+  fixed_point_is_not_authoritative: true
+criteria_all_met: true
+game_input_sent: false
+screenshots_persisted: false

@@ -1,0 +1,16 @@
+.venv/
+.pip-cache/
+.nuitka-cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.log
+logs/
+state/
+build/
+dist/
+*.build/
+*.dist/
+*.onefile-build/
+.coverage
+htmlcov/

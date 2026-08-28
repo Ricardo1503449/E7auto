@@ -1,0 +1,160 @@
+schema_version: 1
+calibration_complete: true
+
+game:
+  executable_path: EpicSeven.exe
+  window_title: 第七史诗
+  baseline_client_size: {width: 2322, height: 1306}
+
+economy:
+  refresh_cost: 3
+
+refresh_strategy:
+  batch_refreshes: [13, 13, 13, 10]
+  recovery_wait_seconds: [5, 180, 5]
+
+templates:
+  main_shop_icon: ../assets/templates/main_shop_icon.png
+  shop_refresh_button: ../assets/templates/shop_refresh_button.png
+  refresh_confirm_prompt: ../assets/templates/refresh_confirm_prompt.png
+  refresh_confirm_button: ../assets/templates/refresh_confirm_button.png
+  shop_exit_icon: ../assets/templates/shop_exit_icon.png
+  confirm_button: ../assets/templates/confirm_button.png
+  insufficient_funds: ../assets/templates/insufficient_funds.png
+  sky_stone_icon: ../assets/templates/sky_stone_icon.png
+  sky_stone_digit_0: ../assets/templates/sky_stone_digit_0.png
+  sky_stone_digit_0_wide: ../assets/templates/sky_stone_digit_0_wide.png
+  sky_stone_digit_1: ../assets/templates/sky_stone_digit_1.png
+  sky_stone_digit_2: ../assets/templates/sky_stone_digit_2.png
+  sky_stone_digit_3: ../assets/templates/sky_stone_digit_3.png
+  sky_stone_digit_4: ../assets/templates/sky_stone_digit_4.png
+  sky_stone_digit_5: ../assets/templates/sky_stone_digit_5.png
+  sky_stone_digit_6: ../assets/templates/sky_stone_digit_6.png
+  sky_stone_digit_7: ../assets/templates/sky_stone_digit_7.png
+  sky_stone_digit_8: ../assets/templates/sky_stone_digit_8.png
+  sky_stone_digit_9: ../assets/templates/sky_stone_digit_9.png
+  friendship_points: ../assets/templates/friendship_points.png
+  friendship_points_confirm: ../assets/templates/friendship_points_confirm.png
+  friendship_points_purchased: ../assets/templates/friendship_points_purchased.png
+  covenant_bookmark: ../assets/templates/covenant_bookmark.png
+  covenant_bookmark_confirm: ../assets/templates/covenant_bookmark_confirm.png
+  covenant_bookmark_purchased: ../assets/templates/covenant_bookmark_purchased.png
+  mystic_medal: ../assets/templates/mystic_medal.png
+  mystic_medal_confirm: ../assets/templates/mystic_medal_confirm.png
+  mystic_medal_purchased: ../assets/templates/mystic_medal_purchased.png
+  network_connection_abnormal: ../assets/templates/network_connection_abnormal.png
+  network_retry: ../assets/templates/network_retry.png
+
+rois:
+  main_shop_icon: {x: 25, y: 525, width: 165, height: 175}
+  shop_refresh_button: {x: 105, y: 1125, width: 580, height: 150}
+  shop_exit_icon: {x: 39, y: 25, width: 267, height: 70}
+  refresh_confirm_prompt: {x: 925, y: 540, width: 475, height: 90}
+  refresh_confirm_button: {x: 1150, y: 755, width: 415, height: 160}
+  inventory_list: {x: 950, y: 110, width: 1320, height: 1180}
+  confirm_item: {x: 880, y: 535, width: 220, height: 225}
+  confirm_button: {x: 1385, y: 860, width: 200, height: 130}
+  purchase_result: {x: 975, y: 210, width: 400, height: 300}
+  sky_stone_icon: {x: 1450, y: 12, width: 195, height: 95}
+  sky_stone_digits: {x: 1625, y: 38, width: 110, height: 45}
+  network_error: {x: 900, y: 545, width: 540, height: 105}
+  network_retry: {x: 1060, y: 760, width: 300, height: 120}
+
+points:
+  shop_icon: {x: 102, y: 594}
+  shop_exit_button: {x: 172, y: 60}
+  main_screen_wake: {x: 1161, y: 653}
+  refresh_button: {x: 394, y: 1201}
+  refresh_confirm_button: {x: 1356, y: 834}
+  confirm_button: {x: 1485, y: 925}
+
+targets:
+  - id: covenant_bookmark
+    display_name: 圣约书签
+    template: covenant_bookmark
+    confirm_template: covenant_bookmark_confirm
+    purchased_template: covenant_bookmark_purchased
+    user_selectable: false
+  - id: mystic_medal
+    display_name: 神秘奖牌
+    template: mystic_medal
+    confirm_template: mystic_medal_confirm
+    purchased_template: mystic_medal_purchased
+    user_selectable: false
+  - id: friendship_points
+    display_name: 友情点数
+    template: friendship_points
+    confirm_template: friendship_points_confirm
+    purchased_template: friendship_points_purchased
+    user_selectable: true
+slots:
+  - id: top_1
+    screen: top
+    order: 0
+    item_roi: {x: 970, y: 145, width: 240, height: 220}
+    buy_point: {x: 2091, y: 299}
+  - id: top_2
+    screen: top
+    order: 1
+    item_roi: {x: 970, y: 408, width: 240, height: 220}
+    buy_point: {x: 2091, y: 562}
+  - id: top_3
+    screen: top
+    order: 2
+    item_roi: {x: 970, y: 671, width: 240, height: 220}
+    buy_point: {x: 2091, y: 825}
+  - id: top_4
+    screen: top
+    order: 3
+    item_roi: {x: 970, y: 934, width: 240, height: 220}
+    buy_point: {x: 2091, y: 1087}
+  - id: bottom_5
+    screen: bottom
+    order: 4
+    item_roi: {x: 970, y: 803, width: 240, height: 220}
+    buy_point: {x: 2091, y: 957}
+  - id: bottom_6
+    screen: bottom
+    order: 5
+    item_roi: {x: 970, y: 1066, width: 240, height: 220}
+    buy_point: {x: 2091, y: 1220}
+
+scroll:
+  cursor_point: {x: 1500, y: 650}
+  delta: -120
+  repetitions: 6
+  interval_ms: 100
+  settle_ms: 800
+  minimum_settle_ms: 100
+  settle_poll_interval_ms: 100
+  stable_observations: 2
+  maximum_pairwise_shift_px: 1.0
+  minimum_phase_response: 0.80
+  downsample_factor: 4
+  minimum_upward_shift_px: 300
+  difference_threshold: 8
+  minimum_changed_fraction: 0.30
+
+timing:
+  poll_interval_ms: 100
+  entry_timeout_ms: 5000
+  scan_timeout_ms: 3000
+  dialog_timeout_ms: 3000
+  purchase_result_timeout_ms: 5000
+  refresh_timeout_ms: 10000
+  stable_frames: 3
+
+vision:
+  default_confidence: 0.90
+  anchor_confidence: 0.93
+  sky_stone_digit_confidence: 0.80
+  sky_stone_digits_offset: {x: 57, y: 16}
+
+overlay:
+  offset: {x: -252, y: -145}
+
+logging:
+  profile: detailed
+  keep_days: 14
+  keep_files: 100
+  max_file_mb: 0
