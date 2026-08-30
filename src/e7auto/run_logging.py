@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import logging
+import re
 from logging.handlers import RotatingFileHandler
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .config import LoggingConfig
+
+
+_RUN_LOG_NAME = re.compile(r"^run-.*\.log(?:\.\d+)?$")
 
 
 def _safe_value(value: object) -> str:
@@ -40,7 +44,6 @@ class RunLogger:
             "run_stopped",
             "startup_rejected",
             "worker_setup_failed",
-            "input_failed",
             "network_error_detected",
             "network_recovered",
             "purchase_counted",
@@ -84,7 +87,11 @@ class RunLogManager:
 
     def _prune(self) -> None:
         files = sorted(
-            (path for path in self._directory.glob("run-*.log") if path.is_file()),
+            (
+                path
+                for path in self._directory.iterdir()
+                if path.is_file() and _RUN_LOG_NAME.fullmatch(path.name)
+            ),
             key=lambda path: path.stat().st_mtime,
             reverse=True,
         )
