@@ -132,6 +132,7 @@ class AppConfig:
     default_confidence: float
     anchor_confidence: float
     sky_stone_digit_confidence: float
+    sky_stone_digit_margin: float
     sky_stone_digits_offset: Point | None
     overlay_offset: Point
     logging: LoggingConfig
@@ -521,6 +522,7 @@ def load_config(path: str | Path) -> AppConfig:
     default_confidence = vision_raw.get("default_confidence")
     anchor_confidence = vision_raw.get("anchor_confidence")
     sky_stone_digit_confidence = vision_raw.get("sky_stone_digit_confidence")
+    sky_stone_digit_margin = vision_raw.get("sky_stone_digit_margin")
     sky_stone_digits_offset = _point(
         vision_raw.get("sky_stone_digits_offset"),
         "vision.sky_stone_digits_offset",
@@ -530,6 +532,7 @@ def load_config(path: str | Path) -> AppConfig:
         ("default_confidence", default_confidence),
         ("anchor_confidence", anchor_confidence),
         ("sky_stone_digit_confidence", sky_stone_digit_confidence),
+        ("sky_stone_digit_margin", sky_stone_digit_margin),
     ):
         if not isinstance(value, (int, float)) or not 0 < float(value) <= 1:
             errors.append(f"vision.{name} must be in (0, 1]")
@@ -538,6 +541,11 @@ def load_config(path: str | Path) -> AppConfig:
     sky_stone_digit_confidence = (
         float(sky_stone_digit_confidence)
         if isinstance(sky_stone_digit_confidence, (int, float))
+        else 1.0
+    )
+    sky_stone_digit_margin = (
+        float(sky_stone_digit_margin)
+        if isinstance(sky_stone_digit_margin, (int, float))
         else 1.0
     )
 
@@ -632,6 +640,7 @@ def load_config(path: str | Path) -> AppConfig:
         default_confidence=default_confidence,
         anchor_confidence=anchor_confidence,
         sky_stone_digit_confidence=sky_stone_digit_confidence,
+        sky_stone_digit_margin=sky_stone_digit_margin,
         sky_stone_digits_offset=sky_stone_digits_offset,
         overlay_offset=overlay_offset,
         logging=logging_config,

@@ -254,6 +254,7 @@ def load_read_only_commissioning_config(path: Path = CONFIG_PATH) -> AppConfig:
         default_confidence=float(vision["default_confidence"]),
         anchor_confidence=float(vision["anchor_confidence"]),
         sky_stone_digit_confidence=float(vision["sky_stone_digit_confidence"]),
+        sky_stone_digit_margin=float(vision["sky_stone_digit_margin"]),
         sky_stone_digits_offset=_point(
             vision.get("sky_stone_digits_offset"),
             "vision.sky_stone_digits_offset",

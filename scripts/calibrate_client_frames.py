@@ -611,6 +611,7 @@ def build_manifest() -> dict[str, object]:
             "scroll_minimum_changed_fraction": 0.30,
             "anchor_confidence": 0.93,
             "sky_stone_digit_confidence": 0.80,
+            "sky_stone_digit_margin": 0.08,
             "sky_stone_digits_offset": point_dict(SKY_STONE_DIGITS_OFFSET),
         },
         "live_scroll_validation": {

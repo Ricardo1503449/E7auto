@@ -11,6 +11,9 @@ from .geometry import AdaptedFrame
 from .ports import Frame
 
 
+_GLYPH_KERNEL = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+
+
 @dataclass(frozen=True, slots=True)
 class Observation:
     object_id: str
@@ -36,6 +39,18 @@ class SkyStoneBalanceObservation:
     value: int
     confidence: float
     roi: Rect
+
+
+@dataclass(frozen=True, slots=True)
+class _DigitMatch:
+    digit: str
+    confidence: float
+    runner_up_confidence: float
+    width_error: int
+
+    @property
+    def margin(self) -> float:
+        return self.confidence - self.runner_up_confidence
 
 
 @dataclass(frozen=True, slots=True)
@@ -181,6 +196,10 @@ class OpenCvGameVision:
         self._templates = templates
         self._targets: tuple[TargetConfig, ...] = config.targets
         self._targets_by_id = {target.target_id: target for target in config.targets}
+        self._sky_stone_variants: tuple[
+            dict[str, tuple[tuple[np.ndarray, int], ...]],
+            tuple[int, ...],
+        ] | None = None
 
     @staticmethod
     def _bgr(frame: Frame | AdaptedFrame) -> Frame | AdaptedFrame:
@@ -443,12 +462,12 @@ class OpenCvGameVision:
         ).astype(np.uint8)
 
     @staticmethod
-    def _normalize_glyph(mask: np.ndarray, width: int = 24, height: int = 36) -> np.ndarray:
+    def _normalize_glyph(mask: np.ndarray, width: int = 32, height: int = 48) -> np.ndarray:
         ys, xs = np.nonzero(mask)
         if not len(xs):
             return np.zeros((height, width), dtype=np.uint8)
         glyph = mask[ys.min() : ys.max() + 1, xs.min() : xs.max() + 1]
-        scale = min((width - 4) / glyph.shape[1], (height - 4) / glyph.shape[0])
+        scale = min((width - 2) / glyph.shape[1], (height - 2) / glyph.shape[0])
         resized_width = max(1, int(round(glyph.shape[1] * scale)))
         resized_height = max(1, int(round(glyph.shape[0] * scale)))
         resized = cv2.resize(
@@ -464,18 +483,39 @@ class OpenCvGameVision:
 
     @staticmethod
     def _glyph_similarity(left: np.ndarray, right: np.ndarray) -> float:
-        union = np.count_nonzero((left > 0) | (right > 0))
+        left_mask = (left > 0).astype(np.uint8)
+        right_mask = (right > 0).astype(np.uint8)
+        union = np.count_nonzero(left_mask | right_mask)
         if union == 0:
             return 0.0
-        intersection = np.count_nonzero((left > 0) & (right > 0))
-        return float(intersection / union)
+        left_pixels = np.count_nonzero(left_mask)
+        right_pixels = np.count_nonzero(right_mask)
+        if left_pixels == 0 or right_pixels == 0:
+            return 0.0
+        intersection = np.count_nonzero(left_mask & right_mask)
+        strict_overlap = float(intersection / union)
+
+        left_coverage = float(
+            np.count_nonzero(left_mask & cv2.dilate(right_mask, _GLYPH_KERNEL))
+            / left_pixels
+        )
+        right_coverage = float(
+            np.count_nonzero(right_mask & cv2.dilate(left_mask, _GLYPH_KERNEL))
+            / right_pixels
+        )
+        tolerant_overlap = (
+            2.0 * left_coverage * right_coverage / (left_coverage + right_coverage)
+            if left_coverage + right_coverage
+            else 0.0
+        )
+        return 0.60 * strict_overlap + 0.40 * tolerant_overlap
 
     @classmethod
     def _aligned_glyph_similarity(cls, glyph: np.ndarray, template: np.ndarray) -> float:
         best = 0.0
         height, width = glyph.shape
         for offset_y in range(-1, 2):
-            for offset_x in range(-2, 3):
+            for offset_x in range(-1, 2):
                 shifted = np.zeros_like(glyph)
                 destination_x = max(0, offset_x)
                 destination_y = max(0, offset_y)
@@ -498,24 +538,91 @@ class OpenCvGameVision:
         cls,
         glyph: np.ndarray,
         template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]],
-    ) -> tuple[str, float, int]:
+    ) -> _DigitMatch:
         normalized = cls._normalize_glyph(glyph)
         ys, xs = np.nonzero(glyph)
         glyph_width = int(xs.max() - xs.min() + 1) if len(xs) else 0
-        best_digit = ""
-        best_confidence = 0.0
-        best_width_error = 0
+        class_scores: list[tuple[float, int, str]] = []
         for digit, variants in template_variants.items():
+            best_confidence = 0.0
+            best_width_error = 2**31 - 1
             for template_mask, template_width in variants:
                 confidence = cls._aligned_glyph_similarity(normalized, template_mask)
                 width_error = abs(glyph_width - template_width)
                 if confidence > best_confidence or (
                     confidence == best_confidence and width_error < best_width_error
                 ):
-                    best_digit = digit
                     best_confidence = confidence
                     best_width_error = width_error
-        return best_digit, best_confidence, best_width_error
+            class_scores.append((best_confidence, best_width_error, digit))
+        class_scores.sort(key=lambda item: (-item[0], item[1], item[2]))
+        if not class_scores:
+            return _DigitMatch("", 0.0, 0.0, 0)
+        best_confidence, best_width_error, best_digit = class_scores[0]
+        runner_up_confidence = class_scores[1][0] if len(class_scores) > 1 else 0.0
+        return _DigitMatch(
+            best_digit,
+            best_confidence,
+            runner_up_confidence,
+            best_width_error,
+        )
+
+    def _digit_match_is_safe(self, match: _DigitMatch) -> bool:
+        return (
+            bool(match.digit)
+            and match.confidence >= self._config.sky_stone_digit_confidence
+            and match.margin >= self._config.sky_stone_digit_margin
+        )
+
+    @classmethod
+    def _stroke_variants(cls, template_mask: np.ndarray) -> tuple[np.ndarray, ...]:
+        source = (template_mask > 0).astype(np.uint8)
+        candidates = (
+            source,
+            cv2.dilate(source, _GLYPH_KERNEL, iterations=1),
+            cv2.erode(source, _GLYPH_KERNEL, iterations=1),
+        )
+        variants: list[np.ndarray] = []
+        for candidate in candidates:
+            if not np.any(candidate):
+                continue
+            normalized = cls._normalize_glyph(candidate)
+            if not any(np.array_equal(normalized, existing) for existing in variants):
+                variants.append(normalized)
+        return tuple(variants)
+
+    def _sky_stone_template_variants(
+        self,
+    ) -> tuple[
+        dict[str, tuple[tuple[np.ndarray, int], ...]],
+        tuple[int, ...],
+    ]:
+        if self._sky_stone_variants is not None:
+            return self._sky_stone_variants
+        template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]] = {}
+        template_widths: list[int] = []
+        for digit in "0123456789":
+            template_keys = [f"sky_stone_digit_{digit}"]
+            if digit == "0" and "sky_stone_digit_0_wide" in self._config.template_paths:
+                template_keys.append("sky_stone_digit_0_wide")
+            variants: list[tuple[np.ndarray, int]] = []
+            for template_key in template_keys:
+                template = self._templates.get(template_key)
+                template_mask = (
+                    template.mask > 0
+                    if template.mask is not None
+                    else self._neutral_bright_mask(template.image) > 0
+                )
+                _, foreground_xs = np.nonzero(template_mask)
+                foreground_width = int(foreground_xs.max() - foreground_xs.min() + 1)
+                variants.extend(
+                    (variant, foreground_width)
+                    for variant in self._stroke_variants(template_mask)
+                )
+                template_widths.append(foreground_width)
+            template_variants[digit] = tuple(variants)
+        self._sky_stone_variants = template_variants, tuple(template_widths)
+        return self._sky_stone_variants
 
     def _split_merged_digit_component(
         self,
@@ -545,15 +652,13 @@ class OpenCvGameVision:
                 if trailing and trailing < minimum_width:
                     continue
                 segment = glyph[:, start:end]
-                digit, confidence, segment_width_error = self._best_digit_match(
-                    segment, template_variants
-                )
-                if confidence < self._config.sky_stone_digit_confidence:
+                match = self._best_digit_match(segment, template_variants)
+                if not self._digit_match_is_safe(match):
                     continue
                 visit(
                     end,
-                    [*decoded, (digit, confidence)],
-                    width_error + segment_width_error,
+                    [*decoded, (match.digit, match.confidence)],
+                    width_error + match.width_error,
                 )
 
         visit(0, [], 0)
@@ -605,19 +710,11 @@ class OpenCvGameVision:
             return None
         return roi
 
-    def sky_stone_balance(self, frame: Frame) -> SkyStoneBalanceObservation | None:
-        icon = self.match(
-            frame,
-            "sky_stone_icon",
-            self._config.rois["sky_stone_icon"],
-            self._config.anchor_confidence,
-        )
-        if icon is None:
-            return None
-
-        roi = self._sky_stone_digits_roi(frame, icon)
-        if roi is None:
-            return None
+    def _read_sky_stone_digits(
+        self,
+        frame: Frame | AdaptedFrame,
+        roi: Rect,
+    ) -> tuple[int, float] | None:
         source = self._crop(self._bgr(frame), roi)
         mask = self._neutral_bright_mask(source)
         count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
@@ -633,36 +730,18 @@ class OpenCvGameVision:
         if not components:
             return None
 
-        template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]] = {}
-        template_widths: list[int] = []
-        for digit in "0123456789":
-            template_keys = [f"sky_stone_digit_{digit}"]
-            if digit == "0" and "sky_stone_digit_0_wide" in self._config.template_paths:
-                template_keys.append("sky_stone_digit_0_wide")
-            variants: list[tuple[np.ndarray, int]] = []
-            for template_key in template_keys:
-                template = self._templates.get(template_key)
-                template_mask = (
-                    template.mask > 0
-                    if template.mask is not None
-                    else self._neutral_bright_mask(template.image) > 0
-                )
-                _, foreground_xs = np.nonzero(template_mask)
-                foreground_width = int(foreground_xs.max() - foreground_xs.min() + 1)
-                variants.append((self._normalize_glyph(template_mask), foreground_width))
-                template_widths.append(foreground_width)
-            template_variants[digit] = tuple(variants)
+        template_variants, template_widths = self._sky_stone_template_variants()
 
         minimum_segment_width = max(1, min(template_widths) - 2)
         maximum_segment_width = max(template_widths) + 2
 
         parsed: list[str] = []
-        confidences: list[float] = [icon.confidence]
+        confidences: list[float] = []
         for _, glyph in components:
-            digit, confidence, _ = self._best_digit_match(glyph, template_variants)
-            if confidence >= self._config.sky_stone_digit_confidence:
-                parsed.append(digit)
-                confidences.append(confidence)
+            match = self._best_digit_match(glyph, template_variants)
+            if self._digit_match_is_safe(match):
+                parsed.append(match.digit)
+                confidences.append(match.confidence)
                 continue
 
             if glyph.shape[1] <= maximum_segment_width:
@@ -677,4 +756,25 @@ class OpenCvGameVision:
                 return None
             parsed.extend(digit for digit, _ in split)
             confidences.extend(confidence for _, confidence in split)
-        return SkyStoneBalanceObservation(int("".join(parsed)), min(confidences), roi)
+        return int("".join(parsed)), min(confidences)
+
+    def sky_stone_balance(
+        self, frame: Frame | AdaptedFrame
+    ) -> SkyStoneBalanceObservation | None:
+        icon = self.match(
+            frame,
+            "sky_stone_icon",
+            self._config.rois["sky_stone_icon"],
+            self._config.anchor_confidence,
+        )
+        if icon is None:
+            return None
+
+        roi = self._sky_stone_digits_roi(frame, icon)
+        if roi is None:
+            return None
+        parsed = self._read_sky_stone_digits(frame, roi)
+        if parsed is None:
+            return None
+        value, confidence = parsed
+        return SkyStoneBalanceObservation(value, min(icon.confidence, confidence), roi)
