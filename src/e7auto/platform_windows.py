@@ -18,7 +18,7 @@ import win32gui
 import win32process
 
 from .config import Point, Rect, Size
-from .ports import Frame, WindowRef, WindowState
+from .ports import DisplayGeometry, Frame, WindowRef, WindowState
 
 
 WDA_NONE = 0x00
@@ -100,19 +100,97 @@ class Win32WindowService:
         if win32gui.GetForegroundWindow() != window.hwnd:
             raise WindowOperationError("Game window could not be focused")
 
-    def resize_client(self, window: WindowRef, size: Size) -> None:
-        style = win32gui.GetWindowLong(window.hwnd, win32con.GWL_STYLE)
-        ex_style = win32gui.GetWindowLong(window.hwnd, win32con.GWL_EXSTYLE)
-        dpi = ctypes.windll.user32.GetDpiForWindow(window.hwnd)
+    @staticmethod
+    def _adjusted_outer_rect(hwnd: int, size: Size) -> wintypes.RECT:
+        style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
+        ex_style = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        dpi = ctypes.windll.user32.GetDpiForWindow(hwnd)
         rect = wintypes.RECT(0, 0, size.width, size.height)
         ok = ctypes.windll.user32.AdjustWindowRectExForDpi(
             ctypes.byref(rect), style, False, ex_style, dpi
         )
         if not ok:
             raise WindowOperationError("AdjustWindowRectExForDpi failed")
-        left, top, _, _ = win32gui.GetWindowRect(window.hwnd)
+        return rect
+
+    def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry:
+        monitor = int(
+            win32api.MonitorFromWindow(
+                window.hwnd,
+                win32con.MONITOR_DEFAULTTONEAREST,
+            )
+        )
+        if not monitor:
+            raise WindowOperationError("MonitorFromWindow failed")
+        info = win32api.GetMonitorInfo(monitor)
+        monitor_rect = info.get("Monitor")
+        device = info.get("Device")
+        if (
+            not isinstance(monitor_rect, tuple)
+            or len(monitor_rect) != 4
+            or not isinstance(device, str)
+            or not device
+        ):
+            raise WindowOperationError("GetMonitorInfo returned invalid display geometry")
+        left, top, right, bottom = (int(value) for value in monitor_rect)
+        bounds = Rect(left, top, right - left, bottom - top)
+        if bounds.width <= 0 or bounds.height <= 0:
+            raise WindowOperationError("monitor dimensions must be positive")
+        dpi = int(ctypes.windll.user32.GetDpiForWindow(window.hwnd))
+        if dpi <= 0:
+            raise WindowOperationError("GetDpiForWindow returned invalid DPI")
+        current_mode: Size | None = None
+        if validate_mode:
+            settings = win32api.EnumDisplaySettings(device, win32con.ENUM_CURRENT_SETTINGS)
+            width = int(getattr(settings, "PelsWidth", 0))
+            height = int(getattr(settings, "PelsHeight", 0))
+            current_mode = Size(width, height)
+            if width <= 0 or height <= 0 or current_mode != Size(bounds.width, bounds.height):
+                raise WindowOperationError(
+                    "current desktop mode disagrees with the full monitor rectangle"
+                )
+        return DisplayGeometry(monitor, device, bounds, current_mode, dpi)
+
+    def fit_client_size(
+        self,
+        window: WindowRef,
+        desired: Size,
+        baseline: Size,
+        monitor_bounds: Rect,
+    ) -> Size:
+        def client_for_width(width: int) -> Size:
+            height = max(1, int(width * baseline.height / baseline.width + 0.5))
+            return Size(width, height)
+
+        if desired.width <= 0 or desired.height <= 0:
+            raise WindowOperationError("desired client dimensions must be positive")
+        outer = self._adjusted_outer_rect(window.hwnd, desired)
+        if outer.bottom - outer.top <= monitor_bounds.height:
+            return desired
+        low, high = 1, desired.width
+        best: Size | None = None
+        while low <= high:
+            middle = (low + high) // 2
+            candidate = client_for_width(middle)
+            adjusted = self._adjusted_outer_rect(window.hwnd, candidate)
+            if adjusted.bottom - adjusted.top <= monitor_bounds.height:
+                best = candidate
+                low = middle + 1
+            else:
+                high = middle - 1
+        if best is None:
+            raise WindowOperationError("no positive fixed-aspect client fits monitor height")
+        return best
+
+    def resize_client(self, window: WindowRef, size: Size, monitor_bounds: Rect) -> None:
+        rect = self._adjusted_outer_rect(window.hwnd, size)
+        current_left, current_top, _, _ = win32gui.GetWindowRect(window.hwnd)
         outer_width = rect.right - rect.left
         outer_height = rect.bottom - rect.top
+        if outer_width > monitor_bounds.width or outer_height > monitor_bounds.height:
+            raise WindowOperationError("complete outer window does not fit monitor")
+        left = min(max(current_left, monitor_bounds.x), monitor_bounds.right - outer_width)
+        top = min(max(current_top, monitor_bounds.y), monitor_bounds.bottom - outer_height)
         win32gui.SetWindowPos(
             window.hwnd,
             None,
@@ -130,11 +208,13 @@ class Win32WindowService:
         client = win32gui.GetClientRect(window.hwnd)
         origin = win32gui.ClientToScreen(window.hwnd, (client[0], client[1]))
         bounds = Rect(origin[0], origin[1], client[2] - client[0], client[3] - client[1])
+        outer = win32gui.GetWindowRect(window.hwnd)
         return WindowState(
             True,
             bool(win32gui.IsIconic(window.hwnd)),
             win32gui.GetForegroundWindow() == window.hwnd,
             bounds,
+            Rect(outer[0], outer[1], outer[2] - outer[0], outer[3] - outer[1]),
         )
 
 

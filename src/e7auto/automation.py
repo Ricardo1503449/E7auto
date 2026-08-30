@@ -8,6 +8,7 @@ from typing import Callable, Protocol, TypeVar
 
 from .config import AppConfig, Point, Rect
 from .domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
+from .geometry import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
 from .ports import (
     CaptureService,
     Clock,
@@ -16,6 +17,7 @@ from .ports import (
     OverlayService,
     RuntimeEnvironment,
     TextRunLogger,
+    DisplayGeometry,
     WindowRef,
     WindowService,
 )
@@ -212,6 +214,8 @@ class AutomationEngine:
         self._consecutive_no_target_refreshes = 0
         self._window: WindowRef | None = None
         self._baseline_bounds: Rect | None = None
+        self._display_geometry: DisplayGeometry | None = None
+        self._transform: CoordinateTransform | None = None
         self._handling_network = False
         self._network_paused_seconds = 0.0
         self._network_status_before_reconnect: OverlayActivityStatus | None = None
@@ -221,6 +225,8 @@ class AutomationEngine:
         self._capture_seconds = 0.0
         self._vision_calls = 0
         self._vision_seconds = 0.0
+        self._normalization_count = 0
+        self._normalization_seconds = 0.0
 
     def execute(self) -> None:
         self._prepare()
@@ -232,22 +238,32 @@ class AutomationEngine:
         self._publisher.mutate(lambda snapshot: snapshot.transitioned(state))
         self._deps.logger.event("state_transition", previous=previous.value, current=state.value)
 
-    def _performance_mark(self) -> tuple[float, int, float, int, float]:
+    def _performance_mark(self) -> tuple[float, int, float, int, float, int, float]:
         return (
             time.perf_counter(),
             self._capture_count,
             self._capture_seconds,
             self._vision_calls,
             self._vision_seconds,
+            self._normalization_count,
+            self._normalization_seconds,
         )
 
     def _log_performance_stage(
         self,
-        mark: tuple[float, int, float, int, float],
+        mark: tuple[float, int, float, int, float, int, float],
         stage: str,
         **fields: object,
     ) -> None:
-        started, capture_count, capture_seconds, vision_calls, vision_seconds = mark
+        (
+            started,
+            capture_count,
+            capture_seconds,
+            vision_calls,
+            vision_seconds,
+            normalization_count,
+            normalization_seconds,
+        ) = mark
         self._deps.logger.event(
             "performance_stage",
             stage=stage,
@@ -256,16 +272,27 @@ class AutomationEngine:
             capture_ms=f"{(self._capture_seconds - capture_seconds) * 1000:.3f}",
             vision_calls=self._vision_calls - vision_calls,
             vision_ms=f"{(self._vision_seconds - vision_seconds) * 1000:.3f}",
+            normalization_count=self._normalization_count - normalization_count,
+            normalization_ms=f"{(self._normalization_seconds - normalization_seconds) * 1000:.3f}",
             **fields,
         )
 
     def _vision_call(self, detector: Callable[..., T], *args: object) -> T:
+        adapted = tuple(arg for arg in args if isinstance(arg, AdaptedFrame))
+        before_count = sum(frame.normalization_count for frame in adapted)
+        before_seconds = sum(frame.normalization_seconds for frame in adapted)
         started = time.perf_counter()
         try:
             return detector(*args)
         finally:
             self._vision_calls += 1
             self._vision_seconds += time.perf_counter() - started
+            self._normalization_count += (
+                sum(frame.normalization_count for frame in adapted) - before_count
+            )
+            self._normalization_seconds += (
+                sum(frame.normalization_seconds for frame in adapted) - before_seconds
+            )
 
     def _invalidate_trusted_balance(self, reason: str) -> None:
         previous = self._trusted_sky_stone_balance
@@ -297,18 +324,77 @@ class AutomationEngine:
             window = self._deps.windows.locate_unique(
                 str(self._config.executable_path), self._config.window_title
             )
+        except Exception as exc:
+            raise StopExecution(StopReason.WINDOW_ABNORMAL, str(exc)) from exc
+        try:
+            display = self._deps.windows.inspect_display(window, validate_mode=True)
+        except Exception as exc:
+            raise StopExecution(StopReason.INVALID_DISPLAY_GEOMETRY, str(exc)) from exc
+        if display.current_mode is None:
+            raise StopExecution(
+                StopReason.INVALID_DISPLAY_GEOMETRY,
+                "validated current desktop mode is missing",
+            )
+        minimum = self._config.display.minimum_mode
+        if (
+            display.current_mode.width < minimum.width
+            or display.current_mode.height < minimum.height
+        ):
+            raise StopExecution(
+                StopReason.UNSUPPORTED_DISPLAY_RESOLUTION,
+                f"unsupported current desktop mode: {display.current_mode}",
+            )
+        desired = initial_client_size(
+            display.current_mode,
+            self._config.display.reference_mode,
+            self._config.baseline_client_size,
+            self._config.display.client_width_fraction,
+        )
+        try:
+            target = (
+                desired
+                if display.current_mode == self._config.display.reference_mode
+                else self._deps.windows.fit_client_size(
+                    window,
+                    desired,
+                    self._config.baseline_client_size,
+                    display.monitor_bounds,
+                )
+            )
             self._deps.windows.restore_and_foreground(window)
-            self._deps.windows.resize_client(window, self._config.baseline_client_size)
+            self._deps.windows.resize_client(window, target, display.monitor_bounds)
             state = self._deps.windows.inspect(window)
         except Exception as exc:
             raise StopExecution(StopReason.WINDOW_ABNORMAL, str(exc)) from exc
-        expected = self._config.baseline_client_size
+        try:
+            verified_display = self._deps.windows.inspect_display(window, validate_mode=True)
+        except Exception as exc:
+            raise StopExecution(StopReason.INVALID_DISPLAY_GEOMETRY, str(exc)) from exc
+        if verified_display != display:
+            raise StopExecution(
+                StopReason.DISPLAY_CHANGED,
+                f"display changed during preparation: {display} -> {verified_display}",
+            )
         if (
             not state.exists
             or state.minimized
             or not state.foreground
-            or state.client_bounds.width != expected.width
-            or state.client_bounds.height != expected.height
+            or state.client_bounds.width != target.width
+            or state.client_bounds.height != target.height
+            or abs(
+                state.client_bounds.width * self._config.baseline_client_size.height
+                - state.client_bounds.height * self._config.baseline_client_size.width
+            )
+            > self._config.baseline_client_size.width
+            or (
+                state.outer_bounds is not None
+                and (
+                    state.outer_bounds.x < display.monitor_bounds.x
+                    or state.outer_bounds.y < display.monitor_bounds.y
+                    or state.outer_bounds.right > display.monitor_bounds.right
+                    or state.outer_bounds.bottom > display.monitor_bounds.bottom
+                )
+            )
         ):
             raise StopExecution(
                 StopReason.WINDOW_ABNORMAL,
@@ -316,10 +402,23 @@ class AutomationEngine:
             )
         self._window = window
         self._baseline_bounds = state.client_bounds
-        recognition_rois = tuple(self._config.rois.values()) + tuple(
-            slot.item_roi for slot in self._config.slots
+        self._display_geometry = display
+        self._transform = CoordinateTransform(
+            self._config.baseline_client_size,
+            target,
         )
-        if not self._deps.overlay.position_and_secure(state.client_bounds, recognition_rois):
+        recognition_rois = tuple(
+            self._transform.rect(roi)
+            for roi in (
+                *self._config.rois.values(),
+                *(slot.item_roi for slot in self._config.slots),
+            )
+        )
+        if not self._deps.overlay.position_and_secure(
+            state.client_bounds,
+            recognition_rois,
+            self._transform.point(self._config.overlay_offset),
+        ):
             raise StopExecution(
                 StopReason.OVERLAY_CAPTURE_UNSAFE,
                 "overlay capture exclusion unavailable and overlay intersects recognition ROI",
@@ -331,11 +430,26 @@ class AutomationEngine:
             client_y=state.client_bounds.y,
             client_width=state.client_bounds.width,
             client_height=state.client_bounds.height,
+            monitor_device=display.device_name,
+            monitor_x=display.monitor_bounds.x,
+            monitor_y=display.monitor_bounds.y,
+            monitor_width=display.monitor_bounds.width,
+            monitor_height=display.monitor_bounds.height,
+            desktop_width=display.current_mode.width,
+            desktop_height=display.current_mode.height,
+            dpi=display.dpi,
+            scale_x=f"{self._transform.scale_x:.6f}",
+            scale_y=f"{self._transform.scale_y:.6f}",
+            reference_path=self._transform.is_identity,
         )
 
-    def _ensure_window(self) -> None:
+    def _ensure_window(self, *, full_display_check: bool = False) -> None:
         self._control.checkpoint()
-        assert self._window is not None and self._baseline_bounds is not None
+        assert (
+            self._window is not None
+            and self._baseline_bounds is not None
+            and self._display_geometry is not None
+        )
         try:
             state = self._deps.windows.inspect(self._window)
         except Exception as exc:
@@ -347,6 +461,35 @@ class AutomationEngine:
             or state.client_bounds != self._baseline_bounds
         ):
             raise StopExecution(StopReason.WINDOW_ABNORMAL, f"window changed: {state}")
+        try:
+            display = self._deps.windows.inspect_display(
+                self._window,
+                validate_mode=full_display_check,
+            )
+        except Exception as exc:
+            raise StopExecution(StopReason.INVALID_DISPLAY_GEOMETRY, str(exc)) from exc
+        expected = self._display_geometry
+        cheap_changed = (
+            display.monitor_id != expected.monitor_id
+            or display.device_name != expected.device_name
+            or display.monitor_bounds != expected.monitor_bounds
+            or display.dpi != expected.dpi
+        )
+        if cheap_changed and not full_display_check:
+            try:
+                display = self._deps.windows.inspect_display(
+                    self._window,
+                    validate_mode=True,
+                )
+            except Exception as exc:
+                raise StopExecution(StopReason.INVALID_DISPLAY_GEOMETRY, str(exc)) from exc
+        if cheap_changed or (
+            full_display_check and display.current_mode != expected.current_mode
+        ):
+            raise StopExecution(
+                StopReason.DISPLAY_CHANGED,
+                f"display changed during run: {expected} -> {display}",
+            )
 
     def _capture_raw(self) -> object:
         started = time.perf_counter()
@@ -355,7 +498,8 @@ class AutomationEngine:
             assert self._window is not None and self._baseline_bounds is not None
             frame = self._deps.capture.capture_client(self._window, self._baseline_bounds)
             self._control.checkpoint()
-            return frame
+            assert self._transform is not None
+            return adapt_frame(frame, self._transform)
         finally:
             self._capture_count += 1
             self._capture_seconds += time.perf_counter() - started
@@ -422,14 +566,15 @@ class AutomationEngine:
         return frame
 
     def _screen_point(self, point: Point) -> Point:
-        assert self._baseline_bounds is not None
-        return self._config.screen_point(self._baseline_bounds, point)
+        assert self._baseline_bounds is not None and self._transform is not None
+        actual = self._transform.point(point)
+        return Point(self._baseline_bounds.x + actual.x, self._baseline_bounds.y + actual.y)
 
     def _dispatch_input(self, action: str, point: Point, callback: Callable[[], None], **fields: object) -> None:
         screen_point = self._screen_point(point)
 
         def guarded() -> None:
-            self._ensure_window()
+            self._ensure_window(full_display_check=True)
             try:
                 self._deps.inputs.move(screen_point)
                 actual = self._deps.inputs.position()

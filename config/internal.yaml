@@ -6,6 +6,11 @@ game:
   window_title: 第七史诗
   baseline_client_size: {width: 2322, height: 1306}
 
+display:
+  reference_mode: {width: 3120, height: 2080}
+  minimum_mode: {width: 2560, height: 1440}
+  client_width_fraction: 0.60
+
 economy:
   refresh_cost: 3
 

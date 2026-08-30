@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 
 from .config import AppConfig, Point, Rect, SlotConfig, TargetConfig
+from .geometry import AdaptedFrame
 from .ports import Frame
 
 
@@ -47,11 +48,14 @@ class ScrollMovementObservation:
     phase_response: float
 
 
-def _inventory_gray(frame: Frame, roi: Rect) -> np.ndarray:
-    height, width = frame.shape[:2]
-    if roi.x < 0 or roi.y < 0 or roi.right > width or roi.bottom > height:
-        raise ValueError(f"Scroll ROI outside frame: {roi} vs {width}x{height}")
-    source = frame[roi.y : roi.bottom, roi.x : roi.right]
+def _inventory_gray(frame: Frame | AdaptedFrame, roi: Rect) -> np.ndarray:
+    if isinstance(frame, AdaptedFrame):
+        source = frame.normalized_roi(roi)
+    else:
+        height, width = frame.shape[:2]
+        if roi.x < 0 or roi.y < 0 or roi.right > width or roi.bottom > height:
+            raise ValueError(f"Scroll ROI outside frame: {roi} vs {width}x{height}")
+        source = frame[roi.y : roi.bottom, roi.x : roi.right]
     if source.ndim != 3 or source.shape[2] not in (3, 4):
         raise ValueError("Scroll comparison frame must have 3 or 4 channels")
     conversion = cv2.COLOR_BGRA2GRAY if source.shape[2] == 4 else cv2.COLOR_BGR2GRAY
@@ -179,13 +183,17 @@ class OpenCvGameVision:
         self._targets_by_id = {target.target_id: target for target in config.targets}
 
     @staticmethod
-    def _bgr(frame: Frame) -> Frame:
+    def _bgr(frame: Frame | AdaptedFrame) -> Frame | AdaptedFrame:
+        if isinstance(frame, AdaptedFrame):
+            return frame
         if frame.ndim != 3 or frame.shape[2] not in (3, 4):
             raise ValueError("Frame must be an HxWx3 or HxWx4 uint8 array")
         return np.ascontiguousarray(frame[:, :, :3])
 
     @staticmethod
-    def _crop(frame: Frame, roi: Rect) -> Frame:
+    def _crop(frame: Frame | AdaptedFrame, roi: Rect) -> Frame:
+        if isinstance(frame, AdaptedFrame):
+            return frame.normalized_roi(roi)
         height, width = frame.shape[:2]
         if roi.x < 0 or roi.y < 0 or roi.right > width or roi.bottom > height:
             raise ValueError(f"ROI outside frame: {roi} vs {width}x{height}")
@@ -196,7 +204,7 @@ class OpenCvGameVision:
 
     def _match_bgr(
         self,
-        bgr_frame: Frame,
+        bgr_frame: Frame | AdaptedFrame,
         template_key: str,
         roi: Rect,
         threshold: float,
@@ -583,7 +591,11 @@ class OpenCvGameVision:
                 base_roi.width,
                 base_roi.height,
             )
-        frame_height, frame_width = frame.shape[:2]
+        if isinstance(frame, AdaptedFrame):
+            frame_width = frame.transform.baseline.width
+            frame_height = frame.transform.baseline.height
+        else:
+            frame_height, frame_width = frame.shape[:2]
         if (
             roi.x < 0
             or roi.y < 0

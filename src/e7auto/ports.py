@@ -25,6 +25,16 @@ class WindowState:
     minimized: bool
     foreground: bool
     client_bounds: Rect
+    outer_bounds: Rect | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DisplayGeometry:
+    monitor_id: int
+    device_name: str
+    monitor_bounds: Rect
+    current_mode: Size | None
+    dpi: int
 
 
 class WindowService(Protocol):
@@ -32,7 +42,17 @@ class WindowService(Protocol):
 
     def restore_and_foreground(self, window: WindowRef) -> None: ...
 
-    def resize_client(self, window: WindowRef, size: Size) -> None: ...
+    def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry: ...
+
+    def fit_client_size(
+        self,
+        window: WindowRef,
+        desired: Size,
+        baseline: Size,
+        monitor_bounds: Rect,
+    ) -> Size: ...
+
+    def resize_client(self, window: WindowRef, size: Size, monitor_bounds: Rect) -> None: ...
 
     def inspect(self, window: WindowRef) -> WindowState: ...
 
@@ -66,7 +86,12 @@ class HotkeyService(Protocol):
 
 
 class OverlayService(Protocol):
-    def position_and_secure(self, client_bounds: Rect, recognition_rois: tuple[Rect, ...]) -> bool: ...
+    def position_and_secure(
+        self,
+        client_bounds: Rect,
+        recognition_rois: tuple[Rect, ...],
+        offset: Point | None = None,
+    ) -> bool: ...
 
     def begin_move(self) -> bool: ...
 
@@ -83,4 +108,3 @@ class TextRunLogger(Protocol):
     def event(self, event: str, **fields: object) -> None: ...
 
     def close(self) -> None: ...
-

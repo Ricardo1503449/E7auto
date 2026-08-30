@@ -75,6 +75,7 @@ class OverlayCommand:
     client_bounds: Rect
     recognition_rois: tuple[Rect, ...]
     completed: threading.Event
+    offset: Point | None = None
     result: bool = False
     security_report: OverlaySecurityReport | None = None
 
@@ -377,8 +378,13 @@ class StatsOverlay(QWidget):
             return
         super().mouseReleaseEvent(event)
 
-    def position_and_secure(self, client_bounds: Rect, recognition_rois: tuple[Rect, ...]) -> bool:
-        command = OverlayCommand(client_bounds, recognition_rois, threading.Event())
+    def position_and_secure(
+        self,
+        client_bounds: Rect,
+        recognition_rois: tuple[Rect, ...],
+        offset: Point | None = None,
+    ) -> bool:
+        command = OverlayCommand(client_bounds, recognition_rois, threading.Event(), offset)
         self.command_requested.emit(command)
         if not command.completed.wait(timeout=3.0):
             return False
@@ -402,6 +408,8 @@ class StatsOverlay(QWidget):
         try:
             self._client_bounds = command.client_bounds
             self._recognition_rois = command.recognition_rois
+            if command.offset is not None:
+                self._offset = QPoint(command.offset.x, command.offset.y)
             saved = self._saved_position()
             self.move(
                 saved

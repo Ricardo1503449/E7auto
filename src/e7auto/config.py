@@ -44,6 +44,13 @@ class Size:
 
 
 @dataclass(frozen=True, slots=True)
+class DisplayConfig:
+    reference_mode: Size
+    minimum_mode: Size
+    client_width_fraction: float
+
+
+@dataclass(frozen=True, slots=True)
 class TargetConfig:
     target_id: str
     display_name: str
@@ -112,6 +119,7 @@ class AppConfig:
     process_name: str
     window_title: str
     baseline_client_size: Size
+    display: DisplayConfig
     refresh_cost: int
     template_paths: dict[str, Path]
     rois: dict[str, Rect]
@@ -129,10 +137,6 @@ class AppConfig:
     logging: LoggingConfig
     network_error_template: str = "network_connection_abnormal"
     network_retry_template: str = "network_retry"
-
-    def screen_point(self, client_bounds: Rect, point: Point) -> Point:
-        return Point(client_bounds.x + point.x, client_bounds.y + point.y)
-
 
 class ConfigError(ValueError):
     def __init__(self, errors: list[str]):
@@ -230,6 +234,14 @@ def _rect(value: Any, path: str, errors: list[str]) -> Rect:
     return Rect(value["x"], value["y"], width, height)
 
 
+def _size(value: Any, path: str, errors: list[str]) -> Size:
+    raw = _mapping(value, path, errors)
+    return Size(
+        _positive_int(raw.get("width"), f"{path}.width", errors),
+        _positive_int(raw.get("height"), f"{path}.height", errors),
+    )
+
+
 def _mapping(value: Any, path: str, errors: list[str]) -> dict[str, Any]:
     if not isinstance(value, dict):
         errors.append(f"{path} must be a mapping")
@@ -269,11 +281,23 @@ def load_config(path: str | Path) -> AppConfig:
     if not isinstance(window_title, str) or not window_title.strip():
         errors.append("game.window_title is required")
         window_title = ""
-    size_raw = _mapping(game.get("baseline_client_size"), "game.baseline_client_size", errors)
-    baseline_size = Size(
-        _positive_int(size_raw.get("width"), "game.baseline_client_size.width", errors),
-        _positive_int(size_raw.get("height"), "game.baseline_client_size.height", errors),
+    baseline_size = _size(game.get("baseline_client_size"), "game.baseline_client_size", errors)
+    display_raw = _mapping(root.get("display"), "display", errors)
+    display = DisplayConfig(
+        reference_mode=_size(display_raw.get("reference_mode"), "display.reference_mode", errors),
+        minimum_mode=_size(display_raw.get("minimum_mode"), "display.minimum_mode", errors),
+        client_width_fraction=_positive_fraction(
+            display_raw.get("client_width_fraction"),
+            "display.client_width_fraction",
+            errors,
+        ),
     )
+    expected_display = DisplayConfig(Size(3120, 2080), Size(2560, 1440), 0.60)
+    if display != expected_display:
+        errors.append(
+            "display must use reference_mode 3120x2080, minimum_mode 2560x1440, "
+            "and client_width_fraction 0.60"
+        )
 
     economy = _mapping(root.get("economy"), "economy", errors)
     refresh_cost = _positive_int(economy.get("refresh_cost"), "economy.refresh_cost", errors)
@@ -595,6 +619,7 @@ def load_config(path: str | Path) -> AppConfig:
         process_name=process_name,
         window_title=window_title,
         baseline_client_size=baseline_size,
+        display=display,
         refresh_cost=refresh_cost,
         template_paths=template_paths,
         rois=rois,

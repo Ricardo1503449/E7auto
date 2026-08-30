@@ -17,6 +17,7 @@ import yaml
 
 from e7auto.config import (
     AppConfig,
+    DisplayConfig,
     LoggingConfig,
     Point,
     Rect,
@@ -68,6 +69,17 @@ def _rect(value: object, name: str) -> Rect:
     if width <= 0 or height <= 0:
         raise RuntimeError(f"{name} must have positive width and height")
     return Rect(x, y, width, height)
+
+
+def _size(value: object, name: str) -> Size:
+    raw = _mapping(value, name)
+    width, height = raw.get("width"), raw.get("height")
+    if any(
+        not isinstance(item, int) or isinstance(item, bool) or item <= 0
+        for item in (width, height)
+    ):
+        raise RuntimeError(f"{name} must contain positive integer width/height")
+    return Size(width, height)
 
 
 def load_read_only_commissioning_config(path: Path = CONFIG_PATH) -> AppConfig:
@@ -225,6 +237,11 @@ def load_read_only_commissioning_config(path: Path = CONFIG_PATH) -> AppConfig:
         process_name=executable_path.name,
         window_title=window_title,
         baseline_client_size=baseline_size,
+        display=DisplayConfig(
+            _size(_mapping(root.get("display"), "display")["reference_mode"], "display.reference_mode"),
+            _size(_mapping(root.get("display"), "display")["minimum_mode"], "display.minimum_mode"),
+            float(_mapping(root.get("display"), "display")["client_width_fraction"]),
+        ),
         refresh_cost=int(economy["refresh_cost"]),
         template_paths=template_paths,
         rois=rois,
