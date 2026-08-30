@@ -26,8 +26,8 @@ Use a Windows x64 machine or VM with no Python installed.
 - [ ] Run `E7auto.exe --self-check` and retain its text output.
 - [ ] In a separate test copy, set `calibration_complete: false`; verify `E7auto.exe` logs refusal and sends no input. Restore the verified configuration before functional testing.
 - [ ] Verify the main window exposes only the limit input, the single `购买友情点数` checkbox, and the start button.
-- [ ] After installing calibrated config/templates, verify unique window lookup and baseline client-size correction with input still disabled under a separately authorized commissioning build.
-- [ ] Verify DPI behavior on every monitor used for the game.
+- [ ] With input disabled, verify current-mode/full-monitor cross-check, the exact `3120 x 2080 -> 2322 x 1306` reference path, `2560 x 1440` minimum boundary, 60%-width non-reference sizing, DPI-aware outer-height fitting, and negative-origin secondary-monitor clamping.
+- [ ] Verify DPI behavior on every monitor used for the game, plus fail-closed stop before input after monitor migration, desktop-mode change, or DPI change.
 - [x] Retain source overlay offset `(-252,-145)` as the first-launch/invalid-state fallback position; runtime placement may be persisted anywhere on the virtual desktop.
 - [x] Verify the production overlay supports click-through, no activation, and exact capture-exclusion read-back. Runtime startup and every F6 lock now require exclusion; historical fixed-size/fallback geometry remains evidence only.
 - [ ] Verify bare F6 pauses automation, enables dragging, then saves position and restores click-through/capture exclusion before resuming; verify the saved position restores after restart and off-screen state falls back.
