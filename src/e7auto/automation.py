@@ -32,6 +32,7 @@ from .vision import (
 T = TypeVar("T")
 
 _REFRESH_CONFIRM_FAST_CONFIDENCE = 0.99
+_SHOP_ENTRY_MAX_ATTEMPTS = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,6 +107,8 @@ class StopController:
         self._lock = threading.Condition(threading.RLock())
         self._reason: StopReason | None = None
         self._paused = False
+        self._pause_started_at: float | None = None
+        self._paused_seconds = 0.0
 
     def request(self, reason: StopReason) -> bool:
         with self._lock:
@@ -115,17 +118,32 @@ class StopController:
             self._lock.notify_all()
             return True
 
-    def pause(self) -> bool:
+    def pause(self, started_at: float | None = None) -> bool:
         with self._lock:
             if self._reason is not None:
                 return False
             self._paused = True
+            self._pause_started_at = started_at
             return True
 
-    def resume(self) -> None:
+    def resume(self, resumed_at: float | None = None) -> None:
         with self._lock:
+            if (
+                self._paused
+                and self._pause_started_at is not None
+                and resumed_at is not None
+            ):
+                self._paused_seconds += max(0.0, resumed_at - self._pause_started_at)
             self._paused = False
+            self._pause_started_at = None
             self._lock.notify_all()
+
+    def paused_seconds(self, now: float) -> float:
+        with self._lock:
+            current = self._paused_seconds
+            if self._paused and self._pause_started_at is not None:
+                current += max(0.0, now - self._pause_started_at)
+            return current
 
     def _wait_until_runnable(self) -> None:
         while self._paused and self._reason is None:
@@ -558,7 +576,8 @@ class AutomationEngine:
     def _active_monotonic(self) -> float:
         """Return elapsed automation time excluding completed network recovery."""
 
-        return self._deps.clock.monotonic() - self._network_paused_seconds
+        now = self._deps.clock.monotonic()
+        return now - self._network_paused_seconds - self._control.paused_seconds(now)
 
     def _capture(self) -> object:
         frame = self._capture_raw()
@@ -836,6 +855,39 @@ class AutomationEngine:
             self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
         raise StopExecution(StopReason.RECOGNITION_TIMEOUT, f"timeout waiting for {name}")
 
+    def _confirm_shop_or_main_after_entry_timeout(self) -> Observation | None:
+        """Return the stable main-screen anchor, or None once the shop is ready."""
+
+        deadline = self._active_monotonic() + self._config.timing.entry_timeout_ms / 1000
+        shop_stable = 0
+        main_stable = 0
+        latest_main: Observation | None = None
+        while self._active_monotonic() <= deadline:
+            frame = self._capture()
+            shop = self._vision_call(self._deps.vision.shop_ready, frame)
+            if shop is None:
+                shop_stable = 0
+            else:
+                shop_stable += 1
+                if shop_stable >= self._config.timing.stable_frames:
+                    return None
+
+            main = self._vision_call(self._deps.vision.main_shop_icon, frame)
+            if main is None:
+                main_stable = 0
+                latest_main = None
+            else:
+                main_stable += 1
+                latest_main = main
+                if main_stable >= self._config.timing.stable_frames:
+                    return latest_main
+            self._control.checkpoint()
+            self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
+        raise StopExecution(
+            StopReason.RECOGNITION_TIMEOUT,
+            "cannot confirm shop or main screen after entry timeout",
+        )
+
     def _enter_store(self) -> None:
         self._invalidate_trusted_balance("shop_entry")
         self._transition(RunState.ENTERING_STORE)
@@ -844,12 +896,35 @@ class AutomationEngine:
             self._deps.vision.main_shop_icon,
             self._config.timing.entry_timeout_ms,
         )
-        self._click("open_shop", main_shop.anchor)
-        self._wait_stable_observation(
-            "shop_refresh_button",
-            self._deps.vision.shop_ready,
-            self._config.timing.entry_timeout_ms,
-        )
+        for attempt in range(1, _SHOP_ENTRY_MAX_ATTEMPTS + 1):
+            self._click("open_shop", main_shop.anchor, attempt=attempt)
+            try:
+                self._wait_stable_observation(
+                    "shop_refresh_button",
+                    self._deps.vision.shop_ready,
+                    self._config.timing.entry_timeout_ms,
+                )
+                break
+            except StopExecution as exc:
+                if exc.reason is not StopReason.RECOGNITION_TIMEOUT:
+                    raise
+                main_shop = self._confirm_shop_or_main_after_entry_timeout()
+                if main_shop is None:
+                    break
+                if attempt >= _SHOP_ENTRY_MAX_ATTEMPTS:
+                    raise StopExecution(
+                        StopReason.RECOGNITION_TIMEOUT,
+                        f"shop entry failed after {_SHOP_ENTRY_MAX_ATTEMPTS} attempts; "
+                        "main screen remains visible",
+                    )
+                self._deps.logger.event(
+                    "shop_entry_retry",
+                    completed_attempt=attempt,
+                    next_attempt=attempt + 1,
+                    confidence=f"{main_shop.confidence:.6f}",
+                    logical_x=main_shop.anchor.x,
+                    logical_y=main_shop.anchor.y,
+                )
         self._publisher.mutate(
             lambda snapshot: snapshot.with_overlay_status(
                 OverlayActivityStatus.REFRESHING
@@ -1648,14 +1723,14 @@ class AutomationSession:
             if self._control.reason is not None:
                 return
             if not self._overlay_moving:
-                if not self._control.pause():
+                if not self._control.pause(self._dependencies.clock.monotonic()):
                     return
                 if self._dependencies.overlay.begin_move():
                     self._overlay_moving = True
                     self._dependencies.logger.event("overlay_move_started", source="F6")
                     return
                 self._control.request(StopReason.OVERLAY_CAPTURE_UNSAFE)
-                self._control.resume()
+                self._control.resume(self._dependencies.clock.monotonic())
                 return
 
             secure = self._dependencies.overlay.finish_move()
@@ -1664,7 +1739,7 @@ class AutomationSession:
                 self._dependencies.logger.event("overlay_move_finished", source="F6")
             else:
                 self._control.request(StopReason.OVERLAY_CAPTURE_UNSAFE)
-            self._control.resume()
+            self._control.resume(self._dependencies.clock.monotonic())
 
     def _finish_overlay_move_on_stop(self) -> None:
         with self._move_lock:
@@ -1672,7 +1747,7 @@ class AutomationSession:
                 return
             self._dependencies.overlay.finish_move()
             self._overlay_moving = False
-            self._control.resume()
+            self._control.resume(self._dependencies.clock.monotonic())
 
     def run(
         self,
