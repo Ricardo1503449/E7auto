@@ -641,6 +641,7 @@ calibrated:
   scroll_minimum_changed_fraction: 0.3
   anchor_confidence: 0.93
   sky_stone_digit_confidence: 0.8
+  sky_stone_digit_margin: 0.08
   sky_stone_digits_offset:
     x: 57
     y: 16

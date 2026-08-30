@@ -6,6 +6,11 @@ game:
   window_title: 第七史诗
   baseline_client_size: {width: 2322, height: 1306}
 
+display:
+  reference_mode: {width: 3120, height: 2080}
+  minimum_mode: {width: 2560, height: 1440}
+  client_width_fraction: 0.60
+
 economy:
   refresh_cost: 3
 
@@ -148,6 +153,7 @@ vision:
   default_confidence: 0.90
   anchor_confidence: 0.93
   sky_stone_digit_confidence: 0.80
+  sky_stone_digit_margin: 0.08
   sky_stone_digits_offset: {x: 57, y: 16}
 
 overlay:
