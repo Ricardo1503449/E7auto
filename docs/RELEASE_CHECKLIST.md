@@ -40,4 +40,12 @@ Use a Windows x64 machine or VM with no Python installed.
 - [ ] Confirm no-click commissioning reproduces three-frame stable refresh control, Sky Stone OCR, and top/bottom inventory scans within the calibrated 3000 ms scan timeout. If no target is present, record that only stable-empty behavior was exercised.
 - [ ] Verify logs are UTF-8 text, retention is bounded, and no screenshot files/directories appear.
 
+## GitHub Release publishing
+
+- [ ] Keep `dist\launcher.dist` and every versioned ZIP as local ignored build output; do not add either path to the Git repository.
+- [ ] Create the versioned ZIP from the exact locally verified standalone directory and record its SHA-256.
+- [ ] Create the matching version tag and GitHub Release from the reviewed release commit.
+- [ ] Upload only the verified versioned ZIP as the Release asset, then confirm its displayed size and downloadable filename.
+- [ ] Confirm the repository tree contains source, tests, templates, build scripts, and documentation, but no tracked `dist` artifact.
+
 Onefile evaluation begins only after every standalone gate passes. Startup extraction behavior, antivirus reputation, data-file lookup, and signed-build behavior then require a separate test matrix.

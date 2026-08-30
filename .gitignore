@@ -8,6 +8,7 @@ __pycache__/
 logs/
 state/
 build/
+# Local build output only. Publish versioned ZIP files through GitHub Releases.
 dist/
 *.build/
 *.dist/
