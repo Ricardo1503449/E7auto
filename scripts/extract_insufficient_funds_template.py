@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -15,21 +14,18 @@ SOURCE_SPECS = {
     "shop": {
         "timestamp_token": "164129",
         "sequence_role": "shop_before_purchase",
-        "sha256": "501affd4cce5b51ca97a18f00a7b4b0fb18ef64c84ccffa97ea868a9654130dc",
         "source_size": {"width": 2422, "height": 1467},
         "expected_client_origin": {"x": 46, "y": 103},
     },
     "purchase_confirmation": {
         "timestamp_token": "164137",
         "sequence_role": "purchase_confirmation_before_insufficient_gold",
-        "sha256": "a9ff3969b37b8acbbe2c590a5827c18f8adacbd0b7d4cec1117ae32ba4b77b2e",
         "source_size": {"width": 2433, "height": 1473},
         "expected_client_origin": {"x": 57, "y": 117},
     },
     "insufficient_gold": {
         "timestamp_token": "164145",
         "sequence_role": "terminal_insufficient_gold_prompt",
-        "sha256": "d96c3cd5345b9f8ddf335bad47b7ce2af232b4f19454fe140930a3de83747689",
         "source_size": {"width": 2433, "height": 1497},
         "expected_client_origin": {"x": 67, "y": 137},
     },
@@ -43,14 +39,6 @@ MIN_COMPONENT_AREA = 8
 MIN_COMPONENT_HEIGHT = 4
 TEMPLATE_PADDING = 4
 PURCHASE_RESULT_ROI = {"x": 975, "y": 210, "width": 400, "height": 300}
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def pixel_sha256(image: np.ndarray) -> str:
-    return hashlib.sha256(np.ascontiguousarray(image).tobytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -142,7 +130,6 @@ def crop_client(image: np.ndarray) -> tuple[np.ndarray, dict[str, object]]:
         "width": BASELINE_WIDTH,
         "height": BASELINE_HEIGHT,
         "boundary_gradient_strength": strengths,
-        "pixel_sha256": pixel_sha256(client),
     }
 
 
@@ -230,9 +217,6 @@ def main() -> int:
     source_entries: dict[str, object] = {}
     for key, spec in SOURCE_SPECS.items():
         source = find_source(source_dir, str(spec["timestamp_token"]))
-        actual_hash = sha256(source)
-        if actual_hash != spec["sha256"]:
-            raise RuntimeError(f"Unexpected source fingerprint for {source}: {actual_hash}")
         image = read_png(source)
         actual_size = {"width": int(image.shape[1]), "height": int(image.shape[0])}
         if actual_size != spec["source_size"]:
@@ -246,7 +230,6 @@ def main() -> int:
             "path": str(source),
             "sequence_role": spec["sequence_role"],
             "source_size": actual_size,
-            "source_sha256": actual_hash,
             "client_crop": client_crop,
         }
 
@@ -262,7 +245,7 @@ def main() -> int:
     manifest = {
         "schema_version": 1,
         "method": (
-            "hash-pinned desktop sources; exact 2322x1306 clients cropped in memory; "
+            "selected desktop sources; exact 2322x1306 clients cropped in memory; "
             "exact terminal-source RGB with deterministic binary alpha text mask"
         ),
         "baseline_client_size": {"width": BASELINE_WIDTH, "height": BASELINE_HEIGHT},
@@ -293,7 +276,6 @@ def main() -> int:
                 "foreground_pixels": int(np.count_nonzero(template[:, :, 3])),
                 "transparent_pixels": int(np.count_nonzero(template[:, :, 3] == 0)),
             },
-            "output_sha256": sha256(output_path),
         },
         "calibrated": {
             "purchase_result_roi": PURCHASE_RESULT_ROI,

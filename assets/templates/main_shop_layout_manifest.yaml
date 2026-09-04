@@ -10,7 +10,6 @@ source:
   size:
     width: 2422
     height: 1462
-  sha256: 778d96c033ea72db81dd0d1a1b1277aaa8e921a7e6fbb6151cf4a23ae3fafe19
   client_crop:
     x: 52
     y: 103
@@ -21,7 +20,6 @@ template:
   size:
     width: 126
     height: 105
-  sha256: f95e1594cff9459a994705e6531c87eff1512b08a77bdc0dfd0189025f361e1e
 threshold: 0.93
 production_before:
   roi:
@@ -55,10 +53,8 @@ calibrated_original:
 vertical_shift_px: 29
 shop_negative_controls:
   shop_top:
-    source_sha256: 184f655559b82a4e9e67b24ef52092dd4c616cf3512d2a22d53b514902625234
     confidence: 0.9120213761925697
   shop_bottom:
-    source_sha256: 24e0a1be8a49f244663d3b681270cba4d191b7c81c364f8be560aa7e3a0be3db
     confidence: 0.912775382399559
 click:
   use_recognized_anchor: true

@@ -4,7 +4,6 @@ source_path: C:\Users\lxy\AppData\Local\Temp\codex-clipboard-d7eb2cbf-dc22-47d9-
 source_size:
   width: 2411
   height: 777
-source_sha256: 3545657776c62d08ffc6cbf9f34e88e4b599f90451aa3dbaa970b11b92673e86
 templates:
 - output_path: refresh_confirm_prompt.png
   role: prompt_identity
@@ -46,7 +45,6 @@ templates:
     - 26
     foreground_pixels: 4904
     transparent_pixels: 12562
-  output_sha256: d34a22b420c364975b9f781d9b629449c48fea21e90ca02ddb0851b76e5fa36a
 - output_path: refresh_confirm_button.png
   role: confirm_button
   crop:
@@ -64,4 +62,3 @@ templates:
     contour_area: 37038.0
     foreground_pixels: 37445
     transparent_pixels: 2626
-  output_sha256: 5f5c48d60247e3da6b6d6abf19f5f5198d96e9465f8afeb76881f8f01854d13b

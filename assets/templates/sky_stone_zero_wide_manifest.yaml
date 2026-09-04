@@ -5,7 +5,6 @@ source:
   size:
     width: 2419
     height: 1519
-  sha256: e2f44aef29f23ac04563dc532012000c43b91a0e4c444754b80ca3ecf3e6f926
   client_crop:
     x: 44
     y: 124
@@ -28,7 +27,6 @@ template:
     height: 33
   foreground_pixels: 273
   output_path: sky_stone_digit_0_wide.png
-  output_sha256: 65b7165c5e38fa6bd31466f342cf9a1291b9e53756629cea0dc400765fdef827
 validation:
   wide_gold_to_sky_stone_zero_minimum: 0.99
   wide_gold_to_sky_stone_zero_similarity: 0.9932659932659933

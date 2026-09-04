@@ -1,5 +1,5 @@
 schema_version: 1
-method: hash-pinned source windows; paired edge gradients locate exact fixed-size
+method: selected source windows; paired edge gradients locate exact fixed-size
   client crops, which are processed in memory and never written to the project
 baseline_client_size:
   width: 2322
@@ -10,7 +10,6 @@ sources:
     size:
       width: 2425
       height: 1474
-    sha256: b926e9ff4ecdc6c8a5b13fc2e4c9959dd28b4111ff55641d7b8f4a14a64db970
     client_crop:
       x: 49
       y: 108
@@ -26,7 +25,6 @@ sources:
     size:
       width: 2425
       height: 1463
-    sha256: 184f655559b82a4e9e67b24ef52092dd4c616cf3512d2a22d53b514902625234
     client_crop:
       x: 42
       y: 101
@@ -42,7 +40,6 @@ sources:
     size:
       width: 2422
       height: 1494
-    sha256: 24e0a1be8a49f244663d3b681270cba4d191b7c81c364f8be560aa7e3a0be3db
     client_crop:
       x: 49
       y: 111
@@ -58,7 +55,6 @@ sources:
     size:
       width: 2401
       height: 1439
-    sha256: d8689ed8e94139e6ccba66e275e52bab0917bbe4c23f1543774893510a2f808d
     client_crop:
       x: 31
       y: 90
@@ -74,7 +70,6 @@ sources:
     size:
       width: 2390
       height: 1487
-    sha256: e72ec85c1c6220dc6b019e5703adf3971d1ebd9e8ee630a6a6bd99c4bd9fe856
     client_crop:
       x: 32
       y: 125

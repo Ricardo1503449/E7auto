@@ -4,7 +4,6 @@ source_path: C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-23 202223.pn
 source_size:
   width: 171
   height: 136
-source_sha256: 00578e2b0fc0d3d7f29495471f6d54ce299d7dfac72694644af2a8b63be19ae8
 crop:
   x: 11
   y: 13
@@ -22,4 +21,3 @@ output_path: main_shop_icon.png
 output_size:
   width: 126
   height: 105
-output_sha256: f95e1594cff9459a994705e6531c87eff1512b08a77bdc0dfd0189025f361e1e

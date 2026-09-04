@@ -3,7 +3,6 @@ validation: insufficient_funds_live_recognition
 status: operator_confirmed_passed
 validated_on: '2026-08-24'
 source_result: logs/insufficient-funds-live-validation.json
-source_result_sha256: 67b68cb53d7f665887d6c16a14fc65d702e5e3f3f999388db900877b5ff1f8a5
 source_recorded_status: ok
 process:
   windows_admin: true

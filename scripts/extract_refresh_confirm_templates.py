@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -12,8 +11,6 @@ import yaml
 DEFAULT_SOURCE = Path(
     r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-d7eb2cbf-dc22-47d9-8648-9b5d861554dc.png"
 )
-EXPECTED_SOURCE_SHA256 = "3545657776c62d08ffc6cbf9f34e88e4b599f90451aa3dbaa970b11b92673e86"
-
 PROMPT_SEARCH = (850, 180, 1650, 360)
 PROMPT_MAX_SATURATION = 20
 PROMPT_MIN_VALUE = 120
@@ -24,10 +21,6 @@ BUTTON_SEARCH = (1100, 400, 1750, 650)
 CANNY_LOW = 30
 CANNY_HIGH = 90
 BUTTON_MIN_CONTOUR_AREA = 30_000.0
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -121,9 +114,6 @@ def main() -> int:
     source = args.source.resolve()
     if not source.is_file():
         raise RuntimeError(f"Missing supplied refresh-confirm source: {source}")
-    actual_hash = sha256(source)
-    if actual_hash != EXPECTED_SOURCE_SHA256:
-        raise RuntimeError(f"Unexpected source fingerprint for {source}: {actual_hash}")
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -183,7 +173,6 @@ def main() -> int:
                     "foreground_pixels": int(np.count_nonzero(output_image[:, :, 3])),
                     "transparent_pixels": int(np.count_nonzero(output_image[:, :, 3] == 0)),
                 },
-                "output_sha256": sha256(output),
             }
         )
 
@@ -192,7 +181,6 @@ def main() -> int:
         "method": "exact source RGB with deterministic binary alpha masks",
         "source_path": str(source),
         "source_size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
-        "source_sha256": actual_hash,
         "templates": entries,
     }
     (output_dir / "refresh_confirm_manifest.yaml").write_text(

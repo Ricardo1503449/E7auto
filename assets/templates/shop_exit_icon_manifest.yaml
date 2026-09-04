@@ -5,7 +5,6 @@ source_path: C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-23 202205.pn
 source_size:
   width: 353
   height: 105
-source_sha256: 0f15b723d3774346a1a28e4be3f8a1f49750a9df4cb158f70edc2acb65ac23f1
 crop:
   x: 22
   y: 17
@@ -28,4 +27,3 @@ output_path: shop_exit_icon.png
 output_size:
   width: 267
   height: 70
-output_sha256: 1d9674ce9a050310d25b8e9959927370b8bda5748d88bdf260711f435d98b800

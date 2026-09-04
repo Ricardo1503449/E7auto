@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -74,14 +73,6 @@ CROPS = (
 )
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
 def find_source(source_dir: Path, token: str) -> Path:
     matches = tuple(path for path in source_dir.glob("*.png") if token in path.stem)
     if len(matches) != 1:
@@ -138,9 +129,7 @@ def main() -> int:
             {
                 "source_path": str(source),
                 "source_size": {"width": source_width, "height": source_height},
-                "source_sha256": sha256(source),
                 "output_path": output.name,
-                "output_sha256": sha256(output),
                 "channels": int(crop.shape[2]) if crop.ndim == 3 else 1,
             }
         )

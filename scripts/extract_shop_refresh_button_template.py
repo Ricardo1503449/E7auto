@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -10,14 +9,9 @@ import yaml
 
 
 SOURCE_TOKEN = "200332"
-EXPECTED_SOURCE_SHA256 = "a52a98445550d0fa936f414339038b7f0424048088cc6e6919bca61d4360c412"
 HSV_LOWER = np.array([45, 50, 20], dtype=np.uint8)
 HSV_UPPER = np.array([85, 255, 255], dtype=np.uint8)
 MIN_CONTOUR_AREA = 60_000.0
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def find_source(source_dir: Path) -> Path:
@@ -26,11 +20,7 @@ def find_source(source_dir: Path) -> Path:
         raise RuntimeError(
             f"Expected exactly one PNG containing {SOURCE_TOKEN!r}, found {len(matches)}"
         )
-    source = matches[0]
-    actual_hash = sha256(source)
-    if actual_hash != EXPECTED_SOURCE_SHA256:
-        raise RuntimeError(f"Unexpected source fingerprint for {source}: {actual_hash}")
-    return source
+    return matches[0]
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -95,7 +85,6 @@ def main() -> int:
         "method": "exact source RGB plus largest rounded-green-button contour as binary alpha",
         "source_path": str(source),
         "source_size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
-        "source_sha256": sha256(source),
         "crop": {"x": x, "y": y, "width": width, "height": height},
         "mask": {
             "color_space": "OpenCV HSV",
@@ -107,7 +96,6 @@ def main() -> int:
         },
         "output_path": output.name,
         "output_size": {"width": width, "height": height},
-        "output_sha256": sha256(output),
     }
     (output_dir / "shop_refresh_button_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),

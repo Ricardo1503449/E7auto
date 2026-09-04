@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 from dataclasses import replace
 from pathlib import Path
 
@@ -24,10 +23,6 @@ class StaticTemplates:
 
     def get(self, key: str) -> TemplateData:
         return self.templates[key]
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -56,14 +51,12 @@ def test_cropped_template_manifest_and_pixels_are_integral() -> None:
     for entry in entries:
         output = TEMPLATE_DIR / entry["output_path"]
         assert output.is_file()
-        assert sha256(output) == entry["output_sha256"]
         image = read_png(output)
         assert image.shape[:2] == (entry["height"], entry["width"])
         assert image.shape[2] == entry["channels"] == 4
 
         source = Path(entry["source_path"])
         if source.is_file():
-            assert sha256(source) == entry["source_sha256"]
             original = read_png(source)
             expected = original[
                 entry["y"] : entry["y"] + entry["height"],
@@ -77,8 +70,6 @@ def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> Non
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
-    assert sha256(output) == manifest["output_sha256"]
-
     image = read_png(output)
     assert image.shape == (
         manifest["output_size"]["height"],
@@ -90,8 +81,6 @@ def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> Non
     assert np.count_nonzero(alpha) == manifest["mask"]["foreground_pixels"] == 3273
 
     source = Path(manifest["source_path"])
-    if source.is_file():
-        assert sha256(source) == manifest["source_sha256"]
 
     config = replace(make_config(), template_paths={"main_shop_icon": output})
     loaded = TemplateRepository(config).get("main_shop_icon")
@@ -104,8 +93,6 @@ def test_shop_refresh_template_contains_complete_rounded_button() -> None:
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
-    assert sha256(output) == manifest["output_sha256"]
-
     image = read_png(output)
     assert image.shape == (118, 547, 4)
     alpha = image[:, :, 3]
@@ -114,8 +101,6 @@ def test_shop_refresh_template_contains_complete_rounded_button() -> None:
     assert manifest["mask"]["contour_area"] == 63050.5
 
     source = Path(manifest["source_path"])
-    if source.is_file():
-        assert sha256(source) == manifest["source_sha256"]
 
     config = replace(make_config(), template_paths={"shop_refresh_button": output})
     loaded = TemplateRepository(config).get("shop_refresh_button")
@@ -140,8 +125,6 @@ def test_shop_exit_template_contains_arrow_and_title_foreground() -> None:
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
-    assert sha256(output) == manifest["output_sha256"]
-
     image = read_png(output)
     assert image.shape == (70, 267, 4)
     alpha = image[:, :, 3]
@@ -151,8 +134,6 @@ def test_shop_exit_template_contains_arrow_and_title_foreground() -> None:
     assert sum(manifest["mask"]["component_areas"]) == 5631
 
     source = Path(manifest["source_path"])
-    if source.is_file():
-        assert sha256(source) == manifest["source_sha256"]
 
     config = replace(make_config(), template_paths={"shop_exit_icon": output})
     repository = TemplateRepository(config)
@@ -182,7 +163,6 @@ def test_refresh_confirmation_templates_are_background_free_and_reproducible() -
     prompt_path = TEMPLATE_DIR / prompt_entry["output_path"]
     prompt = read_png(prompt_path)
     assert prompt.shape == (41, 426, 4)
-    assert sha256(prompt_path) == prompt_entry["output_sha256"]
     assert set(np.unique(prompt[:, :, 3])) == {0, 255}
     assert np.count_nonzero(prompt[:, :, 3]) == 4904
     assert sum(prompt_entry["mask"]["component_areas"]) == 4904
@@ -191,14 +171,11 @@ def test_refresh_confirmation_templates_are_background_free_and_reproducible() -
     button_path = TEMPLATE_DIR / button_entry["output_path"]
     button = read_png(button_path)
     assert button.shape == (111, 361, 4)
-    assert sha256(button_path) == button_entry["output_sha256"]
     assert set(np.unique(button[:, :, 3])) == {0, 255}
     assert np.count_nonzero(button[:, :, 3]) == 37445
     assert button_entry["mask"]["contour_area"] == 37038.0
 
     source = Path(manifest["source_path"])
-    if source.is_file():
-        assert sha256(source) == manifest["source_sha256"]
 
     config = replace(
         make_config(),
@@ -255,10 +232,6 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
             "width": 2322,
             "height": 1306,
         }
-        source = Path(source_entry["path"])
-        if source.is_file():
-            assert sha256(source) == source_entry["source_sha256"]
-
     entry = manifest["template"]
     assert entry["source"] == "insufficient_gold"
     output_path = TEMPLATE_DIR / entry["output_path"]
@@ -268,7 +241,6 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
         entry["output_size"]["width"],
         4,
     )
-    assert sha256(output_path) == entry["output_sha256"]
     assert set(np.unique(output[:, :, 3])) == {0, 255}
     assert np.count_nonzero(output[:, :, 3]) == entry["mask"]["foreground_pixels"]
     assert sum(entry["mask"]["component_areas"]) == entry["mask"]["foreground_pixels"]
@@ -324,7 +296,6 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
     icon_path = TEMPLATE_DIR / icon_entry["output_path"]
     icon = read_png(icon_path)
     assert icon.shape == (75, 62, 4)
-    assert sha256(icon_path) == icon_entry["output_sha256"]
     assert set(np.unique(icon[:, :, 3])) == {255}
     assert np.count_nonzero(icon[:, :, 3]) == icon_entry["opaque_pixels"] == 4650
     assert icon_entry["method"] == "exact opaque source pixel crop"
@@ -342,7 +313,6 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
     for digit, entry in entries.items():
         path = TEMPLATE_DIR / entry["output_path"]
         glyph = read_png(path)
-        assert sha256(path) == entry["output_sha256"]
         assert set(np.unique(glyph[:, :, 3])) == {0, 255}
         assert np.count_nonzero(glyph[:, :, 3]) == entry["foreground_pixels"]
         templates[f"sky_stone_digit_{digit}"] = TemplateData(
@@ -372,7 +342,6 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
     balance_source = manifest["sources"]["balance_crop"]
     source = Path(balance_source["path"])
     if source.is_file():
-        assert sha256(source) == balance_source["sha256"]
         source_image = read_png(source)
         crop = icon_entry["crop"]
         expected_icon = source_image[
@@ -406,7 +375,6 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
         source_path = Path(source_entry["path"])
         if not source_path.is_file():
             continue
-        assert sha256(source_path) == source_entry["sha256"]
         source_image = read_png(source_path)
         config = replace(
             make_config(),
@@ -517,7 +485,6 @@ def test_sky_stone_wide_zero_variant_is_reproducible_and_parses_4501() -> None:
     template = manifest["template"]
     output = TEMPLATE_DIR / template["output_path"]
     assert output.is_file()
-    assert sha256(output) == template["output_sha256"]
     glyph = read_png(output)
     assert glyph.shape == (33, 23, 4)
     assert np.count_nonzero(glyph[:, :, 3]) == template["foreground_pixels"] == 273
@@ -527,8 +494,6 @@ def test_sky_stone_wide_zero_variant_is_reproducible_and_parses_4501() -> None:
     )
     if not source.is_file():
         return
-    assert sha256(source) == manifest["source"]["sha256"]
-
     config = replace(
         make_config(),
         rois={

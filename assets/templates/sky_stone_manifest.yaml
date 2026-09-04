@@ -6,13 +6,11 @@ sources:
     size:
       width: 202
       height: 87
-    sha256: b953c674d28cdf8cb552e5fbc9194de072a1e72e97c69af09ff500743fbe8b40
   full_context:
     path: C:\Users\lxy\AppData\Local\Temp\codex-clipboard-fd6d853a-d4fd-4d17-91fa-c205bd9114fa.png
     size:
       width: 2428
       height: 1512
-    sha256: 6ba52c11eace4e9678418d8e4900bb835bf060ed15a8f0ec586b1d36082ecba4
     exact_balance_crop_location:
       x: 1610
       y: 143
@@ -23,19 +21,16 @@ sources:
     size:
       width: 185
       height: 91
-    sha256: ebbe537dfff4afaf4b166d498d16d1687dc0f46d05e37d61bd4f65b9412dfe7a
   balance_3900:
     path: C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 012032.png
     size:
       width: 194
       height: 83
-    sha256: 2cb7ec7793b773c4616dd2fca0af772f5fd24b1b4e2757951eb803b350f144f6
   combined_top_bar:
     path: C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 012140.png
     size:
       width: 471
       height: 84
-    sha256: 5f15e6ae9c53a288c665d250fa2b833dbfa837650c0f7cbf376afa8a42791903
 icon:
   output_path: sky_stone_icon.png
   method: exact opaque source pixel crop
@@ -45,7 +40,6 @@ icon:
     width: 62
     height: 75
   opaque_pixels: 4650
-  output_sha256: a7465b2585487344919e2f13fa83074e1548482e0549b2841663fb6d730a071d
 digit_segmentation:
   search:
     x: 70
@@ -67,7 +61,6 @@ digits:
     height: 33
   component_area: 265
   foreground_pixels: 265
-  output_sha256: 33df56d8f04f708d6b7f86fdee14b5d14cc5a8d835042c6960ba0581c6074852
 - digit: '1'
   source: full_context
   output_path: sky_stone_digit_1.png
@@ -78,7 +71,6 @@ digits:
     height: 33
   component_area: 145
   foreground_pixels: 145
-  output_sha256: a0d7ed34eb33d9a9eb6505f31923566a8fd4ae6194728e09bf6a411144690729
 - digit: '2'
   source: balance_crop
   output_path: sky_stone_digit_2.png
@@ -89,7 +81,6 @@ digits:
     height: 33
   component_area: 225
   foreground_pixels: 225
-  output_sha256: f0ebfcc9e33d9646afbecc3cfd88b04a28e924aad94a8b6f48f530e9ef93f34b
 - digit: '3'
   source: balance_crop
   output_path: sky_stone_digit_3.png
@@ -100,7 +91,6 @@ digits:
     height: 33
   component_area: 223
   foreground_pixels: 223
-  output_sha256: 1ad37b67facc0a095b2deebb779b55393f78039359c5ed20a4349a846310ccff
 - digit: '4'
   source: combined_top_bar_gold
   output_path: sky_stone_digit_4.png
@@ -111,7 +101,6 @@ digits:
     height: 32
   component_area: 222
   foreground_pixels: 222
-  output_sha256: 7780b139a06a254660f24adead69951fed24f1493376f82d39535dbb88b432be
 - digit: '5'
   source: full_context
   output_path: sky_stone_digit_5.png
@@ -122,7 +111,6 @@ digits:
     height: 33
   component_area: 239
   foreground_pixels: 239
-  output_sha256: 32a8f6f4bbffd9b41b5f425542e897f775fe1530431985e475cc07f4457033cf
 - digit: '6'
   source: combined_top_bar_sky_stone
   output_path: sky_stone_digit_6.png
@@ -133,7 +121,6 @@ digits:
     height: 33
   component_area: 274
   foreground_pixels: 274
-  output_sha256: 77ef3d96ac231304675afe1f144e2486aa74ca08a6b8fe36ee46ceee73a5c270
 - digit: '7'
   source: balance_crop
   output_path: sky_stone_digit_7.png
@@ -144,7 +131,6 @@ digits:
     height: 33
   component_area: 167
   foreground_pixels: 167
-  output_sha256: f18b0f048ce1c1dad4251a0366efd95cac05243ce78ad9669a98e4661f2812ff
 - digit: '8'
   source: full_context
   output_path: sky_stone_digit_8.png
@@ -155,7 +141,6 @@ digits:
     height: 33
   component_area: 297
   foreground_pixels: 297
-  output_sha256: fdc77b10554787a2767095cc738c0fa8b84f64fe755faf281795492f35dabb85
 - digit: '9'
   source: balance_crop
   output_path: sky_stone_digit_9.png
@@ -166,7 +151,6 @@ digits:
     height: 33
   component_area: 278
   foreground_pixels: 278
-  output_sha256: 8ffeb31a397152a0016754d4b49d8c7fc1005481b7d01726e73849cafa32ff42
 cross_source_font_similarity:
   '2': 0.9659090909090909
   '7': 0.9671361502347418

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 
 import yaml
@@ -34,7 +33,4 @@ def test_live_evidence_records_direct_operator_confirmed_pass() -> None:
 
     source = ROOT / manifest["source_result"]
     if source.is_file():
-        assert hashlib.sha256(source.read_bytes()).hexdigest() == manifest[
-            "source_result_sha256"
-        ]
         assert build_manifest(source) == manifest

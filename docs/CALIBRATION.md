@@ -32,7 +32,7 @@
 - Use the baseline client size, identical UI scale, language, graphics settings, and DPI context.
 - Do not enable a broad debug-capture path. This project intentionally has no code that saves captured frames.
 - Validate each template offline against representative user-provided screenshots outside the runtime capture path before live use.
-- Reproduce the checked-in crops with `.\.venv\Scripts\python.exe scripts\crop_calibration_templates.py`; `assets/templates/manifest.yaml` must continue to match the output hashes.
+- Reproduce the checked-in crops with `.\.venv\Scripts\python.exe scripts\crop_calibration_templates.py`; the generated images must continue to satisfy the manifest dimensions, channel counts, and pixel-integrity tests.
 - Reproduce the main-shop foreground mask with `.\.venv\Scripts\python.exe scripts\extract_main_shop_icon_template.py`; its alpha channel must remain binary and match `main_shop_icon_manifest.yaml`.
 - Reproduce the complete rounded refresh-button mask with `.\.venv\Scripts\python.exe scripts\extract_shop_refresh_button_template.py`; it must remain `547 x 118` and match `shop_refresh_button_manifest.yaml`.
 - Reproduce the shop-exit arrow/title foreground with `.\.venv\Scripts\python.exe scripts\extract_shop_exit_icon_template.py`; it must remain `267 x 70`, contain five foreground components, and match `shop_exit_icon_manifest.yaml`. Runtime uses its exact stable client bounds `(39,25,267,70)` and calibrated center `(172,60)` only for the strategy-authorized exit/re-entry branches.

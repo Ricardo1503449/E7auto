@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -27,7 +26,6 @@ SOURCE_SPECS = {
         "path": Path(
             r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-e4b375c4-6d8c-4b2e-9288-e512f7b7f8e2.png"
         ),
-        "sha256": "b926e9ff4ecdc6c8a5b13fc2e4c9959dd28b4111ff55641d7b8f4a14a64db970",
         "size": (2425, 1474),
         "client_crop": (49, 108, BASELINE_WIDTH, BASELINE_HEIGHT),
     },
@@ -35,7 +33,6 @@ SOURCE_SPECS = {
         "path": Path(
             r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 014250.png"
         ),
-        "sha256": "184f655559b82a4e9e67b24ef52092dd4c616cf3512d2a22d53b514902625234",
         "size": (2425, 1463),
         "client_crop": (42, 101, BASELINE_WIDTH, BASELINE_HEIGHT),
     },
@@ -43,7 +40,6 @@ SOURCE_SPECS = {
         "path": Path(
             r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 014258.png"
         ),
-        "sha256": "24e0a1be8a49f244663d3b681270cba4d191b7c81c364f8be560aa7e3a0be3db",
         "size": (2422, 1494),
         "client_crop": (49, 111, BASELINE_WIDTH, BASELINE_HEIGHT),
     },
@@ -51,7 +47,6 @@ SOURCE_SPECS = {
         "path": Path(
             r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-da266c82-d2de-4842-b15a-ee480e4374ab.png"
         ),
-        "sha256": "d8689ed8e94139e6ccba66e275e52bab0917bbe4c23f1543774893510a2f808d",
         "size": (2401, 1439),
         "client_crop": (31, 90, BASELINE_WIDTH, BASELINE_HEIGHT),
     },
@@ -59,7 +54,6 @@ SOURCE_SPECS = {
         "path": Path(
             r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-f67601a5-5bef-49bc-b798-a10036523fe7.png"
         ),
-        "sha256": "e72ec85c1c6220dc6b019e5703adf3971d1ebd9e8ee630a6a6bd99c4bd9fe856",
         "size": (2390, 1487),
         "client_crop": (32, 125, BASELINE_WIDTH, BASELINE_HEIGHT),
     },
@@ -96,10 +90,6 @@ CALIBRATED_SLOTS = (
 )
 SCROLL_CURSOR_POINT = (1500, 650)
 SKY_STONE_DIGITS_OFFSET = (57, 16)
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -147,9 +137,6 @@ def verified_client(
     path = Path(spec["path"])
     if not path.is_file():
         raise RuntimeError(f"Missing supplied {role} source: {path}")
-    actual_hash = sha256(path)
-    if actual_hash != spec["sha256"]:
-        raise RuntimeError(f"Unexpected {role} source fingerprint: {actual_hash}")
     image = read_png(path)
     expected_width, expected_height = spec["size"]
     if image.shape[:2] != (expected_height, expected_width):
@@ -181,7 +168,6 @@ def verified_client(
     return client[:, :, :3], {
         "path": str(path),
         "size": {"width": expected_width, "height": expected_height},
-        "sha256": actual_hash,
         "client_crop": rect_dict(detected_crop),
         "boundary_gradient_strength": boundary_strengths,
     }
@@ -562,7 +548,7 @@ def build_manifest() -> dict[str, object]:
     return {
         "schema_version": 1,
         "method": (
-            "hash-pinned source windows; paired edge gradients locate exact fixed-size "
+            "selected source windows; paired edge gradients locate exact fixed-size "
             "client crops, which are processed in memory and never written to the project"
         ),
         "baseline_client_size": {

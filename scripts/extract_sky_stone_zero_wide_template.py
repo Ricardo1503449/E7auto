@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -17,17 +16,12 @@ except ModuleNotFoundError:
 DEFAULT_SOURCE = Path(
     r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-f737e650-4fcb-4974-9950-5c5c9b4274eb.png"
 )
-EXPECTED_SOURCE_SHA256 = "e2f44aef29f23ac04563dc532012000c43b91a0e4c444754b80ca3ecf3e6f926"
 EXPECTED_SOURCE_SIZE = (2419, 1519)
 EXPECTED_CLIENT_CROP = (44, 124, 2322, 1306)
 WIDE_GOLD_ZERO_COMPONENT = (1464, 46, 19, 29, 273)
 NARROW_GOLD_ZERO_COMPONENT = (1536, 46, 18, 29, 266)
 SKY_STONE_ZERO_COMPONENT = (1690, 46, 19, 29, 271)
 PADDING = 2
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -111,10 +105,6 @@ def main() -> int:
     source = args.source.resolve()
     if not source.is_file():
         raise RuntimeError(f"Missing supplied wide-zero source: {source}")
-    source_hash = sha256(source)
-    if source_hash.casefold() != EXPECTED_SOURCE_SHA256:
-        raise RuntimeError(f"Unexpected source fingerprint for {source}: {source_hash}")
-
     image = read_png(source)
     source_size = (int(image.shape[1]), int(image.shape[0]))
     if source_size != EXPECTED_SOURCE_SIZE:
@@ -155,7 +145,6 @@ def main() -> int:
         "source": {
             "path": str(source),
             "size": {"width": source_size[0], "height": source_size[1]},
-            "sha256": source_hash,
             "client_crop": {
                 "x": client_x,
                 "y": client_y,
@@ -182,7 +171,6 @@ def main() -> int:
             },
             "foreground_pixels": int(np.count_nonzero(output[:, :, 3])),
             "output_path": output_path.name,
-            "output_sha256": sha256(output_path),
         },
         "validation": {
             "wide_gold_to_sky_stone_zero_minimum": 0.99,

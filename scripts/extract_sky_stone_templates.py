@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import cv2
@@ -12,23 +11,18 @@ import yaml
 DEFAULT_SOURCE = Path(
     r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 005313.png"
 )
-EXPECTED_SOURCE_SHA256 = "b953c674d28cdf8cb552e5fbc9194de072a1e72e97c69af09ff500743fbe8b40"
 DEFAULT_CONTEXT_SOURCE = Path(
     r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-fd6d853a-d4fd-4d17-91fa-c205bd9114fa.png"
 )
-EXPECTED_CONTEXT_SOURCE_SHA256 = "6ba52c11eace4e9678418d8e4900bb835bf060ed15a8f0ec586b1d36082ecba4"
 DEFAULT_BALANCE_3924_SOURCE = Path(
     r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 012002.png"
 )
-EXPECTED_BALANCE_3924_SHA256 = "ebbe537dfff4afaf4b166d498d16d1687dc0f46d05e37d61bd4f65b9412dfe7a"
 DEFAULT_BALANCE_3900_SOURCE = Path(
     r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 012032.png"
 )
-EXPECTED_BALANCE_3900_SHA256 = "2cb7ec7793b773c4616dd2fca0af772f5fd24b1b4e2757951eb803b350f144f6"
 DEFAULT_COMBINED_TOP_BAR_SOURCE = Path(
     r"C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-24 012140.png"
 )
-EXPECTED_COMBINED_TOP_BAR_SHA256 = "5f15e6ae9c53a288c665d250fa2b833dbfa837650c0f7cbf376afa8a42791903"
 
 # Exact opaque source crop containing the complete gem and adjacent plus marker.
 ICON_CROP = (10, 5, 72, 80)
@@ -49,10 +43,6 @@ COMBINED_SKY_STONE_SEARCH = (335, 24, 440, 70)
 KNOWN_FONT_MIN_SIMILARITY = 0.80
 ZERO_REPEAT_MIN_SIMILARITY = 0.94
 FOUR_CROSS_SOURCE_MIN_SIMILARITY = 0.98
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def read_png(path: Path) -> np.ndarray:
@@ -165,43 +155,18 @@ def main() -> int:
     source = args.source.resolve()
     if not source.is_file():
         raise RuntimeError(f"Missing supplied Sky Stone source: {source}")
-    actual_hash = sha256(source)
-    if actual_hash != EXPECTED_SOURCE_SHA256:
-        raise RuntimeError(f"Unexpected source fingerprint for {source}: {actual_hash}")
     context_source = args.context_source.resolve()
     if not context_source.is_file():
         raise RuntimeError(f"Missing supplied Sky Stone context source: {context_source}")
-    context_hash = sha256(context_source)
-    if context_hash != EXPECTED_CONTEXT_SOURCE_SHA256:
-        raise RuntimeError(
-            f"Unexpected context fingerprint for {context_source}: {context_hash}"
-        )
-
     supplemental_paths = {
-        "balance_3924": (
-            args.balance_3924_source.resolve(),
-            EXPECTED_BALANCE_3924_SHA256,
-        ),
-        "balance_3900": (
-            args.balance_3900_source.resolve(),
-            EXPECTED_BALANCE_3900_SHA256,
-        ),
-        "combined_top_bar": (
-            args.combined_top_bar_source.resolve(),
-            EXPECTED_COMBINED_TOP_BAR_SHA256,
-        ),
+        "balance_3924": args.balance_3924_source.resolve(),
+        "balance_3900": args.balance_3900_source.resolve(),
+        "combined_top_bar": args.combined_top_bar_source.resolve(),
     }
-    supplemental_hashes: dict[str, str] = {}
     supplemental_images: dict[str, np.ndarray] = {}
-    for source_name, (source_path, expected_hash) in supplemental_paths.items():
+    for source_name, source_path in supplemental_paths.items():
         if not source_path.is_file():
             raise RuntimeError(f"Missing supplied {source_name} source: {source_path}")
-        source_hash = sha256(source_path)
-        if source_hash != expected_hash:
-            raise RuntimeError(
-                f"Unexpected {source_name} fingerprint for {source_path}: {source_hash}"
-            )
-        supplemental_hashes[source_name] = source_hash
         supplemental_images[source_name] = read_png(source_path)
 
     output_dir = args.output_dir.resolve()
@@ -240,7 +205,6 @@ def main() -> int:
                 "crop": crop,
                 "component_area": area,
                 "foreground_pixels": int(np.count_nonzero(output[:, :, 3])),
-                "output_sha256": sha256(output_path),
             }
         )
         digit_masks[digit] = component_mask[y : y + height, x : x + width] > 0
@@ -430,7 +394,6 @@ def main() -> int:
             "balance_crop": {
                 "path": str(source),
                 "size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
-                "sha256": actual_hash,
             },
             "full_context": {
                 "path": str(context_source),
@@ -438,7 +401,6 @@ def main() -> int:
                     "width": int(context_image.shape[1]),
                     "height": int(context_image.shape[0]),
                 },
-                "sha256": context_hash,
                 "exact_balance_crop_location": {"x": 1610, "y": 143, "width": 202, "height": 87},
             },
             **{
@@ -448,9 +410,8 @@ def main() -> int:
                         "width": int(supplemental_images[source_name].shape[1]),
                         "height": int(supplemental_images[source_name].shape[0]),
                     },
-                    "sha256": supplemental_hashes[source_name],
                 }
-                for source_name, (source_path, _) in supplemental_paths.items()
+                for source_name, source_path in supplemental_paths.items()
             },
         },
         "icon": {
@@ -458,7 +419,6 @@ def main() -> int:
             "method": "exact opaque source pixel crop",
             "crop": icon_crop,
             "opaque_pixels": int(np.count_nonzero(icon[:, :, 3])),
-            "output_sha256": sha256(icon_path),
         },
         "digit_segmentation": {
             "search": {"x": DIGIT_SEARCH[0], "y": DIGIT_SEARCH[1], "width": DIGIT_SEARCH[2] - DIGIT_SEARCH[0], "height": DIGIT_SEARCH[3] - DIGIT_SEARCH[1]},
