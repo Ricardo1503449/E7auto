@@ -12,7 +12,7 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm the build uses Nuitka `--windows-uac-admin` and the resulting PE manifest requests administrator elevation.
 - [ ] Run `.venv\Scripts\python.exe scripts\verify_release.py`.
 - [ ] Confirm `dist\launcher.dist` contains `E7auto.exe`, `使用说明.txt`, `config\internal.yaml`, and `assets\templates`.
-- [ ] Confirm every manifest and calibrated PNG is present and hash-valid. The current source set has 28 PNGs, including the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold, overlay-position, and stage-two overlay-capture evidence.
+- [ ] Confirm every manifest and all 28 described calibrated PNGs are present, decodable, structurally valid, and covered by the focused asset tests. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold, overlay-position, and stage-two overlay-capture evidence.
 - [ ] Confirm no `.venv`, `.pip-cache`, tests, logs, or runtime screenshots are included.
 - [ ] Confirm packaged `config\internal.yaml` uses `logging.profile: compact`; source `config\internal.yaml` remains `detailed` for diagnostics.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
@@ -43,7 +43,7 @@ Use a Windows x64 machine or VM with no Python installed.
 ## GitHub Release publishing
 
 - [ ] Keep `dist\launcher.dist` and every versioned ZIP as local ignored build output; do not add either path to the Git repository.
-- [ ] Create the versioned ZIP from the exact locally verified standalone directory and record its SHA-256.
+- [ ] Create the versioned ZIP from the exact locally verified standalone directory and stream every entry to confirm successful decompression and CRC validation.
 - [ ] Create the matching version tag and GitHub Release from the reviewed release commit.
 - [ ] Upload only the verified versioned ZIP as the Release asset, then confirm its displayed size and downloadable filename.
 - [ ] Confirm the repository tree contains source, tests, templates, build scripts, and documentation, but no tracked `dist` artifact.

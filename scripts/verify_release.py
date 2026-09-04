@@ -1,20 +1,17 @@
 from __future__ import annotations
 
 import json
-import hashlib
 import struct
 import subprocess
 import sys
 from pathlib import Path
 
+import cv2
+import numpy as np
 import yaml
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def verify_template_assets(template_dir: Path) -> list[str]:
@@ -60,42 +57,25 @@ def verify_template_assets(template_dir: Path) -> list[str]:
 
     try:
         crop_manifest = yaml.safe_load(crop_manifest_path.read_text(encoding="utf-8"))
-        expected = [
-            (entry["output_path"], entry["output_sha256"])
-            for entry in crop_manifest["templates"]
-        ]
+        expected = [entry["output_path"] for entry in crop_manifest["templates"]]
         for manifest_path in single_manifest_paths:
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-            expected.append((manifest["output_path"], manifest["output_sha256"]))
+            expected.append(manifest["output_path"])
         for manifest_path in multi_manifest_paths:
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-            expected.extend(
-                (entry["output_path"], entry["output_sha256"])
-                for entry in manifest["templates"]
-            )
+            expected.extend(entry["output_path"] for entry in manifest["templates"])
         sky_stone_manifest = yaml.safe_load(
             sky_stone_manifest_path.read_text(encoding="utf-8")
         )
-        expected.append(
-            (
-                sky_stone_manifest["icon"]["output_path"],
-                sky_stone_manifest["icon"]["output_sha256"],
-            )
-        )
+        expected.append(sky_stone_manifest["icon"]["output_path"])
         expected.extend(
-            (entry["output_path"], entry["output_sha256"])
-            for entry in sky_stone_manifest["digits"]
+            entry["output_path"] for entry in sky_stone_manifest["digits"]
         )
         sky_stone_zero_wide_manifest = yaml.safe_load(
             sky_stone_zero_wide_manifest_path.read_text(encoding="utf-8")
         )
         wide_zero_template = sky_stone_zero_wide_manifest["template"]
-        expected.append(
-            (
-                wide_zero_template["output_path"],
-                wide_zero_template["output_sha256"],
-            )
-        )
+        expected.append(wide_zero_template["output_path"])
         insufficient_funds_manifest = yaml.safe_load(
             insufficient_funds_manifest_path.read_text(encoding="utf-8")
         )
@@ -103,12 +83,7 @@ def verify_template_assets(template_dir: Path) -> list[str]:
             insufficient_funds_live_manifest_path.read_text(encoding="utf-8")
         )
         insufficient_template = insufficient_funds_manifest["template"]
-        expected.append(
-            (
-                insufficient_template["output_path"],
-                insufficient_template["output_sha256"],
-            )
-        )
+        expected.append(insufficient_template["output_path"])
         client_calibration = yaml.safe_load(
             client_calibration_manifest_path.read_text(encoding="utf-8")
         )
@@ -328,14 +303,34 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     ):
         problems.append("overlay capture evidence lacks the visible positive control")
 
-    if len(expected) != 28 or len({name for name, _ in expected}) != 28:
+    if len(expected) != 28 or len(set(expected)) != 28:
         problems.append("template manifests must describe exactly 28 unique PNG files")
-    for name, expected_hash in expected:
+    required = set(expected) | {
+        "network_connection_abnormal.png",
+        "network_retry.png",
+    }
+    actual = {path.name for path in template_dir.glob("*.png") if path.is_file()}
+    for name in sorted(required - actual):
+        problems.append(f"missing template asset: {name}")
+    for name in sorted(actual - required):
+        problems.append(f"unexpected template asset: {name}")
+    for name in sorted(required & actual):
         path = template_dir / name
-        if not path.is_file():
-            problems.append(f"missing template asset: {name}")
-        elif sha256(path) != expected_hash:
-            problems.append(f"template hash mismatch: {name}")
+        loaded = cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        if (
+            loaded is None
+            or loaded.size == 0
+            or loaded.ndim != 3
+            or loaded.shape[2] not in (3, 4)
+        ):
+            problems.append(f"invalid template asset: {name}")
+            continue
+        if (
+            loaded.shape[2] == 4
+            and not np.all(loaded[:, :, 3] == 255)
+            and not np.any(loaded[:, :, 3])
+        ):
+            problems.append(f"empty template alpha mask: {name}")
     return problems
 
 

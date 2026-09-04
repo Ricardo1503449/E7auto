@@ -107,3 +107,25 @@ def test_release_verifier_requires_stage_two_overlay_capture_evidence(
     problems = verify_template_assets(copied)
 
     assert "missing template manifest: overlay_capture_validation_manifest.yaml" in problems
+
+
+def test_release_verifier_rejects_an_undecodable_template(tmp_path: Path) -> None:
+    copied = tmp_path / "templates"
+    shutil.copytree(ROOT / "assets" / "templates", copied)
+    (copied / "main_shop_icon.png").write_bytes(b"not a PNG")
+
+    problems = verify_template_assets(copied)
+
+    assert "invalid template asset: main_shop_icon.png" in problems
+
+
+def test_release_verifier_requires_network_recovery_templates(
+    tmp_path: Path,
+) -> None:
+    copied = tmp_path / "templates"
+    shutil.copytree(ROOT / "assets" / "templates", copied)
+    (copied / "network_retry.png").unlink()
+
+    problems = verify_template_assets(copied)
+
+    assert "missing template asset: network_retry.png" in problems
