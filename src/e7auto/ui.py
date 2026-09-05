@@ -11,23 +11,48 @@ import win32con
 import win32gui
 from PySide6.QtCore import (
     QElapsedTimer,
+    QEvent,
     QObject,
     QPoint,
+    QPointF,
     QRect,
+    QRectF,
+    QSize,
     Qt,
     QThread,
     QTimer,
     Signal,
     Slot,
 )
-from PySide6.QtGui import QCloseEvent, QMouseEvent, QValidator
+from PySide6.QtGui import (
+    QColor,
+    QCloseEvent,
+    QFont,
+    QFontDatabase,
+    QIcon,
+    QLinearGradient,
+    QMouseEvent,
+    QPaintEvent,
+    QPainter,
+    QPainterPath,
+    QPen,
+    QPixmap,
+    QResizeEvent,
+    QValidator,
+)
 from PySide6.QtWidgets import (
-    QCheckBox,
+    QAbstractButton,
+    QFrame,
+    QGraphicsDropShadowEffect,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QMainWindow,
     QPushButton,
+    QScrollArea,
+    QSizePolicy,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -553,7 +578,610 @@ class AutomationWorker(QObject):
         self.finished.emit(final)
 
 
+def _add_card_shadow(widget: QWidget) -> None:
+    shadow = QGraphicsDropShadowEffect(widget)
+    shadow.setBlurRadius(24)
+    shadow.setOffset(0, 5)
+    shadow.setColor(QColor(22, 28, 36, 28))
+    widget.setGraphicsEffect(shadow)
+
+
+@dataclass(frozen=True, slots=True)
+class ModuleCardSpec:
+    module_id: str
+    title: str | None
+    image_filename: str | None
+    available: bool
+
+
+class _ToggleSwitch(QAbstractButton):
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("friendshipPointsToggle")
+        self.setAccessibleName("购买友情点数")
+        self.setCheckable(True)
+        self.setChecked(False)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setFixedSize(58, 32)
+
+    def sizeHint(self) -> QSize:
+        return QSize(58, 32)
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        del event
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        track = QRectF(self.rect()).adjusted(1, 1, -1, -1)
+        if not self.isEnabled():
+            track_color = QColor("#c7cbd0")
+        elif self.isChecked():
+            track_color = QColor("#26985a")
+        else:
+            track_color = QColor("#aeb3b9")
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(track_color)
+        painter.drawRoundedRect(track, 15, 15)
+
+        knob_size = 24.0
+        knob_x = track.right() - knob_size - 3 if self.isChecked() else track.left() + 3
+        knob = QRectF(knob_x, track.top() + 3, knob_size, knob_size)
+        painter.setBrush(QColor("#ffffff"))
+        painter.drawEllipse(knob)
+
+class _ModuleCard(QAbstractButton):
+    _IMAGE_ZOOM = 1.0
+    _CARD_RADIUS = 14.0
+
+    def __init__(
+        self,
+        *,
+        title: str | None,
+        image_path: Path | None,
+        available: bool,
+        object_name: str,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._title = title
+        self._pixmap = QPixmap(str(image_path)) if image_path is not None else QPixmap()
+        self._scaled_pixmap = QPixmap()
+        self._scaled_pixmap_size = QSize()
+        self._focal_point = QPointF(0.5, 0.5)
+        self.setObjectName(object_name)
+        self.setAccessibleName(title or "开发中")
+        self.setEnabled(available)
+        self.setCursor(
+            Qt.CursorShape.PointingHandCursor
+            if available
+            else Qt.CursorShape.ArrowCursor
+        )
+        self.setMinimumHeight(190)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+    def sizeHint(self) -> QSize:
+        return QSize(480, 220)
+
+    def _card_rect(self) -> QRectF:
+        return QRectF(self.rect()).adjusted(4.0, 2.0, -4.0, -12.0)
+
+    def _draw_rounded_shadow(self, painter: QPainter, card_rect: QRectF) -> None:
+        for spread, alpha in ((8.0, 2), (6.0, 3), (4.0, 4), (2.0, 6), (0.0, 8)):
+            shadow_rect = card_rect.translated(0.0, 5.0).adjusted(
+                -spread,
+                -spread,
+                spread,
+                spread,
+            )
+            shadow = QPainterPath()
+            shadow.addRoundedRect(
+                shadow_rect,
+                self._CARD_RADIUS + spread,
+                self._CARD_RADIUS + spread,
+            )
+            painter.fillPath(shadow, QColor(22, 28, 36, alpha))
+
+    def _draw_cover_pixmap(self, painter: QPainter, rect: QRectF) -> None:
+        if self._pixmap.isNull():
+            painter.fillRect(rect, QColor("#25282c"))
+            return
+        scale = max(
+            rect.width() / self._pixmap.width(),
+            rect.height() / self._pixmap.height(),
+        ) * self._IMAGE_ZOOM
+        scaled_size = QSize(
+            max(1, round(self._pixmap.width() * scale)),
+            max(1, round(self._pixmap.height() * scale)),
+        )
+        if scaled_size != self._scaled_pixmap_size:
+            self._scaled_pixmap = self._pixmap.scaled(
+                scaled_size,
+                Qt.AspectRatioMode.IgnoreAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+            self._scaled_pixmap_size = scaled_size
+        scaled = self._scaled_pixmap
+        source_x = min(
+            max(0.0, scaled.width() * self._focal_point.x() - rect.width() / 2),
+            max(0.0, scaled.width() - rect.width()),
+        )
+        source_y = min(
+            max(0.0, scaled.height() * self._focal_point.y() - rect.height() / 2),
+            max(0.0, scaled.height() - rect.height()),
+        )
+        painter.drawPixmap(
+            rect,
+            scaled,
+            QRectF(source_x, source_y, rect.width(), rect.height()),
+        )
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        del event
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        rect = self._card_rect()
+        self._draw_rounded_shadow(painter, rect)
+        path = QPainterPath()
+        path.addRoundedRect(rect, self._CARD_RADIUS, self._CARD_RADIUS)
+        painter.save()
+        painter.setClipPath(path)
+
+        if self.isEnabled():
+            self._draw_cover_pixmap(painter, rect)
+            gradient = QLinearGradient(rect.left(), 0, rect.left() + rect.width() * 0.72, 0)
+            gradient.setColorAt(0.0, QColor(8, 10, 12, 224))
+            gradient.setColorAt(0.58, QColor(8, 10, 12, 142))
+            gradient.setColorAt(1.0, QColor(8, 10, 12, 0))
+            painter.fillRect(rect, gradient)
+            if self.underMouse():
+                painter.fillRect(rect, QColor(255, 255, 255, 12))
+            if self.isDown():
+                painter.fillRect(rect, QColor(0, 0, 0, 26))
+            font = QFont("Microsoft YaHei UI")
+            font.setPixelSize(max(22, min(30, round(rect.height() * 0.11))))
+            font.setWeight(QFont.Weight.DemiBold)
+            painter.setFont(font)
+            painter.setPen(QColor("#ffffff"))
+            painter.drawText(
+                QRectF(
+                    rect.left() + 32,
+                    rect.top(),
+                    rect.width() * 0.56,
+                    rect.height(),
+                ),
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,
+                self._title or "",
+            )
+        else:
+            painter.fillRect(rect, QColor("#ffffff"))
+            label_font = QFont("Microsoft YaHei UI")
+            label_font.setPixelSize(15)
+            painter.setFont(label_font)
+            metrics = painter.fontMetrics()
+            text = "开发中"
+            pill_width = metrics.horizontalAdvance(text) + 34
+            pill = QRectF(
+                rect.center().x() - pill_width / 2,
+                rect.center().y() - 18,
+                pill_width,
+                36,
+            )
+            painter.setPen(QPen(QColor("#d2d5d9"), 1))
+            painter.setBrush(QColor("#eef0f2"))
+            painter.drawRoundedRect(pill, 9, 9)
+            painter.setPen(QColor("#22262a"))
+            painter.drawText(pill, Qt.AlignmentFlag.AlignCenter, text)
+
+        painter.restore()
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.setPen(QPen(QColor("#d0d3d7"), 1))
+        painter.drawPath(path)
+
+
+class _FunctionCenterPage(QWidget):
+    module_requested = Signal(str)
+
+    def __init__(self, project_root: Path, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("functionCenterPage")
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(52, 36, 52, 42)
+        layout.setSpacing(24)
+
+        heading = QLabel("功能中心")
+        heading.setObjectName("pageHeading")
+        layout.addWidget(heading)
+
+        self._scroll = QScrollArea()
+        self._scroll.setObjectName("moduleScrollArea")
+        self._scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self._scroll.setWidgetResizable(True)
+        self._scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._scroll.setAutoFillBackground(False)
+        self._scroll.viewport().setAutoFillBackground(False)
+
+        self._card_host = QWidget()
+        self._card_host.setObjectName("moduleCardHost")
+        self._grid = QGridLayout(self._card_host)
+        self._grid.setContentsMargins(0, 0, 0, 0)
+        self._grid.setHorizontalSpacing(28)
+        self._grid.setVerticalSpacing(28)
+        self._scroll.setWidget(self._card_host)
+        layout.addWidget(self._scroll, 1)
+
+        specs = (
+            ModuleCardSpec(
+                "shop_refresh",
+                "刷新秘密商店",
+                "shop-card-background.png",
+                True,
+            ),
+            ModuleCardSpec("future_1", None, None, False),
+            ModuleCardSpec("future_2", None, None, False),
+            ModuleCardSpec("future_3", None, None, False),
+        )
+        self._cards_by_id: dict[str, _ModuleCard] = {}
+        self._cards: list[_ModuleCard] = []
+        for index, spec in enumerate(specs):
+            image_path = (
+                project_root / "assets" / "ui" / spec.image_filename
+                if spec.image_filename is not None
+                else None
+            )
+            object_name = (
+                "shopModuleCard"
+                if spec.module_id == "shop_refresh"
+                else f"futureModuleCard{index}"
+            )
+            card = _ModuleCard(
+                title=spec.title,
+                image_path=image_path,
+                available=spec.available,
+                object_name=object_name,
+            )
+            if spec.available:
+                card.clicked.connect(
+                    lambda _checked=False, module_id=spec.module_id: self.module_requested.emit(
+                        module_id
+                    )
+                )
+            self._cards_by_id[spec.module_id] = card
+            self._cards.append(card)
+        self.shop_card = self._cards_by_id["shop_refresh"]
+        self._column_count = 0
+        self._apply_columns(2)
+
+    @property
+    def cards(self) -> tuple[_ModuleCard, ...]:
+        return tuple(self._cards)
+
+    def _apply_columns(self, columns: int) -> None:
+        if columns == self._column_count:
+            return
+        while self._grid.count():
+            self._grid.takeAt(0)
+        for index, card in enumerate(self._cards):
+            self._grid.addWidget(card, index // columns, index % columns)
+        for column in range(2):
+            self._grid.setColumnStretch(column, 1 if column < columns else 0)
+        self._column_count = columns
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        self._apply_columns(1 if event.size().width() < 820 else 2)
+        super().resizeEvent(event)
+
+
+class _ShopFeaturePage(QWidget):
+    back_requested = Signal()
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("shopFeaturePage")
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(52, 28, 52, 42)
+        outer.setSpacing(20)
+
+        self.back_button = QPushButton("←  返回功能中心")
+        self.back_button.setObjectName("backToModulesButton")
+        self.back_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.back_button.clicked.connect(self.back_requested.emit)
+        outer.addWidget(self.back_button, 0, Qt.AlignmentFlag.AlignLeft)
+
+        heading = QLabel("刷新秘密商店")
+        heading.setObjectName("pageHeading")
+        outer.addWidget(heading)
+
+        scroll = QScrollArea()
+        scroll.setObjectName("featureScrollArea")
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setAutoFillBackground(False)
+        scroll.viewport().setAutoFillBackground(False)
+        content = QWidget()
+        content.setObjectName("featureContent")
+        content_layout = QVBoxLayout(content)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(24)
+
+        settings_card = QFrame()
+        settings_card.setObjectName("settingsCard")
+        settings_layout = QVBoxLayout(settings_card)
+        settings_layout.setContentsMargins(30, 26, 30, 30)
+        settings_layout.setSpacing(24)
+        settings_heading = QLabel("运行设置")
+        settings_heading.setObjectName("cardHeading")
+        settings_layout.addWidget(settings_heading)
+
+        limit_row = QHBoxLayout()
+        self.limit_label = QLabel("天空石消耗上限")
+        self.limit_label.setObjectName("settingLabel")
+        self.limit_input = QLineEdit("0")
+        self.limit_input.setObjectName("refreshLimitInput")
+        self.limit_input.setValidator(_RefreshLimitValidator(self.limit_input))
+        self.limit_input.setMaxLength(len(str(_MAX_REFRESH_LIMIT)))
+        self.limit_input.setInputMethodHints(Qt.InputMethodHint.ImhDigitsOnly)
+        self.limit_input.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+        )
+        self.limit_input.setFixedSize(260, 56)
+        self.limit_label.setBuddy(self.limit_input)
+        limit_row.addWidget(self.limit_label)
+        limit_row.addStretch(1)
+        limit_row.addWidget(self.limit_input)
+        settings_layout.addLayout(limit_row)
+
+        friendship_row = QHBoxLayout()
+        friendship_label = QLabel("购买友情点数")
+        friendship_label.setObjectName("settingLabel")
+        self.friendship_toggle = _ToggleSwitch()
+        friendship_row.addWidget(friendship_label)
+        friendship_row.addStretch(1)
+        friendship_row.addWidget(self.friendship_toggle)
+        settings_layout.addLayout(friendship_row)
+
+        self.start_button = QPushButton("启动脚本")
+        self.start_button.setObjectName("startButton")
+        self.start_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.start_button.setFixedHeight(68)
+        settings_layout.addWidget(self.start_button)
+        _add_card_shadow(settings_card)
+        content_layout.addWidget(settings_card)
+
+        shortcut_card = QFrame()
+        shortcut_card.setObjectName("shortcutCard")
+        shortcut_layout = QVBoxLayout(shortcut_card)
+        shortcut_layout.setContentsMargins(30, 24, 30, 26)
+        shortcut_layout.setSpacing(16)
+        shortcut_heading = QLabel("运行快捷键")
+        shortcut_heading.setObjectName("cardHeading")
+        shortcut_layout.addWidget(shortcut_heading)
+        shortcut_items = QHBoxLayout()
+        shortcut_items.setSpacing(16)
+        shortcut_items.addWidget(self._keycap("F5"))
+        shortcut_items.addWidget(QLabel("结束脚本"))
+        shortcut_items.addSpacing(28)
+        shortcut_items.addWidget(self._keycap("F6"))
+        shortcut_items.addWidget(QLabel("移动悬浮窗"))
+        shortcut_items.addStretch(1)
+        shortcut_layout.addLayout(shortcut_items)
+        _add_card_shadow(shortcut_card)
+        content_layout.addWidget(shortcut_card)
+        content_layout.addStretch(1)
+        scroll.setWidget(content)
+        outer.addWidget(scroll, 1)
+
+    @staticmethod
+    def _keycap(text: str) -> QLabel:
+        label = QLabel(text)
+        label.setObjectName("keycap")
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setFixedSize(52, 44)
+        return label
+
+
+class _WindowControlButton(QPushButton):
+    _VALID_CONTROL_TYPES = {"minimize", "maximize", "restore", "close"}
+    _ICON_STROKE_WIDTH = 1.4
+    _RESTORE_ICON_SIZE = 12
+
+    def __init__(self, control_type: str, parent: QWidget | None = None) -> None:
+        super().__init__("", parent)
+        if control_type not in self._VALID_CONTROL_TYPES:
+            raise ValueError(f"Unsupported window control type: {control_type}")
+        self._control_type = control_type
+        restore_family = (
+            "Segoe Fluent Icons"
+            if "Segoe Fluent Icons" in QFontDatabase.families()
+            else "Segoe MDL2 Assets"
+        )
+        self._restore_font = QFont(restore_family)
+        self._restore_font.setPixelSize(self._RESTORE_ICON_SIZE)
+
+    def set_control_type(self, control_type: str) -> None:
+        if control_type not in self._VALID_CONTROL_TYPES:
+            raise ValueError(f"Unsupported window control type: {control_type}")
+        if control_type == self._control_type:
+            return
+        self._control_type = control_type
+        self.update()
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.translate(QPointF(self.rect().center()))
+
+        color = QColor("#111417")
+        if not self.isEnabled():
+            color = QColor("#8d9399")
+        elif self._control_type == "close" and self.underMouse():
+            color = QColor("#ffffff")
+
+        pen = QPen(color)
+        pen.setWidthF(self._ICON_STROKE_WIDTH)
+        pen.setCapStyle(Qt.PenCapStyle.SquareCap)
+        pen.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
+        painter.setPen(pen)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+
+        if self._control_type == "minimize":
+            painter.drawLine(QPointF(-6.0, 3.0), QPointF(6.0, 3.0))
+        elif self._control_type == "maximize":
+            painter.drawRect(QRectF(-5.0, -5.0, 10.0, 10.0))
+        elif self._control_type == "restore":
+            painter.setFont(self._restore_font)
+            painter.drawText(
+                QRectF(-7.0, -7.0, 14.0, 14.0),
+                Qt.AlignmentFlag.AlignCenter,
+                "\ue923",
+            )
+        else:
+            pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+            painter.setPen(pen)
+            painter.drawLine(QPointF(-5.0, -5.0), QPointF(5.0, 5.0))
+            painter.drawLine(QPointF(5.0, -5.0), QPointF(-5.0, 5.0))
+
+
+class _HighDpiIconLabel(QLabel):
+    def __init__(
+        self,
+        icon_path: Path,
+        size: QSize,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._icon = QIcon(str(icon_path))
+        self.setFixedSize(size)
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._refresh_pixmap()
+
+    def _refresh_pixmap(self) -> None:
+        device_pixel_ratio = self.devicePixelRatioF()
+        self.setPixmap(self._icon.pixmap(self.size(), device_pixel_ratio))
+
+    def showEvent(self, event: QEvent) -> None:
+        super().showEvent(event)
+        self._refresh_pixmap()
+
+    def event(self, event: QEvent) -> bool:
+        handled = super().event(event)
+        if event.type() == QEvent.Type.DevicePixelRatioChange:
+            QTimer.singleShot(0, self._refresh_pixmap)
+        return handled
+
+
+class _TitleBar(QWidget):
+    _HEIGHT = 50
+    _ICON_SIZE = QSize(32, 32)
+    _CONTROL_SIZE = QSize(44, 34)
+
+    def __init__(
+        self,
+        window: QMainWindow,
+        icon_path: Path,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._window = window
+        self.setObjectName("titleBar")
+        self.setProperty("windowMaximized", False)
+        self.setFixedHeight(self._HEIGHT)
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(14, 4, 6, 4)
+        layout.setSpacing(8)
+
+        icon_label = _HighDpiIconLabel(icon_path, self._ICON_SIZE)
+        icon_label.setObjectName("titleBarIcon")
+        icon_label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        title = QLabel("E7auto")
+        title.setObjectName("windowTitle")
+        title.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        layout.addWidget(icon_label)
+        layout.addWidget(title)
+        layout.addStretch(1)
+
+        self._minimize = self._window_button(
+            "minimize", "最小化", "minimizeButton"
+        )
+        self._maximize = self._window_button(
+            "maximize", "最大化", "maximizeButton"
+        )
+        self._close = self._window_button("close", "关闭", "closeButton")
+        self._minimize.clicked.connect(window.showMinimized)
+        self._maximize.clicked.connect(self._toggle_maximized)
+        self._close.clicked.connect(window.close)
+        layout.addWidget(self._minimize)
+        layout.addWidget(self._maximize)
+        layout.addWidget(self._close)
+
+    @staticmethod
+    def _window_button(
+        control_type: str,
+        accessible_name: str,
+        object_name: str,
+    ) -> _WindowControlButton:
+        button = _WindowControlButton(control_type)
+        button.setObjectName(object_name)
+        button.setProperty("windowControl", True)
+        button.setAccessibleName(accessible_name)
+        button.setCursor(Qt.CursorShape.ArrowCursor)
+        button.setFixedSize(_TitleBar._CONTROL_SIZE)
+        return button
+
+    def _toggle_maximized(self) -> None:
+        if self._window.isMaximized():
+            self._window.showNormal()
+        else:
+            self._window.showMaximized()
+
+    def sync_maximize_state(self) -> None:
+        maximized = self._window.isMaximized()
+        self._maximize.set_control_type("restore" if maximized else "maximize")
+        self._maximize.setAccessibleName("还原" if maximized else "最大化")
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            handle = self._window.windowHandle()
+            if handle is not None and handle.startSystemMove():
+                event.accept()
+                return
+        super().mousePressEvent(event)
+
+    def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._toggle_maximized()
+            event.accept()
+            return
+        super().mouseDoubleClickEvent(event)
+
+
+class _ResizeHandle(QWidget):
+    def __init__(
+        self,
+        window: QMainWindow,
+        edges: Qt.Edge,
+        cursor: Qt.CursorShape,
+    ) -> None:
+        super().__init__(window)
+        self._window = window
+        self._edges = edges
+        self.setObjectName("resizeHandle")
+        self.setCursor(cursor)
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            handle = self._window.windowHandle()
+            if handle is not None and handle.startSystemResize(self._edges):
+                event.accept()
+                return
+        super().mousePressEvent(event)
+
+
 class MainWindow(QMainWindow):
+    _MINIMUM_SIZE = QSize(760, 560)
+    _INITIAL_SIZE = QSize(1180, 760)
+
     def __init__(self, project_root: Path):
         super().__init__()
         self._project_root = project_root
@@ -564,31 +1192,235 @@ class MainWindow(QMainWindow):
         self._thread: QThread | None = None
         self._worker: AutomationWorker | None = None
         self._entered_inventory = False
+        self._resize_handles: list[_ResizeHandle] = []
 
-        self.setWindowTitle("E7auto")
-        central = QWidget()
-        layout = QVBoxLayout(central)
-        limit_row = QHBoxLayout()
-        self._limit_label = QLabel("刷新货币消耗上限")
-        self._limit = QLineEdit("0")
-        self._limit.setObjectName("refreshLimitInput")
-        self._limit.setValidator(_RefreshLimitValidator(self._limit))
-        self._limit.setMaxLength(len(str(_MAX_REFRESH_LIMIT)))
-        self._limit.setInputMethodHints(Qt.InputMethodHint.ImhDigitsOnly)
-        self._limit.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self._limit_label.setBuddy(self._limit)
-        limit_row.addWidget(self._limit_label)
-        limit_row.addWidget(self._limit, 1)
-        self._friendship_points = QCheckBox("购买友情点数")
-        self._friendship_points.setChecked(False)
-        self._start = QPushButton("启动脚本")
+        icon_path = project_root / "assets" / "ui" / "e7auto.ico"
+        self.setWindowTitle("E7AUTO")
+        self.setWindowIcon(QIcon(str(icon_path)))
+        self.setWindowFlags(
+            Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint
+        )
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        self.setMinimumSize(self._MINIMUM_SIZE)
+        self.resize(self._INITIAL_SIZE)
+
+        self._shell = QFrame()
+        self._shell.setObjectName("appShell")
+        self._shell.setProperty("windowMaximized", False)
+        shell_layout = QVBoxLayout(self._shell)
+        shell_layout.setContentsMargins(0, 0, 0, 0)
+        shell_layout.setSpacing(0)
+        self._title_bar = _TitleBar(self, icon_path)
+        shell_layout.addWidget(self._title_bar)
+
+        self._pages = QStackedWidget()
+        self._pages.setObjectName("pageStack")
+        self._function_center_page = _FunctionCenterPage(project_root)
+        self._shop_feature_page = _ShopFeaturePage()
+        self._pages.addWidget(self._function_center_page)
+        self._pages.addWidget(self._shop_feature_page)
+        self._pages.setCurrentWidget(self._function_center_page)
+        shell_layout.addWidget(self._pages, 1)
+        self.setCentralWidget(self._shell)
+
+        self._module_pages = {"shop_refresh": self._shop_feature_page}
+        self._function_center_page.module_requested.connect(self._show_module_page)
+        self._shop_feature_page.back_requested.connect(self._show_function_center)
+        self._limit_label = self._shop_feature_page.limit_label
+        self._limit = self._shop_feature_page.limit_input
+        self._friendship_points = self._shop_feature_page.friendship_toggle
+        self._start = self._shop_feature_page.start_button
         self._start.clicked.connect(self._start_run)
         self._limit.textChanged.connect(self._on_limit_text_changed)
-        layout.addLayout(limit_row)
-        layout.addWidget(self._friendship_points)
-        layout.addWidget(self._start)
-        self.setCentralWidget(central)
-        self.setFixedSize(360, 140)
+        self._resize_handles = self._create_resize_handles()
+        self._apply_styles()
+
+    def _apply_styles(self) -> None:
+        self.setStyleSheet(
+            """
+            QMainWindow { background: transparent; }
+            QFrame#appShell {
+                background: #f2f3f5;
+                border: 1px solid #cfd3d7;
+                border-radius: 12px;
+            }
+            QFrame#appShell[windowMaximized="true"] {
+                border: none;
+                border-radius: 0;
+            }
+            QWidget#titleBar {
+                background: #f5f6f7;
+                border-bottom: 1px solid #d9dce0;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+            }
+            QWidget#titleBar[windowMaximized="true"] {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+            QLabel#titleBarIcon { border-radius: 4px; }
+            QLabel#windowTitle {
+                color: #14171a;
+                font-family: "Segoe UI";
+                font-size: 18px;
+                font-weight: 600;
+            }
+            QPushButton[windowControl="true"] {
+                border: none;
+                border-radius: 7px;
+                background: transparent;
+                color: #111417;
+            }
+            QPushButton[windowControl="true"]:hover { background: #e3e5e8; }
+            QPushButton#closeButton:hover { background: #e5565d; color: white; }
+            QStackedWidget#pageStack,
+            QWidget#functionCenterPage,
+            QWidget#shopFeaturePage,
+            QWidget#moduleCardHost,
+            QWidget#featureContent,
+            QScrollArea#moduleScrollArea,
+            QScrollArea#featureScrollArea,
+            QScrollArea#moduleScrollArea > QWidget > QWidget,
+            QScrollArea#featureScrollArea > QWidget > QWidget {
+                background: transparent;
+                border: none;
+            }
+            QLabel {
+                color: #15181b;
+                font-family: "Microsoft YaHei UI", "Segoe UI";
+                font-size: 17px;
+            }
+            QLabel#pageHeading {
+                color: #101214;
+                font-size: 36px;
+                font-weight: 700;
+            }
+            QLabel#cardHeading {
+                color: #121518;
+                font-size: 22px;
+                font-weight: 700;
+            }
+            QLabel#settingLabel { font-size: 18px; }
+            QFrame#settingsCard, QFrame#shortcutCard {
+                background: #ffffff;
+                border: 1px solid #d7dade;
+                border-radius: 14px;
+            }
+            QLineEdit#refreshLimitInput {
+                background: #fbfbfc;
+                color: #111417;
+                border: 1px solid #d3d6da;
+                border-radius: 9px;
+                padding: 0 18px;
+                font-family: "Segoe UI";
+                font-size: 20px;
+            }
+            QLineEdit#refreshLimitInput:focus { border: 1px solid #8c9299; }
+            QPushButton#startButton {
+                background: #26985a;
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                font-size: 20px;
+                font-weight: 600;
+            }
+            QPushButton#startButton:hover { background: #228a50; }
+            QPushButton#startButton:pressed { background: #1d7846; }
+            QPushButton#startButton:disabled { background: #b8bdc1; color: #eef0f1; }
+            QPushButton#backToModulesButton {
+                background: transparent;
+                color: #1d2023;
+                border: none;
+                padding: 4px 2px;
+                font-size: 17px;
+                text-align: left;
+            }
+            QPushButton#backToModulesButton:hover { color: #26985a; }
+            QLabel#keycap {
+                background: #eef0f2;
+                border: 1px solid #d7dade;
+                border-radius: 8px;
+                color: #1b1e21;
+                font-family: "Segoe UI";
+                font-size: 17px;
+            }
+            QScrollBar:vertical {
+                width: 10px;
+                background: transparent;
+                margin: 2px;
+            }
+            QScrollBar::handle:vertical {
+                min-height: 34px;
+                background: #c6cbd0;
+                border-radius: 4px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+            """
+        )
+
+    def _create_resize_handles(self) -> list[_ResizeHandle]:
+        definitions = (
+            (Qt.Edge.TopEdge, Qt.CursorShape.SizeVerCursor),
+            (Qt.Edge.BottomEdge, Qt.CursorShape.SizeVerCursor),
+            (Qt.Edge.LeftEdge, Qt.CursorShape.SizeHorCursor),
+            (Qt.Edge.RightEdge, Qt.CursorShape.SizeHorCursor),
+            (
+                Qt.Edge.TopEdge | Qt.Edge.LeftEdge,
+                Qt.CursorShape.SizeFDiagCursor,
+            ),
+            (
+                Qt.Edge.TopEdge | Qt.Edge.RightEdge,
+                Qt.CursorShape.SizeBDiagCursor,
+            ),
+            (
+                Qt.Edge.BottomEdge | Qt.Edge.LeftEdge,
+                Qt.CursorShape.SizeBDiagCursor,
+            ),
+            (
+                Qt.Edge.BottomEdge | Qt.Edge.RightEdge,
+                Qt.CursorShape.SizeFDiagCursor,
+            ),
+        )
+        return [_ResizeHandle(self, edges, cursor) for edges, cursor in definitions]
+
+    def _layout_resize_handles(self) -> None:
+        if not self._resize_handles:
+            return
+        width = self.width()
+        height = self.height()
+        edge = 6
+        corner = 14
+        geometries = (
+            QRect(corner, 0, max(0, width - 2 * corner), edge),
+            QRect(corner, height - edge, max(0, width - 2 * corner), edge),
+            QRect(0, corner, edge, max(0, height - 2 * corner)),
+            QRect(width - edge, corner, edge, max(0, height - 2 * corner)),
+            QRect(0, 0, corner, corner),
+            QRect(width - corner, 0, corner, corner),
+            QRect(0, height - corner, corner, corner),
+            QRect(width - corner, height - corner, corner, corner),
+        )
+        for handle, geometry in zip(self._resize_handles, geometries, strict=True):
+            handle.setGeometry(geometry)
+            handle.setVisible(not self.isMaximized())
+            handle.raise_()
+
+    @Slot()
+    def _show_shop_page(self) -> None:
+        self._show_module_page("shop_refresh")
+
+    @Slot(str)
+    def _show_module_page(self, module_id: str) -> None:
+        page = self._module_pages.get(module_id)
+        if page is None:
+            return
+        self._pages.setCurrentWidget(page)
+        self._limit.setFocus()
+
+    @Slot()
+    def _show_function_center(self) -> None:
+        if self._thread is None:
+            self._pages.setCurrentWidget(self._function_center_page)
 
     def _validated_refresh_limit(self) -> int | None:
         if not self._limit.hasAcceptableInput():
@@ -627,6 +1459,7 @@ class MainWindow(QMainWindow):
         self._start.setEnabled(False)
         self._limit.setEnabled(False)
         self._friendship_points.setEnabled(False)
+        self._shop_feature_page.back_button.setEnabled(False)
         thread = QThread(self)
         worker = AutomationWorker(
             config,
@@ -658,6 +1491,7 @@ class MainWindow(QMainWindow):
         self._overlay.stop_elapsed_timer()
         self._limit.setEnabled(True)
         self._friendship_points.setEnabled(True)
+        self._shop_feature_page.back_button.setEnabled(True)
         self._thread = None
         self._worker = None
         self._start.setEnabled(self._validated_refresh_limit() is not None)
@@ -665,6 +1499,25 @@ class MainWindow(QMainWindow):
             self.showNormal()
             self.raise_()
             self.activateWindow()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        super().resizeEvent(event)
+        self._layout_resize_handles()
+
+    def changeEvent(self, event: QEvent) -> None:
+        super().changeEvent(event)
+        if event.type() == QEvent.Type.WindowStateChange:
+            QTimer.singleShot(0, self._sync_window_state_appearance)
+
+    def _sync_window_state_appearance(self) -> None:
+        maximized = self.isMaximized()
+        for widget in (self._shell, self._title_bar):
+            widget.setProperty("windowMaximized", maximized)
+            widget.style().unpolish(widget)
+            widget.style().polish(widget)
+            widget.update()
+        self._title_bar.sync_maximize_state()
+        self._layout_resize_handles()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self._thread is not None:
