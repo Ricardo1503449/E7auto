@@ -16,6 +16,14 @@ if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
     throw "Missing source configuration: $sourceConfig"
 }
 $releaseConfig = Join-Path $projectRoot "dist\internal.release.yaml"
+$uiAssetDir = Join-Path $projectRoot "assets\ui"
+$appIcon = Join-Path $uiAssetDir "e7auto.ico"
+if (-not (Test-Path -LiteralPath $appIcon -PathType Leaf)) {
+    throw "Missing application icon: $appIcon"
+}
+if (-not (Test-Path -LiteralPath (Join-Path $uiAssetDir "shop-card-background.png") -PathType Leaf)) {
+    throw "Missing shop card background"
+}
 
 New-Item -ItemType Directory -Path (Join-Path $projectRoot "dist") -Force | Out-Null
 
@@ -39,11 +47,13 @@ try {
         --enable-plugin=pyside6 `
         --windows-uac-admin `
         --windows-console-mode=attach `
+        --windows-icon-from-ico=$appIcon `
         --output-dir=dist `
         --output-filename=E7auto.exe `
         --include-package=e7auto `
         --include-data-file=$releaseConfig=config/internal.yaml `
         --include-data-dir=assets/templates=assets/templates `
+        --include-data-dir=assets/ui=assets/ui `
         --include-data-file=$usageGuideInclude `
         --assume-yes-for-downloads `
         launcher.py

@@ -12,6 +12,50 @@ import yaml
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
+UI_ICON_SIZES = (16, 24, 32, 48, 64, 128, 256, 1024)
+
+
+def verify_ui_assets(ui_dir: Path) -> list[str]:
+    problems: list[str] = []
+    required_pngs = {
+        f"e7auto-icon-{size}.png": (size, size) for size in UI_ICON_SIZES
+    }
+    required_pngs["shop-card-background.png"] = None
+    for name, expected_size in required_pngs.items():
+        path = ui_dir / name
+        if not path.is_file():
+            problems.append(f"missing UI asset: {name}")
+            continue
+        image = cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        if image is None or image.size == 0:
+            problems.append(f"invalid UI asset: {name}")
+            continue
+        if expected_size is not None and (image.shape[1], image.shape[0]) != expected_size:
+            problems.append(f"UI icon has wrong dimensions: {name}")
+
+    ico_path = ui_dir / "e7auto.ico"
+    if not ico_path.is_file():
+        problems.append("missing UI asset: e7auto.ico")
+        return problems
+    try:
+        with ico_path.open("rb") as stream:
+            reserved, icon_type, count = struct.unpack("<HHH", stream.read(6))
+            sizes: set[int] = set()
+            for _ in range(count):
+                width, height, _colors, _reserved, _planes, _bits, _length, _offset = struct.unpack(
+                    "<BBBBHHII", stream.read(16)
+                )
+                decoded_width = 256 if width == 0 else width
+                decoded_height = 256 if height == 0 else height
+                if decoded_width == decoded_height:
+                    sizes.add(decoded_width)
+        if reserved != 0 or icon_type != 1:
+            problems.append("invalid UI icon header: e7auto.ico")
+        if not set(UI_ICON_SIZES[:-1]).issubset(sizes):
+            problems.append("UI icon is missing required Windows sizes")
+    except (OSError, struct.error):
+        problems.append("invalid UI asset: e7auto.ico")
+    return problems
 
 
 def verify_template_assets(template_dir: Path) -> list[str]:
@@ -365,6 +409,11 @@ def main() -> int:
         problems.append("missing templates directory")
     else:
         problems.extend(verify_template_assets(template_dir))
+    ui_dir = release / "assets" / "ui"
+    if not ui_dir.is_dir():
+        problems.append("missing UI assets directory")
+    else:
+        problems.extend(verify_ui_assets(ui_dir))
     if any(path.name == ".venv" for path in release.rglob(".venv")):
         problems.append(".venv was bundled")
     if (release / "logs").exists():
