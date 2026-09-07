@@ -28,12 +28,17 @@ from e7auto.domain import (
     StopReason,
     TargetTally,
 )
+from e7auto.config import Rect, load_config
 import e7auto.ui as ui_module
-from e7auto.ui import MainWindow, OverlayMoveCommand, StatsOverlay
+from e7auto.ui import MainWindow, OverlayCommand, StatsOverlay
 from e7auto.overlay_position import OverlayPositionStore, SavedOverlayPosition
 
 from tests.helpers import make_config
-from scripts.verify_release import verify_ui_assets
+from scripts.verify_release import (
+    verify_forbidden_release_files,
+    verify_required_release_files,
+    verify_ui_assets,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,6 +101,14 @@ def test_main_window_has_approved_shop_controls_and_resizable_shell(
         assert all(
             button.size() == QSize(44, 34)
             for button in (minimize, maximize, close)
+        )
+        assert [
+            label.text()
+            for label in window.findChildren(QLabel, "keycap")
+        ] == ["F5"]
+        assert not any(
+            label.text() in {"F6", "移动悬浮窗"}
+            for label in window.findChildren(QLabel)
         )
         assert [button.text() for button in (minimize, maximize, close)] == ["", "", ""]
         assert minimize._control_type == "minimize"
@@ -309,6 +322,52 @@ def test_ui_assets_and_standalone_build_are_wired() -> None:
     )
     assert "--windows-icon-from-ico=$appIcon" in build_script
     assert "--include-data-dir=assets/ui=assets/ui" in build_script
+    assert "--include-package=winrt.windows.foundation" in build_script
+    assert "--include-module=winrt._winrt_windows_foundation" in build_script
+    assert "--noinclude-dlls=cv2/opencv_videoio_ffmpeg*.dll" in build_script
+    assert (
+        "--noinclude-dlls=PySide6/qt-plugins/imageformats/qpdf.dll"
+        in build_script
+    )
+    assert "--noinclude-dlls=qt6pdf.dll" in build_script
+    assert '"E7auto_v${version}_x64.zip"' in build_script
+    assert "Compress-Archive" in build_script
+    assert "Failed builds/archives never reach this cleanup" in build_script
+    assert "Remove-Item -LiteralPath $resolvedOldReleaseZip -Force" in build_script
+    assert build_script.index("Compress-Archive") < build_script.index(
+        "Remove-Item -LiteralPath $resolvedOldReleaseZip -Force"
+    )
+
+
+def test_release_verifier_rejects_approved_forbidden_files(tmp_path: Path) -> None:
+    forbidden = (
+        tmp_path / "cv2" / "opencv_videoio_ffmpeg500_64.dll",
+        tmp_path / "PySide6" / "qt-plugins" / "imageformats" / "qpdf.dll",
+        tmp_path / "qt6pdf.dll",
+    )
+    for path in forbidden:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
+
+    assert verify_forbidden_release_files(tmp_path) == [
+        "forbidden release file was bundled: cv2/opencv_videoio_ffmpeg500_64.dll",
+        "forbidden release file was bundled: PySide6/qt-plugins/imageformats/qpdf.dll",
+        "forbidden release file was bundled: qt6pdf.dll",
+    ]
+
+
+def test_release_verifier_requires_winrt_foundation_projection(
+    tmp_path: Path,
+) -> None:
+    assert verify_required_release_files(tmp_path) == [
+        "missing required release file: winrt/_winrt_windows_foundation.pyd"
+    ]
+
+    foundation = tmp_path / "winrt" / "_winrt_windows_foundation.pyd"
+    foundation.parent.mkdir(parents=True)
+    foundation.touch()
+
+    assert verify_required_release_files(tmp_path) == []
 
 
 def test_refresh_limit_is_handed_to_worker_as_an_integer(
@@ -438,8 +497,198 @@ def test_stats_overlay_keeps_one_size_for_all_runtime_values() -> None:
         assert not overlay._elapsed_timer.isActive()
         assert overlay.isVisible()
         assert overlay._status.text() == "当前状态：已停止"
-        assert overlay._hint.text() == "F5结束 / F6移动"
+        assert overlay._hint.text() == "F5结束"
         assert all(label.sizeHint().width() <= label.width() for label in overlay.findChildren(QLabel))
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
+def test_stats_overlay_close_button_is_available_only_after_stop() -> None:
+    application = QApplication.instance() or QApplication([])
+    overlay = StatsOverlay()
+    config = make_config()
+    targets = tuple(
+        (target.target_id, target.display_name) for target in config.targets
+    )
+    try:
+        overlay.configure(config)
+        overlay.show()
+        initial = RuntimeSnapshot.initial("dismiss-overlay", targets, 0)
+        overlay.update_snapshot(initial)
+        application.processEvents()
+
+        button = overlay.findChild(QPushButton, "overlayCloseButton")
+        panel = overlay.findChild(QWidget, "panel")
+        assert button is not None
+        assert panel is not None
+        assert not button.isVisible()
+        assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+
+        overlay.update_snapshot(initial.finalized(StopReason.BUDGET_COMPLETE))
+        application.processEvents()
+
+        assert button.isVisible()
+        assert button.accessibleName() == "关闭悬浮窗"
+        assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        assert button.geometry().top() == 4
+        assert button.geometry().right() == panel.rect().right() - 4
+        assert overlay.isVisible()
+
+        QTest.mouseClick(button, Qt.MouseButton.LeftButton)
+        application.processEvents()
+        assert not overlay.isVisible()
+
+        overlay.configure(config)
+        overlay.show()
+        overlay.update_snapshot(RuntimeSnapshot.initial("next-run", targets, 0))
+        application.processEvents()
+        assert not button.isVisible()
+        assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
+def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
+    tmp_path: Path,
+) -> None:
+    application = QApplication.instance() or QApplication([])
+    store = OverlayPositionStore(tmp_path / "overlay.json")
+    overlay = StatsOverlay(
+        store,
+        ROOT / "assets" / "ui" / "e7auto-icon-256.png",
+    )
+    config = make_config()
+    try:
+        overlay.configure(config)
+        overlay.show()
+        application.processEvents()
+
+        panel = overlay.findChild(QWidget, "panel")
+        collapse = overlay.findChild(QPushButton, "overlayCollapseButton")
+        close = overlay.findChild(QPushButton, "overlayCloseButton")
+        icon = overlay.findChild(QWidget, "collapsedOverlayIcon")
+        assert panel is not None
+        assert collapse is not None
+        assert close is not None
+        assert icon is not None
+        assert collapse.text() == "收起"
+        assert collapse.font().pixelSize() == overlay._FONT_SIZE_PX
+        assert f"background: {overlay._ACCENT_GREEN}" in overlay.styleSheet()
+        assert (collapse.geometry().left(), collapse.geometry().top()) == (4, 4)
+        assert close.geometry().top() == collapse.geometry().top()
+        assert panel.isVisible()
+        assert not icon.isVisible()
+
+        overlay.move(100, 100)
+        QTest.mouseClick(collapse, Qt.MouseButton.LeftButton)
+        application.processEvents()
+
+        assert overlay._collapsed
+        assert not panel.isVisible()
+        assert icon.isVisible()
+        assert overlay.size() == QSize(
+            overlay._COLLAPSED_DIAMETER_PX,
+            overlay._COLLAPSED_DIAMETER_PX,
+        )
+        assert not overlay._collapsed_icon._logo.isNull()
+
+        QTest.mousePress(
+            overlay,
+            Qt.MouseButton.LeftButton,
+            pos=QPoint(34, 34),
+        )
+        QTest.mouseMove(overlay, QPoint(54, 54), delay=10)
+        QTest.mouseRelease(
+            overlay,
+            Qt.MouseButton.LeftButton,
+            pos=QPoint(54, 54),
+        )
+        application.processEvents()
+
+        assert overlay.pos() == QPoint(120, 120)
+        assert overlay._collapsed
+        assert store.load() == SavedOverlayPosition(120, 120)
+
+        QTest.mouseClick(
+            overlay,
+            Qt.MouseButton.LeftButton,
+            pos=overlay.rect().center(),
+        )
+        application.processEvents()
+
+        assert not overlay._collapsed
+        assert panel.isVisible()
+        assert not icon.isVisible()
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
+def test_covenant_and_mystic_overlay_rows_are_green() -> None:
+    application = QApplication.instance() or QApplication([])
+    overlay = StatsOverlay()
+    config = load_config(ROOT / "config" / "internal.yaml")
+    try:
+        overlay.configure(config)
+        overlay.show()
+        application.processEvents()
+
+        assert overlay._ACCENT_GREEN == "#26985a"
+        assert overlay._TARGET_TEXT_GREEN == "#04d86a"
+        assert overlay._target_labels["covenant_bookmark"].styleSheet() == (
+            f"color: {overlay._TARGET_TEXT_GREEN};"
+        )
+        assert overlay._target_labels["mystic_medal"].styleSheet() == (
+            f"color: {overlay._TARGET_TEXT_GREEN};"
+        )
+        assert overlay._target_labels["friendship_points"].styleSheet() == ""
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
+def test_collapsed_logo_uses_physical_pixels_for_200_percent_dpi() -> None:
+    application = QApplication.instance() or QApplication([])
+    overlay = StatsOverlay(
+        logo_path=ROOT / "assets" / "ui" / "e7auto-icon-256.png"
+    )
+    try:
+        scaled = overlay._collapsed_icon._logo_for_dpr(64, 2.0)
+        first_cache_key = scaled.cacheKey()
+
+        assert (scaled.width(), scaled.height()) == (128, 128)
+        assert scaled.devicePixelRatio() == 2.0
+        assert scaled.deviceIndependentSize() == QSize(64, 64)
+        assert overlay._collapsed_icon._logo_for_dpr(64, 2.0).cacheKey() == (
+            first_cache_key
+        )
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
+def test_each_overlay_configuration_restores_the_full_panel() -> None:
+    application = QApplication.instance() or QApplication([])
+    overlay = StatsOverlay(
+        logo_path=ROOT / "assets" / "ui" / "e7auto-icon-256.png"
+    )
+    config = make_config()
+    try:
+        overlay.configure(config)
+        overlay.show()
+        overlay._collapse_overlay()
+        application.processEvents()
+        assert overlay._collapsed
+
+        overlay.configure(config)
+        application.processEvents()
+
+        assert not overlay._collapsed
+        assert overlay._panel.isVisible()
+        assert not overlay._collapsed_icon.isVisible()
+        assert overlay.size() == overlay._expanded_size
     finally:
         overlay.close()
         application.processEvents()
@@ -508,7 +757,7 @@ def test_stats_overlay_uses_centered_symmetric_longest_line_layout() -> None:
         assert overlay._elapsed.text() == "已耗时：0时0分0秒"
         assert overlay._no_target.text() == "已经9999999次未出货"
         assert overlay._status.text() == "当前状态：转运ing..."
-        assert overlay._hint.text() == "F5结束 / F6移动"
+        assert overlay._hint.text() == "F5结束"
         assert all(
             label.alignment() & Qt.AlignmentFlag.AlignHCenter for label in labels
         )
@@ -565,7 +814,7 @@ def test_overlay_uses_saved_position_then_falls_back_for_offscreen_state(
         application.processEvents()
 
 
-def test_move_mode_restores_click_through_and_persists_locked_position(
+def test_overlay_is_always_draggable_and_saves_position_after_move(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -573,37 +822,24 @@ def test_move_mode_restores_click_through_and_persists_locked_position(
     store = OverlayPositionStore(tmp_path / "overlay.json")
     overlay = StatsOverlay(store)
     overlay.configure(make_config())
-    styles = [0]
+    styles = [ui_module.win32con.WS_EX_TRANSPARENT]
     monkeypatch.setattr(ui_module.win32gui, "GetWindowLong", lambda *_args: styles[-1])
     monkeypatch.setattr(
         ui_module.win32gui,
         "SetWindowLong",
         lambda _hwnd, _index, style: styles.append(style),
     )
-    monkeypatch.setattr(ui_module, "exclude_window_from_capture", lambda _hwnd: True)
-    monkeypatch.setattr(
-        ui_module,
-        "get_window_display_affinity",
-        lambda _hwnd: ui_module.WDA_EXCLUDEFROMCAPTURE,
-    )
     try:
-        overlay.show()
+        command = OverlayCommand(Rect(100, 200, 100, 80), threading.Event())
+        overlay._apply_command(command)
+        assert command.result
+        assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        assert overlay._hint.text() == "F5结束"
+        assert not styles[-1] & ui_module.win32con.WS_EX_TRANSPARENT
+
         overlay.move(123, 234)
         application.processEvents()
-
-        begin = OverlayMoveCommand(True, threading.Event())
-        overlay._apply_move_command(begin)
-        assert begin.result
-        assert overlay._moving
-        assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        assert overlay._hint.text() == "F5结束 / F6移动"
-
-        finish = OverlayMoveCommand(False, threading.Event())
-        overlay._apply_move_command(finish)
-        assert finish.result
-        assert not overlay._moving
-        assert overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        assert styles[-1] & ui_module.win32con.WS_EX_TRANSPARENT
+        overlay._save_position()
         saved = store.load()
         assert saved is not None
         assert (saved.x, saved.y) == (
