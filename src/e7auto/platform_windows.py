@@ -8,9 +8,6 @@ from ctypes import wintypes
 from pathlib import Path
 from typing import Callable
 
-import mss
-import mss.windows.gdi as mss_gdi
-import numpy as np
 import pywintypes
 import win32api
 import win32con
@@ -18,14 +15,7 @@ import win32gui
 import win32process
 
 from .config import Point, Rect, Size
-from .ports import DisplayGeometry, Frame, WindowRef, WindowState
-
-
-WDA_NONE = 0x00
-WDA_EXCLUDEFROMCAPTURE = 0x11
-_CLICK_HOVER_SECONDS = 0.10
-_CLICK_HOLD_SECONDS = 0.05
-_MSS_GDI_RASTER_OPERATION_LOCK = threading.Lock()
+from .ports import DisplayGeometry, WindowRef, WindowState
 
 
 class WindowLookupError(RuntimeError):
@@ -62,6 +52,9 @@ def _process_path(pid: int) -> str:
 
 
 class Win32WindowService:
+    _RESTORE_TIMEOUT_SECONDS = 1.0
+    _RESTORE_POLL_SECONDS = 0.02
+
     def locate_unique(self, executable_path: str, window_title: str) -> WindowRef:
         matches: list[WindowRef] = []
         expected_executable = Path(executable_path)
@@ -84,7 +77,7 @@ class Win32WindowService:
                 else Path(found_path).name.casefold() == expected_name
             )
             if path_matches:
-                matches.append(WindowRef(hwnd, title, Path(found_path).name, found_path))
+                matches.append(WindowRef(hwnd, title, Path(found_path).name, found_path, pid))
             return True
 
         win32gui.EnumWindows(callback, None)
@@ -92,13 +85,21 @@ class Win32WindowService:
             raise WindowLookupError(f"Expected exactly one game window, found {len(matches)}")
         return matches[0]
 
-    def restore_and_foreground(self, window: WindowRef) -> None:
+    def restore_without_activation(self, window: WindowRef) -> None:
         if not win32gui.IsWindow(window.hwnd):
             raise WindowOperationError("Game window no longer exists")
-        win32gui.ShowWindow(window.hwnd, win32con.SW_RESTORE)
-        win32gui.SetForegroundWindow(window.hwnd)
-        if win32gui.GetForegroundWindow() != window.hwnd:
-            raise WindowOperationError("Game window could not be focused")
+        if not win32gui.IsIconic(window.hwnd):
+            return
+        win32gui.ShowWindow(window.hwnd, win32con.SW_SHOWNOACTIVATE)
+        deadline = time.monotonic() + self._RESTORE_TIMEOUT_SECONDS
+        while win32gui.IsIconic(window.hwnd):
+            if not win32gui.IsWindow(window.hwnd):
+                raise WindowOperationError("Game window no longer exists")
+            if time.monotonic() >= deadline:
+                raise WindowOperationError(
+                    "Game window could not be restored without activation"
+                )
+            time.sleep(self._RESTORE_POLL_SECONDS)
 
     @staticmethod
     def _adjusted_outer_rect(hwnd: int, size: Size) -> wintypes.RECT:
@@ -205,6 +206,12 @@ class Win32WindowService:
         exists = bool(win32gui.IsWindow(window.hwnd))
         if not exists:
             return WindowState(False, False, False, Rect(0, 0, 0, 0))
+        _, pid = win32process.GetWindowThreadProcessId(window.hwnd)
+        if (
+            (window.process_id and pid != window.process_id)
+            or win32gui.GetWindowText(window.hwnd) != window.title
+        ):
+            return WindowState(False, False, False, Rect(0, 0, 0, 0))
         client = win32gui.GetClientRect(window.hwnd)
         origin = win32gui.ClientToScreen(window.hwnd, (client[0], client[1]))
         bounds = Rect(origin[0], origin[1], client[2] - client[0], client[3] - client[1])
@@ -218,73 +225,6 @@ class Win32WindowService:
         )
 
 
-class MssCaptureService:
-    def capture_client(self, window: WindowRef, bounds: Rect) -> Frame:
-        del window
-        # MSS 10.2.0's Windows GDI backend combines SRCCOPY with CAPTUREBLT.
-        # Controlled live A/B evidence showed that CAPTUREBLT causes recurring
-        # cursor-display flicker, while pure SRCCOPY captures valid game frames
-        # without that repeated flicker.  Keep the existing per-frame context
-        # lifecycle and override only this pinned backend's raster flag.
-        with _MSS_GDI_RASTER_OPERATION_LOCK:
-            original_captureblt = mss_gdi.CAPTUREBLT
-            mss_gdi.CAPTUREBLT = 0
-            try:
-                with mss.mss() as grabber:
-                    shot = grabber.grab(
-                        {
-                            "left": bounds.x,
-                            "top": bounds.y,
-                            "width": bounds.width,
-                            "height": bounds.height,
-                        }
-                    )
-                    return np.asarray(shot, dtype=np.uint8).copy()
-            finally:
-                mss_gdi.CAPTUREBLT = original_captureblt
-
-
-class Win32InputService:
-    def __init__(self) -> None:
-        self._last_cursor: Point | None = None
-
-    def _set_cursor_pos_if_needed(self, point: Point) -> None:
-        """Move the system cursor only when it is not already at *point*.
-
-        The automation safety gate positions and reads back the cursor before
-        dispatching an input.  ``click``/``scroll`` used to call
-        ``SetCursorPos`` again unconditionally, so every logical input caused
-        two identical cursor-position notifications.  The user observed that
-        suppressing those duplicates reduced, but did not eliminate, flicker.
-        """
-
-        if self._last_cursor != point:
-            win32api.SetCursorPos((point.x, point.y))
-            self._last_cursor = point
-
-    def move(self, point: Point) -> None:
-        self._set_cursor_pos_if_needed(point)
-
-    def position(self) -> Point:
-        x, y = win32api.GetCursorPos()
-        point = Point(int(x), int(y))
-        self._last_cursor = point
-        return point
-
-    def click(self, point: Point) -> None:
-        self._set_cursor_pos_if_needed(point)
-        time.sleep(_CLICK_HOVER_SECONDS)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-        try:
-            time.sleep(_CLICK_HOLD_SECONDS)
-        finally:
-            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
-
-    def scroll(self, point: Point, delta: int) -> None:
-        self._set_cursor_pos_if_needed(point)
-        win32api.mouse_event(win32con.MOUSEEVENTF_WHEEL, 0, 0, delta, 0)
-
-
 class Win32RuntimeEnvironment:
     def is_elevated(self) -> bool:
         return bool(ctypes.windll.shell32.IsUserAnAdmin())
@@ -292,7 +232,6 @@ class Win32RuntimeEnvironment:
 
 class Win32F5HotkeyService:
     _F5_HOTKEY_ID = 0x67A0
-    _F6_HOTKEY_ID = 0x67A1
     _HOTKEY_ID = _F5_HOTKEY_ID
 
     def __init__(self) -> None:
@@ -303,7 +242,6 @@ class Win32F5HotkeyService:
     def register_f5(
         self,
         callback: Callable[[], None],
-        move_callback: Callable[[], None] | None = None,
     ) -> bool:
         if self._thread is not None:
             return False
@@ -313,17 +251,11 @@ class Win32F5HotkeyService:
 
         def loop() -> None:
             self._thread_id = win32api.GetCurrentThreadId()
-            registered_ids: list[int] = []
+            registered = False
             try:
                 win32gui.RegisterHotKey(None, self._F5_HOTKEY_ID, 0, win32con.VK_F5)
-                registered_ids.append(self._F5_HOTKEY_ID)
-                if move_callback is not None:
-                    win32gui.RegisterHotKey(None, self._F6_HOTKEY_ID, 0, win32con.VK_F6)
-                    registered_ids.append(self._F6_HOTKEY_ID)
             except pywintypes.error:
-                for hotkey_id in registered_ids:
-                    win32gui.UnregisterHotKey(None, hotkey_id)
-                registered = False
+                pass
             else:
                 registered = True
             result.append(registered)
@@ -336,14 +268,13 @@ class Win32F5HotkeyService:
                     if not message or message[0] == 0:
                         break
                     _, msg = message
-                    if msg[1] == win32con.WM_HOTKEY:
-                        if msg[2] == self._F5_HOTKEY_ID:
-                            callback()
-                        elif msg[2] == self._F6_HOTKEY_ID and move_callback is not None:
-                            move_callback()
+                    if (
+                        msg[1] == win32con.WM_HOTKEY
+                        and msg[2] == self._F5_HOTKEY_ID
+                    ):
+                        callback()
             finally:
-                for hotkey_id in registered_ids:
-                    win32gui.UnregisterHotKey(None, hotkey_id)
+                win32gui.UnregisterHotKey(None, self._F5_HOTKEY_ID)
 
         self._thread = threading.Thread(target=loop, name="e7auto-f5", daemon=True)
         self._thread.start()
@@ -365,28 +296,3 @@ class Win32F5HotkeyService:
         thread.join(timeout=2.0)
         self._thread = None
         self._thread_id = None
-
-
-def set_window_display_affinity(hwnd: int, affinity: int) -> bool:
-    return bool(ctypes.windll.user32.SetWindowDisplayAffinity(hwnd, affinity))
-
-
-def get_window_display_affinity(hwnd: int) -> int | None:
-    affinity = wintypes.DWORD()
-    succeeded = bool(
-        ctypes.windll.user32.GetWindowDisplayAffinity(
-            hwnd,
-            ctypes.byref(affinity),
-        )
-    )
-    return int(affinity.value) if succeeded else None
-
-
-def dwm_composition_enabled() -> bool:
-    enabled = wintypes.BOOL()
-    succeeded = ctypes.windll.dwmapi.DwmIsCompositionEnabled(ctypes.byref(enabled))
-    return succeeded == 0 and bool(enabled.value)
-
-
-def exclude_window_from_capture(hwnd: int) -> bool:
-    return set_window_display_affinity(hwnd, WDA_EXCLUDEFROMCAPTURE)

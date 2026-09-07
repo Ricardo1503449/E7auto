@@ -11,12 +11,17 @@ from .config import Point, Rect, Size
 Frame = NDArray[np.uint8]
 
 
+class CaptureError(RuntimeError):
+    pass
+
+
 @dataclass(frozen=True, slots=True)
 class WindowRef:
     hwnd: int
     title: str
     process_name: str
     executable_path: str = ""
+    process_id: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,7 +45,7 @@ class DisplayGeometry:
 class WindowService(Protocol):
     def locate_unique(self, executable_path: str, window_title: str) -> WindowRef: ...
 
-    def restore_and_foreground(self, window: WindowRef) -> None: ...
+    def restore_without_activation(self, window: WindowRef) -> None: ...
 
     def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry: ...
 
@@ -60,15 +65,13 @@ class WindowService(Protocol):
 class CaptureService(Protocol):
     def capture_client(self, window: WindowRef, bounds: Rect) -> Frame: ...
 
+    def close(self) -> None: ...
+
 
 class InputService(Protocol):
-    def move(self, point: Point) -> None: ...
+    def click(self, window: WindowRef, point: Point) -> None: ...
 
-    def position(self) -> Point: ...
-
-    def click(self, point: Point) -> None: ...
-
-    def scroll(self, point: Point, delta: int) -> None: ...
+    def scroll(self, window: WindowRef, point: Point, delta: int) -> None: ...
 
 
 class RuntimeEnvironment(Protocol):
@@ -79,24 +82,17 @@ class HotkeyService(Protocol):
     def register_f5(
         self,
         callback: Callable[[], None],
-        move_callback: Callable[[], None] | None = None,
     ) -> bool: ...
 
     def unregister_f5(self) -> None: ...
 
 
 class OverlayService(Protocol):
-    def position_and_secure(
+    def position(
         self,
         client_bounds: Rect,
-        recognition_rois: tuple[Rect, ...],
         offset: Point | None = None,
     ) -> bool: ...
-
-    def begin_move(self) -> bool: ...
-
-    def finish_move(self) -> bool: ...
-
 
 class Clock(Protocol):
     def monotonic(self) -> float: ...

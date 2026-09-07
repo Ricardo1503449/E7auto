@@ -231,7 +231,7 @@ class OpenCvGameVision:
         """Match against an already prepared contiguous BGR frame.
 
         Inventory scanning performs many template comparisons against one captured
-        frame.  Preparing the MSS BGRA frame once avoids copying the full client
+        frame.  Preparing the captured BGRA frame once avoids copying the full client
         image for every individual comparison while preserving the public
         single-match path above.
         """

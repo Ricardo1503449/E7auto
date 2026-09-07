@@ -179,9 +179,17 @@ class FakeWindowService:
         self.locate_calls += 1
         return self.ref
 
-    def restore_and_foreground(self, window: WindowRef) -> None:
+    def restore_without_activation(self, window: WindowRef) -> None:
         assert window == self.ref
         self.restore_calls += 1
+        if self.state.minimized:
+            self.state = WindowState(
+                self.state.exists,
+                False,
+                self.state.foreground,
+                self.state.client_bounds,
+                self.state.outer_bounds,
+            )
 
     def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry:
         assert window == self.ref
@@ -215,7 +223,13 @@ class FakeWindowService:
             x = min(max(100, monitor.x), monitor.right - size.width)
             y = min(max(200, monitor.y), monitor.bottom - size.height)
             bounds = Rect(x, y, size.width, size.height)
-            self.state = WindowState(True, False, True, bounds, bounds)
+            self.state = WindowState(
+                True,
+                False,
+                self.state.foreground,
+                bounds,
+                bounds,
+            )
 
     def inspect(self, window: WindowRef) -> WindowState:
         self.inspect_count += 1
@@ -227,23 +241,24 @@ class FakeWindowService:
 class FakeCapture:
     def __init__(self) -> None:
         self.calls = 0
+        self.closed = False
 
     def capture_client(self, window: WindowRef, bounds: Rect) -> np.ndarray:
         self.calls += 1
         return np.full((bounds.height, bounds.width, 3), self.calls % 255, dtype=np.uint8)
+
+    def close(self) -> None:
+        self.closed = True
 
 
 class FakeInput:
     def __init__(
         self,
         *,
-        reported_position: Point | None = None,
         fail_on_click: bool = False,
     ) -> None:
         self.actions: list[tuple[str, Point, int | None]] = []
         self.trigger_once: Callable[[], None] | None = None
-        self.current_position = Point(0, 0)
-        self.reported_position = reported_position
         self.fail_on_click = fail_on_click
 
     def _trigger(self) -> None:
@@ -252,24 +267,14 @@ class FakeInput:
             self.trigger_once = None
             callback()
 
-    def move(self, point: Point) -> None:
-        self.actions.append(("move", point, None))
-        self.current_position = point
-        self._trigger()
-
-    def position(self) -> Point:
-        return self.reported_position or self.current_position
-
-    def click(self, point: Point) -> None:
+    def click(self, window: WindowRef, point: Point) -> None:
         if self.fail_on_click:
             raise RuntimeError("synthetic click failure")
         self.actions.append(("click", point, None))
-        self.current_position = point
         self._trigger()
 
-    def scroll(self, point: Point, delta: int) -> None:
+    def scroll(self, window: WindowRef, point: Point, delta: int) -> None:
         self.actions.append(("scroll", point, delta))
-        self.current_position = point
         self._trigger()
 
 
@@ -282,28 +287,17 @@ class FakeRuntimeEnvironment:
 
 
 class FakeOverlay:
-    def __init__(self, safe: bool = True) -> None:
-        self.safe = safe
-        self.calls: list[tuple[Rect, tuple[Rect, ...], Point | None]] = []
-        self.move_calls: list[str] = []
+    def __init__(self, succeeds: bool = True) -> None:
+        self.succeeds = succeeds
+        self.calls: list[tuple[Rect, Point | None]] = []
 
-    def position_and_secure(
+    def position(
         self,
         client_bounds: Rect,
-        recognition_rois: tuple[Rect, ...],
         offset: Point | None = None,
     ) -> bool:
-        self.calls.append((client_bounds, recognition_rois, offset))
-        return self.safe
-
-    def begin_move(self) -> bool:
-        self.move_calls.append("begin")
-        return self.safe
-
-    def finish_move(self) -> bool:
-        self.move_calls.append("finish")
-        return self.safe
-
+        self.calls.append((client_bounds, offset))
+        return self.succeeds
 
 class FakeHotkeys:
     def __init__(self, succeeds: bool = True, on_register: Callable[[Callable[[], None]], None] | None = None):
@@ -316,11 +310,9 @@ class FakeHotkeys:
     def register_f5(
         self,
         callback: Callable[[], None],
-        move_callback: Callable[[], None] | None = None,
     ) -> bool:
         self.registered += 1
         self.callback = callback
-        self.move_callback = move_callback
         if self.succeeds and self.on_register is not None:
             self.on_register(callback)
         return self.succeeds
@@ -354,6 +346,7 @@ class ScriptedVision:
         refresh_confirm_visible: bool = True,
         exit_visible: bool = True,
         scroll_movement: ScrollMovementObservation | None = None,
+        scroll_movements: list[ScrollMovementObservation] | None = None,
         scroll_stability: list[ScrollMovementObservation] | None = None,
         network_errors: list[bool] | None = None,
         network_retries: list[bool] | None = None,
@@ -376,6 +369,7 @@ class ScriptedVision:
             -350.0,
             0.45,
         )
+        self.scroll_movements = deque(scroll_movements or [])
         self.scroll_stability = deque(scroll_stability or [])
         self.default_scroll_stability = ScrollMovementObservation(
             0.5,
@@ -460,7 +454,7 @@ class ScriptedVision:
         after: object,
     ) -> ScrollMovementObservation:
         self.activity.append("verify_scroll")
-        return self.scroll_movement
+        return self.scroll_movements.popleft() if self.scroll_movements else self.scroll_movement
 
     def inventory_scroll_stability(
         self,

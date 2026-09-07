@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import threading
 from dataclasses import replace
 
 from e7auto.automation import AutomationEngine, AutomationSession, SnapshotPublisher, StopController
@@ -81,9 +80,54 @@ def test_entry_success_resizes_window_and_scans_both_screens() -> None:
     assert windows.resize_calls == [make_config().baseline_client_size]
     assert overlay.calls[0][0] == Rect(100, 200, 100, 80)
     assert [point for action, point, _ in inputs.actions if action == "click"] == [
-        Point(105, 205)
+        Point(5, 5),
+        Point(6, 6),
     ]
     assert hotkeys.registered == hotkeys.unregistered == 1
+
+
+def test_initial_background_window_starts_without_foreground_activation() -> None:
+    windows = FakeWindowService()
+    windows.state = WindowState(
+        True,
+        False,
+        False,
+        Rect(100, 200, 64, 64),
+        Rect(100, 200, 64, 64),
+    )
+
+    final, _, _, inputs, _, _, logger = run_session(
+        ScriptedVision(top=[()], bottom=[()]),
+        windows=windows,
+    )
+
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert windows.restore_calls == 1
+    assert any(action == "click" for action, _, _ in inputs.actions)
+    prepared = [fields for event, fields in logger.events if event == "window_prepared"]
+    assert prepared[-1]["game_foreground"] is False
+
+
+def test_initial_minimized_window_is_restored_without_becoming_foreground() -> None:
+    windows = FakeWindowService()
+    windows.state = WindowState(
+        True,
+        True,
+        False,
+        Rect(100, 200, 64, 64),
+        Rect(100, 200, 64, 64),
+    )
+
+    final, _, _, inputs, _, _, logger = run_session(
+        ScriptedVision(top=[()], bottom=[()]),
+        windows=windows,
+    )
+
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert windows.restore_calls == 1
+    assert any(action == "click" for action, _, _ in inputs.actions)
+    prepared = [fields for event, fields in logger.events if event == "window_prepared"]
+    assert prepared[-1]["game_foreground"] is False
 
 
 def test_entry_click_uses_the_recognized_main_shop_anchor() -> None:
@@ -102,7 +146,8 @@ def test_entry_click_uses_the_recognized_main_shop_anchor() -> None:
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert [point for action, point, _ in inputs.actions if action == "click"] == [
-        Point(105, 235)
+        Point(5, 35),
+        Point(6, 6),
     ]
 
 
@@ -123,18 +168,21 @@ def test_entry_retries_only_after_stable_main_screen_confirmation() -> None:
             super().__init__()
             self.clicks = 0
 
-        def click(self, point: Point) -> None:
-            super().click(point)
+        def click(self, window, point: Point) -> None:
+            super().click(window, point)
             self.clicks += 1
             if self.clicks == 2:
                 vision.ready_visible = True
                 vision.main_visible = False
+            elif point == Point(6, 6):
+                vision.main_visible = True
 
     inputs = EntryInput()
     final, _, _, _, _, _, logger = run_session(vision, inputs=inputs)
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert [action for action, _, _ in inputs.actions if action == "click"] == [
+        "click",
         "click",
         "click",
     ]
@@ -149,8 +197,8 @@ def test_entry_does_not_retry_when_neither_shop_nor_main_is_confirmed() -> None:
     vision = ScriptedVision(top=[()], bottom=[()], ready_visible=False)
 
     class EntryInput(FakeInput):
-        def click(self, point: Point) -> None:
-            super().click(point)
+        def click(self, window, point: Point) -> None:
+            super().click(window, point)
             vision.main_visible = False
 
     inputs = EntryInput()
@@ -188,11 +236,11 @@ def test_client_resize_second_verification_failure_is_fail_closed() -> None:
     assert inputs.actions == []
 
 
-def test_overlay_capture_unsafe_blocks_all_input() -> None:
+def test_overlay_position_timeout_blocks_all_input() -> None:
     final, _, _, inputs, _, _, _ = run_session(
-        ScriptedVision(), overlay=FakeOverlay(safe=False)
+        ScriptedVision(), overlay=FakeOverlay(succeeds=False)
     )
-    assert final.stop_reason is StopReason.OVERLAY_CAPTURE_UNSAFE
+    assert final.stop_reason is StopReason.INTERNAL_ERROR
     assert inputs.actions == []
 
 
@@ -207,19 +255,6 @@ def test_non_elevated_runtime_stops_before_window_lookup_or_input() -> None:
     assert final.stop_reason is StopReason.PERMISSION_REQUIRED
     assert windows.locate_calls == 0
     assert inputs.actions == []
-
-
-def test_cursor_readback_mismatch_blocks_the_first_game_click() -> None:
-    inputs = FakeInput(reported_position=Point(999, 999))
-
-    final, _, _, _, _, _, logger = run_session(
-        ScriptedVision(top=[()], bottom=[()]),
-        inputs=inputs,
-    )
-
-    assert final.stop_reason is StopReason.INPUT_FAILURE
-    assert [action for action, _, _ in inputs.actions] == ["move"]
-    assert not any(event == "input" for event, _ in logger.events)
 
 
 def test_input_success_log_is_written_only_after_platform_call_completes() -> None:
@@ -310,6 +345,7 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
             "downsample_factor": 4,
             "sample_count": 3,
             "stability_comparisons": 2,
+            "total_gate_checks": 1,
             "sample_elapsed_ms": "200,300,400",
             "pair_shift_y": "na,0.000,0.000",
             "pair_response": "na,0.950000,0.950000",
@@ -326,6 +362,37 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
     assert verified[0]["difference_threshold"] == 8
     assert verified[0]["settle_elapsed_ms"] == 400
     assert verified[0]["early_exit_ms"] == 400
+
+
+def test_delayed_background_frame_waits_past_stale_stability_until_total_gate_passes() -> None:
+    stable = ScrollMovementObservation(0.5, 0.005, 8, 0.0, 0.0, 0.95)
+    transition = ScrollMovementObservation(25.0, 0.40, 254, 0.0, -350.0, 0.95)
+    stale_total = ScrollMovementObservation(0.5, 0.005, 8, 0.0, 0.0, 0.99)
+    valid_total = ScrollMovementObservation(25.0, 0.40, 254, 0.0, -350.0, 0.45)
+    config = replace(
+        make_config(),
+        scroll=replace(make_config().scroll, settle_ms=1500),
+    )
+    vision = ScriptedVision(
+        top=[()],
+        bottom=[()],
+        scroll_stability=[stable, stable, transition, stable, stable],
+        scroll_movements=[stale_total, valid_total],
+    )
+
+    final, _, _, _, _, _, logger = run_session(
+        vision,
+        config=config,
+        clock=FakeClock(),
+    )
+
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert vision.activity.count("verify_scroll") == 2
+    assert vision.scan_calls == ["top", "bottom"]
+    settle = next(fields for event, fields in logger.events if event == "scroll_settle_trace")
+    assert settle["outcome"] == "stable"
+    assert settle["total_gate_checks"] == 2
+    assert settle["total_phase_shift_y"] == "-350.000"
 
 
 def test_unverified_scroll_never_scans_bottom_or_refreshes() -> None:
@@ -472,6 +539,7 @@ def test_row_one_and_six_targets_are_bought_with_one_downward_scroll() -> None:
         "scroll_bottom",
         "buy:ore:bottom-2",
         "confirm_purchase",
+        "exit_shop",
     ]
 
 
@@ -534,7 +602,7 @@ def test_previously_purchased_slot_is_skipped_without_counting_or_clicking() -> 
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert final.targets[0].acquired == 0
-    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 1
+    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 2
     assert any(
         event == "target_skipped_summary"
         and fields.get("reason") == "already_purchased_before_run"
@@ -628,7 +696,7 @@ def test_budget_below_cost_never_refreshes() -> None:
     assert final.refresh_spent == 0
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     # Only the entry click; scrolling is not a click.
-    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 1
+    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 2
 
 
 def test_exact_budget_refresh_scans_last_inventory_completely() -> None:
@@ -642,7 +710,7 @@ def test_exact_budget_refresh_scans_last_inventory_completely() -> None:
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert vision.scan_calls == ["top", "bottom", "top", "bottom"]
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270), Point(155, 245)]
+    assert clicks == [Point(5, 5), Point(90, 70), Point(55, 45), Point(6, 6)]
     assert len([action for action, _, _ in inputs.actions if action == "scroll"]) == 2
     input_actions = [fields["action"] for event, fields in logger.events if event == "input"]
     assert input_actions.count("scroll_bottom") == 2
@@ -713,6 +781,7 @@ def test_no_target_strategy_runs_all_recovery_stages_then_stops() -> None:
         "open_shop",
         "refresh_inventory",
         "confirm_refresh",
+        "exit_shop",
     ]
     wake_inputs = [
         fields
@@ -724,9 +793,9 @@ def test_no_target_strategy_runs_all_recovery_stages_then_stops() -> None:
             "action": "wake_main_screen",
             "logical_x": 50,
             "logical_y": 40,
-            "screen_x": 150,
-            "screen_y": 240,
-            "cursor_verified": True,
+            "client_x": 50,
+            "client_y": 40,
+            "background_message_queued": True,
         }
     ]
 
@@ -880,7 +949,7 @@ def test_missing_refresh_confirmation_never_confirms_or_charges() -> None:
     assert final.stop_reason is StopReason.REFRESH_CLICK_UNACKNOWLEDGED
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270), Point(190, 270)]
+    assert clicks == [Point(5, 5), Point(90, 70), Point(90, 70)]
 
 
 def test_high_confidence_refresh_confirmation_uses_fast_path_and_detected_anchor() -> None:
@@ -922,7 +991,7 @@ def test_high_confidence_refresh_confirmation_uses_fast_path_and_detected_anchor
 
     assert vision.dialog_checks == 1
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(190, 270), Point(160, 250)]
+    assert clicks == [Point(90, 70), Point(60, 50)]
     accepted = [
         fields
         for event, fields in logger.events
@@ -972,7 +1041,7 @@ def test_lower_confidence_refresh_confirmation_keeps_three_frame_gate() -> None:
 
     assert vision.dialog_checks == 3
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(190, 270), Point(160, 250)]
+    assert clicks == [Point(90, 70), Point(60, 50)]
     accepted = [
         fields
         for event, fields in logger.events
@@ -996,9 +1065,9 @@ def test_missing_first_refresh_dialog_retries_once_then_confirms_once() -> None:
             super().__init__()
             self.refresh_attempts = 0
 
-        def click(self, point: Point) -> None:
-            super().click(point)
-            if point == Point(190, 270):
+        def click(self, window, point: Point) -> None:
+            super().click(window, point)
+            if point == Point(90, 70):
                 self.refresh_attempts += 1
                 if self.refresh_attempts == 2:
                     vision.refresh_confirm_visible = True
@@ -1014,10 +1083,11 @@ def test_missing_first_refresh_dialog_retries_once_then_confirms_once() -> None:
     assert final.refresh_spent == 3
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
     assert clicks == [
-        Point(105, 205),
-        Point(190, 270),
-        Point(190, 270),
-        Point(155, 245),
+        Point(5, 5),
+        Point(90, 70),
+        Point(90, 70),
+        Point(55, 45),
+        Point(6, 6),
     ]
     refresh_inputs = [
         fields
@@ -1065,7 +1135,7 @@ def test_delayed_refresh_dialog_suppresses_retry_click() -> None:
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert final.refresh_spent == 3
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270), Point(155, 245)]
+    assert clicks == [Point(5, 5), Point(90, 70), Point(55, 45), Point(6, 6)]
     assert any(event == "refresh_confirmation_delayed" for event, _ in logger.events)
 
 
@@ -1078,9 +1148,9 @@ def test_refresh_retry_requires_stable_normal_shop_control() -> None:
     )
 
     class HideShopAfterFirstRefresh(FakeInput):
-        def click(self, point: Point) -> None:
-            super().click(point)
-            if point == Point(190, 270):
+        def click(self, window, point: Point) -> None:
+            super().click(window, point)
+            if point == Point(90, 70):
                 vision.ready_visible = False
 
     inputs = HideShopAfterFirstRefresh()
@@ -1093,7 +1163,7 @@ def test_refresh_retry_requires_stable_normal_shop_control() -> None:
     assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270)]
+    assert clicks == [Point(5, 5), Point(90, 70)]
 
 
 def test_refresh_retry_rejects_changed_balance_without_second_click() -> None:
@@ -1108,7 +1178,7 @@ def test_refresh_retry_rejects_changed_balance_without_second_click() -> None:
     assert final.stop_reason is StopReason.REFRESH_BALANCE_MISMATCH
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270)]
+    assert clicks == [Point(5, 5), Point(90, 70)]
 
 
 def test_f5_after_unacknowledged_refresh_blocks_retry_click() -> None:
@@ -1121,9 +1191,9 @@ def test_f5_after_unacknowledged_refresh_blocks_retry_click() -> None:
     hotkeys = FakeHotkeys()
 
     class StopAfterFirstRefresh(FakeInput):
-        def click(self, point: Point) -> None:
-            super().click(point)
-            if point == Point(190, 270):
+        def click(self, window, point: Point) -> None:
+            super().click(window, point)
+            if point == Point(90, 70):
                 assert hotkeys.callback is not None
                 hotkeys.callback()
 
@@ -1138,7 +1208,7 @@ def test_f5_after_unacknowledged_refresh_blocks_retry_click() -> None:
     assert final.stop_reason is StopReason.MANUAL_F5
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205), Point(190, 270)]
+    assert clicks == [Point(5, 5), Point(90, 70)]
 
 
 def test_refresh_failure_does_not_charge_budget() -> None:
@@ -1181,7 +1251,7 @@ def test_unreadable_pre_refresh_balance_sends_no_refresh_input() -> None:
     assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205)]
+    assert clicks == [Point(5, 5)]
 
 
 def test_refresh_waits_through_stable_old_balance_then_accepts_stable_minus_three() -> None:
@@ -1211,7 +1281,7 @@ def test_balance_below_refresh_cost_stops_before_refresh_click() -> None:
     assert final.stop_reason is StopReason.REFRESH_BALANCE_MISMATCH
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
-    assert clicks == [Point(105, 205)]
+    assert clicks == [Point(5, 5)]
 
 
 def test_verified_balance_is_reused_between_ordinary_in_shop_refreshes() -> None:
@@ -1379,74 +1449,6 @@ def test_hotkey_registration_failure_never_prepares_or_inputs() -> None:
     assert len([snapshot for snapshot in snapshots if snapshot.is_final]) == 1
 
 
-def test_f6_toggle_enters_and_locks_overlay_move_mode_before_engine_runs() -> None:
-    overlay = FakeOverlay()
-
-    def toggle_twice(_f5_callback: object) -> None:
-        assert hotkeys.move_callback is not None
-        hotkeys.move_callback()
-        hotkeys.move_callback()
-
-    hotkeys = FakeHotkeys(on_register=toggle_twice)
-    final, _, _, _, _, _, logger = run_session(
-        ScriptedVision(top=[()], bottom=[()]),
-        overlay=overlay,
-        hotkeys=hotkeys,
-    )
-
-    assert overlay.move_calls == ["begin", "finish"]
-    assert [event for event, _ in logger.events if event.startswith("overlay_move_")] == [
-        "overlay_move_started",
-        "overlay_move_finished",
-    ]
-    assert final.is_final
-
-
-def test_pause_blocks_checkpoint_until_resume() -> None:
-    control = StopController()
-    reached: list[str] = []
-    assert control.pause()
-
-    worker = threading.Thread(
-        target=lambda: (control.checkpoint(), reached.append("resumed")),
-        daemon=True,
-    )
-    worker.start()
-    worker.join(timeout=0.05)
-    assert reached == []
-
-    control.resume()
-    worker.join(timeout=1.0)
-    assert reached == ["resumed"]
-
-
-def test_f6_pause_duration_is_excluded_from_active_clock() -> None:
-    clock = FakeClock()
-    vision = ScriptedVision()
-    deps, _, _, _, _ = make_dependencies(vision, clock=clock)
-    initial = RuntimeSnapshot.initial(
-        "pause-clock",
-        tuple((target.target_id, target.display_name) for target in make_config().targets),
-        0,
-    )
-    control = StopController()
-    engine = AutomationEngine(
-        make_config(),
-        deps,
-        control,
-        SnapshotPublisher(initial, lambda _snapshot: None),
-        frozenset(target.target_id for target in make_config().targets),
-    )
-
-    assert control.pause(clock.monotonic())
-    clock.sleep(4.75)
-    assert engine._active_monotonic() == 0.0
-    control.resume(clock.monotonic())
-    clock.sleep(0.25)
-
-    assert engine._active_monotonic() == 0.25
-
-
 def test_f5_after_one_dispatched_input_blocks_every_new_input() -> None:
     inputs = FakeInput()
     hotkeys = FakeHotkeys(on_register=lambda callback: setattr(inputs, "trigger_once", callback))
@@ -1454,7 +1456,7 @@ def test_f5_after_one_dispatched_input_blocks_every_new_input() -> None:
         ScriptedVision(top=[()], bottom=[()]), inputs=inputs, hotkeys=hotkeys
     )
     assert final.stop_reason is StopReason.MANUAL_F5
-    assert [action for action, _, _ in inputs.actions] == ["move", "click"]
+    assert [action for action, _, _ in inputs.actions] == ["click"]
     assert len([snapshot for snapshot in snapshots if snapshot.is_final]) == 1
 
 
@@ -1465,18 +1467,38 @@ def test_window_move_during_run_stops_before_next_input() -> None:
     assert inputs.actions == []
 
 
-def test_minimize_disappear_resize_and_focus_loss_all_stop_safely() -> None:
+def test_minimize_disappear_and_resize_all_stop_safely() -> None:
     abnormal_states = (
         WindowState(True, True, True, Rect(100, 200, 100, 80)),
         WindowState(False, False, False, Rect(0, 0, 0, 0)),
         WindowState(True, False, True, Rect(100, 200, 99, 80)),
-        WindowState(True, False, False, Rect(100, 200, 100, 80)),
     )
     for state in abnormal_states:
         windows = FakeWindowService(abnormal_on_inspect=3, abnormal_state=state)
         final, _, _, inputs, _, _, _ = run_session(ScriptedVision(), windows=windows)
         assert final.stop_reason is StopReason.WINDOW_ABNORMAL
         assert inputs.actions == []
+
+
+def test_focus_loss_is_allowed_after_initial_window_preparation() -> None:
+    windows = FakeWindowService(
+        abnormal_on_inspect=3,
+        abnormal_state=WindowState(
+            True,
+            False,
+            False,
+            Rect(100, 200, 100, 80),
+            Rect(100, 200, 100, 80),
+        ),
+    )
+
+    final, _, _, inputs, _, _, _ = run_session(
+        ScriptedVision(top=[()], bottom=[()]),
+        windows=windows,
+    )
+
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert any(action == "click" for action, _, _ in inputs.actions)
 
 
 def test_new_session_starts_every_counter_at_zero() -> None:
@@ -1497,7 +1519,7 @@ def test_friendship_points_are_ignored_when_checkbox_option_is_disabled() -> Non
     friendship = next(tally for tally in final.targets if tally.target_id == "friendship_points")
     assert friendship.acquired == 0
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
-    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 1
+    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 2
     assert not any(event == "target_skipped" for event, _ in logger.events)
     assert all(
         enabled == frozenset({"wood", "ore"})

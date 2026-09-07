@@ -8,11 +8,6 @@ import yaml
 
 from e7auto.config import ConfigError, Point, Rect, Size, load_config
 from e7auto.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
-from e7auto.overlay import (
-    capture_is_safe,
-    evaluate_overlay_security,
-    overlay_rect,
-)
 from e7auto.run_logging import RunLogManager
 from e7auto.config import LoggingConfig
 
@@ -54,56 +49,6 @@ def test_runtime_snapshot_is_immutable_and_freezes_after_final() -> None:
     assert final.overlay_status is OverlayActivityStatus.STOPPED
     assert final.with_incremented_target("wood") is final
     assert final.transitioned(RunState.SCANNING_TOP) is final
-
-
-def test_overlay_is_relative_and_fallback_fails_only_on_roi_overlap() -> None:
-    client = Rect(100, 200, 800, 600)
-    placed = overlay_rect(client, Point(12, 34), 200, 100)
-    assert placed == Rect(112, 234, 200, 100)
-    roi = Rect(0, 0, 80, 80)
-    assert capture_is_safe(True, placed, client, (roi,))
-    assert not capture_is_safe(False, Rect(110, 210, 50, 50), client, (roi,))
-    assert capture_is_safe(False, Rect(700, 700, 50, 50), client, (roi,))
-
-
-def test_overlay_security_requires_exact_affinity_readback_or_safe_fallback() -> None:
-    client = Rect(100, 200, 800, 600)
-    overlapping = Rect(110, 210, 50, 50)
-    roi = Rect(0, 0, 80, 80)
-
-    setter_only = evaluate_overlay_security(
-        True,
-        None,
-        0x11,
-        overlapping,
-        client,
-        (roi,),
-    )
-    assert not setter_only.capture_excluded
-    assert not setter_only.fallback_safe
-    assert not setter_only.safe
-
-    excluded = evaluate_overlay_security(
-        True,
-        0x11,
-        0x11,
-        overlapping,
-        client,
-        (roi,),
-    )
-    assert excluded.capture_excluded
-    assert excluded.safe
-
-    fallback = evaluate_overlay_security(
-        False,
-        None,
-        0x11,
-        Rect(700, 700, 50, 50),
-        client,
-        (roi,),
-    )
-    assert fallback.fallback_safe
-    assert fallback.safe
 
 
 def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:

@@ -33,6 +33,7 @@ class StopReason(str, Enum):
     UNSUPPORTED_DISPLAY_RESOLUTION = "unsupported_display_resolution"
     DISPLAY_CHANGED = "display_changed"
     PERMISSION_REQUIRED = "permission_required"
+    CAPTURE_FAILURE = "capture_failure"
     INPUT_FAILURE = "input_failure"
     HOTKEY_FAILURE = "hotkey_failure"
     RECOGNITION_TIMEOUT = "recognition_timeout"
@@ -41,7 +42,6 @@ class StopReason(str, Enum):
     REFRESH_BALANCE_MISMATCH = "refresh_balance_mismatch"
     SCROLL_VERIFICATION_FAILED = "scroll_verification_failed"
     CONFIG_INCOMPLETE = "config_incomplete"
-    OVERLAY_CAPTURE_UNSAFE = "overlay_capture_unsafe"
     ENTRY_FAILURE = "entry_failure"
     INTERNAL_ERROR = "internal_error"
 

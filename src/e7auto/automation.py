@@ -10,6 +10,7 @@ from .config import AppConfig, Point, Rect
 from .domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
 from .geometry import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
 from .ports import (
+    CaptureError,
     CaptureService,
     Clock,
     HotkeyService,
@@ -104,52 +105,15 @@ class StopController:
     """
 
     def __init__(self) -> None:
-        self._lock = threading.Condition(threading.RLock())
+        self._lock = threading.RLock()
         self._reason: StopReason | None = None
-        self._paused = False
-        self._pause_started_at: float | None = None
-        self._paused_seconds = 0.0
 
     def request(self, reason: StopReason) -> bool:
         with self._lock:
             if self._reason is not None:
                 return False
             self._reason = reason
-            self._lock.notify_all()
             return True
-
-    def pause(self, started_at: float | None = None) -> bool:
-        with self._lock:
-            if self._reason is not None:
-                return False
-            self._paused = True
-            self._pause_started_at = started_at
-            return True
-
-    def resume(self, resumed_at: float | None = None) -> None:
-        with self._lock:
-            if (
-                self._paused
-                and self._pause_started_at is not None
-                and resumed_at is not None
-            ):
-                self._paused_seconds += max(0.0, resumed_at - self._pause_started_at)
-            self._paused = False
-            self._pause_started_at = None
-            self._lock.notify_all()
-
-    def paused_seconds(self, now: float) -> float:
-        with self._lock:
-            current = self._paused_seconds
-            if self._paused and self._pause_started_at is not None:
-                current += max(0.0, now - self._pause_started_at)
-            return current
-
-    def _wait_until_runnable(self) -> None:
-        while self._paused and self._reason is None:
-            self._lock.wait()
-        if self._reason is not None:
-            raise StopExecution(self._reason)
 
     @property
     def reason(self) -> StopReason | None:
@@ -158,11 +122,13 @@ class StopController:
 
     def checkpoint(self) -> None:
         with self._lock:
-            self._wait_until_runnable()
+            if self._reason is not None:
+                raise StopExecution(self._reason)
 
     def dispatch(self, action: Callable[[], T]) -> T:
         with self._lock:
-            self._wait_until_runnable()
+            if self._reason is not None:
+                raise StopExecution(self._reason)
             return action()
 
 
@@ -250,6 +216,24 @@ class AutomationEngine:
         self._prepare()
         self._enter_store()
         self._scan_until_stopped()
+
+    def finish_normal_run(self, reason: StopReason) -> None:
+        """Return to the main screen before publishing a normal completion."""
+
+        if reason not in {
+            StopReason.BUDGET_COMPLETE,
+            StopReason.REFRESH_STRATEGY_EXHAUSTED,
+        }:
+            return
+        self._deps.logger.event(
+            "normal_completion_exit_started",
+            reason=reason.value,
+        )
+        self._exit_store()
+        self._deps.logger.event(
+            "normal_completion_exit_completed",
+            reason=reason.value,
+        )
 
     def _transition(self, state: RunState) -> None:
         previous = self._publisher.snapshot.state
@@ -379,7 +363,7 @@ class AutomationEngine:
                     display.monitor_bounds,
                 )
             )
-            self._deps.windows.restore_and_foreground(window)
+            self._deps.windows.restore_without_activation(window)
             self._deps.windows.resize_client(window, target, display.monitor_bounds)
             state = self._deps.windows.inspect(window)
         except Exception as exc:
@@ -396,7 +380,6 @@ class AutomationEngine:
         if (
             not state.exists
             or state.minimized
-            or not state.foreground
             or state.client_bounds.width != target.width
             or state.client_bounds.height != target.height
             or abs(
@@ -425,21 +408,13 @@ class AutomationEngine:
             self._config.baseline_client_size,
             target,
         )
-        recognition_rois = tuple(
-            self._transform.rect(roi)
-            for roi in (
-                *self._config.rois.values(),
-                *(slot.item_roi for slot in self._config.slots),
-            )
-        )
-        if not self._deps.overlay.position_and_secure(
+        if not self._deps.overlay.position(
             state.client_bounds,
-            recognition_rois,
             self._transform.point(self._config.overlay_offset),
         ):
             raise StopExecution(
-                StopReason.OVERLAY_CAPTURE_UNSAFE,
-                "overlay capture exclusion unavailable and overlay intersects recognition ROI",
+                StopReason.INTERNAL_ERROR,
+                "overlay positioning timed out",
             )
         self._deps.logger.event(
             "window_prepared",
@@ -456,6 +431,7 @@ class AutomationEngine:
             desktop_width=display.current_mode.width,
             desktop_height=display.current_mode.height,
             dpi=display.dpi,
+            game_foreground=state.foreground,
             scale_x=f"{self._transform.scale_x:.6f}",
             scale_y=f"{self._transform.scale_y:.6f}",
             reference_path=self._transform.is_identity,
@@ -475,7 +451,6 @@ class AutomationEngine:
         if (
             not state.exists
             or state.minimized
-            or not state.foreground
             or state.client_bounds != self._baseline_bounds
         ):
             raise StopExecution(StopReason.WINDOW_ABNORMAL, f"window changed: {state}")
@@ -514,7 +489,10 @@ class AutomationEngine:
         try:
             self._ensure_window()
             assert self._window is not None and self._baseline_bounds is not None
-            frame = self._deps.capture.capture_client(self._window, self._baseline_bounds)
+            try:
+                frame = self._deps.capture.capture_client(self._window, self._baseline_bounds)
+            except CaptureError as exc:
+                raise StopExecution(StopReason.CAPTURE_FAILURE, str(exc)) from exc
             self._control.checkpoint()
             assert self._transform is not None
             return adapt_frame(frame, self._transform)
@@ -577,33 +555,28 @@ class AutomationEngine:
         """Return elapsed automation time excluding completed network recovery."""
 
         now = self._deps.clock.monotonic()
-        return now - self._network_paused_seconds - self._control.paused_seconds(now)
+        return now - self._network_paused_seconds
 
     def _capture(self) -> object:
         frame = self._capture_raw()
         self._handle_network_exception(frame)
         return frame
 
-    def _screen_point(self, point: Point) -> Point:
-        assert self._baseline_bounds is not None and self._transform is not None
-        actual = self._transform.point(point)
-        return Point(self._baseline_bounds.x + actual.x, self._baseline_bounds.y + actual.y)
-
-    def _dispatch_input(self, action: str, point: Point, callback: Callable[[], None], **fields: object) -> None:
-        screen_point = self._screen_point(point)
+    def _dispatch_input(
+        self,
+        action: str,
+        point: Point,
+        callback: Callable[[WindowRef, Point], None],
+        **fields: object,
+    ) -> None:
+        assert self._transform is not None
+        client_point = self._transform.point(point)
 
         def guarded() -> None:
             self._ensure_window(full_display_check=True)
+            assert self._window is not None
             try:
-                self._deps.inputs.move(screen_point)
-                actual = self._deps.inputs.position()
-                if actual != screen_point:
-                    raise StopExecution(
-                        StopReason.INPUT_FAILURE,
-                        f"cursor verification failed for {action}: "
-                        f"expected {screen_point}, observed {actual}",
-                    )
-                callback()
+                callback(self._window, client_point)
             except StopExecution:
                 raise
             except Exception as exc:
@@ -612,8 +585,8 @@ class AutomationEngine:
                     action=action,
                     logical_x=point.x,
                     logical_y=point.y,
-                    screen_x=screen_point.x,
-                    screen_y=screen_point.y,
+                    client_x=client_point.x,
+                    client_y=client_point.y,
                     error=repr(exc),
                 )
                 raise StopExecution(
@@ -625,20 +598,19 @@ class AutomationEngine:
                 action=action,
                 logical_x=point.x,
                 logical_y=point.y,
-                screen_x=screen_point.x,
-                screen_y=screen_point.y,
-                cursor_verified=True,
+                client_x=client_point.x,
+                client_y=client_point.y,
+                background_message_queued=True,
                 **fields,
             )
 
         self._control.dispatch(guarded)
 
     def _click(self, action: str, point: Point, **fields: object) -> None:
-        screen = self._screen_point(point)
         self._dispatch_input(
             action,
             point,
-            lambda: self._deps.inputs.click(screen),
+            self._deps.inputs.click,
             **fields,
         )
 
@@ -652,13 +624,16 @@ class AutomationEngine:
         try:
             before = self._capture()
             point = self._config.scroll.cursor_point
-            screen = self._screen_point(point)
             delta = self._config.scroll.delta
             for index in range(self._config.scroll.repetitions):
                 self._dispatch_input(
                     "scroll_bottom",
                     point,
-                    lambda screen=screen, delta=delta: self._deps.inputs.scroll(screen, delta),
+                    lambda window, client, delta=delta: self._deps.inputs.scroll(
+                        window,
+                        client,
+                        delta,
+                    ),
                     delta=delta,
                     repetition=index + 1,
                 )
@@ -674,6 +649,9 @@ class AutomationEngine:
 
             previous: object | None = None
             verified_frame: object | None = None
+            verified_movement: ScrollMovementObservation | None = None
+            last_total_movement: ScrollMovementObservation | None = None
+            total_gate_checks = 0
             stable = 0
             sample_elapsed: list[str] = []
             pair_shift_y: list[str] = []
@@ -721,7 +699,20 @@ class AutomationEngine:
                     else:
                         stable = 0
                     if stable >= scroll.stable_observations:
-                        verified_frame = current
+                        last_total_movement = self._vision_call(
+                            self._deps.vision.inventory_scroll_movement,
+                            before,
+                            current,
+                        )
+                        total_gate_checks += 1
+                        if (
+                            last_total_movement.phase_shift_y
+                            < -scroll.minimum_upward_shift_px
+                            and last_total_movement.changed_fraction
+                            > scroll.minimum_changed_fraction
+                        ):
+                            verified_frame = current
+                            verified_movement = last_total_movement
 
                 stable_counts.append(str(stable))
                 if verified_frame is not None:
@@ -747,6 +738,7 @@ class AutomationEngine:
                 "downsample_factor": scroll.downsample_factor,
                 "sample_count": settle_samples,
                 "stability_comparisons": stability_comparisons,
+                "total_gate_checks": total_gate_checks,
                 "sample_elapsed_ms": ",".join(sample_elapsed),
                 "pair_shift_y": ",".join(pair_shift_y),
                 "pair_response": ",".join(pair_response),
@@ -759,22 +751,31 @@ class AutomationEngine:
                 self._deps.logger.event(
                     "scroll_settle_trace",
                     outcome="timeout",
-                    total_phase_shift_y="na",
-                    total_phase_response="na",
-                    total_changed_fraction="na",
+                    total_phase_shift_y=(
+                        "na"
+                        if last_total_movement is None
+                        else f"{last_total_movement.phase_shift_y:.3f}"
+                    ),
+                    total_phase_response=(
+                        "na"
+                        if last_total_movement is None
+                        else f"{last_total_movement.phase_response:.6f}"
+                    ),
+                    total_changed_fraction=(
+                        "na"
+                        if last_total_movement is None
+                        else f"{last_total_movement.changed_fraction:.6f}"
+                    ),
                     **trace_fields,
                 )
                 raise StopExecution(
                     StopReason.SCROLL_VERIFICATION_FAILED,
-                    "inventory did not become visually stable before the calibrated "
+                    "inventory did not become stable with verified bottom displacement before the "
                     f"{scroll.settle_ms} ms maximum",
                 )
 
-            movement = self._vision_call(
-                self._deps.vision.inventory_scroll_movement,
-                before,
-                verified_frame,
-            )
+            assert verified_movement is not None
+            movement = verified_movement
             self._deps.logger.event(
                 "scroll_settle_trace",
                 outcome="stable",
@@ -798,16 +799,6 @@ class AutomationEngine:
                 sample_count=settle_samples,
                 stability_comparisons=stability_comparisons,
             )
-            if (
-                movement.phase_shift_y >= -scroll.minimum_upward_shift_px
-                or movement.changed_fraction <= scroll.minimum_changed_fraction
-            ):
-                raise StopExecution(
-                    StopReason.SCROLL_VERIFICATION_FAILED,
-                    "inventory did not reach the calibrated bottom displacement gate: "
-                    f"phase_shift_y={movement.phase_shift_y:.3f}, "
-                    f"changed_fraction={movement.changed_fraction:.6f}",
-                )
             outcome = "verified"
             return tuple(frame_samples)
         finally:
@@ -1711,43 +1702,10 @@ class AutomationSession:
         self._hotkeys = hotkeys
         self._on_snapshot = on_snapshot
         self._control = StopController()
-        self._move_lock = threading.Lock()
-        self._overlay_moving = False
 
     def request_f5_stop(self) -> None:
         if self._control.request(StopReason.MANUAL_F5):
             self._dependencies.logger.event("stop_requested", source="F5")
-
-    def request_f6_move_toggle(self) -> None:
-        with self._move_lock:
-            if self._control.reason is not None:
-                return
-            if not self._overlay_moving:
-                if not self._control.pause(self._dependencies.clock.monotonic()):
-                    return
-                if self._dependencies.overlay.begin_move():
-                    self._overlay_moving = True
-                    self._dependencies.logger.event("overlay_move_started", source="F6")
-                    return
-                self._control.request(StopReason.OVERLAY_CAPTURE_UNSAFE)
-                self._control.resume(self._dependencies.clock.monotonic())
-                return
-
-            secure = self._dependencies.overlay.finish_move()
-            self._overlay_moving = False
-            if secure:
-                self._dependencies.logger.event("overlay_move_finished", source="F6")
-            else:
-                self._control.request(StopReason.OVERLAY_CAPTURE_UNSAFE)
-            self._control.resume(self._dependencies.clock.monotonic())
-
-    def _finish_overlay_move_on_stop(self) -> None:
-        with self._move_lock:
-            if not self._overlay_moving:
-                return
-            self._dependencies.overlay.finish_move()
-            self._overlay_moving = False
-            self._control.resume(self._dependencies.clock.monotonic())
 
     def run(
         self,
@@ -1784,16 +1742,14 @@ class AutomationSession:
             disabled=",".join(sorted(selectable_ids - set(enabled_target_ids))),
         )
         registered = False
+        engine: AutomationEngine | None = None
         reason = StopReason.INTERNAL_ERROR
         detail = ""
         try:
-            registered = self._hotkeys.register_f5(
-                self.request_f5_stop,
-                self.request_f6_move_toggle,
-            )
+            registered = self._hotkeys.register_f5(self.request_f5_stop)
             if not registered:
                 reason = StopReason.HOTKEY_FAILURE
-                detail = "RegisterHotKey(F5/F6) failed"
+                detail = "RegisterHotKey(F5) failed"
                 return publisher.finalize(reason)
             engine = AutomationEngine(
                 self._config,
@@ -1812,7 +1768,22 @@ class AutomationSession:
             reason = StopReason.INTERNAL_ERROR
             detail = repr(exc)
         finally:
-            self._finish_overlay_move_on_stop()
+            if engine is not None and reason in {
+                StopReason.BUDGET_COMPLETE,
+                StopReason.REFRESH_STRATEGY_EXHAUSTED,
+            }:
+                try:
+                    engine.finish_normal_run(reason)
+                except StopExecution as exc:
+                    reason = exc.reason
+                    detail = exc.detail
+                except Exception as exc:
+                    reason = StopReason.INTERNAL_ERROR
+                    detail = f"normal completion cleanup failed: {exc!r}"
+            try:
+                self._dependencies.capture.close()
+            except Exception as exc:
+                detail = f"{detail}; capture close failed: {exc}".strip("; ")
             if registered:
                 try:
                     self._hotkeys.unregister_f5()
