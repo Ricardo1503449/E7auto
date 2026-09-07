@@ -662,7 +662,6 @@ def build_manifest() -> dict[str, object]:
         "external_calibrations": {
             "main_shop_activity_layout": "main_shop_layout_manifest.yaml",
             "overlay_position": "overlay_position_calibration_manifest.yaml",
-            "overlay_capture": "overlay_capture_validation_manifest.yaml",
             "insufficient_funds": "insufficient_funds_manifest.yaml",
             "insufficient_funds_live_recognition": "insufficient_funds_live_validation_manifest.yaml",
         },

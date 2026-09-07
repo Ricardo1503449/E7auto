@@ -84,7 +84,7 @@ def test_position_mode_reuses_production_size_and_reports_exact_offset() -> None
             "height": calibration_size.height(),
         }
         overlay.finish_position_calibration()
-        assert overlay.testAttribute(
+        assert not overlay.testAttribute(
             Qt.WidgetAttribute.WA_TransparentForMouseEvents
         )
     finally:
@@ -95,18 +95,6 @@ def test_position_mode_reuses_production_size_and_reports_exact_offset() -> None
 
 def test_release_asset_verifier_accepts_current_calibration_evidence() -> None:
     assert verify_template_assets(ROOT / "assets" / "templates") == []
-
-
-def test_release_verifier_requires_stage_two_overlay_capture_evidence(
-    tmp_path: Path,
-) -> None:
-    copied = tmp_path / "templates"
-    shutil.copytree(ROOT / "assets" / "templates", copied)
-    (copied / "overlay_capture_validation_manifest.yaml").unlink()
-
-    problems = verify_template_assets(copied)
-
-    assert "missing template manifest: overlay_capture_validation_manifest.yaml" in problems
 
 
 def test_release_verifier_rejects_an_undecodable_template(tmp_path: Path) -> None:

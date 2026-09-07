@@ -6,22 +6,16 @@ import json
 import time
 from pathlib import Path
 
-from e7auto.config import Rect
+from e7auto.config import Rect, load_config
 from e7auto.platform_windows import (
-    MssCaptureService,
     Win32WindowService,
     enable_per_monitor_dpi_awareness,
 )
 from e7auto.vision import OpenCvGameVision, TemplateRepository
-if __package__:
-    from scripts.validate_live_recognition import load_read_only_commissioning_config
-else:
-    from validate_live_recognition import (  # type: ignore[no-redef]
-        load_read_only_commissioning_config,
-    )
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CONFIG_PATH = ROOT / "config" / "internal.yaml"
 RESULT_PATH = ROOT / "logs" / "insufficient-funds-live-validation.json"
 
 
@@ -61,6 +55,7 @@ def main() -> int:
     args = parser.parse_args()
 
     result: dict[str, object]
+    capture = None
     try:
         if args.sample_count < 3:
             raise RuntimeError("sample-count must be at least 3")
@@ -71,12 +66,14 @@ def main() -> int:
         if not ctypes.windll.shell32.IsUserAnAdmin():
             raise RuntimeError("validator must run as Windows administrator")
 
-        config = load_read_only_commissioning_config()
+        config = load_config(CONFIG_PATH)
         result_roi = config.rois["purchase_result"]
         vision = OpenCvGameVision(config, TemplateRepository(config))
         enable_per_monitor_dpi_awareness()
+        from e7auto.wgc_capture import WindowsGraphicsCaptureService
+
         windows = Win32WindowService()
-        capture = MssCaptureService()
+        capture = WindowsGraphicsCaptureService()
         window = windows.locate_unique(str(config.executable_path), config.window_title)
 
         wait_started = time.monotonic()
@@ -139,6 +136,7 @@ def main() -> int:
         criteria = terminal_criteria(stable, config.timing.stable_frames)
         result = {
             "status": "ok" if all(criteria.values()) else "criteria_not_met",
+            "capture_backend": "wgc",
             "process": {"windows_admin": True},
             "window": {
                 "title": window.title,
@@ -173,6 +171,9 @@ def main() -> int:
             "game_input_sent": False,
             "screenshots_persisted": False,
         }
+    finally:
+        if capture is not None:
+            capture.close()
 
     _write_result(args.result_path.resolve(), result)
     return 0 if result.get("status") == "ok" else 1

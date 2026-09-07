@@ -11,6 +11,4 @@ source_result: artifacts/overlay-position-calibration-18px.json
 widget: e7auto.ui.StatsOverlay
 overlay_font_size_px: 18
 limitations:
-  - capture_exclusion_not_validated
-  - fallback_recognition_roi_overlap_not_validated
   - no_game_input_was_sent

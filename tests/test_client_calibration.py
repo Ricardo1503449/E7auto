@@ -19,9 +19,6 @@ INSUFFICIENT_FUNDS_MANIFEST_PATH = (
 INSUFFICIENT_FUNDS_LIVE_MANIFEST_PATH = (
     ROOT / "assets" / "templates" / "insufficient_funds_live_validation_manifest.yaml"
 )
-OVERLAY_CAPTURE_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "overlay_capture_validation_manifest.yaml"
-)
 MAIN_SHOP_LAYOUT_MANIFEST_PATH = (
     ROOT / "assets" / "templates" / "main_shop_layout_manifest.yaml"
 )
@@ -162,9 +159,6 @@ def test_client_calibration_manifest_records_exact_in_memory_crops() -> None:
     )
     assert manifest["external_calibrations"]["insufficient_funds_live_recognition"] == (
         INSUFFICIENT_FUNDS_LIVE_MANIFEST_PATH.name
-    )
-    assert manifest["external_calibrations"]["overlay_capture"] == (
-        OVERLAY_CAPTURE_MANIFEST_PATH.name
     )
     assert manifest["external_calibrations"]["main_shop_activity_layout"] == (
         MAIN_SHOP_LAYOUT_MANIFEST_PATH.name
@@ -307,5 +301,4 @@ def test_operator_confirmed_overlay_position_geometry_is_exact() -> None:
     assert (overlay["width"], overlay["height"]) == (320, 159)
     assert manifest["widget"] == "e7auto.ui.StatsOverlay"
     assert manifest["overlay_font_size_px"] == 18
-    assert "no_game_input_was_sent" in manifest["limitations"]
-    assert "capture_exclusion_not_validated" in manifest["limitations"]
+    assert manifest["limitations"] == ["no_game_input_was_sent"]

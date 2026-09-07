@@ -20,9 +20,7 @@ The inventory templates are exact-pixel crops extracted from nine user-provided 
 
 `client_calibration_manifest.yaml` records five full-window sources. Paired edge gradients first remove the title bar and desktop background, yielding exact `2322 x 1306` client crops at `(49,108)`, `(42,101)`, `(49,111)`, `(31,90)`, and `(32,125)`. The full client images are processed only in memory. The manifest stores verified entry/refresh/dialog/Sky Stone positions, OCR evidence, purchase-row geometry, and the partial config values without persisting a screenshot copy.
 
-`overlay_position_calibration_manifest.yaml` records the historical operator-confirmed `18 px` geometry and the client-relative offset `(-252,-145)`, which is retained as the first-launch/fallback default. Current runtime F6 movement persists an absolute screen position separately; the historical fixed rectangle is not a current runtime placement constraint.
-
-`overlay_capture_validation_manifest.yaml` records that completed later stage: foreground/fixed-geometry checks, exact display-affinity read-back `17`, operator-observed visible positive control, no game input or persisted screenshots, and source-level post-Phase-32/Phase-37 reassessments proving the current 17 configured ROI/slot rectangles remain outside the overlay.
+`overlay_position_calibration_manifest.yaml` records the historical operator-confirmed `18 px` geometry and the client-relative offset `(-252,-145)`, which is retained as the first-launch/fallback default. Current runtime dragging persists an absolute screen position separately; the historical fixed rectangle is not a current runtime placement constraint.
 
 `manifest.yaml` records every source path, crop rectangle, output size, and channel count. Reproduce the files with:
 
