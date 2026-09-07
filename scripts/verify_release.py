@@ -13,6 +13,32 @@ import yaml
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
 UI_ICON_SIZES = (16, 24, 32, 48, 64, 128, 256, 1024)
+FORBIDDEN_RELEASE_GLOBS = (
+    "cv2/opencv_videoio_ffmpeg*.dll",
+    "PySide6/qt-plugins/imageformats/qpdf.dll",
+    "qt6pdf.dll",
+)
+REQUIRED_RELEASE_FILES = (
+    "winrt/_winrt_windows_foundation.pyd",
+)
+
+
+def verify_forbidden_release_files(release: Path) -> list[str]:
+    problems: list[str] = []
+    for pattern in FORBIDDEN_RELEASE_GLOBS:
+        for path in sorted(release.glob(pattern)):
+            problems.append(
+                f"forbidden release file was bundled: {path.relative_to(release).as_posix()}"
+            )
+    return problems
+
+
+def verify_required_release_files(release: Path) -> list[str]:
+    return [
+        f"missing required release file: {relative_path}"
+        for relative_path in REQUIRED_RELEASE_FILES
+        if not (release / relative_path).is_file()
+    ]
 
 
 def verify_ui_assets(ui_dir: Path) -> list[str]:
@@ -79,9 +105,6 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     overlay_position_manifest_path = (
         template_dir / "overlay_position_calibration_manifest.yaml"
     )
-    overlay_capture_manifest_path = (
-        template_dir / "overlay_capture_validation_manifest.yaml"
-    )
     for manifest_path in (
         crop_manifest_path,
         *single_manifest_paths,
@@ -92,7 +115,6 @@ def verify_template_assets(template_dir: Path) -> list[str]:
         insufficient_funds_live_manifest_path,
         client_calibration_manifest_path,
         overlay_position_manifest_path,
-        overlay_capture_manifest_path,
     ):
         if not manifest_path.is_file():
             problems.append(f"missing template manifest: {manifest_path.name}")
@@ -133,9 +155,6 @@ def verify_template_assets(template_dir: Path) -> list[str]:
         )
         overlay_position = yaml.safe_load(
             overlay_position_manifest_path.read_text(encoding="utf-8")
-        )
-        overlay_capture = yaml.safe_load(
-            overlay_capture_manifest_path.read_text(encoding="utf-8")
         )
     except (OSError, KeyError, TypeError, yaml.YAMLError) as exc:
         return [f"invalid template manifest: {exc}"]
@@ -217,10 +236,6 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     ) != overlay_position_manifest_path.name:
         problems.append("client calibration manifest lacks overlay position evidence")
     if client_calibration.get("external_calibrations", {}).get(
-        "overlay_capture"
-    ) != overlay_capture_manifest_path.name:
-        problems.append("client calibration manifest lacks overlay capture evidence")
-    if client_calibration.get("external_calibrations", {}).get(
         "insufficient_funds"
     ) != insufficient_funds_manifest_path.name:
         problems.append("client calibration manifest lacks insufficient-funds evidence")
@@ -275,77 +290,8 @@ def verify_template_assets(template_dir: Path) -> list[str]:
         problems.append("overlay position manifest has inconsistent geometry")
     if overlay_position.get("overlay_font_size_px") != 18:
         problems.append("overlay position manifest has the wrong font size")
-    if {
-        "capture_exclusion_not_validated",
-        "fallback_recognition_roi_overlap_not_validated",
-        "no_game_input_was_sent",
-    } != set(overlay_position.get("limitations", ())):
+    if {"no_game_input_was_sent"} != set(overlay_position.get("limitations", ())):
         problems.append("overlay position manifest has unexpected limitations")
-
-    if (
-        overlay_capture.get("status") != "operator_confirmed_passed"
-        or overlay_capture.get("criteria_all_met") is not True
-        or overlay_capture.get("screenshots_persisted") is not False
-        or overlay_capture.get("game_input_sent") is not False
-    ):
-        problems.append("overlay capture evidence is incomplete")
-    if (
-        overlay_capture.get("client_bounds") != client_bounds
-        or overlay_capture.get("overlay_bounds") != overlay_bounds
-        or overlay_capture.get("offset") != offset
-        or overlay_capture.get("overlay_font_size_px") != 18
-    ):
-        problems.append("overlay capture evidence has inconsistent geometry")
-    if (
-        overlay_capture.get("initial_game_foreground") is not True
-        or overlay_capture.get("foreground_checks", 0) < 8
-    ):
-        problems.append("overlay capture evidence lacks foreground checks")
-    if overlay_capture.get("production_affinity") != {
-        "set_succeeded": True,
-        "readback": 17,
-        "capture_excluded": True,
-    }:
-        problems.append("overlay capture evidence lacks exact affinity readback")
-    configured_fallback = overlay_capture.get("configured_fallback", {})
-    if (
-        configured_fallback.get("recognition_roi_count") != 17
-        or configured_fallback.get("no_overlap") is not True
-        or configured_fallback.get("missing_roi_names") != []
-        or configured_fallback.get("post_phase32_reassessment")
-        != {
-            "source_config": "config/internal.yaml",
-            "added_roi": "rois.purchase_result",
-            "added_roi_geometry": {
-                "x": 975,
-                "y": 210,
-                "width": 400,
-                "height": 300,
-            },
-            "all_current_rois_no_overlap": True,
-            "game_capture_required": False,
-        }
-        or configured_fallback.get("post_phase37_reassessment")
-        != {
-            "source_config": "config/internal.yaml",
-            "added_roi": "rois.shop_exit_icon",
-            "added_roi_geometry": {
-                "x": 39,
-                "y": 25,
-                "width": 267,
-                "height": 70,
-            },
-            "all_current_rois_no_overlap": True,
-            "game_capture_required": False,
-        }
-    ):
-        problems.append("overlay capture evidence has stale fallback geometry")
-    capture_content = overlay_capture.get("capture_content", {})
-    if (
-        capture_content.get("operator_confirmed_visible") is not True
-        or capture_content.get("production_capture_omits_visible_overlay") is not True
-    ):
-        problems.append("overlay capture evidence lacks the visible positive control")
 
     if len(expected) != 28 or len(set(expected)) != 28:
         problems.append("template manifests must describe exactly 28 unique PNG files")
@@ -418,6 +364,8 @@ def main() -> int:
         problems.append(".venv was bundled")
     if (release / "logs").exists():
         problems.append("runtime logs were bundled")
+    problems.extend(verify_forbidden_release_files(release))
+    problems.extend(verify_required_release_files(release))
     if not problems and (release / "config" / "internal.yaml").is_file():
         config_text = (release / "config" / "internal.yaml").read_text(encoding="utf-8")
         if "profile: compact" not in config_text:

@@ -4,16 +4,25 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "e7auto"
-version = "1.1.5"
+version = "1.2.0"
 description = "Fail-closed, calibrated Windows shop automation UI"
 requires-python = "==3.12.*"
 dependencies = [
-  "mss==10.2.0",
   "numpy==2.5.2",
   "opencv-python-headless==5.0.0.93",
   "PySide6==6.11.2",
   "pywin32==312",
   "PyYAML==6.0.3",
+  "typing_extensions==4.16.0",
+  "winrt-runtime==3.2.1",
+  "winrt-Windows.Foundation==3.2.1",
+  "winrt-Windows.Graphics==3.2.1",
+  "winrt-Windows.Graphics.Capture==3.2.1",
+  "winrt-Windows.Graphics.Capture.Interop==3.2.1",
+  "winrt-Windows.Graphics.DirectX==3.2.1",
+  "winrt-Windows.Graphics.DirectX.Direct3D11==3.2.1",
+  "winrt-Windows.Graphics.DirectX.Direct3D11.Interop==3.2.1",
+  "winrt-Windows.Graphics.Imaging==3.2.1",
 ]
 
 [project.optional-dependencies]

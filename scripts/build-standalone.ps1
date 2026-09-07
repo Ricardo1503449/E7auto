@@ -15,7 +15,22 @@ $sourceConfig = Join-Path $projectRoot "config\internal.yaml"
 if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
     throw "Missing source configuration: $sourceConfig"
 }
-$releaseConfig = Join-Path $projectRoot "dist\internal.release.yaml"
+$distDir = Join-Path $projectRoot "dist"
+$releaseConfig = Join-Path $distDir "internal.release.yaml"
+$pyproject = Join-Path $projectRoot "pyproject.toml"
+$versionMatch = [regex]::Match(
+    [IO.File]::ReadAllText($pyproject),
+    '(?m)^version\s*=\s*"(?<version>[^"\r\n]+)"\s*$'
+)
+if (-not $versionMatch.Success) {
+    throw "Unable to read the release version from: $pyproject"
+}
+$version = $versionMatch.Groups["version"].Value
+if ($version -notmatch '^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$') {
+    throw "Unsafe release version for archive filename: $version"
+}
+$releaseZip = Join-Path $distDir "E7auto_v${version}_x64.zip"
+$temporaryReleaseZip = Join-Path $distDir ".E7auto_v${version}_x64.building.zip"
 $uiAssetDir = Join-Path $projectRoot "assets\ui"
 $appIcon = Join-Path $uiAssetDir "e7auto.ico"
 if (-not (Test-Path -LiteralPath $appIcon -PathType Leaf)) {
@@ -25,7 +40,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $uiAssetDir "shop-card-background.pn
     throw "Missing shop card background"
 }
 
-New-Item -ItemType Directory -Path (Join-Path $projectRoot "dist") -Force | Out-Null
+New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 
 # Never carry runtime output from a previous build into the release.
 $releaseDir = Join-Path $projectRoot "dist\launcher.dist"
@@ -51,17 +66,43 @@ try {
         --output-dir=dist `
         --output-filename=E7auto.exe `
         --include-package=e7auto `
+        --include-package=winrt.windows.foundation `
+        --include-module=winrt._winrt_windows_foundation `
         --include-data-file=$releaseConfig=config/internal.yaml `
         --include-data-dir=assets/templates=assets/templates `
         --include-data-dir=assets/ui=assets/ui `
         --include-data-file=$usageGuideInclude `
+        --noinclude-dlls=cv2/opencv_videoio_ffmpeg*.dll `
+        --noinclude-dlls=PySide6/qt-plugins/imageformats/qpdf.dll `
+        --noinclude-dlls=qt6pdf.dll `
         --assume-yes-for-downloads `
         launcher.py
     if ($LASTEXITCODE -ne 0) {
         throw "Nuitka standalone build failed with exit code $LASTEXITCODE"
     }
+
+    Remove-Item -LiteralPath $temporaryReleaseZip -Force -ErrorAction SilentlyContinue
+    Compress-Archive `
+        -LiteralPath (Get-ChildItem -LiteralPath $releaseDir -Force).FullName `
+        -DestinationPath $temporaryReleaseZip `
+        -CompressionLevel Optimal
+    Move-Item -LiteralPath $temporaryReleaseZip -Destination $releaseZip -Force
+
+    # Retain the newly completed archive only. Failed builds/archives never reach this cleanup.
+    $oldReleaseZips = Get-ChildItem -LiteralPath $distDir -File | Where-Object {
+        $_.Name -match '^E7auto_v.+_x64\.zip$' -and
+        $_.FullName -ne $releaseZip
+    }
+    foreach ($oldReleaseZip in $oldReleaseZips) {
+        $resolvedOldReleaseZip = [IO.Path]::GetFullPath($oldReleaseZip.FullName)
+        if ([IO.Path]::GetDirectoryName($resolvedOldReleaseZip) -ne $distDir) {
+            throw "Refusing to remove archive outside dist: $resolvedOldReleaseZip"
+        }
+        Remove-Item -LiteralPath $resolvedOldReleaseZip -Force
+    }
 }
 finally {
     Remove-Item -LiteralPath $releaseConfig -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $temporaryReleaseZip -Force -ErrorAction SilentlyContinue
     Pop-Location
 }

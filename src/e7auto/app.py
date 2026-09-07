@@ -39,6 +39,17 @@ def validate_source_environment(root: Path) -> None:
         )
 
 
+def validate_wgc_import() -> tuple[bool, str]:
+    try:
+        from .wgc_capture import WindowsGraphicsCaptureService
+
+        if WindowsGraphicsCaptureService is None:
+            raise RuntimeError("WGC capture service is unavailable")
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+    return True, ""
+
+
 def main() -> int:
     if os.name != "nt":
         raise RuntimeError("E7auto supports Windows x64 only")
@@ -46,6 +57,7 @@ def main() -> int:
     validate_source_environment(root)
     if "--self-check" in sys.argv:
         compiled = bool(getattr(sys, "frozen", False) or "__compiled__" in globals())
+        wgc_importable, wgc_import_error = validate_wgc_import()
         config_path = root / "config" / "internal.yaml"
         templates_path = root / "assets" / "templates"
         ui_assets_path = root / "assets" / "ui"
@@ -63,6 +75,8 @@ def main() -> int:
                 )
             ),
             "venv_bundled": compiled and (root / ".venv").exists(),
+            "wgc_importable": wgc_importable,
+            "wgc_import_error": wgc_import_error,
         }
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return (
@@ -71,6 +85,7 @@ def main() -> int:
             and result["templates_present"]
             and result["ui_assets_present"]
             and not result["venv_bundled"]
+            and result["wgc_importable"]
             else 2
         )
     enable_per_monitor_dpi_awareness()
