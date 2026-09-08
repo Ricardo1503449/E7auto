@@ -129,7 +129,14 @@ def test_alpha_mask_ignores_wallpaper_but_requires_foreground() -> None:
 
 
 def test_sky_stone_digits_roi_follows_detected_icon() -> None:
-    config = replace(make_config(), sky_stone_digits_offset=Point(57, 16))
+    config = replace(
+        make_config(),
+        rois={
+            **make_config().rois,
+            "sky_stone_digits": Rect(0, 0, 100, 10),
+        },
+        sky_stone_digits_offset=Point(57, 16),
+    )
     icon_template = np.zeros((75, 62, 3), dtype=np.uint8)
     vision = OpenCvGameVision(
         config,
@@ -140,10 +147,10 @@ def test_sky_stone_digits_roi_follows_detected_icon() -> None:
         "sky_stone_icon",
         0.99,
         config.rois["sky_stone_icon"],
-        Point(1502, 59),
+        Point(42, 40),
     )
 
-    assert vision._sky_stone_digits_roi(frame, icon) == Rect(1528, 38, 30, 10)
+    assert vision._sky_stone_digits_roi(frame, icon) == Rect(68, 19, 32, 10)
 
 
 def test_sky_stone_digits_roi_fails_closed_when_derived_region_is_outside_frame() -> None:

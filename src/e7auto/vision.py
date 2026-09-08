@@ -690,10 +690,16 @@ class OpenCvGameVision:
             icon_template = self._templates.get("sky_stone_icon").image
             icon_left = icon.anchor.x - icon_template.shape[1] // 2
             icon_top = icon.anchor.y - icon_template.shape[0] // 2
+            digit_left = icon_left + offset.x
+            # The configured ROI is the allowed top-bar band. Its right edge,
+            # rather than a fixed digit width, bounds balances of any visible length.
+            digit_right = base_roi.right
+            if digit_left < base_roi.x or digit_left >= digit_right:
+                return None
             roi = Rect(
-                icon_left + offset.x,
+                digit_left,
                 icon_top + offset.y,
-                base_roi.width,
+                digit_right - digit_left,
                 base_roi.height,
             )
         if isinstance(frame, AdaptedFrame):
@@ -719,13 +725,13 @@ class OpenCvGameVision:
         mask = self._neutral_bright_mask(source)
         count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
         min_height = max(8, int(round(source.shape[0] * 0.40)))
-        components: list[tuple[int, np.ndarray]] = []
+        components: list[tuple[int, int, np.ndarray]] = []
         for component in range(1, count):
             x, y, width, height, area = (int(value) for value in stats[component])
             if height < min_height or area < 20:
                 continue
             glyph = labels[y : y + height, x : x + width] == component
-            components.append((x, glyph))
+            components.append((x, width, glyph))
         components.sort(key=lambda item: item[0])
         if not components:
             return None
@@ -734,14 +740,25 @@ class OpenCvGameVision:
 
         minimum_segment_width = max(1, min(template_widths) - 2)
         maximum_segment_width = max(template_widths) + 2
+        maximum_run_gap = maximum_segment_width
 
         parsed: list[str] = []
         confidences: list[float] = []
-        for _, glyph in components:
+        previous_right = 0
+        for x, width, glyph in components:
+            gap = x if not parsed else x - previous_right
+            # Thousands separators are too short to become components, while the
+            # much larger gap before the next header control terminates this run.
+            if gap > maximum_run_gap:
+                if parsed:
+                    break
+                return None
+
             match = self._best_digit_match(glyph, template_variants)
             if self._digit_match_is_safe(match):
                 parsed.append(match.digit)
                 confidences.append(match.confidence)
+                previous_right = x + width
                 continue
 
             if glyph.shape[1] <= maximum_segment_width:
@@ -756,6 +773,7 @@ class OpenCvGameVision:
                 return None
             parsed.extend(digit for digit, _ in split)
             confidences.extend(confidence for _, confidence in split)
+            previous_right = x + width
         return int("".join(parsed)), min(confidences)
 
     def sky_stone_balance(

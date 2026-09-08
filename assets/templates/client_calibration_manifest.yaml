@@ -529,14 +529,14 @@ calibrated:
       width: 400
       height: 300
     sky_stone_icon:
-      x: 1450
-      y: 12
-      width: 195
-      height: 95
+      x: 0
+      y: 0
+      width: 2322
+      height: 110
     sky_stone_digits:
-      x: 1625
-      y: 38
-      width: 110
+      x: 0
+      y: 0
+      width: 2322
       height: 45
   points:
     shop_icon:

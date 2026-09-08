@@ -69,9 +69,10 @@ CALIBRATED_ROIS = {
     "confirm_item": (880, 535, 220, 225),
     "confirm_button": (1385, 860, 200, 130),
     "purchase_result": (975, 210, 400, 300),
-    "sky_stone_icon": (1450, 12, 195, 95),
-    "sky_stone_digits": (1625, 38, 110, 45),
+    "sky_stone_icon": (0, 0, 2322, 110),
+    "sky_stone_digits": (0, 0, 2322, 45),
 }
+SKY_STONE_SOURCE_DIGITS_ROI = (1625, 38, 110, 45)
 CALIBRATED_POINTS = {
     "shop_icon": (102, 594),
     "shop_exit_button": (172, 60),
@@ -274,9 +275,7 @@ def glyph_similarity(left: np.ndarray, right: np.ndarray) -> float:
 
 
 def read_balance(frame: np.ndarray) -> dict[str, object]:
-    labels, components = neutral_digit_components(
-        frame, CALIBRATED_ROIS["sky_stone_digits"]
-    )
+    labels, components = neutral_digit_components(frame, SKY_STONE_SOURCE_DIGITS_ROI)
     if len(components) != 4:
         raise RuntimeError(f"Expected four Sky Stone digits, found: {components}")
     template_masks = {
@@ -312,7 +311,7 @@ def read_balance(frame: np.ndarray) -> dict[str, object]:
         raise RuntimeError(f"Unexpected Sky Stone parse: {value} {observations}")
     return {
         "value": value,
-        "digit_roi": rect_dict(CALIBRATED_ROIS["sky_stone_digits"]),
+        "digit_roi": rect_dict(SKY_STONE_SOURCE_DIGITS_ROI),
         "digits": observations,
         "accepted_confidence": 0.80,
     }

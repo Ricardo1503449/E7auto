@@ -60,8 +60,8 @@ rois:
   confirm_item: {x: 880, y: 535, width: 220, height: 225}
   confirm_button: {x: 1385, y: 860, width: 200, height: 130}
   purchase_result: {x: 975, y: 210, width: 400, height: 300}
-  sky_stone_icon: {x: 1450, y: 12, width: 195, height: 95}
-  sky_stone_digits: {x: 1625, y: 38, width: 110, height: 45}
+  sky_stone_icon: {x: 0, y: 0, width: 2322, height: 110}
+  sky_stone_digits: {x: 0, y: 0, width: 2322, height: 45}
   network_error: {x: 900, y: 545, width: 540, height: 105}
   network_retry: {x: 1060, y: 760, width: 300, height: 120}
 
