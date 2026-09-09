@@ -10,6 +10,7 @@ from pathlib import Path
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
+from . import __version__
 from .platform_windows import enable_per_monitor_dpi_awareness
 from .ui import MainWindow
 
@@ -62,6 +63,7 @@ def main() -> int:
         templates_path = root / "assets" / "templates"
         ui_assets_path = root / "assets" / "ui"
         result = {
+            "version": __version__,
             "compiled": compiled,
             "machine": platform.machine(),
             "config_present": config_path.is_file(),

@@ -207,9 +207,14 @@ def test_non_reference_run_scales_input_overlay_and_wraps_capture() -> None:
     assert windows.fit_calls[0][0] == Size(150, 120)
     assert windows.resize_calls == [Size(150, 120)]
     assert isinstance(vision.scan_frames[0], AdaptedFrame)
-    assert [point for action, point, _ in inputs.actions if action == "click"] == [Point(58, 188)]
-    assert overlay.calls[0][2] == Point(11, 14)
-    assert overlay.calls[0][1][0] == Rect(0, 0, 15, 15)
+    transform = CoordinateTransform(config.baseline_client_size, Size(150, 120))
+    assert [point for action, point, _ in inputs.actions if action == "click"] == [
+        transform.point(config.points["shop_icon"]),
+        transform.point(config.points["shop_exit_button"]),
+    ]
+    assert overlay.calls == [
+        (windows.state.client_bounds, transform.point(config.overlay_offset))
+    ]
     assert windows.display_inspections[:4] == [True, True, False, True]
 
 

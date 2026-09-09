@@ -28,7 +28,7 @@ powershell -ExecutionPolicy Bypass -File scripts\run-admin-background-validation
 powershell -ExecutionPolicy Bypass -File scripts\run-admin-background-validation.ps1 -Mode scroll -CaptureBackend wgc -EffectObservationMs 10000
 ```
 
-结果写入 `logs\background-scroll-wgc-post-10000ms-validation.json`。WGC 会在最后一次滚轮消息发送后立即开始轮询，不使用生产路径的固定 `800 ms` 等待；`effect_trace` 会记录每次新 WGC 帧相对滚动前画面的位移和变化比例以及距最后一次输入的时间。观测期间不会追加任何输入。
+结果写入 `logs\background-scroll-wgc-post-10000ms-validation.json`。这个扩展观测模式会在最后一次滚轮消息发送后立即轮询 WGC 新帧，以便观察滚动效果出现的完整时序；生产路径则从 `100 ms` 开始自适应稳定检测，并以 `800 ms` 为最长时限。`effect_trace` 会记录每次新 WGC 帧相对滚动前画面的位移和变化比例以及距最后一次输入的时间。观测期间不会追加任何输入。
 
 ## 2. 后台滚动
 

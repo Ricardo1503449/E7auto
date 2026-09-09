@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 import json
+import re
 import struct
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import cv2
 import numpy as np
+import pywintypes
+import win32api
 import yaml
+
+from e7auto import __version__
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
@@ -336,8 +342,58 @@ def pe_machine(path: Path) -> int:
         return struct.unpack("<H", stream.read(2))[0]
 
 
+def project_version(path: Path) -> str:
+    project = tomllib.loads(path.read_text(encoding="utf-8")).get("project", {})
+    version = project.get("version")
+    if not isinstance(version, str) or not version:
+        raise RuntimeError("pyproject.toml does not contain a static project version")
+    return version
+
+
+def windows_version(version: str) -> tuple[int, int, int, int]:
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:[-+][0-9A-Za-z.-]+)?", version)
+    if match is None:
+        raise ValueError(f"unsupported project version: {version}")
+    major, minor, patch = (int(value) for value in match.groups())
+    return major, minor, patch, 0
+
+
+def _version_tuple(
+    info: dict[str, object], prefix: str
+) -> tuple[int, int, int, int]:
+    most = int(info[f"{prefix}VersionMS"])
+    least = int(info[f"{prefix}VersionLS"])
+    return (
+        most >> 16,
+        most & 0xFFFF,
+        least >> 16,
+        least & 0xFFFF,
+    )
+
+
+def verify_windows_versions(executable: Path, expected: str) -> list[str]:
+    expected_tuple = windows_version(expected)
+    try:
+        info = win32api.GetFileVersionInfo(str(executable), "\\")
+        file_version = _version_tuple(info, "File")
+        product_version = _version_tuple(info, "Product")
+    except (OSError, pywintypes.error, KeyError, TypeError, ValueError) as exc:
+        return [f"unable to read executable version information: {exc}"]
+    problems: list[str] = []
+    if file_version != expected_tuple:
+        problems.append(
+            f"executable file version is {file_version}, expected {expected_tuple}"
+        )
+    if product_version != expected_tuple:
+        problems.append(
+            f"executable product version is {product_version}, expected {expected_tuple}"
+        )
+    return problems
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
+    expected_version = project_version(root / "pyproject.toml")
     release = root / "dist" / "launcher.dist"
     executable = release / "E7auto.exe"
     problems: list[str] = []
@@ -346,10 +402,23 @@ def main() -> int:
     else:
         if pe_machine(executable) != 0x8664:
             problems.append("executable is not PE32+ AMD64")
+        problems.extend(verify_windows_versions(executable, expected_version))
+    if __version__ != expected_version:
+        problems.append(
+            f"source version is {__version__}, expected project version {expected_version}"
+        )
     if not (release / "config" / "internal.yaml").is_file():
         problems.append("missing internal configuration")
     if not (release / USAGE_GUIDE_FILENAME).is_file():
         problems.append(f"missing end-user usage guide: {USAGE_GUIDE_FILENAME}")
+    else:
+        usage_title = (release / USAGE_GUIDE_FILENAME).read_text(
+            encoding="utf-8"
+        ).splitlines()[0]
+        if usage_title != f"E7auto v{expected_version} x64 使用说明":
+            problems.append(
+                f"end-user usage guide has the wrong version title: {usage_title}"
+            )
     template_dir = release / "assets" / "templates"
     if not template_dir.is_dir():
         problems.append("missing templates directory")
@@ -382,8 +451,18 @@ def main() -> int:
         )
         if completed.returncode != 0:
             problems.append(f"compiled self-check failed: {completed.returncode} {completed.stderr.strip()}")
-        elif completed.stdout.strip():
-            self_check = json.loads(completed.stdout.strip().splitlines()[-1])
+        elif not completed.stdout.strip():
+            problems.append("compiled self-check produced no JSON output")
+        else:
+            try:
+                self_check = json.loads(completed.stdout.strip().splitlines()[-1])
+            except json.JSONDecodeError as exc:
+                problems.append(f"compiled self-check returned invalid JSON: {exc}")
+            else:
+                if self_check.get("version") != expected_version:
+                    problems.append(
+                        "compiled self-check version does not match pyproject.toml"
+                    )
     print(json.dumps({"release": str(release), "problems": problems, "self_check": self_check}, indent=2))
     return 1 if problems else 0
 

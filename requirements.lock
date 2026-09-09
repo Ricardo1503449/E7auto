@@ -1,4 +1,4 @@
-# Generated from the isolated Python 3.12 environment on 2026-08-23.
+# Exact Python 3.12 environment lock, last synchronized with pyproject.toml on 2026-09-09.
 # Install only with: .venv\Scripts\python.exe -m pip install -r requirements.lock
 colorama==0.4.6
 iniconfig==2.3.0

@@ -29,6 +29,18 @@ $version = $versionMatch.Groups["version"].Value
 if ($version -notmatch '^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$') {
     throw "Unsafe release version for archive filename: $version"
 }
+$coreVersionMatch = [regex]::Match(
+    $version,
+    '^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)'
+)
+if (-not $coreVersionMatch.Success) {
+    throw "Unable to derive numeric Windows version from: $version"
+}
+$windowsVersion = "{0}.{1}.{2}.0" -f (
+    $coreVersionMatch.Groups["major"].Value,
+    $coreVersionMatch.Groups["minor"].Value,
+    $coreVersionMatch.Groups["patch"].Value
+)
 $releaseZip = Join-Path $distDir "E7auto_v${version}_x64.zip"
 $temporaryReleaseZip = Join-Path $distDir ".E7auto_v${version}_x64.building.zip"
 $uiAssetDir = Join-Path $projectRoot "assets\ui"
@@ -63,6 +75,10 @@ try {
         --windows-uac-admin `
         --windows-console-mode=attach `
         --windows-icon-from-ico=$appIcon `
+        --product-name=E7auto `
+        "--file-description=E7auto Windows x64 shop automation" `
+        "--file-version=$windowsVersion" `
+        "--product-version=$windowsVersion" `
         --output-dir=dist `
         --output-filename=E7auto.exe `
         --include-package=e7auto `

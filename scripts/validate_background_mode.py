@@ -499,7 +499,8 @@ def _run_scroll(args: argparse.Namespace) -> tuple[dict[str, object], int]:
     observation_ms = getattr(args, "effect_observation_ms", config.scroll.settle_ms)
     if not config.scroll.settle_ms <= observation_ms <= 30000:
         raise RuntimeError(
-            "effect-observation-ms must be between the calibrated settle time and 30000"
+            "effect-observation-ms must be between the production adaptive-settle "
+            "maximum and 30000"
         )
     cursor_before = tuple(int(value) for value in win32api.GetCursorPos())
     capture = _capture_service(args.capture_backend)
@@ -774,7 +775,11 @@ def main() -> int:
                 "--effect-observation-ms",
                 type=int,
                 default=800,
-                help="Observe captured scroll effect for 800-30000 ms after the last wheel message without extra input.",
+                help=(
+                    "Immediately poll the captured scroll effect for 800-30000 ms "
+                    "after the last wheel message without extra input; 800 ms is "
+                    "the production adaptive-settle maximum."
+                ),
             )
         sub.add_argument(
             "--capture-backend",
