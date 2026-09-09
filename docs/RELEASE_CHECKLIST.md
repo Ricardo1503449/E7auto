@@ -48,6 +48,23 @@ Use a Windows x64 machine or VM with no Python installed.
 - [ ] Create the versioned ZIP from the exact locally verified standalone directory and stream every entry to confirm successful decompression and CRC validation.
 - [ ] Create the matching version tag and GitHub Release from the reviewed release commit.
 - [ ] Upload only the verified versioned ZIP as the Release asset, then confirm its displayed size and downloadable filename.
+- [ ] Set the public Release title to `E7auto vX.Y.Z` and begin the Release description with the exact top-level heading `# 更新内容`.
+- [ ] Under `更新内容`, choose only subheadings that match the actual changes, such as `## 新增`, `## 改进`, or `## 修复`; omit empty or irrelevant sections.
+- [ ] Make `## 发布` the final subheading. Its complete content must be exactly one bullet in the form ``- 文件：`E7auto_vX.Y.Z_x64.zip` ``. Do not use `下载校验`, add explanatory text, links, SHA-256, or other digest values to this final section or elsewhere in the public Release title/description. Hashes may be retained only in local build and verification records.
 - [ ] Confirm the repository tree contains source, tests, templates, build scripts, and documentation, but no tracked `dist` artifact.
+
+Required Release-description template:
+
+```markdown
+# 更新内容
+
+## <按本次实际改动选择的子标题>
+
+- <具体改动>
+
+## 发布
+
+- 文件：`E7auto_vX.Y.Z_x64.zip`
+```
 
 Onefile evaluation begins only after every standalone gate passes. Startup extraction behavior, antivirus reputation, data-file lookup, and signed-build behavior then require a separate test matrix.
