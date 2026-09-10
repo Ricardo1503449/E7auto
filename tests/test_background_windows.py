@@ -164,7 +164,7 @@ def test_runtime_source_contains_no_printwindow_or_real_cursor_backend() -> None
         "pyautogui",
     )
     violations: list[str] = []
-    for path in sorted((ROOT / "src" / "e7auto").glob("*.py")):
+    for path in sorted((ROOT / "src" / "e7auto").rglob("*.py")):
         source = path.read_text(encoding="utf-8")
         violations.extend(
             f"{path.name}: {symbol}"

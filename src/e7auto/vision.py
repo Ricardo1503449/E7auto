@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
 
 import cv2
 import numpy as np
@@ -9,36 +8,16 @@ import numpy as np
 from .config import AppConfig, Point, Rect, SlotConfig, TargetConfig
 from .geometry import AdaptedFrame
 from .ports import Frame
+from .vision_types import (
+    Observation,
+    InventoryMatch,
+    SkyStoneBalanceObservation,
+    ScrollMovementObservation,
+    PurchaseOutcome,
+)
 
 
 _GLYPH_KERNEL = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
-
-
-@dataclass(frozen=True, slots=True)
-class Observation:
-    object_id: str
-    confidence: float
-    roi: Rect
-    anchor: Point
-
-
-@dataclass(frozen=True, slots=True)
-class InventoryMatch:
-    target_id: str
-    display_name: str
-    slot_id: str
-    slot_order: int
-    buy_point: Point
-    confidence: float
-    roi: Rect
-    is_purchased: bool = False
-
-
-@dataclass(frozen=True, slots=True)
-class SkyStoneBalanceObservation:
-    value: int
-    confidence: float
-    roi: Rect
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,16 +30,6 @@ class _DigitMatch:
     @property
     def margin(self) -> float:
         return self.confidence - self.runner_up_confidence
-
-
-@dataclass(frozen=True, slots=True)
-class ScrollMovementObservation:
-    mean_absolute_difference: float
-    changed_fraction: float
-    maximum_difference: int
-    phase_shift_x: float
-    phase_shift_y: float
-    phase_response: float
 
 
 def _inventory_gray(frame: Frame | AdaptedFrame, roi: Rect) -> np.ndarray:
@@ -150,12 +119,6 @@ def measure_inventory_scroll_stability(
         scale_x=before_gray.shape[1] / width,
         scale_y=before_gray.shape[0] / height,
     )
-
-
-class PurchaseOutcome(str, Enum):
-    PENDING = "pending"
-    SUCCESS = "success"
-    INSUFFICIENT_FUNDS = "insufficient_funds"
 
 
 @dataclass(frozen=True, slots=True)

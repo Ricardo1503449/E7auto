@@ -1,14 +1,15 @@
 from __future__ import annotations
 
+from pathlib import Path
 import importlib.metadata
 import json
 import re
 import site
 import sys
 import tomllib
-from pathlib import Path
 
 from e7auto import __version__
+from scripts.common.paths import PROJECT_ROOT
 
 
 def _canonicalize_name(value: str) -> str:
@@ -35,7 +36,7 @@ def _project_version(path: Path) -> str:
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[1]
+    root = PROJECT_ROOT
     expected = (root / ".venv").resolve()
     locked = _locked_versions(root / "requirements.lock")
     installed = {

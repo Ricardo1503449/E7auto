@@ -15,3 +15,8 @@ dist/
 *.onefile-build/
 .coverage
 htmlcov/
+
+# Local planning-with-files history stays at the project root for recovery.
+/task_plan.md
+/findings.md
+/progress.md

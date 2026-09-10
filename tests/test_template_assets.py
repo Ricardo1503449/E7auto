@@ -528,7 +528,7 @@ def test_wide_zero_extractor_reproduces_checked_in_asset(tmp_path: Path) -> None
     if not source.is_file():
         return
 
-    from scripts.extract_sky_stone_zero_wide_template import main
+    from scripts.calibration.extract_sky_stone_zero_wide_template import main
 
     import sys
 

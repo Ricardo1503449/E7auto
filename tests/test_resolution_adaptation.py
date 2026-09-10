@@ -16,7 +16,7 @@ from e7auto.ports import DisplayGeometry, WindowRef
 from e7auto.vision import OpenCvGameVision, TemplateData
 
 from .helpers import FakeWindowService, ScriptedVision, make_config
-from .test_automation import run_session
+from .automation.support import run_session
 
 
 def test_reference_path_is_identity_and_non_reference_target_uses_width_fraction() -> None:
