@@ -1,5 +1,24 @@
 # Architecture
 
+## Source organization
+
+`app.py` starts the application. `ui/main_window.py`, `ui/overlay.py`, `ui/pages/`,
+`ui/widgets.py`, and `ui/window_chrome.py` own the Qt presentation. `ui/worker.py`
+assembles production services and retains the worker-local WGC import.
+
+`automation/session.py` owns each run's lifecycle; `automation/engine.py` coordinates
+the business flow. `automation/stop_control.py` owns the shared stop/input lock,
+and `automation/snapshots.py` publishes immutable snapshots. `automation/scrolling.py`
+accepts narrow callbacks for guarded input, capture, active time, vision and logging;
+it does not access engine internals. Progress metrics survive a failed scroll so the
+engine can still emit its final performance record.
+
+`ports.py` defines service contracts, including `GameVision`; `vision_types.py`
+defines their recognition results. `vision.py` implements recognition and re-exports
+the existing result names for import compatibility. Public UI and automation entry
+points are retained by their package `__init__.py` files. See [development](DEVELOPMENT.md)
+for script locations, focused testing, and planning-file recovery.
+
 ## Data and threads
 
 - The Qt main thread owns `MainWindow` and `StatsOverlay` only.

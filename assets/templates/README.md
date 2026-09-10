@@ -22,18 +22,18 @@ The inventory templates are exact-pixel crops extracted from nine user-provided 
 
 `overlay_position_calibration_manifest.yaml` records the historical operator-confirmed `18 px` geometry and the client-relative offset `(-252,-145)`, which is retained as the first-launch/fallback default. Current runtime dragging persists an absolute screen position separately; the historical fixed rectangle is not a current runtime placement constraint.
 
-`manifest.yaml` records every source path, crop rectangle, output size, and channel count. Reproduce the files with:
+`manifest.yaml` records every source path, crop rectangle, output size, and channel count. The entry points below show their required arguments with `--help`. Supply the original images explicitly before reproducing assets; see the [input table](../../docs/DEVELOPMENT.md#校准工具输入). Historical manifest paths are provenance, not portable default inputs:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\crop_calibration_templates.py
-.\.venv\Scripts\python.exe scripts\extract_main_shop_icon_template.py
-.\.venv\Scripts\python.exe scripts\extract_shop_refresh_button_template.py
-.\.venv\Scripts\python.exe scripts\extract_shop_exit_icon_template.py
-.\.venv\Scripts\python.exe scripts\extract_refresh_confirm_templates.py
-.\.venv\Scripts\python.exe scripts\extract_insufficient_funds_template.py
-.\.venv\Scripts\python.exe scripts\extract_sky_stone_templates.py
-.\.venv\Scripts\python.exe scripts\extract_sky_stone_zero_wide_template.py
-.\.venv\Scripts\python.exe scripts\calibrate_client_frames.py
+.\.venv\Scripts\python.exe -m scripts.calibration.crop_calibration_templates --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_main_shop_icon_template --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_shop_refresh_button_template --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_shop_exit_icon_template --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_refresh_confirm_templates --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_insufficient_funds_template --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_sky_stone_templates --help
+.\.venv\Scripts\python.exe -m scripts.calibration.extract_sky_stone_zero_wide_template --help
+.\.venv\Scripts\python.exe -m scripts.calibration.calibrate_client_frames --help
 ```
 
 The scripts perform no generative editing. RGB values remain exact source pixels; deterministic alpha masks exclude irrelevant background, and digit shapes are normalized only in memory during recognition. These are offline calibration utilities for explicitly supplied images. Captured runtime frames are never written here or anywhere else.

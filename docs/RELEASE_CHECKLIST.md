@@ -7,11 +7,11 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 ## Local standalone gate
 
 - [ ] Run `powershell -ExecutionPolicy Bypass -File scripts\test-source.ps1`; it must run the Qt/non-WGC suite and the PyWinRT/WGC suite in separate Python processes, with both invocations passing.
-- [ ] Run `.venv\Scripts\python.exe scripts\verify_environment.py`.
-- [ ] Build with `scripts\build-standalone.ps1` and project-local Nuitka cache.
+- [ ] Run `.venv\Scripts\python.exe -m scripts.verify_environment`.
+- [ ] Build with `scripts\release\build-standalone.ps1` and project-local Nuitka cache.
 - [ ] Confirm the build uses Nuitka `--windows-uac-admin` and the resulting PE manifest requests administrator elevation.
 - [ ] Confirm Windows file/product versions are the four-part numeric form of the `pyproject.toml` version, and `E7auto.exe --self-check` reports the same package version.
-- [ ] Run `.venv\Scripts\python.exe scripts\verify_release.py`.
+- [ ] Run `.venv\Scripts\python.exe -m scripts.release.verify_release`.
 - [ ] Confirm `dist\launcher.dist` contains `E7auto.exe`, `使用说明.txt`, `config\internal.yaml`, `assets\templates`, and `assets\ui`.
 - [ ] Confirm the executable uses `assets\ui\e7auto.ico`; all required 16-1024 PNG sizes, the multi-size ICO, and `shop-card-background.png` are present and pass `verify_ui_assets`.
 - [ ] Confirm every required manifest and all 28 described calibrated PNGs are present, decodable, structurally valid, and covered by the focused asset tests. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold and overlay-position evidence.
