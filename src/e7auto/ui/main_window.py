@@ -285,7 +285,7 @@ class MainWindow(QMainWindow):
         try:
             config = load_config(self._config_path)
         except ConfigError as exc:
-            manager = RunLogManager(self._project_root / "logs", LoggingConfig(14, 100))
+            manager = RunLogManager(self._project_root / "logs", LoggingConfig())
             logger = manager.start(run_id)
             logger.event("startup_rejected", reason=StopReason.CONFIG_INCOMPLETE.value, errors=" | ".join(exc.errors))
             logger.close()

@@ -16,7 +16,7 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm the executable uses `assets\ui\e7auto.ico`; all required 16-1024 PNG sizes, the multi-size ICO, and `shop-card-background.png` are present and pass `verify_ui_assets`.
 - [ ] Confirm every required manifest and all 28 described calibrated PNGs are present, decodable, structurally valid, and covered by the focused asset tests. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold and overlay-position evidence.
 - [ ] Confirm no `.venv`, `.pip-cache`, tests, logs, or runtime screenshots are included.
-- [ ] Confirm packaged `config\internal.yaml` uses `logging.profile: compact`; source `config\internal.yaml` remains `detailed` for diagnostics.
+- [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
 
 ## Clean Windows x64 gate

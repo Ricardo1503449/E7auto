@@ -106,10 +106,11 @@ class ScrollConfig:
 
 @dataclass(frozen=True, slots=True)
 class LoggingConfig:
-    keep_days: int
-    keep_files: int
-    profile: str = "detailed"
-    max_file_mb: int = 0
+    keep_days: int = 7
+    keep_runs: int = 20
+    max_file_mb: int = 10
+    backup_count: int = 3
+    max_total_mb: int = 500
 
 
 @dataclass(frozen=True, slots=True)
@@ -553,19 +554,12 @@ def load_config(path: str | Path) -> AppConfig:
     overlay_offset = _point(overlay_raw.get("offset"), "overlay.offset", errors)
 
     logging_raw = _mapping(root.get("logging"), "logging", errors)
-    profile = logging_raw.get("profile", "detailed")
-    if profile not in {"detailed", "compact"}:
-        errors.append("logging.profile must be 'detailed' or 'compact'")
-        profile = "detailed"
-    max_file_mb = logging_raw.get("max_file_mb", 0)
-    if not isinstance(max_file_mb, int) or max_file_mb < 0:
-        errors.append("logging.max_file_mb must be a non-negative integer")
-        max_file_mb = 0
+    defaults = LoggingConfig()
     logging_config = LoggingConfig(
-        _positive_int(logging_raw.get("keep_days"), "logging.keep_days", errors),
-        _positive_int(logging_raw.get("keep_files"), "logging.keep_files", errors),
-        profile,
-        max_file_mb,
+        **{
+            name: _positive_int(logging_raw.get(name, getattr(defaults, name)), f"logging.{name}", errors)
+            for name in ("keep_days", "keep_runs", "max_file_mb", "backup_count", "max_total_mb")
+        }
     )
 
     def point_in_client(point: Point) -> bool:

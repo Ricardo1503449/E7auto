@@ -57,13 +57,13 @@ New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 # Never carry runtime output from a previous build into the release.
 $releaseDir = Join-Path $projectRoot "dist\launcher.dist"
 if (Test-Path -LiteralPath $releaseDir) {
-    Remove-Item -LiteralPath $releaseDir -Recurse -Force
+    $resolvedReleaseDir = [IO.Path]::GetFullPath($releaseDir)
+    if ([IO.Path]::GetDirectoryName($resolvedReleaseDir) -ne $distDir) {
+        throw "Refusing to remove build output outside dist: $resolvedReleaseDir"
+    }
+    Remove-Item -LiteralPath $resolvedReleaseDir -Recurse -Force
 }
 $configText = [IO.File]::ReadAllText($sourceConfig)
-$configText = $configText -replace '(?m)^  profile:\s*\S+\s*$', '  profile: compact'
-$configText = $configText -replace '(?m)^  keep_days:\s*\d+\s*$', '  keep_days: 7'
-$configText = $configText -replace '(?m)^  keep_files:\s*\d+\s*$', '  keep_files: 5'
-$configText = $configText -replace '(?m)^  max_file_mb:\s*\d+\s*$', '  max_file_mb: 2'
 [IO.File]::WriteAllText($releaseConfig, $configText, [Text.UTF8Encoding]::new($false))
 
 $env:NUITKA_CACHE_DIR = Join-Path $projectRoot ".nuitka-cache"

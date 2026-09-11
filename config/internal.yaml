@@ -160,7 +160,8 @@ overlay:
   offset: {x: -252, y: -145}
 
 logging:
-  profile: detailed
-  keep_days: 14
-  keep_files: 100
-  max_file_mb: 0
+  keep_days: 7
+  keep_runs: 20
+  max_file_mb: 10
+  backup_count: 3
+  max_total_mb: 500

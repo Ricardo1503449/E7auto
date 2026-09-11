@@ -15,6 +15,8 @@ import win32api
 import yaml
 
 from e7auto import __version__
+from e7auto.config import LoggingConfig
+from dataclasses import asdict
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -438,8 +440,9 @@ def main() -> int:
     problems.extend(verify_required_release_files(release))
     if not problems and (release / "config" / "internal.yaml").is_file():
         config_text = (release / "config" / "internal.yaml").read_text(encoding="utf-8")
-        if "profile: compact" not in config_text:
-            problems.append("release logging profile is not compact")
+        packaged_logging = yaml.safe_load(config_text).get("logging")
+        if packaged_logging != asdict(LoggingConfig()):
+            problems.append("release logging configuration does not match unified defaults")
     self_check: dict[str, object] | None = None
     if not problems:
         completed = subprocess.run(

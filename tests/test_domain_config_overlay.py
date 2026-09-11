@@ -139,7 +139,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
             "sky_stone_digits_offset": {"x": 1, "y": 2},
         },
         "overlay": {"offset": {"x": 1, "y": 2}},
-        "logging": {"keep_days": 7, "keep_files": 2},
+        "logging": {"keep_days": 7, "keep_runs": 2},
     }
     path = tmp_path / "internal.yaml"
     path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
@@ -191,9 +191,9 @@ def test_text_logger_prunes_numbered_rotations_but_not_lookalikes(tmp_path: Path
     assert lookalike.exists()
 
 
-def test_compact_logger_keeps_only_user_actionable_events(tmp_path: Path) -> None:
-    manager = RunLogManager(tmp_path, LoggingConfig(30, 2, "compact", 0))
-    logger = manager.start("compact")
+def test_logger_records_all_diagnostic_events(tmp_path: Path) -> None:
+    manager = RunLogManager(tmp_path, LoggingConfig(30, 2))
+    logger = manager.start("diagnostics")
     logger.event("recognition", object="shop", detected=False)
     logger.event("recognition", object="shop", detected=True, stable=1, confidence="0.9")
     logger.event("recognition", object="shop", detected=True, stable=3, confidence="0.99")
@@ -213,11 +213,11 @@ def test_compact_logger_keeps_only_user_actionable_events(tmp_path: Path) -> Non
     logger.event("run_stopped", reason="input_failure", detail="confirm_refresh denied")
     logger.close()
     text = next(tmp_path.glob("run-*.log")).read_text(encoding="utf-8")
-    assert "event=recognition" not in text
-    assert "event=inventory_scan" not in text
-    assert "event=sky_stone_observation" not in text
-    assert "event=input_failed" not in text
-    assert "logical_x=" not in text
-    assert "screen_x=" not in text
+    assert "event=recognition" in text
+    assert "event=inventory_scan" in text
+    assert "event=sky_stone_observation" in text
+    assert "event=input_failed" in text
+    assert "logical_x=" in text
+    assert "screen_x=" in text
     assert "event=refresh_counted" in text
     assert "event=run_stopped" in text
