@@ -131,7 +131,16 @@ class TemplateRepository:
     def __init__(self, config: AppConfig):
         self._templates: dict[str, TemplateData] = {}
         for key, path in config.template_paths.items():
-            loaded = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+            try:
+                # Read via Python so Windows paths containing Unicode work too.
+                encoded = np.frombuffer(path.read_bytes(), dtype=np.uint8)
+                loaded = (
+                    cv2.imdecode(encoded, cv2.IMREAD_UNCHANGED)
+                    if encoded.size
+                    else None
+                )
+            except (OSError, cv2.error) as exc:
+                raise ValueError(f"Cannot load template {key}: {path}") from exc
             if loaded is None or loaded.size == 0:
                 raise ValueError(f"Cannot load template {key}: {path}")
             if loaded.ndim != 3 or loaded.shape[2] not in (3, 4):
