@@ -18,6 +18,7 @@ _REFRESH_CONFIRM_FAST_CONFIDENCE = 0.99
 
 
 _SHOP_ENTRY_MAX_ATTEMPTS = 3
+_STARTUP_MAIN_SHOP_TIMEOUT_MS = 10_000
 
 
 class AutomationEngine:
@@ -58,7 +59,7 @@ class AutomationEngine:
 
     def execute(self) -> None:
         self._prepare()
-        self._enter_store()
+        self._enter_store(initial_start=True)
         self._scan_until_stopped()
 
     def finish_normal_run(self, reason: StopReason) -> None:
@@ -570,13 +571,16 @@ class AutomationEngine:
             "cannot confirm shop or main screen after entry timeout",
         )
 
-    def _enter_store(self) -> None:
+    def _enter_store(self, *, initial_start: bool = False) -> None:
         self._invalidate_trusted_balance("shop_entry")
         self._transition(RunState.ENTERING_STORE)
         main_shop = self._wait_stable_observation(
             "main_shop_icon",
             self._deps.vision.main_shop_icon,
-            self._config.timing.entry_timeout_ms,
+            # Allow the game to redraw after the startup window resize.
+            _STARTUP_MAIN_SHOP_TIMEOUT_MS
+            if initial_start
+            else self._config.timing.entry_timeout_ms,
         )
         for attempt in range(1, _SHOP_ENTRY_MAX_ATTEMPTS + 1):
             self._click("open_shop", main_shop.anchor, attempt=attempt)
