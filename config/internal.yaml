@@ -128,7 +128,7 @@ scroll:
   cursor_point: {x: 1500, y: 650}
   delta: -120
   repetitions: 6
-  interval_ms: 100
+  interval_ms: 10
   settle_ms: 800
   minimum_settle_ms: 100
   settle_poll_interval_ms: 100
