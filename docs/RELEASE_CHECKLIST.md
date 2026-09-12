@@ -15,6 +15,7 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm `dist\launcher.dist` contains `E7auto.exe`, `使用说明.txt`, `config\internal.yaml`, `assets\templates`, and `assets\ui`.
 - [ ] Confirm the executable uses `assets\ui\e7auto.ico`; all required 16-1024 PNG sizes, the multi-size ICO, and `shop-card-background.png` are present and pass `verify_ui_assets`.
 - [ ] Confirm every required manifest and all 28 described calibrated PNGs are present, decodable, structurally valid, and covered by the focused asset tests. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold and overlay-position evidence.
+- [ ] Run the focused template repository tests (`tests/test_template_repository.py`): English paths with spaces and Chinese paths must preserve BGR pixels and alpha masks; missing, empty, corrupt, grayscale, and fully transparent templates must be rejected.
 - [ ] Confirm no `.venv`, `.pip-cache`, tests, logs, or runtime screenshots are included.
 - [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
@@ -26,6 +27,7 @@ Use a Windows x64 machine or VM with no Python installed.
 - [ ] Copy only the standalone directory.
 - [ ] Double-click `E7auto.exe`; verify Windows shows UAC. Rejecting UAC must prevent startup and all input. Accepting it must produce an elevated/High-integrity process able to interact with the observed High-integrity game.
 - [ ] Run `E7auto.exe --self-check` and retain its text output.
+- [ ] During separately authorized functional validation, launch a complete standalone copy under a Chinese path with spaces (for example, `E:\E7 商店脚本\E7auto`) and click Start; confirm template loading succeeds without `Cannot load template`. Moving only the EXE is not a valid check, and `--self-check` checks template-directory presence without decoding templates.
 - [ ] In a separate test copy, set `calibration_complete: false`; verify `E7auto.exe` logs refusal and sends no input. Restore the verified configuration before functional testing.
 - [ ] Verify the resizable function center opens `刷新秘密商店`, the back control returns to the card grid, the numeric field has no spinner, only the compact `购买友情点数` switch is clickable, and the green start button retains the existing launch behavior.
 - [ ] With input disabled, verify current-mode/full-monitor cross-check, the exact `3120 x 2080 -> 2322 x 1306` reference path, `2560 x 1440` minimum boundary, 60%-width non-reference sizing, DPI-aware outer-height fitting, and negative-origin secondary-monitor clamping.
