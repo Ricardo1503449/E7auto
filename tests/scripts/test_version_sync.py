@@ -89,10 +89,14 @@ def test_future_build_embeds_and_verifies_windows_version_metadata(
     )
 
     assert verify_release.verify_windows_versions(tmp_path / "E7auto.exe", version) == []
-    info["ProductVersionLS"] = 0
+    mismatched_patch = patch ^ 1
+    info["ProductVersionLS"] = (mismatched_patch << 16) | build
     assert verify_release.verify_windows_versions(
         tmp_path / "E7auto.exe", version
-    ) == [f"executable product version is {(major, minor, 0, 0)}, expected {expected}"]
+    ) == [
+        f"executable product version is {(major, minor, mismatched_patch, build)}, "
+        f"expected {expected}"
+    ]
 
     def missing_version(_path, _query):
         raise verify_release.pywintypes.error(
