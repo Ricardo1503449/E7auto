@@ -11,9 +11,11 @@ from ..config import ConfigError, LoggingConfig, load_config
 from ..domain import RunState, RuntimeSnapshot, StopReason
 from ..overlay_position import OverlayPositionStore
 from ..run_logging import RunLogManager
+from ..penguin_vision import with_penguin_config
 from .overlay import StatsOverlay
 from .pages.function_center import _FunctionCenterPage
 from .pages.shop import _ShopFeaturePage
+from .pages.penguin import _PenguinFeaturePage
 from .window_chrome import _TitleBar, _ResizeHandle
 from .worker import AutomationWorker
 
@@ -58,15 +60,23 @@ class MainWindow(QMainWindow):
         self._pages.setObjectName("pageStack")
         self._function_center_page = _FunctionCenterPage(project_root)
         self._shop_feature_page = _ShopFeaturePage()
+        self._penguin_feature_page = _PenguinFeaturePage()
         self._pages.addWidget(self._function_center_page)
         self._pages.addWidget(self._shop_feature_page)
+        self._pages.addWidget(self._penguin_feature_page)
         self._pages.setCurrentWidget(self._function_center_page)
         shell_layout.addWidget(self._pages, 1)
         self.setCentralWidget(self._shell)
 
-        self._module_pages = {"shop_refresh": self._shop_feature_page}
+        self._module_pages = {
+            "shop_refresh": self._shop_feature_page,
+            "penguin_exchange": self._penguin_feature_page,
+        }
         self._function_center_page.module_requested.connect(self._show_module_page)
         self._shop_feature_page.back_requested.connect(self._show_function_center)
+        self._penguin_feature_page.back_requested.connect(self._show_function_center)
+        self._penguin_feature_page.start_button.clicked.connect(self._start_penguin_run)
+        self._penguin_feature_page.limit_input.textChanged.connect(self._on_limit_text_changed)
         self._limit_label = self._shop_feature_page.limit_label
         self._limit = self._shop_feature_page.limit_input
         self._friendship_points = self._shop_feature_page.friendship_toggle
@@ -117,6 +127,7 @@ class MainWindow(QMainWindow):
             QStackedWidget#pageStack,
             QWidget#functionCenterPage,
             QWidget#shopFeaturePage,
+            QWidget#penguinFeaturePage,
             QWidget#moduleCardHost,
             QWidget#featureContent,
             QScrollArea#moduleScrollArea,
@@ -147,7 +158,8 @@ class MainWindow(QMainWindow):
                 border: 1px solid #d7dade;
                 border-radius: 14px;
             }
-            QLineEdit#refreshLimitInput {
+            QLineEdit#refreshLimitInput, QLineEdit#penguinPurchaseLimitInput,
+            QLabel#penguinLeafCostDisplay {
                 background: #fbfbfc;
                 color: #111417;
                 border: 1px solid #d3d6da;
@@ -157,7 +169,8 @@ class MainWindow(QMainWindow):
                 font-size: 20px;
             }
             QLineEdit#refreshLimitInput:focus { border: 1px solid #8c9299; }
-            QPushButton#startButton {
+            QLineEdit#penguinPurchaseLimitInput:focus { border: 1px solid #8c9299; }
+            QPushButton#startButton, QPushButton#penguinStartButton {
                 background: #26985a;
                 color: #ffffff;
                 border: none;
@@ -165,10 +178,10 @@ class MainWindow(QMainWindow):
                 font-size: 20px;
                 font-weight: 600;
             }
-            QPushButton#startButton:hover { background: #228a50; }
-            QPushButton#startButton:pressed { background: #1d7846; }
-            QPushButton#startButton:disabled { background: #b8bdc1; color: #eef0f1; }
-            QPushButton#backToModulesButton {
+            QPushButton#startButton:hover, QPushButton#penguinStartButton:hover { background: #228a50; }
+            QPushButton#startButton:pressed, QPushButton#penguinStartButton:pressed { background: #1d7846; }
+            QPushButton#startButton:disabled, QPushButton#penguinStartButton:disabled { background: #b8bdc1; color: #eef0f1; }
+            QPushButton#backToModulesButton, QPushButton#penguinBackToModulesButton {
                 background: transparent;
                 color: #1d2023;
                 border: none;
@@ -176,7 +189,7 @@ class MainWindow(QMainWindow):
                 font-size: 17px;
                 text-align: left;
             }
-            QPushButton#backToModulesButton:hover { color: #26985a; }
+            QPushButton#backToModulesButton:hover, QPushButton#penguinBackToModulesButton:hover { color: #26985a; }
             QLabel#keycap {
                 background: #eef0f2;
                 border: 1px solid #d7dade;
@@ -252,15 +265,18 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def _show_module_page(self, module_id: str) -> None:
+        if self._thread is not None:
+            return
         page = self._module_pages.get(module_id)
         if page is None:
             return
         self._pages.setCurrentWidget(page)
-        self._limit.setFocus()
+        page.limit_input.setFocus()
 
     @Slot()
     def _show_function_center(self) -> None:
         if self._thread is None:
+            self._overlay.hide()
             self._pages.setCurrentWidget(self._function_center_page)
 
     def _validated_refresh_limit(self) -> int | None:
@@ -272,18 +288,31 @@ class MainWindow(QMainWindow):
     def _on_limit_text_changed(self, _text: str) -> None:
         if self._thread is None:
             self._start.setEnabled(self._validated_refresh_limit() is not None)
+            self._penguin_feature_page.start_button.setEnabled(
+                self._penguin_feature_page.purchase_limit() is not None
+            )
 
     @Slot()
     def _start_run(self) -> None:
+        self._launch_run(penguins=False)
+
+    @Slot()
+    def _start_penguin_run(self) -> None:
+        self._launch_run(penguins=True)
+
+    def _launch_run(self, *, penguins: bool) -> None:
         if self._thread is not None:
             return
-        refresh_limit = self._validated_refresh_limit()
-        if refresh_limit is None:
-            self._limit.setFocus()
+        limit = (self._penguin_feature_page.purchase_limit() if penguins
+                 else self._validated_refresh_limit())
+        if limit is None:
+            (self._penguin_feature_page.limit_input if penguins else self._limit).setFocus()
             return
         run_id = uuid.uuid4().hex[:12]
         try:
             config = load_config(self._config_path)
+            if penguins:
+                config = with_penguin_config(config)
         except ConfigError as exc:
             manager = RunLogManager(self._project_root / "logs", LoggingConfig())
             logger = manager.start(run_id)
@@ -295,19 +324,22 @@ class MainWindow(QMainWindow):
             return
 
         self._entered_inventory = False
-        self._overlay.configure(config)
+        if penguins:
+            self._overlay.configure_penguins(config)
+        else:
+            self._overlay.configure(config)
         self._overlay.start_elapsed_timer()
         self._start.setEnabled(False)
         self._limit.setEnabled(False)
         self._friendship_points.setEnabled(False)
         self._shop_feature_page.back_button.setEnabled(False)
+        self._penguin_feature_page.setEnabled(False)
         thread = QThread(self)
         worker = AutomationWorker(
-            config,
-            refresh_limit,
-            self._friendship_points.isChecked(),
-            self._project_root,
-            self._overlay,
+            config, 0 if penguins else limit,
+            False if penguins else self._friendship_points.isChecked(),
+            self._project_root, self._overlay,
+            **({"purchase_limit": limit} if penguins else {}),
         )
         worker.moveToThread(thread)
         thread.started.connect(worker.run)
@@ -324,7 +356,8 @@ class MainWindow(QMainWindow):
     @Slot(object)
     def _on_snapshot(self, snapshot: RuntimeSnapshot) -> None:
         self._overlay.update_snapshot(snapshot)
-        if snapshot.state in {RunState.SCANNING_TOP, RunState.SCANNING_BOTTOM, RunState.PURCHASING, RunState.REFRESHING}:
+        if snapshot.state in {RunState.SCANNING_TOP, RunState.SCANNING_BOTTOM, RunState.PURCHASING, RunState.REFRESHING,
+                              RunState.ENTERING_SANCTUARY, RunState.GROWING_PENGUINS, RunState.RETURNING_MAIN}:
             self._entered_inventory = True
 
     @Slot(object)
@@ -333,9 +366,11 @@ class MainWindow(QMainWindow):
         self._limit.setEnabled(True)
         self._friendship_points.setEnabled(True)
         self._shop_feature_page.back_button.setEnabled(True)
+        self._penguin_feature_page.setEnabled(True)
         self._thread = None
         self._worker = None
         self._start.setEnabled(self._validated_refresh_limit() is not None)
+        self._on_limit_text_changed("")
         if not self._entered_inventory:
             self.showNormal()
             self.raise_()

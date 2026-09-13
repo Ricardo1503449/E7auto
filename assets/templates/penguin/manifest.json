@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate": "penguin-template-candidates-v2",
+  "templates": {
+    "sanctuary_entry": {
+      "file": "01_sanctuary_entry.png",
+      "sha256": "7ada7c2bd7057e1c11f4e847d3a0037895e5ddea777305aed71b8984794d6f40",
+      "roi": [
+        64,
+        284,
+        80,
+        114
+      ],
+      "label": "圣域入口图标"
+    },
+    "forest_entry": {
+      "file": "02_forest_entry.png",
+      "sha256": "d48c748041e3be124a6e58857f1855803401d9791e2ef1ae85997b25ca0b9757",
+      "roi": [
+        2073,
+        291,
+        173,
+        52
+      ],
+      "label": "精灵之森入口文字"
+    },
+    "growth_altar": {
+      "file": "03_growth_altar.png",
+      "sha256": "e0ebf9bf397c06291d12cc787012bbf2538b3c9a83227d86b3e05a03c632d283",
+      "roi": [
+        1675,
+        1122,
+        582,
+        106
+      ],
+      "label": "成长祭坛完整按钮"
+    },
+    "penguin_buy_102": {
+      "file": "04_penguin_buy_102.png",
+      "sha256": "e05e8cd65d6fc1080d3b2b8b1bd3662fa09d1bc6f8f980107ab883dd4f0c1f6a",
+      "roi": [
+        152,
+        919,
+        417,
+        107
+      ],
+      "label": "企鹅 102 完整购买按钮"
+    },
+    "penguin_buy_5100": {
+      "file": "05_penguin_buy_5100.png",
+      "sha256": "99fc674b0a9309e4616f4015ca45ea97dfda811bdeba18a2cfd19f235df7b213",
+      "roi": [
+        1055,
+        1010,
+        604,
+        118
+      ],
+      "label": "企鹅 5,100 完整购买按钮"
+    },
+    "quantity_max": {
+      "file": "06_quantity_max.png",
+      "sha256": "1b32e9350ab552add504b41c46258a1458381dd8e9be59edb33a2f43ec0ba885",
+      "roi": [
+        1574,
+        813,
+        147,
+        90
+      ],
+      "label": "最多完整按钮（操作辅助）"
+    },
+    "penguin_complete": {
+      "file": "07_penguin_complete.png",
+      "sha256": "19fdc18553f93690b918ee8fdcccd88bf29fbafe3eca3834c55af4d565fdf801",
+      "roi": [
+        966,
+        268,
+        399,
+        70
+      ],
+      "label": "企鹅成长完成！文字"
+    },
+    "reward_close": {
+      "file": "08_reward_close.png",
+      "sha256": "59cc7615233c7fd77a8ba22633180d9020eb11f3151299ca45946b9a40aa2160",
+      "roi": [
+        1084,
+        934,
+        154,
+        47
+      ],
+      "label": "奖励弹窗：仅点击关闭文字"
+    },
+    "altar_close": {
+      "file": "09_altar_close.png",
+      "sha256": "3d0d8e1aac4a08641399c455414353f5a742cfdf2fe9d1344da0cb4a7bac6f30",
+      "roi": [
+        1094,
+        1235,
+        178,
+        44
+      ],
+      "label": "成长祭坛：叉号及点击关闭"
+    },
+    "forest_back": {
+      "file": "10_forest_back.png",
+      "sha256": "37cc3e424933b9c7ffe9740ff737497c01989b420ca27e5d897999dd3e063fbb",
+      "roi": [
+        37,
+        22,
+        278,
+        77
+      ],
+      "label": "精灵之森返回：箭头及标题"
+    },
+    "sanctuary_back": {
+      "file": "11_sanctuary_back.png",
+      "sha256": "c0a3d12c5d79f6c5859659eca00697c587a403d0de15aca34acbf5bb10a5723e",
+      "roi": [
+        35,
+        22,
+        187,
+        76
+      ],
+      "label": "圣域返回：箭头及标题"
+    },
+    "purchase_currency": {
+      "file": "12_purchase_currency.png",
+      "sha256": "9e8c23f37c286ee43ff4cc59e455e90c82f49a183bd1a29831c712d63612bac6",
+      "roi": [
+        151,
+        920,
+        420,
+        106
+      ],
+      "label": "企鹅购买货币完整按钮"
+    },
+    "purchase_cancel": {
+      "file": "13_purchase_cancel.png",
+      "sha256": "f63df24c526bb22125894ca26dbc93ff852cbb1365561617cf2b12cc17a71e6b",
+      "roi": [
+        666,
+        1010,
+        371,
+        118
+      ],
+      "label": "购买弹窗取消完整按钮（返回辅助）"
+    }
+  }
+}

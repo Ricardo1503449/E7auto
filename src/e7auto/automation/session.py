@@ -57,13 +57,26 @@ class AutomationSession:
             tuple((target.target_id, target.display_name) for target in self._config.targets),
             refresh_limit,
         )
-        publisher = SnapshotPublisher(initial, self._on_snapshot)
-        self._on_snapshot(initial)
         self._dependencies.logger.event(
             "target_selection",
             enabled=",".join(sorted(enabled_target_ids)),
             disabled=",".join(sorted(selectable_ids - set(enabled_target_ids))),
         )
+        return self._run(initial, enabled_target_ids, AutomationEngine)
+
+    def run_penguins(self, purchase_limit: int, run_id: str | None = None) -> RuntimeSnapshot:
+        if (isinstance(purchase_limit, bool) or not isinstance(purchase_limit, int)
+                or not 0 <= purchase_limit <= 2_147_483_647):
+            raise ValueError("purchase_limit must be a bounded non-negative integer")
+        from .penguin import PenguinEngine
+
+        initial = RuntimeSnapshot.penguins(run_id or uuid.uuid4().hex[:12], purchase_limit)
+        return self._run(initial, frozenset(), PenguinEngine)
+
+    def _run(self, initial: RuntimeSnapshot, enabled_target_ids: frozenset[str],
+             engine_type: type[AutomationEngine]) -> RuntimeSnapshot:
+        publisher = SnapshotPublisher(initial, self._on_snapshot)
+        self._on_snapshot(initial)
         registered = False
         engine: AutomationEngine | None = None
         reason = StopReason.INTERNAL_ERROR
@@ -74,7 +87,7 @@ class AutomationSession:
                 reason = StopReason.HOTKEY_FAILURE
                 detail = "RegisterHotKey(F5) failed"
                 return publisher.finalize(reason)
-            engine = AutomationEngine(
+            engine = engine_type(
                 self._config,
                 self._dependencies,
                 self._control,
@@ -94,6 +107,8 @@ class AutomationSession:
             if engine is not None and reason in {
                 StopReason.BUDGET_COMPLETE,
                 StopReason.REFRESH_STRATEGY_EXHAUSTED,
+                StopReason.PENGUIN_LIMIT_COMPLETE,
+                StopReason.PENGUIN_FUNDS_COMPLETE,
             }:
                 try:
                     engine.finish_normal_run(reason)
@@ -119,6 +134,9 @@ class AutomationSession:
                 detail=detail,
                 refresh_spent=final.refresh_spent,
                 refresh_limit=final.refresh_limit,
+                feature_id=final.feature_id,
+                purchases_completed=final.purchases_completed,
+                purchase_limit=final.purchase_limit,
             )
             self._dependencies.logger.close()
         return publisher.snapshot

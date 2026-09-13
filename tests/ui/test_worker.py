@@ -10,9 +10,11 @@ from tests.helpers import make_config
 import e7auto.ui.main_window as main_window_module
 
 
-def test_refresh_limit_is_handed_to_worker_as_an_integer(
+@pytest.mark.parametrize("penguins", [False, True])
+def test_selected_limit_is_handed_to_worker_as_an_integer(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    penguins: bool,
 ) -> None:
     application = QApplication.instance() or QApplication([])
     captured: dict[str, object] = {}
@@ -47,9 +49,13 @@ def test_refresh_limit_is_handed_to_worker_as_an_integer(
             buy_friendship_points: bool,
             project_root: Path,
             overlay: StatsOverlay,
+            *,
+            purchase_limit: int | None = None,
         ) -> None:
             captured["refresh_limit"] = refresh_limit
             captured["buy_friendship_points"] = buy_friendship_points
+            captured["purchase_limit"] = purchase_limit
+            captured["worker_count"] = captured.get("worker_count", 0) + 1
             self.snapshot = FakeSignal()
             self.finished = FakeSignal()
 
@@ -63,6 +69,7 @@ def test_refresh_limit_is_handed_to_worker_as_an_integer(
             pass
 
     monkeypatch.setattr(main_window_module, "load_config", lambda _path: make_config())
+    monkeypatch.setattr(main_window_module, "with_penguin_config", lambda config: config)
     monkeypatch.setattr(main_window_module, "QThread", FakeThread)
     monkeypatch.setattr(main_window_module, "AutomationWorker", FakeWorker)
 
@@ -74,12 +81,22 @@ def test_refresh_limit_is_handed_to_worker_as_an_integer(
         assert toggle is not None
         limit_input.setText("123")
         toggle.setChecked(True)
-        window._start_run()
+        if penguins:
+            window._penguin_feature_page.limit_input.setText("7")
+            window._start_penguin_run()
+        else:
+            window._start_run()
 
-        assert captured["refresh_limit"] == 123
-        assert captured["buy_friendship_points"] is True
+        assert captured["refresh_limit"] == (0 if penguins else 123)
+        assert captured["buy_friendship_points"] is (not penguins)
+        assert captured["purchase_limit"] == (7 if penguins else None)
         assert isinstance(captured["refresh_limit"], int)
         assert captured["thread_started"] is True
+        assert not window._penguin_feature_page.isEnabled()
+        assert not window._start.isEnabled()
+        window._start_run()
+        window._start_penguin_run()
+        assert captured["worker_count"] == 1
     finally:
         window._thread = None
         window._worker = None

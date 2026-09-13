@@ -56,6 +56,7 @@ def verify_ui_assets(ui_dir: Path) -> list[str]:
         f"e7auto-icon-{size}.png": (size, size) for size in UI_ICON_SIZES
     }
     required_pngs["shop-card-background.png"] = None
+    required_pngs["penguin-card-background.png"] = None
     for name, expected_size in required_pngs.items():
         path = ui_dir / name
         if not path.is_file():

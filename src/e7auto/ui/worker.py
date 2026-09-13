@@ -26,6 +26,8 @@ class AutomationWorker(QObject):
         buy_friendship_points: bool,
         project_root: Path,
         overlay: StatsOverlay,
+        *,
+        purchase_limit: int | None = None,
     ):
         super().__init__()
         self._config = config
@@ -33,6 +35,7 @@ class AutomationWorker(QObject):
         self._buy_friendship_points = buy_friendship_points
         self._project_root = project_root
         self._overlay = overlay
+        self._purchase_limit = purchase_limit
 
     @Slot()
     def run(self) -> None:
@@ -45,7 +48,11 @@ class AutomationWorker(QObject):
             from ..wgc_capture import WindowsGraphicsCaptureService
 
             templates = TemplateRepository(self._config)
-            vision = OpenCvGameVision(self._config, templates)
+            if self._purchase_limit is None:
+                vision = OpenCvGameVision(self._config, templates)
+            else:
+                from ..penguin_vision import PenguinVision
+                vision = PenguinVision(self._config, templates)
             dependencies = AutomationDependencies(
                 windows=Win32WindowService(),
                 capture=WindowsGraphicsCaptureService(),
@@ -67,11 +74,13 @@ class AutomationWorker(QObject):
                 if self._buy_friendship_points
                 else frozenset()
             )
-            final = session.run(
-                self._refresh_limit,
-                run_id,
-                enabled_optional_target_ids=enabled_optional,
-            )
+            if self._purchase_limit is None:
+                final = session.run(
+                    self._refresh_limit, run_id,
+                    enabled_optional_target_ids=enabled_optional,
+                )
+            else:
+                final = session.run_penguins(self._purchase_limit, run_id)
         except Exception as exc:
             logger.event("worker_setup_failed", error=repr(exc))
             logger.close()
@@ -80,6 +89,8 @@ class AutomationWorker(QObject):
                 tuple((target.target_id, target.display_name) for target in self._config.targets),
                 self._refresh_limit,
             )
+            if self._purchase_limit is not None:
+                initial = RuntimeSnapshot.penguins(run_id, self._purchase_limit)
             final = initial.finalized(StopReason.INTERNAL_ERROR)
             self.snapshot.emit(final)
         self.finished.emit(final)

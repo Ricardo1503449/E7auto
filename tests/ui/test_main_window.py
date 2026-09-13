@@ -79,7 +79,7 @@ def test_main_window_has_approved_shop_controls_and_resizable_shell(
         )
         assert [
             label.text()
-            for label in window.findChildren(QLabel, "keycap")
+            for label in window._shop_feature_page.findChildren(QLabel, "keycap")
         ] == ["F5"]
         assert not any(
             label.text() in {"F6", "移动悬浮窗"}
@@ -203,7 +203,7 @@ def test_function_center_reflows_and_future_cards_are_deliberate_placeholders(
 
         future_cards = [
             window.findChild(QAbstractButton, f"futureModuleCard{index}")
-            for index in range(1, 4)
+            for index in range(2, 4)
         ]
         assert all(card is not None for card in future_cards)
         assert all(not card.isEnabled() for card in future_cards if card is not None)
@@ -214,7 +214,7 @@ def test_function_center_reflows_and_future_cards_are_deliberate_placeholders(
         )
         assert set(window._function_center_page._cards_by_id) == {
             "shop_refresh",
-            "future_1",
+            "penguin_exchange",
             "future_2",
             "future_3",
         }

@@ -37,3 +37,5 @@ The inventory templates are exact-pixel crops extracted from nine user-provided 
 ```
 
 The scripts perform no generative editing. RGB values remain exact source pixels; deterministic alpha masks exclude irrelevant background, and digit shapes are normalized only in memory during recognition. These are offline calibration utilities for explicitly supplied images. Captured runtime frames are never written here or anywhere else.
+
+`penguin/` contains the 13 user-approved v2 controls for penguin exchange. All PNGs retain exact source RGB and binary alpha; button exteriors are transparent and reward-close contains text only. `penguin/manifest.json` records baseline 2322 x 1306 geometry and SHA-256 for runtime integrity validation. The application validates these assets only when starting penguin exchange, so shop-only runs do not depend on them. No generated artwork or live screenshot capture is used.

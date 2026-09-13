@@ -152,6 +152,7 @@ class StatsOverlay(QWidget):
         self._collapsed = False
         self._expanded_size = QSize()
         self._target_labels: dict[str, QLabel] = {}
+        self._penguins = False
         self._target_layout = QVBoxLayout()
         self._target_layout.setContentsMargins(0, 0, 0, 0)
         self._elapsed = QLabel("已耗时：0时0分0秒")
@@ -203,10 +204,12 @@ class StatsOverlay(QWidget):
         layout.addWidget(self._elapsed)
         # Keep the elapsed-time line visually separated from the target rows.
         layout.addSpacing(self._SECTION_GAP_PX)
+        self._elapsed_gap = layout.itemAt(layout.count() - 1).spacerItem()
         layout.addLayout(self._target_layout)
         layout.addWidget(self._currency)
         # Keep the spent-currency line visually separated from the no-target streak.
         layout.addSpacing(self._SECTION_GAP_PX)
+        self._streak_gap = layout.itemAt(layout.count() - 1).spacerItem()
         layout.addWidget(self._no_target)
         layout.addWidget(self._status)
         layout.addWidget(self._hint)
@@ -237,10 +240,15 @@ class StatsOverlay(QWidget):
         self.command_requested.connect(self._apply_command, Qt.ConnectionType.QueuedConnection)
 
     def configure(self, config: AppConfig) -> None:
+        self._penguins = False
         self._configure_display(
             config.targets,
             QPoint(config.overlay_offset.x, config.overlay_offset.y),
         )
+
+    def configure_penguins(self, config: AppConfig) -> None:
+        self._penguins = True
+        self._configure_display((), QPoint(config.overlay_offset.x, config.overlay_offset.y))
 
     def _configure_display(
         self,
@@ -250,11 +258,15 @@ class StatsOverlay(QWidget):
         self._set_dismissible(False)
         self._set_collapsed(False)
         self._offset = offset
+        self._no_target.setVisible(not self._penguins)
+        self._elapsed_gap.changeSize(0, self._SECTION_GAP_PX)
+        self._streak_gap.changeSize(0, 0 if self._penguins else self._SECTION_GAP_PX)
         self._configure_target_labels(targets)
         self._lock_production_size(targets)
 
     def _configure_target_labels(self, targets: Sequence[TargetConfig]) -> None:
         for label in self._target_labels.values():
+            label.hide()
             self._target_layout.removeWidget(label)
             label.deleteLater()
         self._target_labels.clear()
@@ -290,10 +302,12 @@ class StatsOverlay(QWidget):
                 f"{target.display_name}：{self._widest_digit_run(label)}"
             )
         maximum_currency = self._widest_digit_run(self._currency)
+        if self._penguins:
+            maximum_currency = maximum_currency[0] * 10
         maximum_elapsed = self._widest_digit_run(self._elapsed)
         self._elapsed.setText(f"已耗时：{maximum_elapsed}时59分59秒")
         self._currency.setText(
-            f"已消耗天空石：{maximum_currency} / {maximum_currency}"
+            f"{'已购买次数' if self._penguins else '已消耗天空石'}：{maximum_currency} / {maximum_currency}"
         )
         self._no_target.setText(
             f"已经{self._widest_digit_run(self._no_target)}次未出货"
@@ -307,6 +321,13 @@ class StatsOverlay(QWidget):
                     f"当前状态：{OverlayActivityStatus.TRANSFERRING.value}",
                     f"当前状态：{OverlayActivityStatus.RECONNECTING.value}",
                     f"当前状态：{OverlayActivityStatus.STOPPED.value}",
+                    *(
+                        (f"当前状态：{status.value}" for status in (
+                            OverlayActivityStatus.NAVIGATING,
+                            OverlayActivityStatus.BUYING_PENGUINS,
+                            OverlayActivityStatus.RETURNING,
+                        )) if self._penguins else ()
+                    ),
                 ),
                 key=self._status.fontMetrics().horizontalAdvance,
             )
@@ -335,7 +356,7 @@ class StatsOverlay(QWidget):
                 f"{target.display_name}：0"
             )
         self._elapsed.setText("已耗时：0时0分0秒")
-        self._currency.setText("已消耗天空石：0 / 0")
+        self._currency.setText("已购买次数：0 / 0" if self._penguins else "已消耗天空石：0 / 0")
         self._no_target.setText("已经0次未出货")
         self._status.setText("当前状态：已启动")
         self._hint.setText("F5结束")
@@ -365,6 +386,14 @@ class StatsOverlay(QWidget):
         return f"已耗时：{hours}时{minutes}分{seconds}秒"
 
     def update_snapshot(self, snapshot: RuntimeSnapshot) -> None:
+        if snapshot.feature_id == "penguin_exchange":
+            self._currency.setText(
+                f"已购买次数：{snapshot.purchases_completed} / {snapshot.purchase_limit}"
+            )
+            self._status.setText(f"当前状态：{snapshot.overlay_status.value}")
+            self._hint.setText("F5结束")
+            self._set_dismissible(snapshot.is_final)
+            return
         for tally in snapshot.targets:
             label = self._target_labels.get(tally.target_id)
             if label is not None:
@@ -441,6 +470,7 @@ class StatsOverlay(QWidget):
     ) -> None:
         """Show the production overlay in an explicitly draggable calibration mode."""
 
+        self._penguins = False
         self._configure_display(targets, QPoint(0, 0))
         self._position_calibration_origin = QPoint(client_bounds.x, client_bounds.y)
         self._position_calibration_drag_delta = None

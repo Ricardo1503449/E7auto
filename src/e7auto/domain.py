@@ -12,6 +12,9 @@ class RunState(str, Enum):
     SCANNING_BOTTOM = "scanning_bottom"
     PURCHASING = "purchasing"
     REFRESHING = "refreshing"
+    ENTERING_SANCTUARY = "entering_sanctuary"
+    GROWING_PENGUINS = "growing_penguins"
+    RETURNING_MAIN = "returning_main"
     STOPPED = "stopped"
 
 
@@ -20,6 +23,9 @@ class OverlayActivityStatus(str, Enum):
     REFRESHING = "刷新ing..."
     TRANSFERRING = "转运ing..."
     RECONNECTING = "重连中"
+    NAVIGATING = "进入成长祭坛中"
+    BUYING_PENGUINS = "购买企鹅中"
+    RETURNING = "返回主界面中"
     STOPPED = "已停止"
 
 
@@ -44,6 +50,8 @@ class StopReason(str, Enum):
     CONFIG_INCOMPLETE = "config_incomplete"
     ENTRY_FAILURE = "entry_failure"
     INTERNAL_ERROR = "internal_error"
+    PENGUIN_LIMIT_COMPLETE = "penguin_limit_complete"
+    PENGUIN_FUNDS_COMPLETE = "penguin_funds_complete"
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,6 +75,24 @@ class RuntimeSnapshot:
     overlay_status: OverlayActivityStatus = OverlayActivityStatus.STARTED
     is_final: bool = False
     stop_reason: StopReason | None = None
+    feature_id: str = "shop_refresh"
+    purchases_completed: int = 0
+    purchase_limit: int = 0
+
+    @classmethod
+    def penguins(cls, run_id: str, purchase_limit: int) -> "RuntimeSnapshot":
+        return cls(
+            run_id=run_id, state=RunState.PREPARING, targets=(),
+            refresh_spent=0, refresh_limit=0, feature_id="penguin_exchange",
+            purchase_limit=purchase_limit,
+        )
+
+    def with_penguin_purchase(self) -> "RuntimeSnapshot":
+        if self.is_final:
+            return self
+        if self.feature_id != "penguin_exchange" or self.purchases_completed >= self.purchase_limit:
+            raise ValueError("penguin purchase would exceed the configured limit")
+        return replace(self, purchases_completed=self.purchases_completed + 1)
 
     @classmethod
     def initial(

@@ -47,7 +47,7 @@ class _FunctionCenterPage(QWidget):
                 "shop-card-background.png",
                 True,
             ),
-            ModuleCardSpec("future_1", None, None, False),
+            ModuleCardSpec("penguin_exchange", "红叶换企鹅", "penguin-card-background.png", True),
             ModuleCardSpec("future_2", None, None, False),
             ModuleCardSpec("future_3", None, None, False),
         )
@@ -62,6 +62,7 @@ class _FunctionCenterPage(QWidget):
             object_name = (
                 "shopModuleCard"
                 if spec.module_id == "shop_refresh"
+                else "penguinModuleCard" if spec.module_id == "penguin_exchange"
                 else f"futureModuleCard{index}"
             )
             card = _ModuleCard(
@@ -79,6 +80,7 @@ class _FunctionCenterPage(QWidget):
             self._cards_by_id[spec.module_id] = card
             self._cards.append(card)
         self.shop_card = self._cards_by_id["shop_refresh"]
+        self.penguin_card = self._cards_by_id["penguin_exchange"]
         self._column_count = 0
         self._apply_columns(2)
 

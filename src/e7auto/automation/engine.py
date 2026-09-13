@@ -17,7 +17,7 @@ from .stop_control import T, StopExecution, StopController
 _REFRESH_CONFIRM_FAST_CONFIDENCE = 0.99
 
 
-_SHOP_ENTRY_MAX_ATTEMPTS = 3
+_ENTRY_MAX_ATTEMPTS = 3
 _STARTUP_MAIN_SHOP_TIMEOUT_MS = 10_000
 
 
@@ -46,6 +46,7 @@ class AutomationEngine:
         self._display_geometry: DisplayGeometry | None = None
         self._transform: CoordinateTransform | None = None
         self._handling_network = False
+        self._network_recovery_generation = 0
         self._network_paused_seconds = 0.0
         self._network_status_before_reconnect: OverlayActivityStatus | None = None
         self._trusted_sky_stone_balance: int | None = None
@@ -352,6 +353,7 @@ class AutomationEngine:
             return
         if self._vision_call(error_detector, frame) is None:
             return
+        self._network_recovery_generation += 1
         self._invalidate_trusted_balance("network_recovery")
         self._handling_network = True
         recovery_started = self._deps.clock.monotonic()
@@ -517,7 +519,10 @@ class AutomationEngine:
         stable = 0
         latest: Observation | None = None
         while self._active_monotonic() <= deadline:
+            generation = self._network_recovery_generation
             observation = self._vision_call(detector, self._capture())
+            if generation != self._network_recovery_generation:
+                stable = 0
             if observation is None:
                 stable = 0
                 self._deps.logger.event("recognition", object=name, detected=False)
@@ -538,38 +543,91 @@ class AutomationEngine:
             self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
         raise StopExecution(StopReason.RECOGNITION_TIMEOUT, f"timeout waiting for {name}")
 
-    def _confirm_shop_or_main_after_entry_timeout(self) -> Observation | None:
-        """Return the stable main-screen anchor, or None once the shop is ready."""
+    def _confirm_destination_or_main_after_entry_timeout(
+        self,
+        entry_name: str,
+        destination_detector: Callable[[object], Observation | None],
+        main_detector: Callable[[object], Observation | None],
+        timeout_ms: int | None = None,
+    ) -> tuple[bool, Observation]:
+        """Prefer the destination; authorize a retry only on a stable main screen."""
 
-        deadline = self._active_monotonic() + self._config.timing.entry_timeout_ms / 1000
-        shop_stable = 0
+        deadline = self._active_monotonic() + (
+            timeout_ms if timeout_ms is not None else self._config.timing.entry_timeout_ms
+        ) / 1000
+        destination_stable = 0
         main_stable = 0
-        latest_main: Observation | None = None
         while self._active_monotonic() <= deadline:
+            generation = self._network_recovery_generation
             frame = self._capture()
-            shop = self._vision_call(self._deps.vision.shop_ready, frame)
-            if shop is None:
-                shop_stable = 0
+            if generation != self._network_recovery_generation:
+                destination_stable = main_stable = 0
+            destination = self._vision_call(destination_detector, frame)
+            if destination is None:
+                destination_stable = 0
             else:
-                shop_stable += 1
-                if shop_stable >= self._config.timing.stable_frames:
-                    return None
+                destination_stable += 1
+                if destination_stable >= self._config.timing.stable_frames:
+                    return True, destination
 
-            main = self._vision_call(self._deps.vision.main_shop_icon, frame)
+            main = self._vision_call(main_detector, frame)
             if main is None:
                 main_stable = 0
-                latest_main = None
             else:
                 main_stable += 1
-                latest_main = main
                 if main_stable >= self._config.timing.stable_frames:
-                    return latest_main
+                    return False, main
             self._control.checkpoint()
             self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
         raise StopExecution(
             StopReason.RECOGNITION_TIMEOUT,
-            "cannot confirm shop or main screen after entry timeout",
+            f"cannot confirm {entry_name} or main screen after entry timeout",
         )
+
+    def _enter_with_retry(
+        self,
+        *,
+        entry_name: str,
+        main: Observation,
+        main_detector: Callable[[object], Observation | None],
+        destination_name: str,
+        destination_detector: Callable[[object], Observation | None],
+        click_action: str,
+        timeout_ms: int | None = None,
+    ) -> Observation:
+        timeout_ms = self._config.timing.entry_timeout_ms if timeout_ms is None else timeout_ms
+        for attempt in range(1, _ENTRY_MAX_ATTEMPTS + 1):
+            self._click(click_action, main.anchor, attempt=attempt)
+            try:
+                return self._wait_stable_observation(
+                    destination_name,
+                    destination_detector,
+                    timeout_ms,
+                )
+            except StopExecution as exc:
+                if exc.reason is not StopReason.RECOGNITION_TIMEOUT:
+                    raise
+                arrived, observation = self._confirm_destination_or_main_after_entry_timeout(
+                    entry_name, destination_detector, main_detector, timeout_ms,
+                )
+                if arrived:
+                    return observation
+                main = observation
+                if attempt >= _ENTRY_MAX_ATTEMPTS:
+                    raise StopExecution(
+                        StopReason.RECOGNITION_TIMEOUT,
+                        f"{entry_name} entry failed after {_ENTRY_MAX_ATTEMPTS} attempts; "
+                        "main screen remains visible",
+                    )
+                self._deps.logger.event(
+                    f"{entry_name}_entry_retry",
+                    completed_attempt=attempt,
+                    next_attempt=attempt + 1,
+                    confidence=f"{main.confidence:.6f}",
+                    logical_x=main.anchor.x,
+                    logical_y=main.anchor.y,
+                )
+        raise AssertionError("entry retry loop must return or stop")
 
     def _enter_store(self, *, initial_start: bool = False) -> None:
         self._invalidate_trusted_balance("shop_entry")
@@ -582,35 +640,13 @@ class AutomationEngine:
             if initial_start
             else self._config.timing.entry_timeout_ms,
         )
-        for attempt in range(1, _SHOP_ENTRY_MAX_ATTEMPTS + 1):
-            self._click("open_shop", main_shop.anchor, attempt=attempt)
-            try:
-                self._wait_stable_observation(
-                    "shop_refresh_button",
-                    self._deps.vision.shop_ready,
-                    self._config.timing.entry_timeout_ms,
-                )
-                break
-            except StopExecution as exc:
-                if exc.reason is not StopReason.RECOGNITION_TIMEOUT:
-                    raise
-                main_shop = self._confirm_shop_or_main_after_entry_timeout()
-                if main_shop is None:
-                    break
-                if attempt >= _SHOP_ENTRY_MAX_ATTEMPTS:
-                    raise StopExecution(
-                        StopReason.RECOGNITION_TIMEOUT,
-                        f"shop entry failed after {_SHOP_ENTRY_MAX_ATTEMPTS} attempts; "
-                        "main screen remains visible",
-                    )
-                self._deps.logger.event(
-                    "shop_entry_retry",
-                    completed_attempt=attempt,
-                    next_attempt=attempt + 1,
-                    confidence=f"{main_shop.confidence:.6f}",
-                    logical_x=main_shop.anchor.x,
-                    logical_y=main_shop.anchor.y,
-                )
+        self._enter_with_retry(
+            entry_name="shop", main=main_shop,
+            main_detector=self._deps.vision.main_shop_icon,
+            destination_name="shop_refresh_button",
+            destination_detector=self._deps.vision.shop_ready,
+            click_action="open_shop",
+        )
         self._publisher.mutate(
             lambda snapshot: snapshot.with_overlay_status(
                 OverlayActivityStatus.REFRESHING
