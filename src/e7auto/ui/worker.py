@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import uuid
+import traceback
 
 from PySide6.QtCore import QObject, Signal, Slot
 
@@ -55,7 +56,7 @@ class AutomationWorker(QObject):
                 vision = PenguinVision(self._config, templates)
             dependencies = AutomationDependencies(
                 windows=Win32WindowService(),
-                capture=WindowsGraphicsCaptureService(),
+                capture=WindowsGraphicsCaptureService(logger=logger),
                 inputs=Win32WindowMessageInputService(),
                 overlay=self._overlay,
                 vision=vision,
@@ -82,7 +83,7 @@ class AutomationWorker(QObject):
             else:
                 final = session.run_penguins(self._purchase_limit, run_id)
         except Exception as exc:
-            logger.event("worker_setup_failed", error=repr(exc))
+            logger.event("worker_setup_failed", error=repr(exc), traceback=traceback.format_exc())
             logger.close()
             initial = RuntimeSnapshot.initial(
                 run_id,

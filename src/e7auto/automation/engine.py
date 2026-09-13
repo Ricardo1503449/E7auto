@@ -210,6 +210,7 @@ class AutomationEngine:
                 )
             )
             self._deps.windows.restore_without_activation(window)
+            before_resize = self._deps.windows.inspect(window)
             self._deps.windows.resize_client(window, target, display.monitor_bounds)
             state = self._deps.windows.inspect(window)
         except Exception as exc:
@@ -264,6 +265,9 @@ class AutomationEngine:
             )
         self._deps.logger.event(
             "window_prepared",
+            client_before_resize=before_resize.client_bounds,
+            outer_before_resize=before_resize.outer_bounds,
+            outer_after_resize=state.outer_bounds,
             hwnd=window.hwnd,
             client_x=state.client_bounds.x,
             client_y=state.client_bounds.y,

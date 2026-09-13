@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 import uuid
+import traceback
 
 from ..config import AppConfig
 from ..domain import RuntimeSnapshot, StopReason
@@ -103,6 +104,7 @@ class AutomationSession:
         except Exception as exc:
             reason = StopReason.INTERNAL_ERROR
             detail = repr(exc)
+            self._dependencies.logger.event("internal_error", error=detail, traceback=traceback.format_exc())
         finally:
             if engine is not None and reason in {
                 StopReason.BUDGET_COMPLETE,
@@ -118,6 +120,7 @@ class AutomationSession:
                 except Exception as exc:
                     reason = StopReason.INTERNAL_ERROR
                     detail = f"normal completion cleanup failed: {exc!r}"
+                    self._dependencies.logger.event("internal_error", error=detail, traceback=traceback.format_exc())
             try:
                 self._dependencies.capture.close()
             except Exception as exc:
