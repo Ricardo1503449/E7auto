@@ -3,6 +3,7 @@ from __future__ import annotations
 import ctypes
 import threading
 import time
+from typing import Callable
 from ctypes import wintypes
 
 import numpy as np
@@ -30,7 +31,7 @@ from .background_windows import (
     _validate_window_identity,
 )
 from .config import Rect
-from .ports import Frame, WindowRef
+from .ports import Frame, TextRunLogger, WindowRef
 
 
 _D3D_DRIVER_TYPE_HARDWARE = 1
@@ -159,7 +160,7 @@ def _crop_client_frame(
 ) -> np.ndarray:
     frame_height, frame_width = frame.shape[:2]
     if (frame_width, frame_height) == (expected_client.width, expected_client.height):
-        return frame
+        return np.ascontiguousarray(frame)
 
     candidates: list[Rect] = []
     extended = _extended_frame_bounds(hwnd)
@@ -190,7 +191,7 @@ def _crop_client_frame(
 class WindowsGraphicsCaptureService:
     """Production WGC backend, loaded lazily inside the automation worker."""
 
-    def __init__(self, *, frame_timeout_seconds: float = 0.25) -> None:
+    def __init__(self, *, frame_timeout_seconds: float = 0.25, logger: TextRunLogger | None = None) -> None:
         if frame_timeout_seconds <= 0:
             raise ValueError("frame_timeout_seconds must be positive")
         self._frame_timeout_seconds = frame_timeout_seconds
@@ -208,6 +209,56 @@ class WindowsGraphicsCaptureService:
         self._last_frame_time: object | None = None
         self._apartment_initialized = False
         self._closed = False
+        self._logger = logger
+        self._initial_item_size: tuple[int, int] | None = None
+        self._pool_size: tuple[int, int] | None = None
+        self._content_size: tuple[int, int] | None = None
+        self._observed_item_size: tuple[int, int] | None = None
+        self._startup_failure_diagnostics: dict[str, object] | None = None
+        self._successful_frames = 0
+
+    def _diagnostics(self, window: WindowRef, bounds: Rect) -> dict[str, object]:
+        def query(operation: Callable[[], object]) -> object:
+            try:
+                return operation()
+            except Exception as exc:
+                return f"query_failed:{type(exc).__name__}:{exc}"
+
+        def item_size() -> tuple[int, int] | None:
+            if self._item is None:
+                return None
+            size = self._item.size
+            return (size.width, size.height)
+
+        def client_bounds() -> Rect:
+            left, top, right, bottom = win32gui.GetClientRect(window.hwnd)
+            x, y = win32gui.ClientToScreen(window.hwnd, (left, top))
+            return Rect(x, y, right - left, bottom - top)
+
+        def dpi_awareness() -> int:
+            user32 = ctypes.windll.user32
+            get_context = user32.GetThreadDpiAwarenessContext
+            get_context.restype = ctypes.c_void_p
+            get_awareness = user32.GetAwarenessFromDpiAwarenessContext
+            get_awareness.argtypes = [ctypes.c_void_p]
+            return int(get_awareness(get_context()))
+
+        return {
+            "hwnd": window.hwnd,
+            "initial_item_size": self._initial_item_size,
+            "item_size": self._observed_item_size or query(item_size),
+            "current_item_size": query(item_size),
+            "frame_content_size": self._content_size,
+            "frame_pool_size": self._pool_size,
+            "expected_client": bounds,
+            "actual_client": query(client_bounds),
+            "window_rect": query(lambda: win32gui.GetWindowRect(window.hwnd)),
+            "dwm_bounds": query(lambda: _extended_frame_bounds(window.hwnd)),
+            "minimized": query(lambda: bool(win32gui.IsIconic(window.hwnd))),
+            "window_dpi": query(lambda: int(ctypes.windll.user32.GetDpiForWindow(window.hwnd))),
+            "capture_thread_dpi_awareness": query(dpi_awareness),
+            "successful_frames": self._successful_frames,
+        }
 
     @staticmethod
     def support_diagnostic() -> tuple[bool, str]:
@@ -235,6 +286,7 @@ class WindowsGraphicsCaptureService:
             )
             self._item = create_for_window(window.hwnd)
             item_size = self._item.size
+            self._initial_item_size = (item_size.width, item_size.height)
             if item_size.width <= 0 or item_size.height <= 0:
                 raise BackgroundCaptureError("WGC returned an invalid capture-item size")
             self._frame_pool = Direct3D11CaptureFramePool.create_free_threaded(
@@ -243,6 +295,7 @@ class WindowsGraphicsCaptureService:
                 2,
                 item_size,
             )
+            self._pool_size = self._initial_item_size
             self._session = self._frame_pool.create_capture_session(self._item)
             self._session.is_cursor_capture_enabled = False
             if self._session.is_cursor_capture_enabled:
@@ -252,8 +305,11 @@ class WindowsGraphicsCaptureService:
             )
             self._window = window
             self._expected_client = expected_client
+            if self._logger is not None:
+                self._logger.event("wgc_initialized", **self._diagnostics(window, expected_client))
             self._session.start_capture()
         except Exception as exc:
+            self._startup_failure_diagnostics = self._diagnostics(window, expected_client)
             self.close()
             if isinstance(exc, BackgroundCaptureError):
                 raise
@@ -271,7 +327,22 @@ class WindowsGraphicsCaptureService:
             latest = candidate
 
     def capture_client(self, window: WindowRef, bounds: Rect) -> Frame:
+        try:
+            return self._capture_client(window, bounds)
+        except Exception as exc:
+            diagnostics = self._startup_failure_diagnostics or self._diagnostics(window, bounds)
+            detail = " ".join(f"{key}={value}" for key, value in diagnostics.items())
+            if self._logger is not None:
+                self._logger.event("wgc_capture_failed", error_type=type(exc).__name__,
+                                   error=str(exc), **diagnostics)
+            if isinstance(exc, BackgroundCaptureError):
+                raise BackgroundCaptureError(f"{exc}; {detail}") from exc
+            raise
+
+    def _capture_client(self, window: WindowRef, bounds: Rect) -> Frame:
         with self._capture_lock:
+            self._content_size = None
+            self._observed_item_size = None
             try:
                 _validate_window_identity(window)
             except BackgroundInputError as exc:
@@ -295,24 +366,38 @@ class WindowsGraphicsCaptureService:
                         if self._last_frame_time is None or frame_time > self._last_frame_time:
                             assert self._item is not None
                             item_size = self._item.size
+                            self._observed_item_size = (item_size.width, item_size.height)
                             content_size = frame.content_size
-                            if (
-                                content_size.width != item_size.width
-                                or content_size.height != item_size.height
-                            ):
+                            self._content_size = (content_size.width, content_size.height)
+                            if content_size.width <= 0 or content_size.height <= 0:
                                 raise BackgroundCaptureError(
-                                    "WGC frame size changed during capture"
+                                    f"invalid WGC content size: {self._content_size}"
                                 )
                             with SoftwareBitmap.create_copy_from_surface_async(
                                 frame.surface
                             ).get() as bitmap:
                                 pixels = _copy_software_bitmap(bitmap)
+                            surface_height, surface_width = pixels.shape[:2]
+                            if (
+                                content_size.width > surface_width
+                                or content_size.height > surface_height
+                            ):
+                                raise BackgroundCaptureError(
+                                    "WGC content size exceeds capture surface: "
+                                    f"content={self._content_size} "
+                                    f"surface={(surface_width, surface_height)}"
+                                )
+                            # The pool/item may include invisible window borders while
+                            # ContentSize matches DWM's visible bounds. Discard undefined
+                            # surface padding BEFORE choosing the client crop's origin.
+                            pixels = pixels[:content_size.height, :content_size.width]
                             client = _crop_client_frame(pixels, window.hwnd, bounds)
                             self._last_frame_time = frame_time
                             if client.shape != (bounds.height, bounds.width, 4):
                                 raise BackgroundCaptureError(
                                     f"unexpected WGC client shape: {client.shape}"
                                 )
+                            self._successful_frames += 1
                             return client
                     finally:
                         frame.close()
