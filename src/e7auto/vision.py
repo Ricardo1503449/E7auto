@@ -333,7 +333,30 @@ class OpenCvGameVision:
         )
         if success is not None:
             return PurchaseOutcome.SUCCESS
+        if self.purchased_button(frame, item_roi) is not None:
+            return PurchaseOutcome.SUCCESS_BUTTON
         return PurchaseOutcome.PENDING
+
+    def purchased_button(self, frame: Frame, item_roi: Rect) -> Observation | None:
+        """Read the sold-out button only in the original purchase slot.
+
+        This is purchase-result evidence, not a way to infer an item's identity
+        during inventory scanning. The caller has already confirmed the target.
+        """
+        slots = [slot for slot in self._config.slots if slot.item_roi == item_roi]
+        if len(slots) != 1 or "purchased_button" not in self._config.template_paths:
+            return None
+        height, width = self._templates.get("purchased_button").image.shape[:2]
+        # Calibrated search padding: 18 horizontal / 16 vertical baseline pixels.
+        # The full ROI remains within one row at every supported slot position.
+        width += 36
+        height += 32
+        center = slots[0].buy_point
+        roi = Rect(center.x - width // 2, center.y - height // 2, width, height)
+        baseline = self._config.baseline_client_size
+        if roi.x < 0 or roi.y < 0 or roi.right > baseline.width or roi.bottom > baseline.height:
+            return None
+        return self.match(frame, "purchased_button", roi, self._config.anchor_confidence)
 
     def scan_inventory(
         self,

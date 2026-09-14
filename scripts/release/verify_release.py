@@ -97,6 +97,7 @@ def verify_ui_assets(ui_dir: Path) -> list[str]:
 def verify_template_assets(template_dir: Path) -> list[str]:
     problems: list[str] = []
     crop_manifest_path = template_dir / "manifest.yaml"
+    purchased_button_manifest_path = template_dir / "purchased_button_manifest.json"
     single_manifest_paths = (
         template_dir / "main_shop_icon_manifest.yaml",
         template_dir / "shop_refresh_button_manifest.yaml",
@@ -117,6 +118,7 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     )
     for manifest_path in (
         crop_manifest_path,
+        purchased_button_manifest_path,
         *single_manifest_paths,
         *multi_manifest_paths,
         sky_stone_manifest_path,
@@ -134,6 +136,10 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     try:
         crop_manifest = yaml.safe_load(crop_manifest_path.read_text(encoding="utf-8"))
         expected = [entry["output_path"] for entry in crop_manifest["templates"]]
+        purchased_button_manifest = json.loads(purchased_button_manifest_path.read_text(encoding="utf-8"))
+        if purchased_button_manifest.get("output_path") != "purchased_button.png":
+            problems.append("purchased-button manifest has an unexpected output path")
+        expected.append("purchased_button.png")
         for manifest_path in single_manifest_paths:
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             expected.append(manifest["output_path"])
@@ -166,7 +172,7 @@ def verify_template_assets(template_dir: Path) -> list[str]:
         overlay_position = yaml.safe_load(
             overlay_position_manifest_path.read_text(encoding="utf-8")
         )
-    except (OSError, KeyError, TypeError, yaml.YAMLError) as exc:
+    except (OSError, KeyError, TypeError, json.JSONDecodeError, yaml.YAMLError) as exc:
         return [f"invalid template manifest: {exc}"]
 
     if client_calibration.get("baseline_client_size") != {
@@ -303,8 +309,8 @@ def verify_template_assets(template_dir: Path) -> list[str]:
     if {"no_game_input_was_sent"} != set(overlay_position.get("limitations", ())):
         problems.append("overlay position manifest has unexpected limitations")
 
-    if len(expected) != 28 or len(set(expected)) != 28:
-        problems.append("template manifests must describe exactly 28 unique PNG files")
+    if len(expected) != 29 or len(set(expected)) != 29:
+        problems.append("template manifests must describe exactly 29 unique PNG files")
     required = set(expected) | {
         "network_connection_abnormal.png",
         "network_retry.png",

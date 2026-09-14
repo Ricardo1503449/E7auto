@@ -26,6 +26,7 @@ templates:
   shop_exit_icon: ../assets/templates/shop_exit_icon.png
   confirm_button: ../assets/templates/confirm_button.png
   insufficient_funds: ../assets/templates/insufficient_funds.png
+  purchased_button: ../assets/templates/purchased_button.png
   sky_stone_icon: ../assets/templates/sky_stone_icon.png
   sky_stone_digit_0: ../assets/templates/sky_stone_digit_0.png
   sky_stone_digit_0_wide: ../assets/templates/sky_stone_digit_0_wide.png

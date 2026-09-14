@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+import pytest
+
 from .support import run_session
 from e7auto.domain import StopReason
 from e7auto.vision import PurchaseOutcome
@@ -161,6 +163,39 @@ def test_ambiguous_purchase_result_never_retries_or_counts() -> None:
     assert final.targets[0].acquired == 0
     clicks = [action for action, _, _ in inputs.actions if action == "click"]
     assert len(clicks) == 3  # enter shop, buy, confirm; no retry
+
+
+@pytest.mark.parametrize("interruption", [PurchaseOutcome.PENDING, PurchaseOutcome.INSUFFICIENT_FUNDS])
+def test_button_success_requires_consecutive_frames_and_counts_once(interruption) -> None:
+    base = make_config(stable_frames=3)
+    config = replace(base, timing=replace(base.timing, purchase_result_timeout_ms=100))
+    vision = ScriptedVision(
+        top=[(match("wood"),)] * 3 + [()] * 3,
+        bottom=[()] * 3,
+        purchase=[PurchaseOutcome.SUCCESS_BUTTON, interruption] + [PurchaseOutcome.SUCCESS_BUTTON] * 3,
+    )
+    final, _, _, inputs, _, _, logger = run_session(vision, config=config)
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert final.targets[0].acquired == 1
+    assert len(vision.purchase_queries) == 5
+    assert [fields["button_stable"] for event, fields in logger.events if event == "purchase_result"] == [1, 0, 1, 2, 3]
+    counted = [fields for event, fields in logger.events if event == "purchase_counted"]
+    assert len(counted) == 1 and counted[0]["evidence"] == "success_button"
+    actions = [fields["action"] for event, fields in logger.events if event == "input"]
+    assert sum(str(action).startswith("buy:") for action in actions) == 1
+    assert actions.count("confirm_purchase") == 1
+
+
+def test_transient_button_success_times_out_without_retry_or_count() -> None:
+    config = make_config(stable_frames=3)
+    vision = ScriptedVision(
+        top=[(match("wood"),)] * 3,
+        purchase=[PurchaseOutcome.SUCCESS_BUTTON] * 2 + [PurchaseOutcome.PENDING],
+    )
+    final, _, _, inputs, _, _, _ = run_session(vision, config=config)
+    assert final.stop_reason is StopReason.PURCHASE_RESULT_AMBIGUOUS
+    assert final.targets[0].acquired == 0
+    assert len([action for action, _, _ in inputs.actions if action == "click"]) == 3
 
 
 def test_friendship_points_are_ignored_when_checkbox_option_is_disabled() -> None:

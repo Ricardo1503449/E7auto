@@ -55,6 +55,9 @@ def test_cropped_template_manifest_and_pixels_are_integral() -> None:
         assert image.shape[:2] == (entry["height"], entry["width"])
         assert image.shape[2] == entry["channels"] == 4
 
+        if entry["state"] != "confirmation_button":
+            assert set(np.unique(image[:, :, 3])) == {0, 255}
+
         source = Path(entry["source_path"])
         if source.is_file():
             original = read_png(source)
@@ -62,7 +65,10 @@ def test_cropped_template_manifest_and_pixels_are_integral() -> None:
                 entry["y"] : entry["y"] + entry["height"],
                 entry["x"] : entry["x"] + entry["width"],
             ]
-            assert np.array_equal(image, expected)
+            if entry["state"] == "confirmation_button":
+                assert np.array_equal(image, expected)
+            else:
+                assert np.array_equal(image[:, :, :3], expected[:, :, :3])
 
 
 def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> None:
@@ -77,8 +83,10 @@ def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> Non
         4,
     )
     alpha = image[:, :, 3]
-    assert set(np.unique(alpha)) == {0, 255}
-    assert np.count_nonzero(alpha) == manifest["mask"]["foreground_pixels"] == 3273
+    assert alpha.min() == 0 and alpha.max() == 255
+    assert np.count_nonzero((alpha > 0) & (alpha < 255)) == manifest["mask"]["edge_smoothing"]["partially_transparent_pixels"]
+    assert manifest["mask"]["edge_smoothing"]["partially_transparent_pixels"] > 0
+    assert np.count_nonzero(alpha) == manifest["mask"]["foreground_pixels"]
 
     source = Path(manifest["source_path"])
 
@@ -86,6 +94,29 @@ def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> Non
     loaded = TemplateRepository(config).get("main_shop_icon")
     assert loaded.mask is not None
     assert np.array_equal(loaded.mask, alpha)
+
+    if source.is_file():
+        from scripts.calibration.extract_main_shop_icon_template import main_screen_foreground_mask
+
+        original = read_png(source)
+        crop = manifest["crop"]
+        expected = original[crop["y"]:crop["y"] + crop["height"], crop["x"]:crop["x"] + crop["width"]]
+        assert np.array_equal(image[:, :, :3], expected[:, :, :3])
+        client, roi = manifest["client_crop"], manifest["mask"]["glyph_roi"]
+        x, y = client["x"] + roi["x"], client["y"] + roi["y"]
+        mask = main_screen_foreground_mask(original[y:y + roi["height"], x:x + roi["width"]])
+        dx, dy = crop["x"] - x, crop["y"] - y
+        assert np.array_equal(alpha, mask[dy:dy + crop["height"], dx:dx + crop["width"]])
+
+
+def test_main_shop_question_strokes_are_solid_but_openings_remain_transparent() -> None:
+    image = read_png(TEMPLATE_DIR / "main_shop_icon.png")
+    alpha = image[:, :, 3]
+    assert alpha[37, 74] == 255  # Previously removed pale-blue right stroke.
+    assert alpha[36, 44] == 255  # Previously removed left stroke.
+    assert alpha[22, 70] == 0  # Natural opening of the right question mark.
+    assert alpha[10, 10] == 0  # Exterior wallpaper.
+    assert alpha[65, 60] == 0  # Gap between the icon and its caption.
 
 
 def test_shop_refresh_template_contains_complete_rounded_button() -> None:

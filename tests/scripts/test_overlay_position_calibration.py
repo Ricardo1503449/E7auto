@@ -97,6 +97,22 @@ def test_release_asset_verifier_accepts_current_calibration_evidence() -> None:
     assert verify_template_assets(ROOT / "assets" / "templates") == []
 
 
+def test_release_verifier_requires_purchased_button_and_manifest(tmp_path: Path) -> None:
+    copied = tmp_path / "templates"
+    shutil.copytree(ROOT / "assets" / "templates", copied)
+    (copied / "purchased_button.png").unlink()
+    assert "missing template asset: purchased_button.png" in verify_template_assets(copied)
+    (copied / "purchased_button_manifest.json").unlink()
+    assert "missing template manifest: purchased_button_manifest.json" in verify_template_assets(copied)
+
+
+def test_release_verifier_rejects_invalid_purchased_button_manifest(tmp_path: Path) -> None:
+    copied = tmp_path / "templates"
+    shutil.copytree(ROOT / "assets" / "templates", copied)
+    (copied / "purchased_button_manifest.json").write_text("{invalid", encoding="utf-8")
+    assert any(problem.startswith("invalid template manifest:") for problem in verify_template_assets(copied))
+
+
 def test_release_verifier_rejects_an_undecodable_template(tmp_path: Path) -> None:
     copied = tmp_path / "templates"
     shutil.copytree(ROOT / "assets" / "templates", copied)

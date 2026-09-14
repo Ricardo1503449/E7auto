@@ -154,6 +154,7 @@ _REQUIRED_TEMPLATES = {
     "refresh_confirm_button",
     "confirm_button",
     "insufficient_funds",
+    "purchased_button",
     "sky_stone_icon",
     *(f"sky_stone_digit_{digit}" for digit in range(10)),
     "sky_stone_digit_0_wide",

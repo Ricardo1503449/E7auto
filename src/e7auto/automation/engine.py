@@ -1035,6 +1035,7 @@ class AutomationEngine:
 
         deadline = self._active_monotonic() + self._config.timing.purchase_result_timeout_ms / 1000
         insufficient_stable = 0
+        button_stable = 0
         while self._active_monotonic() <= deadline:
             outcome = self._vision_call(
                 self._deps.vision.purchase_outcome,
@@ -1046,22 +1047,32 @@ class AutomationEngine:
                 insufficient_stable += 1
             else:
                 insufficient_stable = 0
+            if outcome is PurchaseOutcome.SUCCESS_BUTTON:
+                button_stable += 1
+            else:
+                button_stable = 0
             self._deps.logger.event(
                 "purchase_result",
                 target=match.target_id,
+                slot=match.slot_id,
                 outcome=outcome.value,
                 insufficient_stable=insufficient_stable,
+                button_stable=button_stable,
             )
             if outcome is PurchaseOutcome.INSUFFICIENT_FUNDS:
                 if insufficient_stable >= self._config.timing.stable_frames:
                     raise StopExecution(StopReason.PURCHASE_FUNDS_INSUFFICIENT)
-            if outcome is PurchaseOutcome.SUCCESS:
+            if outcome is PurchaseOutcome.SUCCESS or (
+                outcome is PurchaseOutcome.SUCCESS_BUTTON
+                and button_stable >= self._config.timing.stable_frames
+            ):
                 updated = self._publisher.mutate(
                     lambda snapshot: snapshot.with_incremented_target(match.target_id)
                 )
                 self._deps.logger.event(
                     "purchase_counted",
                     target=match.target_id,
+                    evidence=outcome.value,
                     refresh_spent=updated.refresh_spent,
                     count=next(
                         tally.acquired for tally in updated.targets if tally.target_id == match.target_id

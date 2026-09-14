@@ -14,11 +14,20 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Run `.venv\Scripts\python.exe -m scripts.release.verify_release`.
 - [ ] Confirm `dist\launcher.dist` contains `E7auto.exe`, `使用说明.txt`, `config\internal.yaml`, `assets\templates`, and `assets\ui`.
 - [ ] Confirm the executable uses `assets\ui\e7auto.ico`; all required 16-1024 PNG sizes, the multi-size ICO, and `shop-card-background.png` are present and pass `verify_ui_assets`.
-- [ ] Confirm every required manifest and all 28 described calibrated PNGs are present, decodable, structurally valid, and covered by the focused asset tests. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold and overlay-position evidence.
+- [ ] Confirm every template referenced by the release configuration and its provenance manifest is present, decodable, structurally valid, and covered by focused asset tests. Include the nine masked item-state templates, the repaired/smoothed main-shop icon, and `purchased_button.png` / `purchased_button_manifest.json`; verify packaged bytes match the reviewed source assets. This includes the separately manifested wide Sky Stone `0` variant, plus `client_calibration_manifest.yaml` for automatic initial cropping of five full-window sources and references to the separate insufficient-gold and overlay-position evidence.
 - [ ] Run the focused template repository tests (`tests/test_template_repository.py`): English paths with spaces and Chinese paths must preserve BGR pixels and alpha masks; missing, empty, corrupt, grayscale, and fully transparent templates must be rejected.
 - [ ] Confirm no `.venv`, `.pip-cache`, tests, logs, or runtime screenshots are included.
 - [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
+
+## v1.3.1 recognition changes
+
+The current source targets `E7auto_v1.3.1_x64.zip`. Source tests and supplied-screenshot checks are recorded in [the validation report](SHOP_RECOGNITION_VALIDATION.md); the local v1.3.1 directory and ZIP have now been built and checked for static/resource/archive integrity. After the user requested another Windows UAC prompt, elevated release verification and the compiled self-check passed (problems=[], version 1.3.1, AMD64, WGC importable); no GitHub Release has been published.
+
+- [x] Verify the new assets are included by `--include-data-dir=assets/templates=assets/templates` and the package uses the current configuration (59 template-directory files match source, 31 configured templates decode, 165 ZIP files match dist).
+- [x] Complete the elevated compiled `--self-check`: the user-approved UAC retry passed, problems=[], version 1.3.1, AMD64, WGC importable. Static 1.3.1.0 / requireAdministrator checks passed.
+- [ ] During separately authorized shop validation, exercise button-only success for the original purchase row, three consecutive detections, another-row rejection, no counting for pre-existing sold-out items, insufficient-funds precedence, and result timeout without retry/count.
+- [ ] Validate the main-shop icon against differing wallpapers and supported client sizes on the target machine.
 
 ## Clean Windows x64 gate
 

@@ -1,23 +1,54 @@
 schema_version: 1
-method: exact source RGB plus deterministic binary alpha foreground mask
-source_path: C:\Users\lxy\Pictures\Screenshots\屏幕截图 2026-08-23 202223.png
+method: exact source RGB plus deterministic alpha foreground mask
+source_path: C:\Users\lxy\AppData\Local\Temp\codex-clipboard-713efead-f496-4726-bc3a-dd851974cdc1.png
 source_size:
-  width: 171
-  height: 136
+  width: 2411
+  height: 1484
 crop:
-  x: 11
-  y: 13
-  width: 126
-  height: 105
+  x: 64
+  y: 667
+  width: 128
+  height: 106
 mask:
   color_space: OpenCV HSV
   max_saturation: 20
   min_value: 80
   min_component_area: 30
   border_exclusion: 5
-  foreground_pixels: 3273
-  transparent_pixels: 9957
+  foreground_pixels: 4703
+  transparent_pixels: 8865
+  glyph_roi:
+    x: 25
+    y: 525
+    width: 165
+    height: 175
+  outline:
+    radius: 1
+    min_blue_minus_red: -8
+    max_blue_green_difference: 25
+    max_value_exclusive: 170
+  question_stroke_repair:
+    roi:
+      x: 35
+      y: 40
+      width: 90
+      height: 75
+    enclosed_components_only: true
+    max_saturation: 32
+    min_value: 180
+  edge_smoothing:
+    kernel_size:
+    - 3
+    - 3
+    sigma: 0.65
+    inward_only: true
+    partially_transparent_pixels: 1295
 output_path: main_shop_icon.png
 output_size:
-  width: 126
-  height: 105
+  width: 128
+  height: 106
+client_crop:
+  x: 26
+  y: 96
+  width: 2322
+  height: 1306

@@ -9,6 +9,7 @@ import yaml
 
 from scripts.common.image_io import read_rgba_png as read_png, write_png
 from scripts.common.paths import PROJECT_ROOT
+from scripts.calibration.calibrate_client_frames import locate_client_crop
 
 
 SOURCE_TOKEN = "202223"
@@ -17,6 +18,48 @@ MIN_VALUE = 80
 MIN_COMPONENT_AREA = 30
 BORDER_EXCLUSION = 5
 CROP_PADDING = 3
+MAIN_SCREEN_ROI = (25, 525, 165, 175)
+QUESTION_MARK_ROI = (35, 40, 90, 75)
+STROKE_HOLE_MAX_SATURATION = 32
+STROKE_HOLE_MIN_VALUE = 180
+EDGE_SMOOTHING_SIGMA = 0.65
+
+
+def restore_question_mark_strokes(image: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Restore pale-blue stroke pixels rejected by the white foreground seed.
+
+    Only enclosed transparent components within the question marks qualify.
+    The natural openings connect to exterior transparency; text counters and
+    exterior wallpaper are never filled.
+    """
+    hsv = cv2.cvtColor(image[:, :, :3], cv2.COLOR_BGR2HSV)
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(
+        (mask == 0).astype(np.uint8), connectivity=8
+    )
+    rx, ry, rw, rh = QUESTION_MARK_ROI
+    restored = mask.copy()
+    for component in range(1, count):
+        x, y, width, height, _ = stats[component]
+        if not (rx <= x and ry <= y and x + width <= rx + rw and y + height <= ry + rh):
+            continue
+        pixels = labels == component
+        if np.all(hsv[:, :, 1][pixels] <= STROKE_HOLE_MAX_SATURATION) and np.all(
+            hsv[:, :, 2][pixels] >= STROKE_HOLE_MIN_VALUE
+        ):
+            restored[pixels] = 255
+    return restored
+
+
+def main_screen_foreground_mask(image: np.ndarray) -> np.ndarray:
+    seed = foreground_mask(image)
+    b, g, r = (image[:, :, channel].astype(np.int16) for channel in range(3))
+    outline = (b >= r - 8) & (np.abs(b - g) <= 25) & (np.maximum(np.maximum(b, g), r) < 170)
+    mask = np.where((seed > 0) | ((cv2.dilate(seed, np.ones((3, 3), np.uint8)) > 0)
+                                 & outline), 255, 0).astype(np.uint8)
+    mask = restore_question_mark_strokes(image, mask)
+    # Feather inward only: never expose wallpaper or fill natural glyph openings.
+    softened = cv2.GaussianBlur(mask, (3, 3), EDGE_SMOOTHING_SIGMA, borderType=cv2.BORDER_CONSTANT)
+    return np.where(mask > 0, softened, 0).astype(np.uint8)
 
 
 def find_source(source_dir: Path) -> Path:
@@ -56,10 +99,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Extract a wallpaper-independent Epic Seven main-shop icon template"
     )
-    parser.add_argument(
+    sources = parser.add_mutually_exclusive_group(required=True)
+    sources.add_argument("--source", type=Path, help="Full baseline-scale main-screen screenshot")
+    sources.add_argument(
         "--source-dir",
         type=Path,
-        required=True,
     )
     parser.add_argument(
         "--output-dir",
@@ -67,12 +111,23 @@ def main() -> int:
         default=PROJECT_ROOT / "assets" / "templates",
     )
     args = parser.parse_args()
-    source = find_source(args.source_dir.resolve())
+    source = args.source.resolve() if args.source else find_source(args.source_dir.resolve())
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    image = read_png(source)
-    mask = foreground_mask(image)
+    original = read_png(source)
+    client_crop = None
+    offset_x = offset_y = 0
+    if args.source:
+        client_crop = locate_client_crop(original)
+        cx, cy, _, _ = client_crop
+        rx, ry, rw, rh = MAIN_SCREEN_ROI
+        offset_x, offset_y = cx + rx, cy + ry
+        image = original[offset_y:offset_y + rh, offset_x:offset_x + rw]
+        mask = main_screen_foreground_mask(image)
+    else:
+        image = original
+        mask = foreground_mask(image)
     ys, xs = np.nonzero(mask)
     x0 = max(0, int(xs.min()) - CROP_PADDING)
     y0 = max(0, int(ys.min()) - CROP_PADDING)
@@ -86,10 +141,10 @@ def main() -> int:
 
     manifest = {
         "schema_version": 1,
-        "method": "exact source RGB plus deterministic binary alpha foreground mask",
+        "method": "exact source RGB plus deterministic alpha foreground mask",
         "source_path": str(source),
-        "source_size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
-        "crop": {"x": x0, "y": y0, "width": x1 - x0, "height": y1 - y0},
+        "source_size": {"width": int(original.shape[1]), "height": int(original.shape[0])},
+        "crop": {"x": offset_x + x0, "y": offset_y + y0, "width": x1 - x0, "height": y1 - y0},
         "mask": {
             "color_space": "OpenCV HSV",
             "max_saturation": MAX_SATURATION,
@@ -102,6 +157,24 @@ def main() -> int:
         "output_path": output.name,
         "output_size": {"width": x1 - x0, "height": y1 - y0},
     }
+    if client_crop is not None:
+        manifest["client_crop"] = dict(zip(("x", "y", "width", "height"), client_crop))
+        manifest["mask"]["glyph_roi"] = dict(zip(("x", "y", "width", "height"), MAIN_SCREEN_ROI))
+        manifest["mask"]["outline"] = {"radius": 1, "min_blue_minus_red": -8,
+                                      "max_blue_green_difference": 25, "max_value_exclusive": 170}
+        manifest["mask"]["question_stroke_repair"] = {
+            "roi": dict(zip(("x", "y", "width", "height"), QUESTION_MARK_ROI)),
+            "enclosed_components_only": True,
+            "max_saturation": STROKE_HOLE_MAX_SATURATION,
+            "min_value": STROKE_HOLE_MIN_VALUE,
+        }
+        manifest["mask"]["edge_smoothing"] = {
+            "kernel_size": [3, 3], "sigma": EDGE_SMOOTHING_SIGMA,
+            "inward_only": True,
+            "partially_transparent_pixels": int(np.count_nonzero(
+                (output_image[:, :, 3] > 0) & (output_image[:, :, 3] < 255)
+            )),
+        }
     (output_dir / "main_shop_icon_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",

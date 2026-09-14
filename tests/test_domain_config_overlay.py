@@ -60,6 +60,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "refresh_confirm_button",
         "confirm_button",
         "insufficient_funds",
+        "purchased_button",
         "sky_stone_icon",
         "covenant_bookmark",
         "covenant_bookmark_confirm",

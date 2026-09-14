@@ -46,4 +46,5 @@ class ScrollMovementObservation:
 class PurchaseOutcome(str, Enum):
     PENDING = "pending"
     SUCCESS = "success"
+    SUCCESS_BUTTON = "success_button"
     INSUFFICIENT_FUNDS = "insufficient_funds"

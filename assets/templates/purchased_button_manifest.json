@@ -1,0 +1,89 @@
+{
+  "source_path": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-d614573d-8b1f-4a13-84e8-d232a57aa9bb.png",
+  "source_sha256": "d6e2b2ba9fba40489999fe22dd61bc05949c2821b6b57ab508c42fec41b2c12e",
+  "client_crop": [
+    19,
+    103,
+    2322,
+    1306
+  ],
+  "template_client_crop": [
+    1926,
+    908,
+    331,
+    98
+  ],
+  "size": [
+    331,
+    98
+  ],
+  "method": "Exact source RGB crop with transparent exterior, removed uneven top scanline, and antialiased corner alpha; approved v4.",
+  "transparent_pixels": 855,
+  "rgb_unchanged": true,
+  "approved_preview": "v4",
+  "alpha_processing": {
+    "top_row_transparent": true,
+    "corner_radius_px": 27,
+    "supersampling": 16,
+    "corner_patches": "x < 28 or x >= width-28, and y < 29 or y >= height-28; straight edges retained"
+  },
+  "output_path": "purchased_button.png",
+  "output_sha256": "fe915d41cd3bb0012fbb81b95538b5e52aa873e97797e6ca9131f4a69b439c60",
+  "fixture": {
+    "path": "tests/fixtures/purchased_button_samples.png",
+    "patch_size": [
+      367,
+      130
+    ],
+    "arrangement": "vertical",
+    "independent_source": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\MobileFile\\IMG_1789374398603.jpg",
+    "independent_source_sha256": "0fdc76b6b0a54dd633b6d9b9a569483b0a390f0372d5df70b0a2165d9c388781",
+    "independent_client_crop": [
+      1,
+      38,
+      1536,
+      864
+    ],
+    "normalization": "Production AdaptedFrame.normalized_roi to baseline scale",
+    "cases": [
+      {
+        "case": "reference_partial",
+        "purchased": false
+      },
+      {
+        "case": "reference_hero",
+        "purchased": false
+      },
+      {
+        "case": "reference_hero_second",
+        "purchased": false
+      },
+      {
+        "case": "reference_purchased",
+        "purchased": true
+      },
+      {
+        "case": "reference_equipment",
+        "purchased": false
+      },
+      {
+        "case": "independent_top_1",
+        "purchased": true
+      },
+      {
+        "case": "independent_top_2",
+        "purchased": false
+      },
+      {
+        "case": "independent_top_3",
+        "purchased": false
+      },
+      {
+        "case": "independent_top_4",
+        "purchased": false
+      }
+    ]
+  },
+  "foreground_pixels": 31583,
+  "partially_transparent_pixels": 196
+}
