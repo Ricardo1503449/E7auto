@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "feature": "shop",
+  "key": "sky_stone_icon",
+  "method": "Preserve all original RGB pixels and 62x75 canvas; replace alpha with gem and plus contours.",
+  "original": {
+    "backup": "artifacts/sky-stone-cutout/sky_stone_icon_original.png",
+    "sha256": "a7465b2585487344919e2f13fa83074e1548482e0549b2841663fb6d730a071d",
+    "verified_against": "HEAD:assets/templates/shop/sky_stone_icon.png"
+  },
+  "alpha_polygons": [
+    [
+      [
+        30,
+        8
+      ],
+      [
+        33,
+        8
+      ],
+      [
+        36,
+        12
+      ],
+      [
+        38,
+        17
+      ],
+      [
+        42,
+        21
+      ],
+      [
+        44,
+        25
+      ],
+      [
+        46,
+        28
+      ],
+      [
+        47,
+        34
+      ],
+      [
+        48,
+        39
+      ],
+      [
+        47,
+        48
+      ],
+      [
+        45,
+        52
+      ],
+      [
+        43,
+        55
+      ],
+      [
+        40,
+        58
+      ],
+      [
+        38,
+        62
+      ],
+      [
+        34,
+        66
+      ],
+      [
+        32,
+        68
+      ],
+      [
+        30,
+        68
+      ],
+      [
+        27,
+        66
+      ],
+      [
+        24,
+        64
+      ],
+      [
+        21,
+        60
+      ],
+      [
+        19,
+        56
+      ],
+      [
+        17,
+        53
+      ],
+      [
+        15,
+        49
+      ],
+      [
+        14,
+        44
+      ],
+      [
+        14,
+        36
+      ],
+      [
+        15,
+        30
+      ],
+      [
+        17,
+        25
+      ],
+      [
+        19,
+        20
+      ],
+      [
+        22,
+        16
+      ],
+      [
+        25,
+        12
+      ],
+      [
+        28,
+        9
+      ]
+    ],
+    [
+      [
+        46,
+        3
+      ],
+      [
+        50,
+        3
+      ],
+      [
+        50,
+        12
+      ],
+      [
+        59,
+        12
+      ],
+      [
+        59,
+        18
+      ],
+      [
+        51,
+        18
+      ],
+      [
+        51,
+        26
+      ],
+      [
+        45,
+        26
+      ],
+      [
+        45,
+        19
+      ],
+      [
+        40,
+        19
+      ],
+      [
+        37,
+        16
+      ],
+      [
+        37,
+        13
+      ],
+      [
+        45,
+        12
+      ],
+      [
+        45,
+        4
+      ]
+    ]
+  ],
+  "opaque_pixels": 1742,
+  "validation": {
+    "feedback_sha256": "2bf65b69252faaf9830459b67aced74b91684b56cc598b3e4092ee5ad831b07b",
+    "client_crop": [
+      567,
+      321,
+      1536,
+      864
+    ],
+    "icon_confidence": 0.9717669151723385,
+    "required_confidence": 0.93,
+    "balance": 23711,
+    "rgb_unchanged": true,
+    "size": [
+      62,
+      75
+    ],
+    "related_tests": "14 sky stone tests passed before registration"
+  },
+  "registration_context": "Supplemental registration of the already validated alpha edit. Earlier direct overwrite had no transaction; this new transaction starts from the current masked template. Original opaque backup retained separately."
+}

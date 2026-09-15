@@ -1,0 +1,3 @@
+# Registration hashes cover exact source bytes, including line endings.
+# Recognize preserved CRLF while retaining the normal whitespace checks.
+docs/calibration/registrations/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

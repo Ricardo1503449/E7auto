@@ -15,8 +15,25 @@ from scripts.common.image_io import read_rgba_png as read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
-# Exact opaque source crop containing the complete gem and adjacent plus marker.
+# Original source crop; preserve its pixels and mask the background only.
 ICON_CROP = (10, 5, 72, 80)
+ICON_FOREGROUND_POLYGONS = (
+    ((30, 8), (33, 8), (36, 12), (38, 17), (42, 21), (44, 25),
+     (46, 28), (47, 34), (48, 39), (47, 48), (45, 52), (43, 55),
+     (40, 58), (38, 62), (34, 66), (32, 68), (30, 68), (27, 66),
+     (24, 64), (21, 60), (19, 56), (17, 53), (15, 49), (14, 44),
+     (14, 36), (15, 30), (17, 25), (19, 20), (22, 16), (25, 12), (28, 9)),
+    ((46, 3), (50, 3), (50, 12), (59, 12), (59, 18), (51, 18),
+     (51, 26), (45, 26), (45, 19), (40, 19), (37, 16), (37, 13),
+     (45, 12), (45, 4)),
+)
+
+
+def icon_foreground_mask() -> np.ndarray:
+    """Gem and plus contours in the unchanged 62x75 source crop."""
+    mask = np.zeros((75, 62), dtype=np.uint8)
+    cv2.fillPoly(mask, [np.array(points, np.int32) for points in ICON_FOREGROUND_POLYGONS], 255)
+    return mask
 
 DIGIT_SEARCH = (70, 20, 175, 66)
 DIGIT_MAX_SATURATION = 40
@@ -59,6 +76,7 @@ def icon_template(image: np.ndarray) -> tuple[np.ndarray, dict[str, int]]:
     output = np.ascontiguousarray(image[y0:y1, x0:x1].copy())
     if not np.all(output[:, :, 3] == 255):
         raise RuntimeError("Supplied Sky Stone anchor crop must be fully opaque")
+    output[:, :, 3] = icon_foreground_mask()
     return output, {"x": x0, "y": y0, "width": x1 - x0, "height": y1 - y0}
 
 
@@ -393,7 +411,7 @@ def main() -> int:
         },
         "icon": {
             "output_path": icon_path.relative_to(output_dir).as_posix(),
-            "method": "exact opaque source pixel crop",
+            "method": "exact source RGB crop with gem and plus foreground alpha mask",
             "crop": icon_crop,
             "opaque_pixels": int(np.count_nonzero(icon[:, :, 3])),
         },

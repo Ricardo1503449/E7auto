@@ -329,17 +329,19 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
     icon_path = TEMPLATE_DIR / icon_entry["output_path"]
     icon = read_png(icon_path)
     assert icon.shape == (75, 62, 4)
-    assert set(np.unique(icon[:, :, 3])) == {255}
-    assert np.count_nonzero(icon[:, :, 3]) == icon_entry["opaque_pixels"] == 4650
-    assert icon_entry["method"] == "exact opaque source pixel crop"
+    assert set(np.unique(icon[:, :, 3])) == {0, 255}
+    assert np.count_nonzero(icon[:, :, 3]) == icon_entry["opaque_pixels"] == 1742
+    assert icon_entry["method"] == "exact source RGB crop with gem and plus foreground alpha mask"
+    from scripts.calibration.extract_sky_stone_templates import icon_foreground_mask
+    assert np.array_equal(icon[:, :, 3], icon_foreground_mask())
     loaded_icon = TemplateRepository(
         replace(make_config(), template_paths={"sky_stone_icon": icon_path})
     ).get("sky_stone_icon")
-    assert loaded_icon.mask is None
+    assert np.array_equal(loaded_icon.mask, icon[:, :, 3])
     assert np.array_equal(loaded_icon.image, icon[:, :, :3])
 
     templates = {
-        "sky_stone_icon": TemplateData(icon[:, :, :3], None),
+        "sky_stone_icon": TemplateData(icon[:, :, :3], icon[:, :, 3]),
     }
     entries = {entry["digit"]: entry for entry in manifest["digits"]}
     assert set(entries) == set("0123456789")
@@ -381,7 +383,7 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
             crop["y"] : crop["y"] + crop["height"],
             crop["x"] : crop["x"] + crop["width"],
         ]
-        assert np.array_equal(icon, expected_icon)
+        assert np.array_equal(icon[:, :, :3], expected_icon[:, :, :3])
         config = replace(
             make_config(),
             rois={

@@ -71,10 +71,10 @@
     },
     "sky_stone_icon": {
       "file": "sky_stone_icon.png",
-      "sha256": "a7465b2585487344919e2f13fa83074e1548482e0549b2841663fb6d730a071d",
+      "sha256": "c78eaf04b03db0faa962cdd289c8a3763935316ab03ac04349c6671f794c4028",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/shop-sky_stone_icon-c78eaf04b03d-424d239c56ae.json",
+        "record_sha256": "424d239c56ae82b763197a4183991aa88eedf4a2cc6dee8143357d364e3732b9"
       }
     },
     "friendship_points": {

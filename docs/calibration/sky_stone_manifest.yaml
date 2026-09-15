@@ -33,13 +33,13 @@ sources:
       height: 84
 icon:
   output_path: shop/sky_stone_icon.png
-  method: exact opaque source pixel crop
+  method: exact source RGB crop with gem and plus foreground alpha mask
   crop:
     x: 10
     y: 5
     width: 62
     height: 75
-  opaque_pixels: 4650
+  opaque_pixels: 1742
 digit_segmentation:
   search:
     x: 70
