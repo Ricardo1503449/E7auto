@@ -109,6 +109,19 @@ def verify_template_assets(
             catalog_path = template_dir / profile / "manifest.json"
             registered, _ = load_template_manifest(catalog_path, (2322, 1306))
             runtime_required.update(path.relative_to(template_dir.resolve()).as_posix() for path in registered.values())
+            catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+            for key, entry in catalog["templates"].items():
+                source = entry.get("source", {})
+                if not isinstance(source, dict) or "record" not in source:
+                    continue
+                relative = Path(source["record"])
+                if relative.parts[:2] != ("docs", "calibration"):
+                    raise ValueError(f"invalid registered source record: {profile}/{key}")
+                record = (calibration_dir / Path(*relative.parts[2:])).resolve()
+                if not record.is_relative_to(calibration_dir.resolve()):
+                    raise ValueError(f"registered source record escapes calibration directory: {key}")
+                if not record.is_file() or hashlib.sha256(record.read_bytes()).hexdigest() != source.get("record_sha256"):
+                    raise ValueError(f"source record integrity mismatch: {profile}/{key}")
         except (ValueError, TypeError, KeyError, OSError) as exc:
             problems.append(str(exc))
     purchased_button_manifest_path = calibration_dir / "purchased_button_manifest.json"

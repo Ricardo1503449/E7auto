@@ -133,6 +133,23 @@ def test_custom_calibration_output_and_manifest_directory(tmp_path):
     assert manifest == tmp_path / "records"
 
 
+def test_registration_and_release_verification_use_current_catalog_and_source(installation):
+    import numpy as np
+    from scripts.common.candidates import write_candidate_png
+    from scripts.templates import register
+
+    shutil.copytree(ROOT / "docs/calibration", installation / "docs/calibration")
+    candidate = installation / "artifacts/candidate.png"
+    write_candidate_png(candidate, np.full((12, 10, 3), 123, np.uint8))
+    source = installation / "artifacts/source.yaml"
+    source.write_text("source: synthetic registration integration test\n", encoding="utf-8")
+    plan = register.prepare(installation, "shop", "additional_control", candidate, source, "additional.png")
+    register.apply(installation, plan)
+    assert verify_template_assets(installation / "assets/templates", installation / "docs/calibration") == []
+    (installation / plan["destinations"]["record"]).write_text("changed\n", encoding="utf-8")
+    assert any("source record integrity mismatch" in problem for problem in verify_template_assets(
+        installation / "assets/templates", installation / "docs/calibration",
+    ))
 
 
 def test_provenance_outputs_match_runtime_configuration():

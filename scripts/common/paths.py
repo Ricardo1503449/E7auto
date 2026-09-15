@@ -1,11 +1,14 @@
 """Project paths shared by development tools, independent of process cwd."""
 from pathlib import Path
+from datetime import datetime
 import json
 import re
+import uuid
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "assets" / "templates"
 CALIBRATION_DIR = PROJECT_ROOT / "docs" / "calibration"
+CANDIDATES_DIR = PROJECT_ROOT / "artifacts" / "template-candidates"
 
 
 def feature_directory(feature: str, template_root: Path = TEMPLATES_DIR) -> Path:
@@ -31,9 +34,25 @@ def template_relative_path(template_key: str, *, feature: str, template_root: Pa
     return candidate.relative_to(template_root.resolve())
 
 
-def calibration_output_dirs(output_dir: Path | None = None, manifest_dir: Path | None = None) -> tuple[Path, Path]:
-    output_dir = TEMPLATES_DIR if output_dir is None else output_dir.resolve()
-    manifest_dir = (CALIBRATION_DIR if output_dir == TEMPLATES_DIR else output_dir) if manifest_dir is None else manifest_dir.resolve()
+def ensure_candidate_path(path: Path) -> Path:
+    resolved = path.resolve()
+    for protected in (TEMPLATES_DIR, CALIBRATION_DIR, PROJECT_ROOT / "config"):
+        if resolved.is_relative_to(protected.resolve()):
+            raise ValueError(f"Candidate export cannot write formal resources: {resolved}")
+    return resolved
+
+
+def calibration_output_dirs(
+    output_dir: Path | None = None, manifest_dir: Path | None = None
+) -> tuple[Path, Path]:
+    """Candidate outputs and provenance never overwrite formal resources."""
+    if output_dir is None:
+        output_dir = CANDIDATES_DIR / (datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:8])
+    output_dir = ensure_candidate_path(output_dir)
+    if manifest_dir is None:
+        manifest_dir = output_dir
+    manifest_dir = ensure_candidate_path(manifest_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Candidate output: {output_dir}")
     return output_dir, manifest_dir

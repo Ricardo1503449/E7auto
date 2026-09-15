@@ -1,9 +1,12 @@
 from pathlib import Path
 import argparse
+import hashlib
+import json
 
 import cv2
 
-from scripts.common.image_io import write_png
+from scripts.common.candidates import write_candidate_png as write_png
+from scripts.common.paths import ensure_candidate_path
 from scripts.common.paths import calibration_output_dirs, template_relative_path
 
 
@@ -20,6 +23,12 @@ def crop(source: Path, output_dir: Path, name: str, x: int, y: int, width: int, 
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / template_relative_path(name, feature="common")
     write_png(output, result)
+    ensure_candidate_path(output.with_suffix(".source.json")).write_text(json.dumps({
+        "source_path": str(source.resolve()),
+        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "crop": {"x": client_x+x, "y": client_y+y, "width": width, "height": height},
+        "output_path": output.relative_to(output_dir).as_posix(),
+    }, indent=2) + "\n", encoding="utf-8")
 
 
 def main() -> int:

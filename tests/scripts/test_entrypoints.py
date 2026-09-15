@@ -14,6 +14,7 @@ from tests.helpers.paths import ROOT
 
 
 CLI_MODULES = [
+    "templates.register",
     "calibration.calibrate_client_frames",
     "calibration.calibrate_overlay_position",
     "calibration.crop_calibration_templates",

@@ -42,3 +42,13 @@ tests/fixtures/       # 可移植的离线回归样本
 - 当前历史清单中的 `output_path` 统一相对于 `assets/templates/`；企鹅运行清单中的 `file` 相对于 `assets/templates/penguin/`。原始来源路径仅供追溯，不视为可移植默认输入。
 - 维护来源图片、基准尺寸、裁剪区域和遮罩依据。目录整理不得重新编码PNG或修改像素；企鹅等带完整性校验的模板更新须同步已审核的摘要。
 - 不要求为格式统一而重写历史JSON/YAML；新清单须注明字段和路径基准。
+
+## 校准与验证
+
+- 模板提取默认输出到 `artifacts/template-candidates/<时间>-<编号>/`，每个PNG附带 `.candidate.json`（SHA-256及尺寸）；来源/裁剪记录也留在候选目录。提取不直接覆盖正式模板、正式来源记录或配置。
+- 自定义 `--output-dir` 和 `--manifest-dir` 只用于候选输出。网络裁剪生成来源记录，网络文字转换读取 `--template-dir` 并导出新候选，不原地改输入。
+- `template_relative_path` 必须明确传入feature，并按该功能清单查询已登记键；未知键报错，没有默认商店归属。后续提取工具使用相同规则及 `write_candidate_png`。
+- 候选验收后使用统一 `scripts.templates.register prepare/apply` 登记；新模板显式指定功能、键和文件名。PNG、运行清单和来源记录由登记工具协同更新，不能只更新图片或自动刷新不明变化的哈希。完整用法与中断恢复见 [模板登记流程](TEMPLATE_WORKFLOW.md)。
+- 每次新增功能至少验证：有效模板可加载；专用/共享必需资源缺失或损坏会拒绝启动；另一功能专用资源缺失不影响本功能；相关真实离线样本仍能识别。
+- 更新校准工具、配置、测试、文档和发布检查中的路径引用。发布验证从源码 `docs/calibration/` 读取来源记录，检查发行目录中的模板；不得为方便校验而重新把历史记录放回运行模板目录。
+- 发布构建继续递归包含 `assets/templates/`，新增功能同时更新 `scripts/release/verify_release.py` 的资源验证。只运行直接相关测试；提交、推送和发布仍需用户明确授权。

@@ -80,3 +80,5 @@ Required Release-description template:
 ```
 
 Onefile evaluation begins only after every standalone gate passes. Startup extraction behavior, antivirus reputation, data-file lookup, and signed-build behavior then require a separate test matrix.
+
+- 模板更新须经 `scripts.templates.register prepare/apply` 登记；发布目录的图片列表以运行清单为准，来源记录在源码 `docs/calibration/registrations` 中校验哈希，不要求打包历史记录。发布前不得有未恢复的登记事务。

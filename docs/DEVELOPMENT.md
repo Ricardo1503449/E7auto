@@ -63,7 +63,7 @@ Python 开发工具统一使用 `python -m scripts.<分类>.<模块>`。不要�
 | `extract_sky_stone_templates` | `--source`、`--context-source`、`--balance-3924-source`、`--balance-3900-source`、`--combined-top-bar-source` |
 | `calibrate_client_frames` | `--main-source`、`--shop-top-source`、`--shop-bottom-source`、`--refresh-confirm-source`、`--purchase-confirm-source` |
 | `crop_network_templates` | `--source` |
-| `make_network_text_templates` | `--template-dir`；原地转换该目录中的两张网络提示裁剪图 |
+| `make_network_text_templates` | `--template-dir`；读取两张网络裁剪图，并通过可选 `--output-dir` 导出新候选 |
 
 `--source-dir` 工具仍按历史文件名中的时间标记选择来源；保留文件名标记及对应内容。全窗口校准仍要求五个角色对应原有尺寸、裁剪与校验条件，不适用于任意截图。
 
@@ -74,7 +74,7 @@ Python 开发工具统一使用 `python -m scripts.<分类>.<模块>`。不要�
 .\.venv\Scripts\python.exe -m scripts.calibration.calibrate_client_frames --help
 ```
 
-提取工具的 `--output-dir` 默认是 `assets/templates`；需要试验时显式传入另一个目录。`calibrate_client_frames` 使用 `--output` 指定清单输出文件。导入工具模块不会执行网络模板裁剪或转换。运行时捕获图片仍仅存于内存。
+模板提取默认生成独立的 `artifacts/template-candidates/<时间>-<编号>` 目录，PNG按功能层级输出并附带校验文件；来源记录跟随候选目录。可以通过 `--output-dir`、`--manifest-dir` 自定义候选位置，禁止直接写正式资源。候选验收后通过统一的 `scripts.templates.register prepare/apply` 登记；用法及失败恢复见 [模板登记流程](TEMPLATE_WORKFLOW.md)。`calibrate_client_frames` 使用 `--output` 指定清单输出文件。导入工具模块不会执行网络模板裁剪或转换。运行时捕获图片仍仅存于内存。
 
 实机验证步骤与授权条件见 [校准指南](CALIBRATION.md) 和 [后台验证](BACKGROUND_VALIDATION.md)。
 
@@ -106,3 +106,7 @@ powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
 ```
 
 构建继续使用根目录 `launcher.py`、现有配置和资源布局。源码测试与构建脚本契约通过，不等于已重新构建或验证新的独立程序。修改源码后需要另行执行构建和 [发布检查](RELEASE_CHECKLIST.md)，才能对新产物作出结论。
+
+## 新增功能与模板
+
+所有后续功能必须遵循[模板资源组织与新增功能约定](TEMPLATES.md)：功能专用模板放入 `assets/templates/<feature>/`，实际复用的模板放入 `common/<用途>/`，启动按功能加载，历史来源记录放入 `docs/calibration/`。新增或迁移模板时同步配置、提取工具、离线回归及发布验证。

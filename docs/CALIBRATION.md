@@ -1,5 +1,7 @@
 # Internal calibration guide
 
+Template extractors now write candidate directories and checksums. Validated candidates enter formal catalogs only through the [registration workflow](TEMPLATE_WORKFLOW.md); extraction does not overwrite formal PNGs.
+
 All Python commands below are module entry points run from the project root. Template reproduction requires explicit source arguments; use `--help` and the [required-input table](DEVELOPMENT.md#校准工具输入). Recorded local source paths remain historical evidence, not assumed available files.
 
 `calibration_complete` is now true for the validated target Windows x64 machine. If any item below changes or becomes unavailable, restore the fail-closed gate until new direct evidence is collected; never infer coordinates or costs from unrelated screenshots.

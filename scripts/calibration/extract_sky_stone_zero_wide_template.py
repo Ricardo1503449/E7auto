@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.common.image_io import write_png
+from scripts.common.candidates import write_candidate_png as write_png
+from scripts.common.paths import ensure_candidate_path
 
 from pathlib import Path
 from scripts.common.paths import calibration_output_dirs, template_relative_path
@@ -85,7 +86,7 @@ def main() -> int:
         type=Path,
         default=None,
     )
-    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
+    parser.add_argument("--manifest-dir", type=Path, help="Candidate provenance directory (default: candidate output directory)")
     args = parser.parse_args()
 
     source = args.source.resolve()
@@ -170,7 +171,7 @@ def main() -> int:
         < manifest["validation"]["wide_gold_to_sky_stone_zero_minimum"]
     ):
         raise RuntimeError(f"Wide zero validation failed: {manifest['validation']}")
-    (manifest_dir / "sky_stone_zero_wide_manifest.yaml").write_text(
+    (ensure_candidate_path(manifest_dir / "sky_stone_zero_wide_manifest.yaml")).write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

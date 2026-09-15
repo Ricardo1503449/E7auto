@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.common.image_io import write_png
+from scripts.common.candidates import write_candidate_png as write_png
+from scripts.common.paths import ensure_candidate_path
 
 from pathlib import Path
 from scripts.common.paths import calibration_output_dirs, template_relative_path
@@ -67,7 +68,7 @@ def main() -> int:
         type=Path,
         default=None,
     )
-    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
+    parser.add_argument("--manifest-dir", type=Path, help="Candidate provenance directory (default: candidate output directory)")
     args = parser.parse_args()
     source = find_source(args.source_dir.resolve())
     output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
@@ -103,7 +104,7 @@ def main() -> int:
         "output_path": output.relative_to(output_dir).as_posix(),
         "output_size": {"width": x1 - x0, "height": y1 - y0},
     }
-    (manifest_dir / "shop_exit_icon_manifest.yaml").write_text(
+    (ensure_candidate_path(manifest_dir / "shop_exit_icon_manifest.yaml")).write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

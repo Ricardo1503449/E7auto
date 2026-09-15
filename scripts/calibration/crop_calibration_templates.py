@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.common.image_io import write_png
+from scripts.common.candidates import write_candidate_png as write_png
+from scripts.common.paths import ensure_candidate_path
 
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -98,7 +99,7 @@ def main() -> int:
         type=Path,
         default=None,
     )
-    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
+    parser.add_argument("--manifest-dir", type=Path, help="Candidate provenance directory (default: candidate output directory)")
     args = parser.parse_args()
     source_dir = args.source_dir.resolve()
     output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
@@ -131,7 +132,7 @@ def main() -> int:
         "method": "exact pixel crop; no scaling, filtering, color conversion, or generation",
         "templates": manifest_entries,
     }
-    (manifest_dir / "manifest.yaml").write_text(
+    (ensure_candidate_path(manifest_dir / "manifest.yaml")).write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

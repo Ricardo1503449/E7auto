@@ -1,0 +1,1 @@
+"""Explicit template registration tools."""

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.common.image_io import write_png
+from scripts.common.candidates import write_candidate_png as write_png
+from scripts.common.paths import ensure_candidate_path
 
 from pathlib import Path
 from scripts.common.paths import calibration_output_dirs, template_relative_path
@@ -99,7 +100,7 @@ def main() -> int:
         type=Path,
         default=None,
     )
-    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
+    parser.add_argument("--manifest-dir", type=Path, help="Candidate provenance directory (default: candidate output directory)")
     args = parser.parse_args()
     source = args.source.resolve()
     if not source.is_file():
@@ -172,7 +173,7 @@ def main() -> int:
         "source_size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
         "templates": entries,
     }
-    (manifest_dir / "refresh_confirm_manifest.yaml").write_text(
+    (ensure_candidate_path(manifest_dir / "refresh_confirm_manifest.yaml")).write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )
