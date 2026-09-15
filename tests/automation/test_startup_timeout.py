@@ -36,7 +36,8 @@ def test_startup_waits_up_to_ten_seconds_and_continues_when_ready(ready_after: f
 
     class TimedInput(FakeInput):
         def click(self, window, point):
-            click_times.append(clock.monotonic())
+            if point != startup_config().points["main_screen_wake"]:
+                click_times.append(clock.monotonic())
             super().click(window, point)
 
     final, _, _, inputs, _, _, _ = run_session(
@@ -48,7 +49,7 @@ def test_startup_waits_up_to_ten_seconds_and_continues_when_ready(ready_after: f
 
     if ready_after > 10:
         assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
-        assert inputs.actions == []
+        assert inputs.actions == [("click", startup_config().points["main_screen_wake"], None)]
         assert 10 <= clock.monotonic() < 10.2
     else:
         assert final.stop_reason is StopReason.BUDGET_COMPLETE

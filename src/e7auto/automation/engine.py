@@ -18,7 +18,7 @@ _REFRESH_CONFIRM_FAST_CONFIDENCE = 0.99
 
 
 _ENTRY_MAX_ATTEMPTS = 3
-_STARTUP_MAIN_SHOP_TIMEOUT_MS = 10_000
+_STARTUP_MAIN_ICON_TIMEOUT_MS = 10_000
 
 
 class AutomationEngine:
@@ -47,6 +47,7 @@ class AutomationEngine:
         self._transform: CoordinateTransform | None = None
         self._handling_network = False
         self._network_recovery_generation = 0
+        self._startup_wake_sent = False
         self._network_paused_seconds = 0.0
         self._network_status_before_reconnect: OverlayActivityStatus | None = None
         self._trusted_sky_stone_balance: int | None = None
@@ -350,6 +351,8 @@ class AutomationEngine:
             self._capture_count += 1
             self._capture_seconds += time.perf_counter() - started
 
+
+
     def _handle_network_exception(self, frame: object) -> None:
         error_detector = getattr(self._deps.vision, "network_connection_error", None)
         retry_detector = getattr(self._deps.vision, "network_retry", None)
@@ -513,26 +516,59 @@ class AutomationEngine:
                 early_exit_ms=progress.early_exit_ms,
             )
 
+    def _wait_startup_icon(
+        self,
+        name: str,
+        detector: Callable[[object], Observation | None],
+        *,
+        minimum_stable_frames: int = 1,
+    ) -> Observation:
+        observation = self._wait_stable_observation(
+            name, detector, _STARTUP_MAIN_ICON_TIMEOUT_MS,
+            startup_wake=True, minimum_stable_frames=minimum_stable_frames,
+        )
+        self._deps.logger.event(
+            "startup_icon_confirmed", object=name, wake_sent=self._startup_wake_sent,
+        )
+        return observation
+
     def _wait_stable_observation(
         self,
         name: str,
         detector: Callable[[object], Observation | None],
         timeout_ms: int,
+        *,
+        startup_wake: bool = False,
+        minimum_stable_frames: int = 1,
     ) -> Observation:
         deadline = self._active_monotonic() + timeout_ms / 1000
         stable = 0
-        latest: Observation | None = None
         while self._active_monotonic() <= deadline:
             generation = self._network_recovery_generation
-            observation = self._vision_call(detector, self._capture())
+            frame = self._capture()
             if generation != self._network_recovery_generation:
                 stable = 0
+                if startup_wake:
+                    # Shop capture can return the interrupted frame after
+                    # recovery. Never use it to authorize a wake-up click.
+                    self._control.checkpoint()
+                    self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
+                    continue
+            observation = self._vision_call(detector, frame)
             if observation is None:
                 stable = 0
                 self._deps.logger.event("recognition", object=name, detected=False)
+                if startup_wake and not self._startup_wake_sent:
+                    self._startup_wake_sent = True
+                    self._click(
+                        "wake_main_screen_startup", self._config.points["main_screen_wake"],
+                        object=name,
+                    )
+                    # Allow a complete redraw window after the single wake;
+                    # subsequent misses and network recovery never resend it.
+                    deadline = self._active_monotonic() + timeout_ms / 1000
             else:
                 stable += 1
-                latest = observation
                 self._deps.logger.event(
                     "recognition",
                     object=name,
@@ -541,7 +577,7 @@ class AutomationEngine:
                     roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
                     stable=stable,
                 )
-                if stable >= self._config.timing.stable_frames:
+                if stable >= max(minimum_stable_frames, self._config.timing.stable_frames):
                     return observation
             self._control.checkpoint()
             self._deps.clock.sleep(self._config.timing.poll_interval_ms / 1000)
@@ -636,14 +672,12 @@ class AutomationEngine:
     def _enter_store(self, *, initial_start: bool = False) -> None:
         self._invalidate_trusted_balance("shop_entry")
         self._transition(RunState.ENTERING_STORE)
-        main_shop = self._wait_stable_observation(
-            "main_shop_icon",
-            self._deps.vision.main_shop_icon,
-            # Allow the game to redraw after the startup window resize.
-            _STARTUP_MAIN_SHOP_TIMEOUT_MS
-            if initial_start
-            else self._config.timing.entry_timeout_ms,
-        )
+        if initial_start:
+            main_shop = self._wait_startup_icon("main_shop_icon", self._deps.vision.main_shop_icon)
+        else:
+            main_shop = self._wait_stable_observation(
+                "main_shop_icon", self._deps.vision.main_shop_icon, self._config.timing.entry_timeout_ms,
+            )
         self._enter_with_retry(
             entry_name="shop", main=main_shop,
             main_detector=self._deps.vision.main_shop_icon,

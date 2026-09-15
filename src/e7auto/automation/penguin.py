@@ -105,7 +105,11 @@ class PenguinEngine(AutomationEngine):
     def execute(self) -> None:
         self._location = "main"
         self._prepare()
-        main = self._control_visible("sanctuary_entry", timeout_ms=10_000)
+        main = self._wait_startup_icon(
+            "sanctuary_entry", lambda frame: self._deps.vision.control(frame, "sanctuary_entry"),
+            minimum_stable_frames=2,
+        )
+        self._deps.logger.event("penguin_state_confirmed", stage="sanctuary_entry")
         if self._publisher.snapshot.purchase_limit == 0:
             raise StopExecution(StopReason.PENGUIN_LIMIT_COMPLETE)
         self._status(RunState.ENTERING_SANCTUARY, OverlayActivityStatus.NAVIGATING)

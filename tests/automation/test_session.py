@@ -100,12 +100,12 @@ def test_entry_click_uses_the_recognized_main_shop_anchor() -> None:
     ]
 
 
-def test_entry_recognition_failure_sends_no_input_and_restores_failure_reason() -> None:
+def test_entry_recognition_failure_only_wakes_once_and_restores_failure_reason() -> None:
     final, _, _, inputs, _, hotkeys, _ = run_session(
         ScriptedVision(main_visible=False), limit=0
     )
     assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
-    assert inputs.actions == []
+    assert inputs.actions == [("click", make_config().points["main_screen_wake"], None)]
     assert hotkeys.unregistered == 1
 
 

@@ -87,3 +87,7 @@ Templates are grouped under `assets/templates/shop`, `penguin`, and `common/{dig
 ### Shared main-screen column and recognition configuration
 
 Both entry detectors read `rois.left_icon_column` and their respective `vision.entry_thresholds` (color and structure). Other penguin controls and price-digit thresholds also come from YAML. `template_manifest.py` loads common/shop/penguin catalogs using the same baseline, contained-path, PNG-dimension and SHA-256 checks. Catalog `source.crop` describes provenance only and cannot generate or override search rectangles. The catalogs are runtime resources; source screenshots and historical calibration records are not runtime dependencies. Feature loading remains isolated (31 shop/shared images or 26 penguin/shared images).
+
+### One-shot startup wake
+
+Shop and penguin initial entry use `AutomationEngine._wait_startup_icon`. The first absent entry observation dispatches `wake_main_screen_startup` at configured `main_screen_wake` through the existing stop/window/coordinate guards, then starts a fresh 10-second active recognition budget. An engine-local flag prevents repeated startup wake attempts; normal reentry and destination checks do not enable this branch. Network recovery invalidates the interrupted startup capture before recognition or wake authorization, resets stability, and excludes recovery duration from the budget. Both entries retain their configured matching and stable-frame requirements (penguin retains its minimum of two frames).
