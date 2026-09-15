@@ -20,9 +20,17 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
 
-## v1.3.1 recognition changes
+## v1.3.2 local rebuild
 
-The current source targets `E7auto_v1.3.1_x64.zip`. Source tests and supplied-screenshot checks are recorded in [the validation report](SHOP_RECOGNITION_VALIDATION.md); the local v1.3.1 directory and ZIP have now been built and checked for static/resource/archive integrity. After the user requested another Windows UAC prompt, elevated release verification and the compiled self-check passed (problems=[], version 1.3.1, AMD64, WGC importable); no GitHub Release has been published.
+Current source targets `E7auto_v1.3.2_x64.zip`. Prior records below describe their original versions. This local rebuild does not include GitHub publishing.
+
+- [x] Version/environment checks and 50 focused tests passed.
+- [x] Rebuilt local standalone directory and ZIP; 154 ZIP files match dist by CRC/read and SHA-256, 48 template-directory files and 11 UI assets match source.
+- [x] Verified AMD64, Windows version 1.3.2.0 and requireAdministrator. Elevated release verification passed with problems=[]; compiled self-check reports version 1.3.2 and WGC importable.
+
+## v1.3.1 recognition changes (historical)
+
+The v1.3.1 source targeted `E7auto_v1.3.1_x64.zip`. Source tests and supplied-screenshot checks are recorded in [the validation report](SHOP_RECOGNITION_VALIDATION.md); the local v1.3.1 directory and ZIP have now been built and checked for static/resource/archive integrity. After the user requested another Windows UAC prompt, elevated release verification and the compiled self-check passed (problems=[], version 1.3.1, AMD64, WGC importable); no GitHub Release has been published.
 
 - [x] Verify the new assets are included by `--include-data-dir=assets/templates=assets/templates` and the package uses the current configuration (59 template-directory files match source, 31 configured templates decode, 165 ZIP files match dist).
 - [x] Complete the elevated compiled `--self-check`: the user-approved UAC retry passed, problems=[], version 1.3.1, AMD64, WGC importable. Static 1.3.1.0 / requireAdministrator checks passed.
