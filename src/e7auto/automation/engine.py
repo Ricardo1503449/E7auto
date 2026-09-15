@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from typing import Callable
+from datetime import datetime
 import time
 
 from ..config import AppConfig, Point, Rect
 from ..domain import OverlayActivityStatus, RunState, StopReason
 from ..geometry import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
-from ..ports import CaptureError, DisplayGeometry, WindowRef
+from ..ports import CachedGameFrame, CaptureError, DisplayGeometry, WindowRef
 from ..vision_types import InventoryMatch, Observation, PurchaseOutcome, ScrollMovementObservation, ScrollOverlapObservation
 from .dependencies import AutomationDependencies
 from .scrolling import FrameSample, ScrollProgress, ScrollServices, scroll_to_bottom
@@ -45,6 +46,7 @@ class AutomationEngine:
         self._baseline_bounds: Rect | None = None
         self._display_geometry: DisplayGeometry | None = None
         self._transform: CoordinateTransform | None = None
+        self._last_captured_frame: CachedGameFrame | None = None
         self._handling_network = False
         self._network_recovery_generation = 0
         self._startup_wake_sent = False
@@ -344,6 +346,10 @@ class AutomationEngine:
                 frame = self._deps.capture.capture_client(self._window, self._baseline_bounds)
             except CaptureError as exc:
                 raise StopExecution(StopReason.CAPTURE_FAILURE, str(exc)) from exc
+            self._last_captured_frame = CachedGameFrame(
+                frame, datetime.now().astimezone().isoformat(timespec="milliseconds"),
+                self._deps.clock.monotonic(),
+            )
             self._control.checkpoint()
             assert self._transform is not None
             return adapt_frame(frame, self._transform)
@@ -351,7 +357,11 @@ class AutomationEngine:
             self._capture_count += 1
             self._capture_seconds += time.perf_counter() - started
 
+    def cached_game_frame(self) -> CachedGameFrame | None:
+        return self._last_captured_frame
 
+    def release_cached_game_frame(self) -> None:
+        self._last_captured_frame = None
 
     def _handle_network_exception(self, frame: object) -> None:
         error_detector = getattr(self._deps.vision, "network_connection_error", None)

@@ -13,6 +13,13 @@ from .snapshots import SnapshotPublisher
 from .stop_control import StopExecution, StopController
 
 
+_EXPECTED_STOPS = frozenset({
+    StopReason.BUDGET_COMPLETE, StopReason.REFRESH_STRATEGY_EXHAUSTED,
+    StopReason.PENGUIN_LIMIT_COMPLETE, StopReason.PENGUIN_FUNDS_COMPLETE,
+    StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_F5,
+})
+
+
 class AutomationSession:
     def __init__(
         self,
@@ -121,6 +128,25 @@ class AutomationSession:
                     reason = StopReason.INTERNAL_ERROR
                     detail = f"normal completion cleanup failed: {exc!r}"
                     self._dependencies.logger.event("internal_error", error=detail, traceback=traceback.format_exc())
+            try:
+                if reason not in _EXPECTED_STOPS:
+                    self._dependencies.logger.save_stop_snapshot(
+                        engine.cached_game_frame() if engine is not None else None,
+                        stop_reason=reason.value,
+                        stopped_monotonic=self._dependencies.clock.monotonic(),
+                    )
+            except Exception as exc:
+                # A diagnostic writer must never replace the automation failure or skip cleanup.
+                try:
+                    self._dependencies.logger.event(
+                        "stop_snapshot", outcome="failed", stop_reason=reason.value,
+                        source="last_successful_capture", detail=f"snapshot writer failed: {exc!r}",
+                    )
+                except Exception:
+                    pass
+            finally:
+                if engine is not None:
+                    engine.release_cached_game_frame()
             try:
                 self._dependencies.capture.close()
             except Exception as exc:

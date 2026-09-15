@@ -19,6 +19,11 @@ from .vision_types import (
 Frame = NDArray[np.uint8]
 
 
+@dataclass(frozen=True, slots=True)
+class CachedGameFrame:
+    frame: Frame
+    captured_at: str
+    captured_monotonic: float
 
 
 class CaptureError(RuntimeError):
@@ -113,6 +118,9 @@ class Clock(Protocol):
 class TextRunLogger(Protocol):
     def event(self, event: str, **fields: object) -> None: ...
 
+    def save_stop_snapshot(
+        self, cached: CachedGameFrame | None, *, stop_reason: str, stopped_monotonic: float,
+    ) -> None: ...
 
     def close(self) -> None: ...
 

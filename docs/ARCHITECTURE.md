@@ -92,6 +92,8 @@ Both entry detectors read `rois.left_icon_column` and their respective `vision.e
 
 Shop and penguin initial entry use `AutomationEngine._wait_startup_icon`. The first absent entry observation dispatches `wake_main_screen_startup` at configured `main_screen_wake` through the existing stop/window/coordinate guards, then starts a fresh 10-second active recognition budget. An engine-local flag prevents repeated startup wake attempts; normal reentry and destination checks do not enable this branch. Network recovery invalidates the interrupted startup capture before recognition or wake authorization, resets stability, and excludes recovery duration from the budget. Both entries retain their configured matching and stable-frame requirements (penguin retains its minimum of two frames).
 
-## Scroll verification fallback
+## Scroll verification and stop diagnostics
 
 Scroll verification retains the primary displacement gate and adds cumulative pairwise movement plus overlap checks when that gate fails. Stability, changed-pixel fraction and the existing timeout remain required; logs identify the accepted verification method.
+
+Each run retains only its last successful game capture for stop diagnostics. Session cleanup and the worker exception path may write that cached frame once on an unexpected stop, without another capture. Expected stops (including manual F5 and insufficient purchase funds) do not write an image. Snapshot failures cannot replace the original stop reason or bypass cleanup; the image shares its run's log retention group.

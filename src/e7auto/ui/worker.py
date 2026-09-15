@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import uuid
 import traceback
+import time
 
 from PySide6.QtCore import QObject, Signal, Slot
 
@@ -84,7 +85,20 @@ class AutomationWorker(QObject):
                 final = session.run_penguins(self._purchase_limit, run_id)
         except Exception as exc:
             logger.event("worker_setup_failed", error=repr(exc), traceback=traceback.format_exc())
-            logger.close()
+            try:
+                logger.save_stop_snapshot(
+                    None, stop_reason=StopReason.INTERNAL_ERROR.value, stopped_monotonic=time.monotonic(),
+                )
+            except Exception as snapshot_error:
+                try:
+                    logger.event(
+                        "stop_snapshot", outcome="failed", stop_reason=StopReason.INTERNAL_ERROR.value,
+                        source="last_successful_capture", detail=f"snapshot writer failed: {snapshot_error!r}",
+                    )
+                except Exception:
+                    pass
+            finally:
+                logger.close()
             initial = RuntimeSnapshot.initial(
                 run_id,
                 tuple((target.target_id, target.display_name) for target in self._config.targets),

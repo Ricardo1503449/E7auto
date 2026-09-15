@@ -5,7 +5,7 @@ from typing import Callable
 import numpy as np
 
 from e7auto.config import Point, Rect, Size
-from e7auto.ports import DisplayGeometry, WindowRef, WindowState
+from e7auto.ports import CachedGameFrame, DisplayGeometry, WindowRef, WindowState
 
 
 class FakeClock:
@@ -208,9 +208,16 @@ class FakeLogger:
     def __init__(self) -> None:
         self.events: list[tuple[str, dict[str, object]]] = []
         self.closed = 0
+        self.stop_snapshots: list[tuple[CachedGameFrame | None, str, float]] = []
 
     def event(self, event: str, **fields: object) -> None:
         self.events.append((event, fields))
 
     def close(self) -> None:
         self.closed += 1
+
+    def save_stop_snapshot(
+        self, cached: CachedGameFrame | None, *, stop_reason: str, stopped_monotonic: float,
+    ) -> None:
+        if not self.stop_snapshots:
+            self.stop_snapshots.append((cached, stop_reason, stopped_monotonic))
