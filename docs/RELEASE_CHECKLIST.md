@@ -24,8 +24,8 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 
 Current source targets `E7auto_v1.3.2_x64.zip`. Prior records below describe their original versions. This local rebuild does not include GitHub publishing.
 
-- [x] Version/environment checks and 50 focused tests passed.
-- [x] Rebuilt local standalone directory and ZIP; 154 ZIP files match dist by CRC/read and SHA-256, 48 template-directory files and 11 UI assets match source.
+- [x] Initial 2026-09-15 build: version/environment checks and 50 focused tests passed. The 2026-09-16 same-version rebuild uses commit `1d0a198` with the masked Sky Stone icon; prior relevant tests were reused and environment verification passed again.
+- [x] Latest local standalone directory and ZIP rebuilt: 83,424,277-byte ZIP, 154 files match dist by CRC/read and SHA-256, 48 template-directory files and 11 UI assets match source. Full current and historical evidence: [v1.3.2 build validation](RELEASE_V1.3.2_VALIDATION.md).
 - [x] Verified AMD64, Windows version 1.3.2.0 and requireAdministrator. Elevated release verification passed with problems=[]; compiled self-check reports version 1.3.2 and WGC importable.
 
 ## v1.3.1 recognition changes (historical)

@@ -78,6 +78,8 @@ Python 开发工具统一使用 `python -m scripts.<分类>.<模块>`。不要�
 
 实机验证步骤与授权条件见 [校准指南](CALIBRATION.md) 和 [后台验证](BACKGROUND_VALIDATION.md)。
 
+涉及模板、识别配置和功能加载的开发，先遵循项目根目录 [AGENTS.md](../AGENTS.md)。新增模板与修改已有模板均需候选验证及 `prepare → apply` 登记。更新完成后运行 `.\.venv\Scripts\python.exe -m scripts.templates.check_changes`；获准提交后，将正式PNG、运行清单和登记来源记录一起暂存，再运行同命令的 `--staged` 模式检查实际暂存内容。保留 `.gitattributes` 中登记来源的字节及CRLF识别规则，避免换行转换破坏哈希或把合法CRLF误报为行尾空白。本地检查不自动提交，也不配置CI或安装hook。
+
 当前主界面入口模板由深色背景完整截图通过 `--source` 重建；步骤包含客户区定位、前景筛选、问号笔画孔洞恢复和仅向内的透明边缘平滑。历史 `--source-dir` 模式仅重建旧版局部素材。九张商品模板的遮罩参数记录在 `docs/calibration/manifest.yaml`；已购买按钮和小区域回归素材来源记录在 `purchased_button_manifest.json`。模板自身匹配成功不能替代跨背景和实机验证，当前证据见 [商店识别改动验证记录](SHOP_RECOGNITION_VALIDATION.md)。
 
 ## 测试
