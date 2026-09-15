@@ -4,13 +4,14 @@ import os
 import subprocess
 import sys
 from dataclasses import asdict
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
 import yaml
 
 from e7auto.config import ConfigError, LoggingConfig, load_config
-from e7auto.run_logging import RunLogManager
+from e7auto.run_logging import RunLogManager, _field_value, _message
 
 
 def test_group_retention_removes_whole_run(tmp_path: Path) -> None:
@@ -141,3 +142,60 @@ def test_age_uses_newest_segment_of_whole_run(tmp_path: Path) -> None:
     log = RunLogManager(tmp_path, LoggingConfig()).start('new')
     log.close()
     assert old_segment.exists() and recent_segment.exists()
+
+
+@pytest.mark.parametrize('value,expected', [
+    ('0.800000', '0.8'), ('12.340', '12.34'), ('0.000', '0'), ('-0.000', '-0'),
+    ('-393.380', '-393.38'), ('0.000001', '0.000001'),
+    ('12345678901234567890.123456789000', '12345678901234567890.123456789'),
+])
+def test_measurements_are_compacted_without_float_rounding(value, expected):
+    actual = _field_value('phase_shift_y', value)
+    assert actual == expected
+    assert Decimal(actual) == Decimal(value)
+    assert Decimal(actual).is_signed() == Decimal(value).is_signed()
+
+
+def test_vector_positions_and_missing_values_are_preserved():
+    value = 'na,-393.380,-0.000,0.004000,nan,inf,0.000001'
+    assert _field_value('pair_shift_y', value) == 'na,-393.38,-0,0.004,nan,inf,0.000001'
+    assert _field_value('fallback_block_scores', 'na,0.800000,0.000000,0.750000') == 'na,0.8,0,0.75'
+
+
+@pytest.mark.parametrize('key', ['version', 'path', 'detail', 'error', 'traceback', 'run_id', 'object'])
+def test_arbitrary_text_is_never_interpreted_as_a_measurement(key):
+    assert _field_value(key, '12.340000') == '12.340000'
+
+
+@pytest.mark.parametrize('value', ['001.2000', '1e-10', 'nan', 'inf', 'timeout 1.000', '0.8\n1.000'])
+def test_non_decimal_measurements_keep_original_text_and_escaping(value):
+    assert _field_value('confidence', value) == value.replace('\n', '\\n')
+
+
+def test_real_log_keeps_every_event_and_error_detail_while_compacting_numbers(tmp_path: Path):
+    log = RunLogManager(tmp_path, LoggingConfig()).start('compact')
+    original_error = 'failure at x=12.340000\nstack\tline'
+    for _ in range(3):
+        log.event('recognition', object='shop', detected=False, confidence='0.800000')
+    log.event('scroll_settle_trace', outcome='timeout', pair_shift_y='na,-393.380,0.000',
+              fallback_checks=2, fallback_block_scores='na,0.800000,0.100000,0.200000')
+    log.event('internal_error', error=original_error, traceback=original_error)
+    log.event('run_stopped', reason='scroll_verification_failed', detail=original_error)
+    log.close()
+    text = log.path.read_text(encoding='utf-8')
+    lines = text.splitlines()
+    assert len(lines) == 7  # Started + three unchanged observations + trace + error + stopped.
+    assert text.count('event=recognition ') == 3
+    assert text.count('confidence=0.8') == 3
+    assert 'pair_shift_y=na,-393.38,0' in text
+    assert 'fallback_checks=2' in text
+    assert 'fallback_block_scores=na,0.8,0.1,0.2' in text
+    assert text.count('failure at x=12.340000\\nstack\\tline') == 3
+    assert 'event=run_stopped' in lines[-1]
+    assert 'reason=scroll_verification_failed' in lines[-1]
+
+
+def test_message_keeps_keys_order_and_non_measurement_values():
+    assert _message('input', {'repetition': 1, 'background_message_queued': True, 'logical_x': 1500}) == (
+        'event=input background_message_queued=True logical_x=1500 repetition=1'
+    )

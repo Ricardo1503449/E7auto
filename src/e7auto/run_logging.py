@@ -18,6 +18,16 @@ from .ports import CachedGameFrame
 _RUN_LOG_NAME = re.compile(r"^(run-.*\.log)(?:\.\d+)?$")
 _STOP_SNAPSHOT_NAME = re.compile(r"^(run-[0-9]{8}-[0-9]{6}-[0-9]{6}-.+)-stop\.png(?:\.tmp)?$")
 _CONTEXT_EVENTS = {"run_log_started", "window_prepared", "wgc_initialized"}
+_DECIMAL_LOG_FIELDS = frozenset({
+    "confidence", "max_confidence", "minimum_phase_response", "shift_tolerance_px",
+    "duration_ms", "capture_ms", "vision_ms", "normalization_ms", "cache_wait_ms",
+    "scale_x", "scale_y", "phase_shift_x", "phase_shift_y", "phase_response",
+    "mean_absolute_difference", "changed_fraction", "total_phase_shift_y",
+    "total_phase_response", "total_changed_fraction", "cumulative_shift_x",
+    "cumulative_shift_y", "fallback_overlap_height_fraction", "fallback_block_scores",
+    "pair_shift_y", "pair_response", "pair_changed_fraction",
+})
+_PLAIN_DECIMAL = re.compile(r"-?(?:0|[1-9][0-9]*)\.[0-9]+")
 
 
 def _safe_value(value: object) -> str:
@@ -25,10 +35,23 @@ def _safe_value(value: object) -> str:
 
 
 def _message(event: str, fields: dict[str, object]) -> str:
-    suffix = " ".join(f"{key}={_safe_value(value)}" for key, value in sorted(fields.items()))
+    suffix = " ".join(f"{key}={_field_value(key, value)}" for key, value in sorted(fields.items()))
     return f"event={event}" + (f" {suffix}" if suffix else "")
 
 
+def _field_value(key: str, value: object) -> str:
+    """Trim insignificant zeros only in known measurements, never arbitrary text.
+
+    No float conversion/rounding: decimal values, signs, and vector positions survive.
+    """
+    text = _safe_value(value)
+    if key not in _DECIMAL_LOG_FIELDS:
+        return text
+    return ",".join(
+        item.rstrip("0").rstrip(".")
+        if item.endswith("0") and _PLAIN_DECIMAL.fullmatch(item) else item
+        for item in text.split(",")
+    )
 
 
 def _acquire_lease(path: Path) -> BinaryIO:
