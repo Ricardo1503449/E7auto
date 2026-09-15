@@ -56,7 +56,7 @@ sources:
         right: 118.23576561636263
         paired_horizontal: 226.26920950801548
 template:
-  output_path: insufficient_funds.png
+  output_path: shop/insufficient_funds.png
   source: insufficient_gold
   content: 购买金币 title and explanatory text
   crop:

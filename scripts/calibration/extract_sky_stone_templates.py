@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from scripts.common.image_io import write_png
+
 from pathlib import Path
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 import argparse
 
 import cv2
 import numpy as np
 import yaml
 
-from scripts.common.image_io import read_rgba_png as read_png, write_png
+from scripts.common.image_io import read_rgba_png as read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -122,8 +125,9 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "assets" / "templates",
+        default=None,
     )
+    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
     args = parser.parse_args()
     source = args.source.resolve()
     if not source.is_file():
@@ -142,13 +146,12 @@ def main() -> int:
             raise RuntimeError(f"Missing supplied {source_name} source: {source_path}")
         supplemental_images[source_name] = read_png(source_path)
 
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
     image = read_png(source)
     context_image = read_png(context_source)
 
     icon, icon_crop = icon_template(image)
-    icon_path = output_dir / "sky_stone_icon.png"
+    icon_path = output_dir / template_relative_path("sky_stone_icon.png", feature="shop")
     write_png(icon_path, icon)
 
     labels, components = digit_components(image)
@@ -168,13 +171,13 @@ def main() -> int:
         component_mask = np.zeros(source_image.shape[:2], dtype=np.uint8)
         component_mask[component_labels == component] = 255
         output, crop = crop_with_mask(source_image, component_mask, padding=DIGIT_PADDING)
-        output_path = output_dir / f"sky_stone_digit_{digit}.png"
+        output_path = output_dir / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
         write_png(output_path, output)
         digit_entries.append(
             {
                 "digit": digit,
                 "source": source_name,
-                "output_path": output_path.name,
+                "output_path": output_path.relative_to(output_dir).as_posix(),
                 "crop": crop,
                 "component_area": area,
                 "foreground_pixels": int(np.count_nonzero(output[:, :, 3])),
@@ -388,7 +391,7 @@ def main() -> int:
             },
         },
         "icon": {
-            "output_path": icon_path.name,
+            "output_path": icon_path.relative_to(output_dir).as_posix(),
             "method": "exact opaque source pixel crop",
             "crop": icon_crop,
             "opaque_pixels": int(np.count_nonzero(icon[:, :, 3])),
@@ -425,7 +428,7 @@ def main() -> int:
         },
         "missing_digits": [],
     }
-    (output_dir / "sky_stone_manifest.yaml").write_text(
+    (manifest_dir / "sky_stone_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

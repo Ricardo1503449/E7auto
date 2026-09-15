@@ -13,7 +13,7 @@ from scripts.validation.validate_insufficient_funds import terminal_criteria
 ROOT = PROJECT_ROOT
 DEFAULT_SOURCE = ROOT / "logs" / "insufficient-funds-live-validation.json"
 DEFAULT_OUTPUT = (
-    ROOT / "assets" / "templates" / "insufficient_funds_live_validation_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
 )
 def build_manifest(source_path: Path = DEFAULT_SOURCE) -> dict[str, object]:
     source = source_path.resolve()

@@ -43,7 +43,7 @@ mask:
     sigma: 0.65
     inward_only: true
     partially_transparent_pixels: 1295
-output_path: main_shop_icon.png
+output_path: shop/main_shop_icon.png
 output_size:
   width: 128
   height: 106

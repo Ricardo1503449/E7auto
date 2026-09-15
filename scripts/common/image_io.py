@@ -32,4 +32,5 @@ def write_png(path: Path, image: np.ndarray) -> None:
     ok, encoded = cv2.imencode(".png", image)
     if not ok:
         raise RuntimeError(f"Cannot encode PNG: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
     encoded.tofile(path)

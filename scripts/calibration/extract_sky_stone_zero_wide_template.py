@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from scripts.common.image_io import write_png
+
 from pathlib import Path
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 import argparse
 
 import cv2
@@ -8,7 +11,7 @@ import numpy as np
 import yaml
 
 from scripts.calibration.calibrate_client_frames import locate_client_crop
-from scripts.common.image_io import read_rgba_png as read_png, write_png
+from scripts.common.image_io import read_rgba_png as read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -80,8 +83,9 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "assets" / "templates",
+        default=None,
     )
+    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
     args = parser.parse_args()
 
     source = args.source.resolve()
@@ -116,9 +120,8 @@ def main() -> int:
         crop_x : crop_x + width + PADDING * 2,
     ]
 
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "sky_stone_digit_0_wide.png"
+    output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
+    output_path = output_dir / template_relative_path("sky_stone_digit_0_wide.png", feature="common")
     write_png(output_path, output)
 
     manifest = {
@@ -152,7 +155,7 @@ def main() -> int:
                 "height": int(output.shape[0]),
             },
             "foreground_pixels": int(np.count_nonzero(output[:, :, 3])),
-            "output_path": output_path.name,
+            "output_path": output_path.relative_to(output_dir).as_posix(),
         },
         "validation": {
             "wide_gold_to_sky_stone_zero_minimum": 0.99,
@@ -167,7 +170,7 @@ def main() -> int:
         < manifest["validation"]["wide_gold_to_sky_stone_zero_minimum"]
     ):
         raise RuntimeError(f"Wide zero validation failed: {manifest['validation']}")
-    (output_dir / "sky_stone_zero_wide_manifest.yaml").write_text(
+    (manifest_dir / "sky_stone_zero_wide_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

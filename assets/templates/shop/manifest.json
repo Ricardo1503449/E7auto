@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "templates": {
+    "main_shop_icon": {
+      "file": "main_shop_icon.png",
+      "sha256": "04ab79da676c4be2ca7109983458e9c2efcba2003810c96ed30b11411f129408",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "shop_refresh_button": {
+      "file": "shop_refresh_button.png",
+      "sha256": "08faa2c896d1725d08cfb598b915ae3c1d152c53289cd503ea93cda23c0c0cb7",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "refresh_confirm_prompt": {
+      "file": "refresh_confirm_prompt.png",
+      "sha256": "d34a22b420c364975b9f781d9b629449c48fea21e90ca02ddb0851b76e5fa36a",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "refresh_confirm_button": {
+      "file": "refresh_confirm_button.png",
+      "sha256": "5f5c48d60247e3da6b6d6abf19f5f5198d96e9465f8afeb76881f8f01854d13b",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "shop_exit_icon": {
+      "file": "shop_exit_icon.png",
+      "sha256": "1d9674ce9a050310d25b8e9959927370b8bda5748d88bdf260711f435d98b800",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "confirm_button": {
+      "file": "confirm_button.png",
+      "sha256": "f49af61d6366b6e98199e8f3a28f5f029a786dafd72113d5c4fdea8cd8fb40b7",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "insufficient_funds": {
+      "file": "insufficient_funds.png",
+      "sha256": "1b66c737c1af8be862848e16761248d782f371d00bedf52e77762a9392652e76",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "purchased_button": {
+      "file": "purchased_button.png",
+      "sha256": "fe915d41cd3bb0012fbb81b95538b5e52aa873e97797e6ca9131f4a69b439c60",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_icon": {
+      "file": "sky_stone_icon.png",
+      "sha256": "a7465b2585487344919e2f13fa83074e1548482e0549b2841663fb6d730a071d",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "friendship_points": {
+      "file": "friendship_points.png",
+      "sha256": "53fc7842ad9c52d409076ff2345fc507fc4dcf4fcf75d2e8bbc048c81d97a92d",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "friendship_points_confirm": {
+      "file": "friendship_points_confirm.png",
+      "sha256": "b1a2e8137d154f9796f0d9e03e936c07da01960a7f4a9d046274f05ffa2c07f4",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "friendship_points_purchased": {
+      "file": "friendship_points_purchased.png",
+      "sha256": "e85e3809eb1d0df51d7afaade3d9a57265d886d627227042c7d6fe342f5e067d",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "covenant_bookmark": {
+      "file": "covenant_bookmark.png",
+      "sha256": "630d44f2bceb151dc836948372693b7d4da6955c25f468be22b771df4bdb3c99",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "covenant_bookmark_confirm": {
+      "file": "covenant_bookmark_confirm.png",
+      "sha256": "f3ab4f8d94d6e0a5a4507620f2010253d9901b446b386ca353e9a4a31bc987cd",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "covenant_bookmark_purchased": {
+      "file": "covenant_bookmark_purchased.png",
+      "sha256": "e5c035e8b80c9a6a1f0aeb23b562d43b0aee08adc27b2832697d80703ed06771",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "mystic_medal": {
+      "file": "mystic_medal.png",
+      "sha256": "79c6f1ef41ad4bca1d898a036c76c56ce52a1656a139ea4131770609b5bb8809",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "mystic_medal_confirm": {
+      "file": "mystic_medal_confirm.png",
+      "sha256": "31e8246ee5abb41dd1b766198d24e85c871e5d8007b91159a3fbc20335c85443",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "mystic_medal_purchased": {
+      "file": "mystic_medal_purchased.png",
+      "sha256": "2d2c910d32c22ef03e6c3be5bc5669891d6ad2d868165f0615e054c1f6f6e847",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    }
+  }
+}

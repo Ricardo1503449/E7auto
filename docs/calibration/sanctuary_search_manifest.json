@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "offline_calibrated",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "source_fixture": "tests/fixtures/main_entry_samples.npz",
+  "source_fixture_sha256": "356399045f47461a38c85a934a17cbd13a6b4622d9f088fd54fd330ca976c4aa",
+  "source_provenance": "tests/fixtures/main_entry_samples.json",
+  "independent_localization_roi": {
+    "x": 16,
+    "y": 240,
+    "width": 192,
+    "height": 480
+  },
+  "observed_template_union": {
+    "x": 63,
+    "y": 284,
+    "width": 81,
+    "height": 115
+  },
+  "margin_pixels": 24,
+  "margin_basis": "Retain existing movement tolerance around the independently observed union; not a measured maximum layout shift. Runtime consumes only the final explicit rectangle.",
+  "selected_search_roi": {
+    "x": 39,
+    "y": 260,
+    "width": 129,
+    "height": 163
+  },
+  "shop_search_roi_unchanged": {
+    "x": 25,
+    "y": 525,
+    "width": 165,
+    "height": 175
+  },
+  "observations": [
+    {
+      "sample": "hidden_192723",
+      "client_width": 2322,
+      "match": null
+    },
+    {
+      "sample": "hidden_192753",
+      "client_width": 2322,
+      "match": null
+    },
+    {
+      "sample": "hidden_193020",
+      "client_width": 2322,
+      "match": null
+    },
+    {
+      "sample": "visible_penguin_calibration",
+      "client_width": 2322,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 1.0,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 104,
+          "y": 341
+        }
+      }
+    },
+    {
+      "sample": "visible_penguin_calibration",
+      "client_width": 1920,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 0.9906267523765564,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 104,
+          "y": 342
+        }
+      }
+    },
+    {
+      "sample": "visible_penguin_calibration",
+      "client_width": 1536,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 0.9914628863334656,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 103,
+          "y": 341
+        }
+      }
+    },
+    {
+      "sample": "visible_shop_calibration",
+      "client_width": 2322,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 0.9985876083374023,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 104,
+          "y": 341
+        }
+      }
+    },
+    {
+      "sample": "visible_shop_calibration",
+      "client_width": 1920,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 0.9891003370285034,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 104,
+          "y": 342
+        }
+      }
+    },
+    {
+      "sample": "visible_shop_calibration",
+      "client_width": 1536,
+      "match": {
+        "object_id": "penguin_sanctuary_entry",
+        "confidence": 0.9885700345039368,
+        "roi": {
+          "x": 16,
+          "y": 240,
+          "width": 192,
+          "height": 480
+        },
+        "anchor": {
+          "x": 103,
+          "y": 341
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Two real main-screen samples; scaled variants are derived samples, not independent game layouts.",
+    "No new activity-layout screenshots or live-run acceptance in this task."
+  ]
+}

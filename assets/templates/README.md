@@ -1,4 +1,18 @@
-# Calibrated templates
+# 模板目录
+
+后续新增功能必须遵循[模板资源组织与新增功能约定](../../docs/TEMPLATES.md)。
+
+| 目录 | 内容 |
+| --- | --- |
+| `shop/` | 18张商店专用模板和运行清单 `manifest.json` |
+| `common/` | 数字及网络模板的统一运行清单 `manifest.json` |
+| `common/digits/` | 11张共用数字模板 |
+| `common/network/` | 2张共用网络异常/重试模板 |
+| `penguin/` | 13张企鹅专用模板和运行必需的 `manifest.json` |
+
+PNG按功能和实际复用关系存放；根目录不再接收新图片。下文商店图片文件名相对于 `shop/`，数字和网络图片分别在对应的 `common/` 子目录。历史校准清单均位于 [docs/calibration](../../docs/calibration/)，其 `output_path` 相对于本模板根目录。每份运行清单的 `file` 相对于该清单所在目录。运行阈值及最终搜索区域均在 `config/internal.yaml` 中维护，清单只登记文件、来源和完整性。
+
+## Calibrated templates
 
 The inventory templates retain the exact RGB pixels and dimensions cropped from nine user-provided reference PNGs at the confirmed `2322 x 1306` physical-client scale. All nine use binary alpha masks to exclude the outer dark-gray frame and exterior background, retaining the inner frame, enclosed artwork/background, and complete quantity digits. The three target resources each have unpurchased, confirmation-dialog, and purchased-state templates. `confirm_button.png` is an additional unchanged common button anchor. Runtime uses its existing masked template-matching path for these nine assets.
 

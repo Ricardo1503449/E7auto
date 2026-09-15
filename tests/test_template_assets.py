@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 from pathlib import Path
+from scripts.common.paths import template_relative_path
+from scripts.common.paths import CALIBRATION_DIR
 
 import cv2
 import numpy as np
@@ -37,7 +39,7 @@ def read_supplied_client(path: Path) -> np.ndarray:
 
 
 def test_cropped_template_manifest_and_pixels_are_integral() -> None:
-    manifest = yaml.safe_load((TEMPLATE_DIR / "manifest.yaml").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((CALIBRATION_DIR / "manifest.yaml").read_text(encoding="utf-8"))
     assert manifest["method"].startswith("exact pixel crop")
     entries = manifest["templates"]
     assert len(entries) == 10
@@ -72,7 +74,7 @@ def test_cropped_template_manifest_and_pixels_are_integral() -> None:
 
 
 def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> None:
-    manifest_path = TEMPLATE_DIR / "main_shop_icon_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "main_shop_icon_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
@@ -110,7 +112,7 @@ def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> Non
 
 
 def test_main_shop_question_strokes_are_solid_but_openings_remain_transparent() -> None:
-    image = read_png(TEMPLATE_DIR / "main_shop_icon.png")
+    image = read_png(TEMPLATE_DIR / template_relative_path("main_shop_icon.png", feature="shop"))
     alpha = image[:, :, 3]
     assert alpha[37, 74] == 255  # Previously removed pale-blue right stroke.
     assert alpha[36, 44] == 255  # Previously removed left stroke.
@@ -120,7 +122,7 @@ def test_main_shop_question_strokes_are_solid_but_openings_remain_transparent() 
 
 
 def test_shop_refresh_template_contains_complete_rounded_button() -> None:
-    manifest_path = TEMPLATE_DIR / "shop_refresh_button_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "shop_refresh_button_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
@@ -152,7 +154,7 @@ def test_shop_refresh_template_contains_complete_rounded_button() -> None:
 
 
 def test_shop_exit_template_contains_arrow_and_title_foreground() -> None:
-    manifest_path = TEMPLATE_DIR / "shop_exit_icon_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "shop_exit_icon_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     output = TEMPLATE_DIR / manifest["output_path"]
     assert output.is_file()
@@ -185,7 +187,7 @@ def test_shop_exit_template_contains_arrow_and_title_foreground() -> None:
 
 
 def test_refresh_confirmation_templates_are_background_free_and_reproducible() -> None:
-    manifest_path = TEMPLATE_DIR / "refresh_confirm_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "refresh_confirm_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     entries = {entry["role"]: entry for entry in manifest["templates"]}
     assert set(entries) == {"prompt_identity", "confirm_button"}
@@ -241,7 +243,7 @@ def test_refresh_confirmation_templates_are_background_free_and_reproducible() -
 
 
 def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> None:
-    manifest_path = TEMPLATE_DIR / "insufficient_funds_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "insufficient_funds_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     assert manifest["baseline_client_size"] == {"width": 2322, "height": 1306}
     assert "not negative samples" in manifest["sequence_usage"]
@@ -304,7 +306,7 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
 
 
 def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> None:
-    manifest_path = TEMPLATE_DIR / "sky_stone_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "sky_stone_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     assert manifest["sources"]["balance_crop"]["size"] == {"width": 202, "height": 87}
     assert manifest["sources"]["full_context"]["size"] == {"width": 2428, "height": 1512}
@@ -471,10 +473,10 @@ def test_sky_stone_alignment_tolerance_parses_supplied_4499_client() -> None:
         sky_stone_digit_confidence=0.80,
     )
     template_paths = {
-        "sky_stone_icon": TEMPLATE_DIR / "sky_stone_icon.png",
-        "sky_stone_digit_0_wide": TEMPLATE_DIR / "sky_stone_digit_0_wide.png",
+        "sky_stone_icon": TEMPLATE_DIR / template_relative_path("sky_stone_icon.png", feature="shop"),
+        "sky_stone_digit_0_wide": TEMPLATE_DIR / template_relative_path("sky_stone_digit_0_wide.png", feature="common"),
         **{
-            f"sky_stone_digit_{digit}": TEMPLATE_DIR / f"sky_stone_digit_{digit}.png"
+            f"sky_stone_digit_{digit}": TEMPLATE_DIR / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
             for digit in "0123456789"
         },
     }
@@ -511,7 +513,7 @@ def test_sky_stone_wide_zero_variant_is_reproducible_and_parses_4501() -> None:
     source = Path(
         r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-f737e650-4fcb-4974-9950-5c5c9b4274eb.png"
     )
-    manifest_path = TEMPLATE_DIR / "sky_stone_zero_wide_manifest.yaml"
+    manifest_path = CALIBRATION_DIR / "sky_stone_zero_wide_manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     template = manifest["template"]
     output = TEMPLATE_DIR / template["output_path"]
@@ -535,10 +537,10 @@ def test_sky_stone_wide_zero_variant_is_reproducible_and_parses_4501() -> None:
         anchor_confidence=0.93,
         sky_stone_digit_confidence=0.80,
         template_paths={
-            "sky_stone_icon": TEMPLATE_DIR / "sky_stone_icon.png",
+            "sky_stone_icon": TEMPLATE_DIR / template_relative_path("sky_stone_icon.png", feature="shop"),
             "sky_stone_digit_0_wide": output,
             **{
-                f"sky_stone_digit_{digit}": TEMPLATE_DIR / f"sky_stone_digit_{digit}.png"
+                f"sky_stone_digit_{digit}": TEMPLATE_DIR / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
                 for digit in "0123456789"
             },
         },
@@ -576,13 +578,13 @@ def test_wide_zero_extractor_reproduces_checked_in_asset(tmp_path: Path) -> None
     finally:
         sys.argv = original_argv
 
-    assert (tmp_path / "sky_stone_digit_0_wide.png").read_bytes() == (
-        TEMPLATE_DIR / "sky_stone_digit_0_wide.png"
+    assert (tmp_path / "common/digits/sky_stone_digit_0_wide.png").read_bytes() == (
+        TEMPLATE_DIR / template_relative_path("sky_stone_digit_0_wide.png", feature="common")
     ).read_bytes()
     assert yaml.safe_load(
         (tmp_path / "sky_stone_zero_wide_manifest.yaml").read_text(encoding="utf-8")
     ) == yaml.safe_load(
-        (TEMPLATE_DIR / "sky_stone_zero_wide_manifest.yaml").read_text(
+        (CALIBRATION_DIR / "sky_stone_zero_wide_manifest.yaml").read_text(
             encoding="utf-8"
         )
     )

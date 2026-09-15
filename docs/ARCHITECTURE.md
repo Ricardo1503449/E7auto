@@ -79,3 +79,11 @@ Main-screen shop and sanctuary entry now share `AutomationEngine._enter_with_ret
 The shared entry helper accepts an optional timeout override. Sanctuary passes 10,000 ms for both post-click arrival and subsequent destination/main recheck to tolerate its transition animation; shop retains its configured 5,000 ms. Successful stable detection continues immediately. Neither an unrecognized transition nor timeout alone permits another click; only stable main-screen evidence does. F5 interrupts both waits.
 
 Function-center shop and penguin backgrounds both use `_ModuleCard._draw_cover_pixmap`: aspect-preserving cover scaling, centered cropping, `_IMAGE_ZOOM=1.0`, smooth interpolation and a scaled-size cache. The approved penguin v6 image is `assets/ui/penguin-card-background.png`; the shared card also supplies rounded clipping and the left-side title gradient. There is no penguin-specific scaling override.
+
+## Template ownership and loading
+
+Templates are grouped under `assets/templates/shop`, `penguin`, and `common/{digits,network}`. Shop startup loads 31 shop/shared images; penguin startup selects 13 shared images before adding its 13 validated controls. It does not read shop-only image files. The common YAML structure remains validated for both features. Historical manifests live in `docs/calibration`; the runtime penguin manifest stays beside its images. Future features follow [the template organization contract](TEMPLATES.md).
+
+### Shared main-screen column and recognition configuration
+
+Both entry detectors read `rois.left_icon_column` and their respective `vision.entry_thresholds` (color and structure). Other penguin controls and price-digit thresholds also come from YAML. `template_manifest.py` loads common/shop/penguin catalogs using the same baseline, contained-path, PNG-dimension and SHA-256 checks. Catalog `source.crop` describes provenance only and cannot generate or override search rectangles. The catalogs are runtime resources; source screenshots and historical calibration records are not runtime dependencies. Feature loading remains isolated (31 shop/shared images or 26 penguin/shared images).

@@ -4,7 +4,7 @@ import argparse
 import cv2
 
 from scripts.common.image_io import write_png
-from scripts.common.paths import TEMPLATES_DIR
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 
 
 def crop(source: Path, output_dir: Path, name: str, x: int, y: int, width: int, height: int) -> None:
@@ -18,16 +18,18 @@ def crop(source: Path, output_dir: Path, name: str, x: int, y: int, width: int, 
     if result.shape[:2] != (height, width):
         raise SystemExit(f"crop outside source for {name}: {result.shape}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    write_png(output_dir / name, result)
+    output = output_dir / template_relative_path(name, feature="common")
+    write_png(output, result)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Crop network prompts from a supplied reference image")
     parser.add_argument("--source", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path, default=TEMPLATES_DIR)
+    parser.add_argument("--output-dir", type=Path, default=None)
     args = parser.parse_args()
-    crop(args.source, args.output_dir, "network_connection_abnormal.png", 900, 545, 540, 105)
-    crop(args.source, args.output_dir, "network_retry.png", 1060, 760, 300, 120)
+    output_dir, _ = calibration_output_dirs(args.output_dir)
+    crop(args.source, output_dir, "network_connection_abnormal.png", 900, 545, 540, 105)
+    crop(args.source, output_dir, "network_retry.png", 1060, 760, 300, 120)
     return 0
 
 

@@ -49,7 +49,7 @@ Python 开发工具统一使用 `python -m scripts.<分类>.<模块>`。不要�
 
 ## 校准工具输入
 
-模板提取命令必须提供原始图片。文件来源、尺寸及裁剪依据见 `assets/templates/*manifest.yaml` 和 `*manifest.json`；历史临时路径只是来源记录，不能假定在其他机器上存在。准备相同来源的文件，再传入实际位置。
+模板提取命令必须提供原始图片。文件来源、尺寸及裁剪依据见 `docs/calibration/*manifest.yaml` 和 `*manifest.json`；历史临时路径只是来源记录，不能假定在其他机器上存在。准备相同来源的文件，再传入实际位置。
 
 | 模块（前缀 `scripts.calibration.`） | 必需参数 |
 | --- | --- |
@@ -78,7 +78,7 @@ Python 开发工具统一使用 `python -m scripts.<分类>.<模块>`。不要�
 
 实机验证步骤与授权条件见 [校准指南](CALIBRATION.md) 和 [后台验证](BACKGROUND_VALIDATION.md)。
 
-当前主界面入口模板由深色背景完整截图通过 `--source` 重建；步骤包含客户区定位、前景筛选、问号笔画孔洞恢复和仅向内的透明边缘平滑。历史 `--source-dir` 模式仅重建旧版局部素材。九张商品模板的遮罩参数记录在 `assets/templates/manifest.yaml`；已购买按钮和小区域回归素材来源记录在 `purchased_button_manifest.json`。模板自身匹配成功不能替代跨背景和实机验证，当前证据见 [商店识别改动验证记录](SHOP_RECOGNITION_VALIDATION.md)。
+当前主界面入口模板由深色背景完整截图通过 `--source` 重建；步骤包含客户区定位、前景筛选、问号笔画孔洞恢复和仅向内的透明边缘平滑。历史 `--source-dir` 模式仅重建旧版局部素材。九张商品模板的遮罩参数记录在 `docs/calibration/manifest.yaml`；已购买按钮和小区域回归素材来源记录在 `purchased_button_manifest.json`。模板自身匹配成功不能替代跨背景和实机验证，当前证据见 [商店识别改动验证记录](SHOP_RECOGNITION_VALIDATION.md)。
 
 ## 测试
 

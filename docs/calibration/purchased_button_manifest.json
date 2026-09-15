@@ -27,7 +27,7 @@
     "supersampling": 16,
     "corner_patches": "x < 28 or x >= width-28, and y < 29 or y >= height-28; straight edges retained"
   },
-  "output_path": "purchased_button.png",
+  "output_path": "shop/purchased_button.png",
   "output_sha256": "fe915d41cd3bb0012fbb81b95538b5e52aa873e97797e6ca9131f4a69b439c60",
   "fixture": {
     "path": "tests/fixtures/purchased_button_samples.png",

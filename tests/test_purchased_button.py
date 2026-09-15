@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from dataclasses import replace
 
 import cv2
 import numpy as np
@@ -52,6 +53,30 @@ def test_other_row_and_unknown_slot_cannot_confirm_a_purchase():
     frame = sample_frame(config, 3, slot_index=1)
     assert vision.purchase_outcome(frame, "covenant_bookmark", config.slots[0].item_roi) is PurchaseOutcome.PENDING
     assert vision.purchase_outcome(frame, "covenant_bookmark", Rect(0, 0, 240, 220)) is PurchaseOutcome.PENDING
+
+
+@pytest.mark.parametrize("slot_index", [0, 4])
+def test_configured_padding_changes_search_without_losing_row_anchor(monkeypatch, slot_index):
+    config, _ = setup_vision()
+    config = replace(config, purchased_button_padding=Point(5, 7))
+    vision = OpenCvGameVision(config, TemplateRepository(config))
+    frame = sample_frame(config, 3, slot_index)
+    calls = []
+    original = vision.match
+
+    def match(frame, key, roi, threshold):
+        calls.append(roi)
+        return original(frame, key, roi, threshold)
+
+    monkeypatch.setattr(vision, "match", match)
+    result = vision.purchased_button(frame, config.slots[slot_index].item_roi)
+    assert result is not None
+    template = vision._templates.get("purchased_button").image
+    center = config.slots[slot_index].buy_point
+    assert calls[0].width == template.shape[1] + 10
+    assert calls[0].height == template.shape[0] + 14
+    assert calls[0].x + calls[0].width // 2 == center.x
+    assert calls[0].y + calls[0].height // 2 == center.y
 
 
 def test_sold_out_button_alone_does_not_identify_inventory_target():

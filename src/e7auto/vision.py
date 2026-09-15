@@ -121,6 +121,10 @@ def measure_inventory_scroll_stability(
     )
 
 
+
+
+
+
 @dataclass(frozen=True, slots=True)
 class TemplateData:
     image: Frame
@@ -193,12 +197,23 @@ class OpenCvGameVision:
     def match(self, frame: Frame, template_key: str, roi: Rect, threshold: float) -> Observation | None:
         return self._match_bgr(self._bgr(frame), template_key, roi, threshold)
 
+    def match_entry(
+        self, frame: Frame, template_key: str, roi: Rect, threshold: float,
+        *, structure_threshold: float,
+    ) -> Observation | None:
+        """Require color and mean-subtracted structure at the same location."""
+        return self._match_bgr(
+            self._bgr(frame), template_key, roi, threshold, structure_threshold=structure_threshold,
+        )
+
     def _match_bgr(
         self,
         bgr_frame: Frame | AdaptedFrame,
         template_key: str,
         roi: Rect,
         threshold: float,
+        *,
+        structure_threshold: float | None = None,
     ) -> Observation | None:
         """Match against an already prepared contiguous BGR frame.
 
@@ -226,6 +241,27 @@ class OpenCvGameVision:
             result = np.nan_to_num(result, nan=np.inf, posinf=np.inf, neginf=np.inf)
             difference, _, location, _ = cv2.minMaxLoc(result)
             confidence = 1.0 - float(difference)
+        if structure_threshold is not None:
+            # Keep all color-qualified candidates: the best color match can be
+            # wallpaper while a slightly lower-scoring candidate is the icon.
+            color_scores = result if template_data.mask is None else 1.0 - result
+            candidates = np.isfinite(color_scores) & (color_scores >= threshold)
+            if not np.any(candidates):
+                return None
+            mask = template_data.mask
+            pixels = template.reshape(-1, 3) if mask is None else template[mask > 0]
+            if not pixels.size or not np.any(np.ptp(pixels, axis=0)):
+                return None  # A constant template has no structure to verify.
+            structure = cv2.matchTemplate(
+                source, template, cv2.TM_CCOEFF_NORMED, mask=mask,
+            )
+            # CCOEFF removes each channel's mean before comparing spatial
+            # variation. Constant patches can yield NaN/Inf; fail closed.
+            candidates &= np.isfinite(structure) & (structure >= structure_threshold)
+            if not np.any(candidates):
+                return None
+            qualified_scores = np.where(candidates, color_scores, -np.inf)
+            _, confidence, _, location = cv2.minMaxLoc(qualified_scores)
         confidence = max(0.0, min(1.0, float(confidence)))
         if float(confidence) < threshold:
             return None
@@ -236,11 +272,13 @@ class OpenCvGameVision:
         return Observation(template_key, float(confidence), roi, anchor)
 
     def main_shop_icon(self, frame: Frame) -> Observation | None:
-        return self.match(
+        thresholds = self._config.entry_thresholds["shop"]
+        return self.match_entry(
             frame,
             "main_shop_icon",
-            self._config.rois["main_shop_icon"],
-            self._config.anchor_confidence,
+            self._config.rois["left_icon_column"],
+            thresholds.color,
+            structure_threshold=thresholds.structure,
         )
 
     def shop_ready(self, frame: Frame) -> Observation | None:
@@ -347,10 +385,10 @@ class OpenCvGameVision:
         if len(slots) != 1 or "purchased_button" not in self._config.template_paths:
             return None
         height, width = self._templates.get("purchased_button").image.shape[:2]
-        # Calibrated search padding: 18 horizontal / 16 vertical baseline pixels.
-        # The full ROI remains within one row at every supported slot position.
-        width += 36
-        height += 32
+        # Follow the selected row's configured anchor; padding is per side.
+        padding = self._config.purchased_button_padding
+        width += 2 * padding.x
+        height += 2 * padding.y
         center = slots[0].buy_point
         roi = Rect(center.x - width // 2, center.y - height // 2, width, height)
         baseline = self._config.baseline_client_size
@@ -447,6 +485,8 @@ class OpenCvGameVision:
             self._config.scroll.difference_threshold,
             self._config.scroll.downsample_factor,
         )
+
+
 
     @staticmethod
     def _neutral_bright_mask(image: Frame) -> np.ndarray:

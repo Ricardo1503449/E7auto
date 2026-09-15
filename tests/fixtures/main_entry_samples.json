@@ -1,0 +1,41 @@
+{
+  "description": "Unmodified BGR pixels of the full left icon column, cropped from existing game captures; no scaling or template compositing.",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": {
+    "x": 0,
+    "y": 240,
+    "width": 210,
+    "height": 900
+  },
+  "shop_source_client_crop": {
+    "x": 26,
+    "y": 96,
+    "width": 2322,
+    "height": 1306
+  },
+  "samples": {
+    "hidden_192723": {
+      "source": "logs\\run-20260915-192723-312685-059f65c502ec-stop.png",
+      "source_sha256": "31650a03c64d6a4f458822e9b2c2fa3610ef5034a864cf141cf0093274b5d724"
+    },
+    "hidden_192753": {
+      "source": "logs\\run-20260915-192753-478853-abd6129d96d3-stop.png",
+      "source_sha256": "1aa12ce4c9cd4f77a210f39afa17a9e895c2691e5712475a812b0f37e0a758de"
+    },
+    "hidden_193020": {
+      "source": "logs\\run-20260915-193020-619591-1e179aa53bdb-stop.png",
+      "source_sha256": "768519b1221e727e5e614a4f8af254c46e10b69342cee0c2812ccadd8f4b1238"
+    },
+    "visible_penguin_calibration": {
+      "source": "artifacts\\penguin-template-candidates-v2\\context\\source_01.png",
+      "source_sha256": "f1a53ebecd5452e234af4329b5ed874cad287c2bb0d652f9b6e09a2bf21b783a"
+    },
+    "visible_shop_calibration": {
+      "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-713efead-f496-4726-bc3a-dd851974cdc1.png",
+      "source_sha256": "7a24b2502462634a6e451a31a293dab124c2a1d122ac5538da34bd65e3b11803"
+    }
+  }
+}

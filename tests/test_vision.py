@@ -54,6 +54,10 @@ class ThresholdSpyVision(OpenCvGameVision):
         self.roi = roi
         return None
 
+    def match_entry(self, frame, template_key, roi, threshold, *, structure_threshold):
+        self.structure_threshold = structure_threshold
+        return self.match(frame, template_key, roi, threshold)
+
 
 def test_main_shop_entry_uses_strict_anchor_threshold() -> None:
     vision = ThresholdSpyVision()

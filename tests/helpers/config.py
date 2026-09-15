@@ -4,6 +4,7 @@ from pathlib import Path
 
 from e7auto.config import (
     AppConfig,
+    EntryThresholds,
     DisplayConfig,
     LoggingConfig,
     Point,
@@ -45,7 +46,7 @@ def make_config(
         refresh_cost=refresh_cost,
         template_paths={},
         rois={
-            "main_shop_icon": Rect(0, 0, 10, 10),
+            "left_icon_column": Rect(0, 0, 10, 10),
             "shop_refresh_button": Rect(80, 0, 10, 10),
             "shop_exit_icon": Rect(1, 1, 10, 10),
             "refresh_confirm_prompt": Rect(20, 20, 20, 10),
@@ -91,6 +92,12 @@ def make_config(
         refresh_strategy=RefreshStrategyConfig((13, 13, 13, 10), (5, 180, 5)),
         default_confidence=0.9,
         anchor_confidence=0.93,
+        entry_thresholds={"shop": EntryThresholds(0.93, 0.8), "penguin": EntryThresholds(0.96, 0.8)},
+        penguin_control_confidence=0.96,
+        penguin_price_digit_confidence=0.84,
+        penguin_price_digit_margin=0.09,
+        purchased_button_padding=Point(18, 16),
+        penguin_price_rect=Rect(115, 25, 210, 62),
         sky_stone_digit_confidence=0.8,
         sky_stone_digit_margin=0.08,
         sky_stone_digits_offset=None,

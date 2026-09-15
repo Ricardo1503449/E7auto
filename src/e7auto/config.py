@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
+
+from .template_manifest import load_template_manifest
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,6 +116,12 @@ class LoggingConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class EntryThresholds:
+    color: float
+    structure: float
+
+
+@dataclass(frozen=True, slots=True)
 class AppConfig:
     source_path: Path
     executable_path: Path
@@ -132,11 +140,18 @@ class AppConfig:
     refresh_strategy: RefreshStrategyConfig
     default_confidence: float
     anchor_confidence: float
+    entry_thresholds: dict[str, EntryThresholds]
+    penguin_control_confidence: float
+    penguin_price_digit_confidence: float
+    penguin_price_digit_margin: float
+    purchased_button_padding: Point
+    penguin_price_rect: Rect
     sky_stone_digit_confidence: float
     sky_stone_digit_margin: float
     sky_stone_digits_offset: Point | None
     overlay_offset: Point
     logging: LoggingConfig
+    template_manifest_paths: dict[str, Path] = field(default_factory=dict)
     network_error_template: str = "network_connection_abnormal"
     network_retry_template: str = "network_retry"
 
@@ -145,6 +160,13 @@ class ConfigError(ValueError):
         self.errors = tuple(errors)
         super().__init__("; ".join(errors))
 
+
+COMMON_TEMPLATE_KEYS = frozenset({
+    *(f"sky_stone_digit_{digit}" for digit in range(10)),
+    "sky_stone_digit_0_wide",
+    "network_connection_abnormal",
+    "network_retry",
+})
 
 _REQUIRED_TEMPLATES = {
     "main_shop_icon",
@@ -160,7 +182,7 @@ _REQUIRED_TEMPLATES = {
     "sky_stone_digit_0_wide",
 }
 _REQUIRED_ROIS = {
-    "main_shop_icon",
+    "left_icon_column",
     "shop_refresh_button",
     "shop_exit_icon",
     "refresh_confirm_prompt",
@@ -172,6 +194,12 @@ _REQUIRED_ROIS = {
     "sky_stone_icon",
     "sky_stone_digits",
 }
+PENGUIN_CONTROLS = (
+    "sanctuary_entry", "forest_entry", "growth_altar", "penguin_buy_102",
+    "penguin_buy_5100", "quantity_max", "penguin_complete", "reward_close",
+    "altar_close", "forest_back", "sanctuary_back", "purchase_currency",
+    "purchase_cancel",
+)
 _REQUIRED_POINTS = {
     "shop_icon",
     "shop_exit_button",
@@ -252,7 +280,11 @@ def _mapping(value: Any, path: str, errors: list[str]) -> dict[str, Any]:
     return value
 
 
-def load_config(path: str | Path) -> AppConfig:
+def load_config(
+    path: str | Path, *, template_profile: Literal["shop", "penguin"] = "shop"
+) -> AppConfig:
+    if template_profile not in {"shop", "penguin"}:
+        raise ConfigError([f"unknown template profile: {template_profile}"])
     source_path = Path(path).resolve()
     errors: list[str] = []
     try:
@@ -307,24 +339,62 @@ def load_config(path: str | Path) -> AppConfig:
     if refresh_cost != 3:
         errors.append("economy.refresh_cost must be the confirmed fixed value 3")
 
-    template_raw = _mapping(root.get("templates"), "templates", errors)
+    # Production features use the same catalog loader. Explicit path registries
+    # remain supported for small standalone/synthetic configurations.
+    catalogs_raw = root.get("template_manifests")
+    template_raw = _mapping(root.get("templates", {}), "templates", errors)
     template_paths: dict[str, Path] = {}
-    for key in sorted(_REQUIRED_TEMPLATES | set(template_raw)):
+    template_manifest_paths: dict[str, Path] = {}
+    template_sizes: dict[str, tuple[int, int]] = {}
+    if catalogs_raw is not None:
+        if template_raw:
+            errors.append("templates and template_manifests cannot both register filenames")
+        catalogs = _mapping(catalogs_raw, "template_manifests", errors)
+        for profile in ("common", "shop", "penguin"):
+            value = catalogs.get(profile)
+            if not isinstance(value, str) or not value:
+                errors.append(f"template_manifests.{profile} is required")
+                continue
+            template_manifest_paths[profile] = (source_path.parent / value).resolve()
+        for profile in (("common", "shop") if template_profile == "shop" else ("common",)):
+            if profile not in template_manifest_paths:
+                continue
+            try:
+                registered, sizes = load_template_manifest(
+                    template_manifest_paths[profile], (baseline_size.width, baseline_size.height),
+                )
+                if template_paths.keys() & registered.keys():
+                    errors.append(f"duplicate template keys in {profile} manifest")
+                template_paths.update(registered)
+                template_sizes.update(sizes)
+            except ValueError as exc:
+                errors.append(str(exc))
+    required_templates = (
+        COMMON_TEMPLATE_KEYS if template_profile == "penguin" else _REQUIRED_TEMPLATES
+    )
+    selected_templates = COMMON_TEMPLATE_KEYS if template_profile == "penguin" else set(template_raw)
+    for key in sorted((required_templates | selected_templates) if catalogs_raw is None else ()):
         value = template_raw.get(key)
         if not isinstance(value, str) or not value.strip():
-            if key in _REQUIRED_TEMPLATES:
+            if key in required_templates:
                 errors.append(f"templates.{key} is required")
             continue
         candidate = (source_path.parent / value).resolve()
         if not candidate.is_file():
             errors.append(f"templates.{key} does not exist: {candidate}")
         template_paths[key] = candidate
+    for key in sorted(required_templates - template_paths.keys()):
+        errors.append(f"templates.{key} is required")
 
     roi_raw = _mapping(root.get("rois"), "rois", errors)
     rois: dict[str, Rect] = {}
-    for key in sorted(_REQUIRED_ROIS | set(roi_raw)):
+    required_rois = _REQUIRED_ROIS | (
+        {f"penguin_{name}" for name in PENGUIN_CONTROLS if name != "sanctuary_entry"}
+        if template_profile == "penguin" else set()
+    )
+    for key in sorted(required_rois | set(roi_raw)):
         if roi_raw.get(key) is None:
-            if key in _REQUIRED_ROIS:
+            if key in required_rois:
                 errors.append(f"rois.{key} is required")
             continue
         rois[key] = _rect(roi_raw[key], f"rois.{key}", errors)
@@ -338,6 +408,12 @@ def load_config(path: str | Path) -> AppConfig:
             continue
         points[key] = _point(points_raw[key], f"points.{key}", errors)
 
+    # Keep validating the shared configuration structure, but penguin startup
+    # must not read or require the shop's image files.
+    target_templates = (
+        {name + suffix for name in _EXPECTED_TARGET_POLICY for suffix in ("", "_confirm", "_purchased")}
+        if template_profile == "penguin" else template_paths
+    )
     targets_raw = root.get("targets")
     targets: list[TargetConfig] = []
     if not isinstance(targets_raw, list) or not targets_raw:
@@ -357,15 +433,15 @@ def load_config(path: str | Path) -> AppConfig:
             if not isinstance(display_name, str) or not display_name:
                 errors.append(f"targets[{index}].display_name is required")
                 display_name = target_id
-            if not isinstance(template, str) or template not in template_paths:
+            if not isinstance(template, str) or template not in target_templates:
                 errors.append(f"targets[{index}].template must reference a loaded template")
                 template = ""
-            if not isinstance(confirm_template, str) or confirm_template not in template_paths:
+            if not isinstance(confirm_template, str) or confirm_template not in target_templates:
                 errors.append(
                     f"targets[{index}].confirm_template must reference a loaded template"
                 )
                 confirm_template = ""
-            if not isinstance(purchased_template, str) or purchased_template not in template_paths:
+            if not isinstance(purchased_template, str) or purchased_template not in target_templates:
                 errors.append(
                     f"targets[{index}].purchased_template must reference a loaded template"
                 )
@@ -523,8 +599,38 @@ def load_config(path: str | Path) -> AppConfig:
     vision_raw = _mapping(root.get("vision"), "vision", errors)
     default_confidence = vision_raw.get("default_confidence")
     anchor_confidence = vision_raw.get("anchor_confidence")
+    entry_raw = _mapping(vision_raw.get("entry_thresholds"), "vision.entry_thresholds", errors)
+    entry_thresholds: dict[str, EntryThresholds] = {}
+    for feature in ("shop", "penguin"):
+        values = _mapping(entry_raw.get(feature), f"vision.entry_thresholds.{feature}", errors)
+        parsed = {}
+        for name in ("color", "structure"):
+            value = values.get(name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 < value <= 1:
+                errors.append(f"vision.entry_thresholds.{feature}.{name} must be in (0, 1]")
+                value = 1.0
+            parsed[name] = float(value)
+        entry_thresholds[feature] = EntryThresholds(**parsed)
+    penguin_control_confidence = vision_raw.get("penguin_control_confidence")
+    if (isinstance(penguin_control_confidence, bool)
+            or not isinstance(penguin_control_confidence, (int, float))
+            or not 0 < penguin_control_confidence <= 1):
+        errors.append("vision.penguin_control_confidence must be in (0, 1]")
+        penguin_control_confidence = 1.0
     sky_stone_digit_confidence = vision_raw.get("sky_stone_digit_confidence")
     sky_stone_digit_margin = vision_raw.get("sky_stone_digit_margin")
+    penguin_price_digit_confidence = vision_raw.get("penguin_price_digit_confidence")
+    penguin_price_digit_margin = vision_raw.get("penguin_price_digit_margin")
+    purchased_button_padding = _point(
+        vision_raw.get("purchased_button_padding"), "vision.purchased_button_padding", errors,
+    )
+    if purchased_button_padding.x < 0 or purchased_button_padding.y < 0:
+        errors.append("vision.purchased_button_padding must be non-negative")
+    penguin_price_rect = _rect(
+        vision_raw.get("penguin_price_rect"), "vision.penguin_price_rect", errors,
+    )
+    if penguin_price_rect.x < 0 or penguin_price_rect.y < 0:
+        errors.append("vision.penguin_price_rect offsets must be non-negative")
     sky_stone_digits_offset = _point(
         vision_raw.get("sky_stone_digits_offset"),
         "vision.sky_stone_digits_offset",
@@ -535,8 +641,10 @@ def load_config(path: str | Path) -> AppConfig:
         ("anchor_confidence", anchor_confidence),
         ("sky_stone_digit_confidence", sky_stone_digit_confidence),
         ("sky_stone_digit_margin", sky_stone_digit_margin),
+        ("penguin_price_digit_confidence", penguin_price_digit_confidence),
+        ("penguin_price_digit_margin", penguin_price_digit_margin),
     ):
-        if not isinstance(value, (int, float)) or not 0 < float(value) <= 1:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 < float(value) <= 1:
             errors.append(f"vision.{name} must be in (0, 1]")
     default_confidence = float(default_confidence) if isinstance(default_confidence, (int, float)) else 1.0
     anchor_confidence = float(anchor_confidence) if isinstance(anchor_confidence, (int, float)) else 1.0
@@ -577,6 +685,11 @@ def load_config(path: str | Path) -> AppConfig:
     for key, roi in rois.items():
         if not rect_in_client(roi):
             errors.append(f"rois.{key} must fit inside the baseline client")
+    for key, (width, height) in template_sizes.items():
+        roi_key = "left_icon_column" if key == "main_shop_icon" else key
+        roi = rois.get(roi_key)
+        if roi is not None and (roi.width < width or roi.height < height):
+            errors.append(f"rois.{roi_key} must contain the complete {key} template")
     for key, point in points.items():
         if not point_in_client(point):
             errors.append(f"points.{key} must fit inside the baseline client")
@@ -585,6 +698,13 @@ def load_config(path: str | Path) -> AppConfig:
             errors.append(f"slots[{index}].item_roi must fit inside the baseline client")
         if not point_in_client(slot.buy_point):
             errors.append(f"slots[{index}].buy_point must fit inside the baseline client")
+        if "purchased_button" in template_sizes:
+            width, height = template_sizes["purchased_button"]
+            width += 2 * purchased_button_padding.x
+            height += 2 * purchased_button_padding.y
+            button_roi = Rect(slot.buy_point.x - width // 2, slot.buy_point.y - height // 2, width, height)
+            if not rect_in_client(button_roi):
+                errors.append(f"vision.purchased_button_padding makes slots[{index}] button search exceed the client")
     if not point_in_client(scroll.cursor_point):
         errors.append("scroll.cursor_point must fit inside the baseline client")
     inventory_roi = rois.get("inventory_list")
@@ -634,9 +754,16 @@ def load_config(path: str | Path) -> AppConfig:
         refresh_strategy=refresh_strategy,
         default_confidence=default_confidence,
         anchor_confidence=anchor_confidence,
+        entry_thresholds=entry_thresholds,
+        penguin_control_confidence=float(penguin_control_confidence),
+        penguin_price_digit_confidence=float(penguin_price_digit_confidence),
+        penguin_price_digit_margin=float(penguin_price_digit_margin),
+        purchased_button_padding=purchased_button_padding,
+        penguin_price_rect=penguin_price_rect,
         sky_stone_digit_confidence=sky_stone_digit_confidence,
         sky_stone_digit_margin=sky_stone_digit_margin,
         sky_stone_digits_offset=sky_stone_digits_offset,
         overlay_offset=overlay_offset,
         logging=logging_config,
+        template_manifest_paths=template_manifest_paths,
     )

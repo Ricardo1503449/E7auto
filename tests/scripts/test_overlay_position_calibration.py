@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import CALIBRATION_DIR
 import os
 import shutil
 
@@ -98,29 +99,33 @@ def test_release_asset_verifier_accepts_current_calibration_evidence() -> None:
 
 
 def test_release_verifier_requires_purchased_button_and_manifest(tmp_path: Path) -> None:
+    calibration = tmp_path / "calibration"
+    shutil.copytree(CALIBRATION_DIR, calibration)
     copied = tmp_path / "templates"
     shutil.copytree(ROOT / "assets" / "templates", copied)
-    (copied / "purchased_button.png").unlink()
-    assert "missing template asset: purchased_button.png" in verify_template_assets(copied)
-    (copied / "purchased_button_manifest.json").unlink()
-    assert "missing template manifest: purchased_button_manifest.json" in verify_template_assets(copied)
+    (copied / "shop/purchased_button.png").unlink()
+    assert any("purchased_button does not exist:" in problem for problem in verify_template_assets(copied, calibration))
+    (calibration / "purchased_button_manifest.json").unlink()
+    assert "missing template manifest: purchased_button_manifest.json" in verify_template_assets(copied, calibration)
 
 
 def test_release_verifier_rejects_invalid_purchased_button_manifest(tmp_path: Path) -> None:
+    calibration = tmp_path / "calibration"
+    shutil.copytree(CALIBRATION_DIR, calibration)
     copied = tmp_path / "templates"
     shutil.copytree(ROOT / "assets" / "templates", copied)
-    (copied / "purchased_button_manifest.json").write_text("{invalid", encoding="utf-8")
-    assert any(problem.startswith("invalid template manifest:") for problem in verify_template_assets(copied))
+    (calibration / "purchased_button_manifest.json").write_text("{invalid", encoding="utf-8")
+    assert any(problem.startswith("invalid template manifest:") for problem in verify_template_assets(copied, calibration))
 
 
-def test_release_verifier_rejects_an_undecodable_template(tmp_path: Path) -> None:
+def test_release_verifier_rejects_a_corrupted_template(tmp_path: Path) -> None:
     copied = tmp_path / "templates"
     shutil.copytree(ROOT / "assets" / "templates", copied)
-    (copied / "main_shop_icon.png").write_bytes(b"not a PNG")
+    (copied / "shop/main_shop_icon.png").write_bytes(b"not a PNG")
 
     problems = verify_template_assets(copied)
 
-    assert "invalid template asset: main_shop_icon.png" in problems
+    assert any("template integrity mismatch: main_shop_icon" in problem for problem in problems)
 
 
 def test_release_verifier_requires_network_recovery_templates(
@@ -128,8 +133,8 @@ def test_release_verifier_requires_network_recovery_templates(
 ) -> None:
     copied = tmp_path / "templates"
     shutil.copytree(ROOT / "assets" / "templates", copied)
-    (copied / "network_retry.png").unlink()
+    (copied / "common/network/network_retry.png").unlink()
 
     problems = verify_template_assets(copied)
 
-    assert "missing template asset: network_retry.png" in problems
+    assert any("network_retry does not exist:" in problem for problem in problems)

@@ -70,3 +70,5 @@ powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
 构建脚本会嵌入 `requireAdministrator` UAC 清单并生成与 `pyproject.toml` 版本一致的 `E7auto_v<版本>_x64.zip`。只有新版独立目录成功构建且新版 ZIP 成功压缩后，脚本才会删除 `dist` 中其他版本的 ZIP；构建或压缩失败时会保留旧 ZIP。`dist` 仅保存本机构建结果，不纳入 Git 跟踪；通过发布检查的版本化 ZIP 应作为 GitHub Release 附件上传。
 
 在独立目录通过真实主机校准和纯净 Windows 验证之前，暂不采用单文件打包。
+
+新增功能或识别模板时，遵循[模板资源组织与新增功能约定](docs/TEMPLATES.md)。

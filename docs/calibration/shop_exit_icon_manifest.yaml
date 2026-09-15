@@ -23,7 +23,7 @@ mask:
   - 1067
   foreground_pixels: 5631
   transparent_pixels: 13059
-output_path: shop_exit_icon.png
+output_path: shop/shop_exit_icon.png
 output_size:
   width: 267
   height: 70

@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from scripts.common.image_io import write_png
+
 from pathlib import Path
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 import argparse
 
 import cv2
 import numpy as np
 import yaml
 
-from scripts.common.image_io import read_rgba_png as read_png, write_png
+from scripts.common.image_io import read_rgba_png as read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -94,14 +97,14 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "assets" / "templates",
+        default=None,
     )
+    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
     args = parser.parse_args()
     source = args.source.resolve()
     if not source.is_file():
         raise RuntimeError(f"Missing supplied refresh-confirm source: {source}")
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
 
     image = read_png(source)
     prompt_alpha, component_areas = prompt_mask(image)
@@ -146,11 +149,11 @@ def main() -> int:
     )
     entries: list[dict[str, object]] = []
     for filename, role, output_image, crop, mask_details in outputs:
-        output = output_dir / filename
+        output = output_dir / template_relative_path(filename, feature="shop")
         write_png(output, output_image)
         entries.append(
             {
-                "output_path": filename,
+                "output_path": template_relative_path(filename, feature="shop").as_posix(),
                 "role": role,
                 "crop": crop,
                 "output_size": {"width": crop["width"], "height": crop["height"]},
@@ -169,7 +172,7 @@ def main() -> int:
         "source_size": {"width": int(image.shape[1]), "height": int(image.shape[0])},
         "templates": entries,
     }
-    (output_dir / "refresh_confirm_manifest.yaml").write_text(
+    (manifest_dir / "refresh_confirm_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

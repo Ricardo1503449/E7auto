@@ -5,7 +5,7 @@ source_size:
   width: 2411
   height: 777
 templates:
-- output_path: refresh_confirm_prompt.png
+- output_path: shop/refresh_confirm_prompt.png
   role: prompt_identity
   crop:
     x: 1001
@@ -45,7 +45,7 @@ templates:
     - 26
     foreground_pixels: 4904
     transparent_pixels: 12562
-- output_path: refresh_confirm_button.png
+- output_path: shop/refresh_confirm_button.png
   role: confirm_button
   crop:
     x: 1228

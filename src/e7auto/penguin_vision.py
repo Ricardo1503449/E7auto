@@ -2,55 +2,47 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from pathlib import Path
-import hashlib
-import json
 
 import cv2
 import numpy as np
 
-from .config import AppConfig, ConfigError, Rect
+from .config import AppConfig, COMMON_TEMPLATE_KEYS, ConfigError, PENGUIN_CONTROLS, Rect
+from .template_manifest import load_template_manifest
 from .vision import OpenCvGameVision, TemplateData, TemplateRepository
 from .vision_types import Observation
 
 
-CONTROLS = (
-    "sanctuary_entry", "forest_entry", "growth_altar", "penguin_buy_102",
-    "penguin_buy_5100", "quantity_max", "penguin_complete", "reward_close",
-    "altar_close", "forest_back", "sanctuary_back", "purchase_currency",
-    "purchase_cancel",
-)
-# Relative to the approved 604 x 118 purchase button; covers the full price field.
-PRICE_RECT = Rect(115, 25, 210, 62)
+CONTROLS = PENGUIN_CONTROLS
 
 
 def with_penguin_config(config: AppConfig) -> AppConfig:
-    directory = config.source_path.parent.parent / "assets" / "templates" / "penguin"
     try:
-        manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
-        if manifest["schema_version"] != 1 or manifest["baseline"] != [
-            config.baseline_client_size.width, config.baseline_client_size.height,
-        ]:
-            raise ValueError("penguin calibration baseline mismatch")
-        paths, rois = dict(config.template_paths), dict(config.rois)
-        for name in CONTROLS:
-            entry = manifest["templates"][name]
-            path = directory / entry["file"]
-            if path.resolve().parent != directory.resolve():
-                raise ValueError("invalid penguin template path")
-            if hashlib.sha256(path.read_bytes()).hexdigest() != entry["sha256"]:
-                raise ValueError(f"approved template changed: {name}")
-            x, y, width, height = entry["roi"]
-            if not (0 <= x < x + width <= config.baseline_client_size.width
-                    and 0 <= y < y + height <= config.baseline_client_size.height):
-                raise ValueError(f"invalid penguin ROI: {name}")
-            left, top = max(0, x - 24), max(0, y - 24)
-            right = min(config.baseline_client_size.width, x + width + 24)
-            bottom = min(config.baseline_client_size.height, y + height + 24)
-            paths[f"penguin_{name}"] = path
-            rois[f"penguin_{name}"] = Rect(left, top, right-left, bottom-top)
-        return replace(config, template_paths=paths, rois=rois)
-    except (OSError, ValueError, KeyError, TypeError) as exc:
+        registered, sizes = load_template_manifest(
+            config.template_manifest_paths["penguin"],
+            (config.baseline_client_size.width, config.baseline_client_size.height),
+            prefix="penguin_",
+        )
+        expected = {f"penguin_{name}" for name in CONTROLS}
+        if set(registered) != expected:
+            raise ValueError("penguin catalog must contain exactly the configured controls")
+        price = config.penguin_price_rect
+        button_width, button_height = sizes["penguin_penguin_buy_5100"]
+        if not (0 <= price.x < price.right <= button_width
+                and 0 <= price.y < price.bottom <= button_height):
+            raise ValueError("vision.penguin_price_rect must fit inside the purchase-button template")
+        for key, (width, height) in sizes.items():
+            roi_key = "left_icon_column" if key == "penguin_sanctuary_entry" else key
+            search = config.rois.get(roi_key)
+            if search is None:
+                raise ValueError(f"rois.{roi_key} is required")
+            if not (0 <= search.x < search.right <= config.baseline_client_size.width
+                    and 0 <= search.y < search.bottom <= config.baseline_client_size.height
+                    and search.width >= width and search.height >= height):
+                raise ValueError(f"rois.{roi_key} must fit the client and contain the template")
+        paths = {key: config.template_paths[key] for key in COMMON_TEMPLATE_KEYS}
+        paths.update(registered)
+        return replace(config, template_paths=paths)
+    except (ValueError, KeyError, TypeError) as exc:
         raise ConfigError([f"Penguin templates: {exc}"]) from exc
 
 
@@ -76,8 +68,10 @@ class PenguinVision(OpenCvGameVision):
         super().__init__(config, templates)
         approved = templates.get("penguin_penguin_buy_5100")
         mask = approved.mask.copy()
-        r = PRICE_RECT
+        r = config.penguin_price_rect
         mask[r.y:r.bottom, r.x:r.right] = 0
+        if not np.any(mask):
+            raise ConfigError(["vision.penguin_price_rect removes the entire purchase-button mask"])
         # Only the amount is excluded for locating a dialog whose price changed.
         # Full 5100 recognition still uses the unmodified approved template.
         self._purchase_body = TemplateData(approved.image, mask)
@@ -85,7 +79,13 @@ class PenguinVision(OpenCvGameVision):
 
     def control(self, frame: object, name: str) -> Observation | None:
         key = f"penguin_{name}"
-        return self.match(frame, key, self._config.rois[key], 0.96)
+        if name == "sanctuary_entry":
+            thresholds = self._config.entry_thresholds["penguin"]
+            return self.match_entry(
+                frame, key, self._config.rois["left_icon_column"], thresholds.color,
+                structure_threshold=thresholds.structure,
+            )
+        return self.match(frame, key, self._config.rois[key], self._config.penguin_control_confidence)
 
     def dialog(self, frame: object) -> PenguinDialog | None:
         maximum = self.control(frame, "quantity_max")
@@ -94,11 +94,11 @@ class PenguinVision(OpenCvGameVision):
             return None
         key = "penguin_penguin_buy_5100"
         # A private one-entry repository avoids mutating the approved repository.
-        body = self._body_matcher.match(frame, key, self._config.rois[key], 0.96)
+        body = self._body_matcher.match(frame, key, self._config.rois[key], self._config.penguin_control_confidence)
         if body is None:
             return None
         height, width = self._purchase_body.image.shape[:2]
-        r = PRICE_RECT
+        r = self._config.penguin_price_rect
         price_roi = Rect(body.anchor.x - width//2 + r.x,
                          body.anchor.y - height//2 + r.y, r.width, r.height)
         price = self._price(frame, price_roi)
@@ -125,7 +125,8 @@ class PenguinVision(OpenCvGameVision):
         digits = []
         for _, glyph in sorted(glyphs, key=lambda item: item[0]):
             match = self._best_digit_match(glyph, variants)
-            if match.confidence < 0.84 or match.margin < 0.09:
+            if (match.confidence < self._config.penguin_price_digit_confidence
+                    or match.margin < self._config.penguin_price_digit_margin):
                 return None
             digits.append(match.digit)
         value = int("".join(digits))

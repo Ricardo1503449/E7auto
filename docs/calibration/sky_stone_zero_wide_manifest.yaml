@@ -26,7 +26,7 @@ template:
     width: 23
     height: 33
   foreground_pixels: 273
-  output_path: sky_stone_digit_0_wide.png
+  output_path: common/digits/sky_stone_digit_0_wide.png
 validation:
   wide_gold_to_sky_stone_zero_minimum: 0.99
   wide_gold_to_sky_stone_zero_similarity: 0.9932659932659933

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import template_relative_path
 import argparse
 
 import cv2
@@ -15,13 +16,13 @@ ROOT = PROJECT_ROOT
 BASELINE_WIDTH = 2322
 BASELINE_HEIGHT = 1306
 INSUFFICIENT_FUNDS_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "insufficient_funds_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_manifest.yaml"
 )
 INSUFFICIENT_FUNDS_LIVE_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "insufficient_funds_live_validation_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
 )
 MAIN_SHOP_LAYOUT_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "main_shop_layout_manifest.yaml"
+    ROOT / "docs" / "calibration" / "main_shop_layout_manifest.yaml"
 )
 
 SOURCE_SPECS = {
@@ -171,7 +172,7 @@ def verified_client(
 
 
 def load_template(name: str) -> tuple[np.ndarray, np.ndarray | None]:
-    raw = read_png(ROOT / "assets" / "templates" / f"{name}.png")
+    raw = read_png(ROOT / "assets" / "templates" / template_relative_path(f"{name}.png", feature="shop"))
     mask = None if np.all(raw[:, :, 3] == 255) else raw[:, :, 3]
     return np.ascontiguousarray(raw[:, :, :3]), mask
 
@@ -277,7 +278,7 @@ def read_balance(frame: np.ndarray) -> dict[str, object]:
     template_masks = {
         digit: normalize_glyph(
             read_png(
-                ROOT / "assets" / "templates" / f"sky_stone_digit_{digit}.png"
+                ROOT / "assets" / "templates" / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
             )[:, :, 3]
             > 0
         )
@@ -683,7 +684,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "assets" / "templates" / "client_calibration_manifest.yaml",
+        default=ROOT / "docs" / "calibration" / "client_calibration_manifest.yaml",
     )
     args = parser.parse_args()
     manifest = build_manifest({role: getattr(args, role + "_source") for role in SOURCE_SPECS})

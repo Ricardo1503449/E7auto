@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from scripts.common.image_io import write_png
+
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 import argparse
 
 import cv2
 import numpy as np
 import yaml
 
-from scripts.common.image_io import read_png, write_png
+from scripts.common.image_io import read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -93,12 +96,12 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "assets" / "templates",
+        default=None,
     )
+    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
     args = parser.parse_args()
     source_dir = args.source_dir.resolve()
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
 
     manifest_entries: list[dict[str, object]] = []
     for spec in CROPS:
@@ -110,14 +113,14 @@ def main() -> int:
         crop = np.ascontiguousarray(
             image[spec.y : spec.y + spec.height, spec.x : spec.x + spec.width]
         )
-        output = output_dir / spec.output
+        output = output_dir / template_relative_path(spec.output, feature="shop")
         write_png(output, crop)
         entry = asdict(spec)
         entry.update(
             {
                 "source_path": str(source),
                 "source_size": {"width": source_width, "height": source_height},
-                "output_path": output.name,
+                "output_path": output.relative_to(output_dir).as_posix(),
                 "channels": int(crop.shape[2]) if crop.ndim == 3 else 1,
             }
         )
@@ -128,7 +131,7 @@ def main() -> int:
         "method": "exact pixel crop; no scaling, filtering, color conversion, or generation",
         "templates": manifest_entries,
     }
-    (output_dir / "manifest.yaml").write_text(
+    (manifest_dir / "manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

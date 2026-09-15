@@ -25,7 +25,7 @@ All Python commands below are module entry points run from the project root. Tem
 - The baseline is established once during calibration and remains the only template/coordinate space. Runtime validates the game monitor's current effective desktop mode against its full Win32 monitor rectangle. Only current mode `3120 x 2080` requests the exact baseline client; other supported modes use 60% of full monitor width with fixed aspect ratio and a DPI-aware complete-outer-window height cap.
 - Non-reference recognition maps and normalizes each requested ROI in memory; points and recognized anchors are transformed only before input. Runtime never adopts the actual size as a new calibration baseline and never recalibrates after a monitor/mode/DPI change.
 - Keep ROIs tight enough to avoid similar icons but large enough for normal UI animation.
-- Overlay position calibration is recorded in `assets/templates/overlay_position_calibration_manifest.yaml`; it sent no game input.
+- Overlay position calibration is recorded in `docs/calibration/overlay_position_calibration_manifest.yaml`; it sent no game input.
 
 ## Template rules
 

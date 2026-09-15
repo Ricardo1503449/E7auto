@@ -22,7 +22,7 @@ mask:
   contour_area: 63050.5
   foreground_pixels: 63683
   transparent_pixels: 863
-output_path: shop_refresh_button.png
+output_path: shop/shop_refresh_button.png
 output_size:
   width: 547
   height: 118

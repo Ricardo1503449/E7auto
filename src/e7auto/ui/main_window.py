@@ -310,7 +310,9 @@ class MainWindow(QMainWindow):
             return
         run_id = uuid.uuid4().hex[:12]
         try:
-            config = load_config(self._config_path)
+            config = load_config(
+                self._config_path, template_profile="penguin" if penguins else "shop"
+            )
             if penguins:
                 config = with_penguin_config(config)
         except ConfigError as exc:

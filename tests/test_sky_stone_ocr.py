@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import template_relative_path
 
 import cv2
 import numpy as np
@@ -83,7 +84,7 @@ def _paint_balance(
     *,
     add_distant_control: bool = True,
 ) -> int:
-    icon = cv2.imread(str(TEMPLATE_DIR / "sky_stone_icon.png"), cv2.IMREAD_UNCHANGED)
+    icon = cv2.imread(str(TEMPLATE_DIR / template_relative_path("sky_stone_icon.png", feature="shop")), cv2.IMREAD_UNCHANGED)
     assert icon is not None
     icon_top = 10
     if icon_left >= 0:
@@ -96,7 +97,7 @@ def _paint_balance(
     digit_top = icon_top + 21 if icon_left >= 0 else 5
     for index, digit in enumerate(sequence):
         glyph = cv2.imread(
-            str(TEMPLATE_DIR / f"sky_stone_digit_{digit}.png"),
+            str(TEMPLATE_DIR / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")),
             cv2.IMREAD_UNCHANGED,
         )
         assert glyph is not None

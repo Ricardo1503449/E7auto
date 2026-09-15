@@ -32,7 +32,7 @@ sources:
       width: 471
       height: 84
 icon:
-  output_path: sky_stone_icon.png
+  output_path: shop/sky_stone_icon.png
   method: exact opaque source pixel crop
   crop:
     x: 10
@@ -53,7 +53,7 @@ digit_segmentation:
 digits:
 - digit: '0'
   source: balance_3900
-  output_path: sky_stone_digit_0.png
+  output_path: common/digits/sky_stone_digit_0.png
   crop:
     x: 116
     y: 26
@@ -63,7 +63,7 @@ digits:
   foreground_pixels: 265
 - digit: '1'
   source: full_context
-  output_path: sky_stone_digit_1.png
+  output_path: common/digits/sky_stone_digit_1.png
   crop:
     x: 1420
     y: 170
@@ -73,7 +73,7 @@ digits:
   foreground_pixels: 145
 - digit: '2'
   source: balance_crop
-  output_path: sky_stone_digit_2.png
+  output_path: common/digits/sky_stone_digit_2.png
   crop:
     x: 125
     y: 27
@@ -83,7 +83,7 @@ digits:
   foreground_pixels: 225
 - digit: '3'
   source: balance_crop
-  output_path: sky_stone_digit_3.png
+  output_path: common/digits/sky_stone_digit_3.png
   crop:
     x: 74
     y: 27
@@ -93,7 +93,7 @@ digits:
   foreground_pixels: 223
 - digit: '4'
   source: combined_top_bar_gold
-  output_path: sky_stone_digit_4.png
+  output_path: common/digits/sky_stone_digit_4.png
   crop:
     x: 125
     y: 31
@@ -103,7 +103,7 @@ digits:
   foreground_pixels: 222
 - digit: '5'
   source: full_context
-  output_path: sky_stone_digit_5.png
+  output_path: common/digits/sky_stone_digit_5.png
   crop:
     x: 1511
     y: 170
@@ -113,7 +113,7 @@ digits:
   foreground_pixels: 239
 - digit: '6'
   source: combined_top_bar_sky_stone
-  output_path: sky_stone_digit_6.png
+  output_path: common/digits/sky_stone_digit_6.png
   crop:
     x: 391
     y: 30
@@ -123,7 +123,7 @@ digits:
   foreground_pixels: 274
 - digit: '7'
   source: balance_crop
-  output_path: sky_stone_digit_7.png
+  output_path: common/digits/sky_stone_digit_7.png
   crop:
     x: 145
     y: 27
@@ -133,7 +133,7 @@ digits:
   foreground_pixels: 167
 - digit: '8'
   source: full_context
-  output_path: sky_stone_digit_8.png
+  output_path: common/digits/sky_stone_digit_8.png
   crop:
     x: 1439
     y: 170
@@ -143,7 +143,7 @@ digits:
   foreground_pixels: 297
 - digit: '9'
   source: balance_crop
-  output_path: sky_stone_digit_9.png
+  output_path: common/digits/sky_stone_digit_9.png
   crop:
     x: 104
     y: 27

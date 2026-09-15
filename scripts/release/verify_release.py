@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import json
+import hashlib
 import re
 import struct
 import subprocess
@@ -16,8 +17,10 @@ import yaml
 
 from e7auto import __version__
 from e7auto.config import LoggingConfig
+from e7auto.penguin_vision import CONTROLS
+from e7auto.template_manifest import load_template_manifest
 from dataclasses import asdict
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
@@ -94,27 +97,38 @@ def verify_ui_assets(ui_dir: Path) -> list[str]:
     return problems
 
 
-def verify_template_assets(template_dir: Path) -> list[str]:
+def verify_template_assets(
+    template_dir: Path, calibration_dir: Path = CALIBRATION_DIR
+) -> list[str]:
+    """Validate distributed images using source provenance kept outside the bundle."""
     problems: list[str] = []
-    crop_manifest_path = template_dir / "manifest.yaml"
-    purchased_button_manifest_path = template_dir / "purchased_button_manifest.json"
+    crop_manifest_path = calibration_dir / "manifest.yaml"
+    runtime_required: set[str] = set()
+    for profile in ("common", "shop", "penguin"):
+        try:
+            catalog_path = template_dir / profile / "manifest.json"
+            registered, _ = load_template_manifest(catalog_path, (2322, 1306))
+            runtime_required.update(path.relative_to(template_dir.resolve()).as_posix() for path in registered.values())
+        except (ValueError, TypeError, KeyError, OSError) as exc:
+            problems.append(str(exc))
+    purchased_button_manifest_path = calibration_dir / "purchased_button_manifest.json"
     single_manifest_paths = (
-        template_dir / "main_shop_icon_manifest.yaml",
-        template_dir / "shop_refresh_button_manifest.yaml",
-        template_dir / "shop_exit_icon_manifest.yaml",
+        calibration_dir / "main_shop_icon_manifest.yaml",
+        calibration_dir / "shop_refresh_button_manifest.yaml",
+        calibration_dir / "shop_exit_icon_manifest.yaml",
     )
-    multi_manifest_paths = (template_dir / "refresh_confirm_manifest.yaml",)
-    sky_stone_manifest_path = template_dir / "sky_stone_manifest.yaml"
+    multi_manifest_paths = (calibration_dir / "refresh_confirm_manifest.yaml",)
+    sky_stone_manifest_path = calibration_dir / "sky_stone_manifest.yaml"
     sky_stone_zero_wide_manifest_path = (
-        template_dir / "sky_stone_zero_wide_manifest.yaml"
+        calibration_dir / "sky_stone_zero_wide_manifest.yaml"
     )
-    insufficient_funds_manifest_path = template_dir / "insufficient_funds_manifest.yaml"
+    insufficient_funds_manifest_path = calibration_dir / "insufficient_funds_manifest.yaml"
     insufficient_funds_live_manifest_path = (
-        template_dir / "insufficient_funds_live_validation_manifest.yaml"
+        calibration_dir / "insufficient_funds_live_validation_manifest.yaml"
     )
-    client_calibration_manifest_path = template_dir / "client_calibration_manifest.yaml"
+    client_calibration_manifest_path = calibration_dir / "client_calibration_manifest.yaml"
     overlay_position_manifest_path = (
-        template_dir / "overlay_position_calibration_manifest.yaml"
+        calibration_dir / "overlay_position_calibration_manifest.yaml"
     )
     for manifest_path in (
         crop_manifest_path,
@@ -137,9 +151,9 @@ def verify_template_assets(template_dir: Path) -> list[str]:
         crop_manifest = yaml.safe_load(crop_manifest_path.read_text(encoding="utf-8"))
         expected = [entry["output_path"] for entry in crop_manifest["templates"]]
         purchased_button_manifest = json.loads(purchased_button_manifest_path.read_text(encoding="utf-8"))
-        if purchased_button_manifest.get("output_path") != "purchased_button.png":
+        if purchased_button_manifest.get("output_path") != "shop/purchased_button.png":
             problems.append("purchased-button manifest has an unexpected output path")
-        expected.append("purchased_button.png")
+        expected.append("shop/purchased_button.png")
         for manifest_path in single_manifest_paths:
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             expected.append(manifest["output_path"])
@@ -311,11 +325,31 @@ def verify_template_assets(template_dir: Path) -> list[str]:
 
     if len(expected) != 29 or len(set(expected)) != 29:
         problems.append("template manifests must describe exactly 29 unique PNG files")
-    required = set(expected) | {
-        "network_connection_abnormal.png",
-        "network_retry.png",
+    # Historical crop records remain evidence; current filenames are owned by
+    # runtime catalogs, including explicitly registered additions.
+    required = runtime_required
+    penguin_dir = template_dir / "penguin"
+    try:
+        penguin_manifest = json.loads((penguin_dir / "manifest.json").read_text(encoding="utf-8"))
+        if penguin_manifest["schema_version"] != 1 or penguin_manifest["baseline"] != [2322, 1306]:
+            problems.append("penguin manifest has an invalid schema or baseline")
+        entries = penguin_manifest["templates"]
+        if set(entries) != set(CONTROLS):
+            problems.append("penguin manifest must describe exactly the 13 approved controls")
+        for entry in entries.values():
+            filename = entry["file"]
+            if not isinstance(filename, str) or not (penguin_dir / filename).resolve().is_relative_to(penguin_dir.resolve()):
+                raise ValueError("invalid penguin template path")
+            required.add(f"penguin/{filename}")
+            path = penguin_dir / filename
+            if path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() != entry["sha256"]:
+                problems.append(f"penguin template integrity mismatch: {filename}")
+    except (OSError, KeyError, TypeError, ValueError, AttributeError) as exc:
+        problems.append(f"invalid penguin manifest: {exc}")
+    actual = {
+        path.relative_to(template_dir).as_posix()
+        for path in template_dir.rglob("*.png") if path.is_file()
     }
-    actual = {path.name for path in template_dir.glob("*.png") if path.is_file()}
     for name in sorted(required - actual):
         problems.append(f"missing template asset: {name}")
     for name in sorted(actual - required):

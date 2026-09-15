@@ -68,7 +68,11 @@ def test_selected_limit_is_handed_to_worker_as_an_integer(
         def deleteLater(self) -> None:
             pass
 
-    monkeypatch.setattr(main_window_module, "load_config", lambda _path: make_config())
+    def fake_load_config(_path, *, template_profile):
+        captured["template_profile"] = template_profile
+        return make_config()
+
+    monkeypatch.setattr(main_window_module, "load_config", fake_load_config)
     monkeypatch.setattr(main_window_module, "with_penguin_config", lambda config: config)
     monkeypatch.setattr(main_window_module, "QThread", FakeThread)
     monkeypatch.setattr(main_window_module, "AutomationWorker", FakeWorker)
@@ -90,6 +94,7 @@ def test_selected_limit_is_handed_to_worker_as_an_integer(
         assert captured["refresh_limit"] == (0 if penguins else 123)
         assert captured["buy_friendship_points"] is (not penguins)
         assert captured["purchase_limit"] == (7 if penguins else None)
+        assert captured["template_profile"] == ("penguin" if penguins else "shop")
         assert isinstance(captured["refresh_limit"], int)
         assert captured["thread_started"] is True
         assert not window._penguin_feature_page.isEnabled()

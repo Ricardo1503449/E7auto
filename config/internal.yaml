@@ -18,41 +18,25 @@ refresh_strategy:
   batch_refreshes: [13, 13, 13, 10]
   recovery_wait_seconds: [5, 180, 5]
 
-templates:
-  main_shop_icon: ../assets/templates/main_shop_icon.png
-  shop_refresh_button: ../assets/templates/shop_refresh_button.png
-  refresh_confirm_prompt: ../assets/templates/refresh_confirm_prompt.png
-  refresh_confirm_button: ../assets/templates/refresh_confirm_button.png
-  shop_exit_icon: ../assets/templates/shop_exit_icon.png
-  confirm_button: ../assets/templates/confirm_button.png
-  insufficient_funds: ../assets/templates/insufficient_funds.png
-  purchased_button: ../assets/templates/purchased_button.png
-  sky_stone_icon: ../assets/templates/sky_stone_icon.png
-  sky_stone_digit_0: ../assets/templates/sky_stone_digit_0.png
-  sky_stone_digit_0_wide: ../assets/templates/sky_stone_digit_0_wide.png
-  sky_stone_digit_1: ../assets/templates/sky_stone_digit_1.png
-  sky_stone_digit_2: ../assets/templates/sky_stone_digit_2.png
-  sky_stone_digit_3: ../assets/templates/sky_stone_digit_3.png
-  sky_stone_digit_4: ../assets/templates/sky_stone_digit_4.png
-  sky_stone_digit_5: ../assets/templates/sky_stone_digit_5.png
-  sky_stone_digit_6: ../assets/templates/sky_stone_digit_6.png
-  sky_stone_digit_7: ../assets/templates/sky_stone_digit_7.png
-  sky_stone_digit_8: ../assets/templates/sky_stone_digit_8.png
-  sky_stone_digit_9: ../assets/templates/sky_stone_digit_9.png
-  friendship_points: ../assets/templates/friendship_points.png
-  friendship_points_confirm: ../assets/templates/friendship_points_confirm.png
-  friendship_points_purchased: ../assets/templates/friendship_points_purchased.png
-  covenant_bookmark: ../assets/templates/covenant_bookmark.png
-  covenant_bookmark_confirm: ../assets/templates/covenant_bookmark_confirm.png
-  covenant_bookmark_purchased: ../assets/templates/covenant_bookmark_purchased.png
-  mystic_medal: ../assets/templates/mystic_medal.png
-  mystic_medal_confirm: ../assets/templates/mystic_medal_confirm.png
-  mystic_medal_purchased: ../assets/templates/mystic_medal_purchased.png
-  network_connection_abnormal: ../assets/templates/network_connection_abnormal.png
-  network_retry: ../assets/templates/network_retry.png
+template_manifests:
+  common: ../assets/templates/common/manifest.json
+  shop: ../assets/templates/shop/manifest.json
+  penguin: ../assets/templates/penguin/manifest.json
 
 rois:
-  main_shop_icon: {x: 25, y: 525, width: 165, height: 175}
+  left_icon_column: {x: 0, y: 240, width: 210, height: 900}
+  penguin_forest_entry: {x: 2049, y: 267, width: 221, height: 100}
+  penguin_growth_altar: {x: 1651, y: 1098, width: 630, height: 154}
+  penguin_penguin_buy_102: {x: 128, y: 895, width: 465, height: 155}
+  penguin_penguin_buy_5100: {x: 1031, y: 986, width: 652, height: 166}
+  penguin_quantity_max: {x: 1550, y: 789, width: 195, height: 138}
+  penguin_penguin_complete: {x: 942, y: 244, width: 447, height: 118}
+  penguin_reward_close: {x: 1060, y: 910, width: 202, height: 95}
+  penguin_altar_close: {x: 1070, y: 1211, width: 226, height: 92}
+  penguin_forest_back: {x: 13, y: 0, width: 326, height: 123}
+  penguin_sanctuary_back: {x: 11, y: 0, width: 235, height: 122}
+  penguin_purchase_currency: {x: 127, y: 896, width: 468, height: 154}
+  penguin_purchase_cancel: {x: 642, y: 986, width: 419, height: 166}
   shop_refresh_button: {x: 105, y: 1125, width: 580, height: 150}
   shop_exit_icon: {x: 39, y: 25, width: 267, height: 70}
   refresh_confirm_prompt: {x: 925, y: 540, width: 475, height: 90}
@@ -153,6 +137,16 @@ timing:
 vision:
   default_confidence: 0.90
   anchor_confidence: 0.93
+  entry_thresholds:
+    shop: {color: 0.93, structure: 0.80}
+    penguin: {color: 0.96, structure: 0.80}
+  penguin_control_confidence: 0.96
+  penguin_price_digit_confidence: 0.84
+  penguin_price_digit_margin: 0.09
+  # Per-side button search padding: x=horizontal, y=vertical.
+  purchased_button_padding: {x: 18, y: 16}
+  # Relative to the detected purchase button's top-left, not screen coordinates.
+  penguin_price_rect: {x: 115, y: 25, width: 210, height: 62}
   sky_stone_digit_confidence: 0.80
   sky_stone_digit_margin: 0.08
   sky_stone_digits_offset: {x: 57, y: 16}

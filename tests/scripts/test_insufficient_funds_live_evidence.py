@@ -7,7 +7,7 @@ import yaml
 from scripts.calibration.promote_insufficient_funds_live_result import build_manifest
 from tests.helpers.paths import ROOT
 MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "insufficient_funds_live_validation_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
 )
 
 

@@ -89,9 +89,9 @@ def test_shared_png_io_preserves_pixels_channels_and_unicode_paths(tmp_path: Pat
 def test_tool_paths_resolve_outside_project_cwd(tmp_path: Path) -> None:
     code = (
         "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); "
-        "from scripts.common.paths import PROJECT_ROOT, TEMPLATES_DIR; "
+        "from scripts.common.paths import PROJECT_ROOT, TEMPLATES_DIR, CALIBRATION_DIR; "
         "assert PROJECT_ROOT == Path(sys.argv[1]); "
-        "assert (TEMPLATES_DIR / 'manifest.yaml').is_file()"
+        "assert (CALIBRATION_DIR / 'manifest.yaml').is_file()"
     )
     result = subprocess.run(
         [sys.executable, "-c", code, str(ROOT)],

@@ -15,7 +15,7 @@ templates:
   source_size:
     width: 1550
     height: 270
-  output_path: friendship_points.png
+  output_path: shop/friendship_points.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -39,7 +39,7 @@ templates:
   source_size:
     width: 1539
     height: 269
-  output_path: covenant_bookmark.png
+  output_path: shop/covenant_bookmark.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -63,7 +63,7 @@ templates:
   source_size:
     width: 1540
     height: 273
-  output_path: mystic_medal.png
+  output_path: shop/mystic_medal.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -87,7 +87,7 @@ templates:
   source_size:
     width: 2391
     height: 868
-  output_path: friendship_points_confirm.png
+  output_path: shop/friendship_points_confirm.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -111,7 +111,7 @@ templates:
   source_size:
     width: 2387
     height: 955
-  output_path: covenant_bookmark_confirm.png
+  output_path: shop/covenant_bookmark_confirm.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -135,7 +135,7 @@ templates:
   source_size:
     width: 2404
     height: 889
-  output_path: mystic_medal_confirm.png
+  output_path: shop/mystic_medal_confirm.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -159,7 +159,7 @@ templates:
   source_size:
     width: 2391
     height: 868
-  output_path: confirm_button.png
+  output_path: shop/confirm_button.png
   channels: 4
 - output: friendship_points_purchased.png
   source_token: '202035'
@@ -173,7 +173,7 @@ templates:
   source_size:
     width: 1529
     height: 266
-  output_path: friendship_points_purchased.png
+  output_path: shop/friendship_points_purchased.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -197,7 +197,7 @@ templates:
   source_size:
     width: 1544
     height: 252
-  output_path: covenant_bookmark_purchased.png
+  output_path: shop/covenant_bookmark_purchased.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:
@@ -221,7 +221,7 @@ templates:
   source_size:
     width: 1533
     height: 252
-  output_path: mystic_medal_purchased.png
+  output_path: shop/mystic_medal_purchased.png
   channels: 4
   alpha_mask:
     inner_frame_bounds_inclusive:

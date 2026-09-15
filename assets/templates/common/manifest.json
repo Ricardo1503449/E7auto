@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "templates": {
+    "sky_stone_digit_0": {
+      "file": "digits/sky_stone_digit_0.png",
+      "sha256": "33df56d8f04f708d6b7f86fdee14b5d14cc5a8d835042c6960ba0581c6074852",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_0_wide": {
+      "file": "digits/sky_stone_digit_0_wide.png",
+      "sha256": "65b7165c5e38fa6bd31466f342cf9a1291b9e53756629cea0dc400765fdef827",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_1": {
+      "file": "digits/sky_stone_digit_1.png",
+      "sha256": "a0d7ed34eb33d9a9eb6505f31923566a8fd4ae6194728e09bf6a411144690729",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_2": {
+      "file": "digits/sky_stone_digit_2.png",
+      "sha256": "f0ebfcc9e33d9646afbecc3cfd88b04a28e924aad94a8b6f48f530e9ef93f34b",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_3": {
+      "file": "digits/sky_stone_digit_3.png",
+      "sha256": "1ad37b67facc0a095b2deebb779b55393f78039359c5ed20a4349a846310ccff",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_4": {
+      "file": "digits/sky_stone_digit_4.png",
+      "sha256": "7780b139a06a254660f24adead69951fed24f1493376f82d39535dbb88b432be",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_5": {
+      "file": "digits/sky_stone_digit_5.png",
+      "sha256": "32a8f6f4bbffd9b41b5f425542e897f775fe1530431985e475cc07f4457033cf",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_6": {
+      "file": "digits/sky_stone_digit_6.png",
+      "sha256": "77ef3d96ac231304675afe1f144e2486aa74ca08a6b8fe36ee46ceee73a5c270",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_7": {
+      "file": "digits/sky_stone_digit_7.png",
+      "sha256": "f18b0f048ce1c1dad4251a0366efd95cac05243ce78ad9669a98e4661f2812ff",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_8": {
+      "file": "digits/sky_stone_digit_8.png",
+      "sha256": "fdc77b10554787a2767095cc738c0fa8b84f64fe755faf281795492f35dabb85",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "sky_stone_digit_9": {
+      "file": "digits/sky_stone_digit_9.png",
+      "sha256": "8ffeb31a397152a0016754d4b49d8c7fc1005481b7d01726e73849cafa32ff42",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "network_connection_abnormal": {
+      "file": "network/network_connection_abnormal.png",
+      "sha256": "fa3bb3cb09aa6c247d16f47323f9ef1d464f84435df4816b554c375cc4af0ad2",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    },
+    "network_retry": {
+      "file": "network/network_retry.png",
+      "sha256": "7c41faa6972664f78730effb252138b1765fa92871c1154e56e10dfc37360969",
+      "source": {
+        "calibration_records": "docs/calibration",
+        "registered_from": "config/internal.yaml before catalog migration"
+      }
+    }
+  }
+}

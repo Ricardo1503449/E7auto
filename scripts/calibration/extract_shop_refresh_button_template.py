@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from scripts.common.image_io import write_png
+
 from pathlib import Path
+from scripts.common.paths import calibration_output_dirs, template_relative_path
 import argparse
 
 import cv2
 import numpy as np
 import yaml
 
-from scripts.common.image_io import read_rgba_png as read_png, write_png
+from scripts.common.image_io import read_rgba_png as read_png
 from scripts.common.paths import PROJECT_ROOT
 
 
@@ -51,12 +54,12 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=PROJECT_ROOT / "assets" / "templates",
+        default=None,
     )
+    parser.add_argument("--manifest-dir", type=Path, help="Directory for calibration provenance")
     args = parser.parse_args()
     source = find_source(args.source_dir.resolve())
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir, manifest_dir = calibration_output_dirs(args.output_dir, args.manifest_dir)
 
     image = read_png(source)
     contour, area = button_contour(image)
@@ -66,7 +69,7 @@ def main() -> int:
 
     output_image = np.ascontiguousarray(image[y : y + height, x : x + width].copy())
     output_image[:, :, 3] = mask[y : y + height, x : x + width]
-    output = output_dir / "shop_refresh_button.png"
+    output = output_dir / template_relative_path("shop_refresh_button.png", feature="shop")
     write_png(output, output_image)
 
     manifest = {
@@ -83,10 +86,10 @@ def main() -> int:
             "foreground_pixels": int(np.count_nonzero(output_image[:, :, 3])),
             "transparent_pixels": int(np.count_nonzero(output_image[:, :, 3] == 0)),
         },
-        "output_path": output.name,
+        "output_path": output.relative_to(output_dir).as_posix(),
         "output_size": {"width": width, "height": height},
     }
-    (output_dir / "shop_refresh_button_manifest.yaml").write_text(
+    (manifest_dir / "shop_refresh_button_manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

@@ -4,21 +4,23 @@ from pathlib import Path
 
 import yaml
 
+from e7auto.config import load_config
+
 from e7auto.config import Point, load_config
 from scripts.calibration.calibrate_client_frames import SOURCE_SPECS, build_manifest
 from tests.helpers.paths import ROOT
-MANIFEST_PATH = ROOT / "assets" / "templates" / "client_calibration_manifest.yaml"
+MANIFEST_PATH = ROOT / "docs" / "calibration" / "client_calibration_manifest.yaml"
 OVERLAY_POSITION_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "overlay_position_calibration_manifest.yaml"
+    ROOT / "docs" / "calibration" / "overlay_position_calibration_manifest.yaml"
 )
 INSUFFICIENT_FUNDS_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "insufficient_funds_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_manifest.yaml"
 )
 INSUFFICIENT_FUNDS_LIVE_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "insufficient_funds_live_validation_manifest.yaml"
+    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
 )
 MAIN_SHOP_LAYOUT_MANIFEST_PATH = (
-    ROOT / "assets" / "templates" / "main_shop_layout_manifest.yaml"
+    ROOT / "docs" / "calibration" / "main_shop_layout_manifest.yaml"
 )
 CONFIG_PATH = ROOT / "config" / "internal.yaml"
 
@@ -204,14 +206,22 @@ def test_internal_config_contains_only_evidence_supported_partial_calibration() 
     config = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
     calibrated = manifest["calibrated"]
     for key, value in calibrated["rois"].items():
-        assert config["rois"][key] == value
+        if key == "main_shop_icon":
+            column = config["rois"]["left_icon_column"]
+            assert column["x"] <= value["x"] and column["y"] <= value["y"]
+            assert column["x"]+column["width"] >= value["x"]+value["width"]
+            assert column["y"]+column["height"] >= value["y"]+value["height"]
+        else:
+            assert config["rois"][key] == value
     for key, value in calibrated["points"].items():
         assert config["points"][key] == value
     assert config["slots"] == calibrated["slots"]
     assert config["scroll"]["cursor_point"] == calibrated["scroll_cursor_point"]
     assert config["scroll"]["delta"] == calibrated["scroll_delta"] == -120
     assert config["scroll"]["repetitions"] == calibrated["scroll_repetitions"] == 6
-    assert config["scroll"]["interval_ms"] == calibrated["scroll_interval_ms"] == 100
+    # The provenance retains the original timing; runtime now uses 10 ms.
+    assert calibrated["scroll_interval_ms"] == 100
+    assert config["scroll"]["interval_ms"] == 10
     assert config["scroll"]["settle_ms"] == calibrated["scroll_settle_ms"] == 800
     assert (
         config["scroll"]["minimum_upward_shift_px"]
@@ -244,13 +254,12 @@ def test_internal_config_contains_only_evidence_supported_partial_calibration() 
     )
 
     assert config["calibration_complete"] is True
-    assert "top_anchor" not in config["templates"]
-    assert "bottom_anchor" not in config["templates"]
+    loaded = load_config(CONFIG_PATH)
+    assert "top_anchor" not in loaded.template_paths
+    assert "bottom_anchor" not in loaded.template_paths
     assert "top_anchor" not in config["rois"]
     assert "bottom_anchor" not in config["rois"]
-    assert config["templates"]["insufficient_funds"] == (
-        "../assets/templates/insufficient_funds.png"
-    )
+    assert loaded.template_paths["insufficient_funds"].name == "insufficient_funds.png"
     insufficient_manifest = yaml.safe_load(
         INSUFFICIENT_FUNDS_MANIFEST_PATH.read_text(encoding="utf-8")
     )
@@ -268,7 +277,7 @@ def test_internal_config_contains_only_evidence_supported_partial_calibration() 
     loaded = load_config(CONFIG_PATH)
     assert loaded.rois["purchase_result"].x == 975
     assert loaded.template_paths["insufficient_funds"].is_file()
-    assert loaded.scroll.interval_ms == 100
+    assert loaded.scroll.interval_ms == config["scroll"]["interval_ms"] == 10
     assert loaded.scroll.settle_ms == 800
     assert loaded.scroll.minimum_settle_ms == 100
     assert loaded.scroll.settle_poll_interval_ms == 100

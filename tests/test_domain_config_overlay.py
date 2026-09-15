@@ -26,9 +26,9 @@ def test_calibration_complete_gate_still_fails_closed(tmp_path: Path) -> None:
     source = Path("config/internal.yaml").resolve()
     raw = yaml.safe_load(source.read_text(encoding="utf-8"))
     raw["calibration_complete"] = False
-    raw["templates"] = {
+    raw["template_manifests"] = {
         key: str((source.parent / value).resolve())
-        for key, value in raw["templates"].items()
+        for key, value in raw["template_manifests"].items()
     }
     partial = tmp_path / "internal.yaml"
     partial.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
@@ -90,7 +90,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         },
         "economy": {"refresh_cost": 3},
         "templates": {key: f"templates/{key}.bin" for key in template_keys},
-        "rois": {key: rect for key in ("main_shop_icon", "shop_refresh_button", "shop_exit_icon", "refresh_confirm_prompt", "refresh_confirm_button", "inventory_list", "confirm_item", "confirm_button", "purchase_result", "sky_stone_icon", "sky_stone_digits")},
+        "rois": {key: rect for key in ("left_icon_column", "shop_refresh_button", "shop_exit_icon", "refresh_confirm_prompt", "refresh_confirm_button", "inventory_list", "confirm_item", "confirm_button", "purchase_result", "sky_stone_icon", "sky_stone_digits")},
         "points": {
             key: {"x": 5, "y": 5}
             for key in (
@@ -135,6 +135,12 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "vision": {
             "default_confidence": 0.9,
             "anchor_confidence": 0.95,
+            "entry_thresholds": {"shop": {"color": 0.93, "structure": 0.8}, "penguin": {"color": 0.96, "structure": 0.8}},
+            "penguin_control_confidence": 0.96,
+            "penguin_price_digit_confidence": 0.84,
+            "penguin_price_digit_margin": 0.09,
+            "purchased_button_padding": {"x": 18, "y": 16},
+            "penguin_price_rect": {"x": 115, "y": 25, "width": 210, "height": 62},
             "sky_stone_digit_confidence": 0.8,
             "sky_stone_digit_margin": 0.08,
             "sky_stone_digits_offset": {"x": 1, "y": 2},
