@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 from typing import Callable
 
 from ..config import Point, ScrollConfig
 from ..domain import StopReason
 from ..ports import TextRunLogger
-from ..vision_types import ScrollMovementObservation
+from ..vision_types import (
+    ScrollMovementObservation,
+    ScrollOverlapObservation,
+    SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX,
+    SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION,
+)
 from .stop_control import StopExecution
 
 
@@ -35,6 +41,8 @@ class ScrollServices:
     active_monotonic: Callable[[], float]
     measure_stability: Callable[[object, object], ScrollMovementObservation]
     measure_movement: Callable[[object, object], ScrollMovementObservation]
+    verify_overlap: Callable[[object, object, float, float], ScrollOverlapObservation]
+    inventory_height: int
     logger: TextRunLogger
 
 
@@ -60,6 +68,15 @@ def scroll_to_bottom(
     services.sleep(scroll.minimum_settle_ms / 1000)
 
     previous: object | None = None
+    first: object | None = None
+    cumulative_x = 0.0
+    cumulative_y = 0.0
+    cumulative_pairs = 0
+    cumulative_valid = True
+    verification_method = "none"
+    fallback_checks = 0
+    fallback_reason = "not_needed"
+    last_overlap: ScrollOverlapObservation | None = None
     verified_frame: object | None = None
     verified_movement: ScrollMovementObservation | None = None
     last_total_movement: ScrollMovementObservation | None = None
@@ -87,6 +104,7 @@ def scroll_to_bottom(
         sample_elapsed.append(str(progress.elapsed_ms))
 
         if previous is None:
+            first = current
             pair_shift_y.append("na")
             pair_response.append("na")
             pair_changed_fraction.append("na")
@@ -96,6 +114,18 @@ def scroll_to_bottom(
                 current,
             )
             progress.comparisons += 1
+            if not all(isfinite(value) for value in (
+                observation.phase_shift_x, observation.phase_shift_y, observation.phase_response,
+            )):
+                cumulative_valid = False
+                fallback_reason = "non_finite_pair"
+            if cumulative_valid:
+                cumulative_x += observation.phase_shift_x
+                cumulative_y += observation.phase_shift_y
+                cumulative_pairs += 1
+                if not isfinite(cumulative_x) or not isfinite(cumulative_y):
+                    cumulative_valid = False
+                    fallback_reason = "non_finite_sum"
             pair_shift_y.append(f"{observation.phase_shift_y:.3f}")
             pair_response.append(f"{observation.phase_response:.6f}")
             pair_changed_fraction.append(
@@ -123,6 +153,30 @@ def scroll_to_bottom(
                 ):
                     verified_frame = current
                     verified_movement = last_total_movement
+                    verification_method = "primary"
+                else:
+                    overlap_height = max(0.0, 1.0 - abs(cumulative_y) / services.inventory_height)
+                    if not cumulative_valid:
+                        pass  # Preserve the reason for disabling this scroll's fallback.
+                    elif cumulative_y >= -scroll.minimum_upward_shift_px:
+                        fallback_reason = "insufficient_net_upward_shift"
+                    elif abs(cumulative_x) > SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX:
+                        fallback_reason = "horizontal_shift"
+                    elif not last_total_movement.changed_fraction > scroll.minimum_changed_fraction:
+                        fallback_reason = "insufficient_total_change"
+                    elif overlap_height < SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION:
+                        fallback_reason = "insufficient_overlap"
+                    else:
+                        assert first is not None
+                        services.checkpoint()
+                        last_overlap = services.verify_overlap(first, current, cumulative_x, cumulative_y)
+                        fallback_checks += 1
+                        fallback_reason = last_overlap.reason
+                        if last_overlap.accepted:
+                            verified_frame = current
+                            # Keep B -> current metrics truthful even on fallback success.
+                            verified_movement = last_total_movement
+                            verification_method = "cumulative_overlap"
 
         stable_counts.append(str(stable))
         if verified_frame is not None:
@@ -156,7 +210,34 @@ def scroll_to_bottom(
         "stable_counts": ",".join(stable_counts),
         "settle_elapsed_ms": progress.elapsed_ms,
         "early_exit_ms": progress.early_exit_ms,
+        "verification_method": verification_method,
+        "fallback_checks": fallback_checks,
     }
+    # A later primary success must not hide earlier failures or invalid samples.
+    first_primary_success = (
+        verification_method == "primary" and total_gate_checks == 1 and cumulative_valid
+    )
+    if not first_primary_success:
+        trace_fields.update(
+            cumulative_shift_x=f"{cumulative_x:.3f}",
+            cumulative_shift_y=f"{cumulative_y:.3f}",
+            cumulative_pairs=cumulative_pairs,
+            cumulative_valid=cumulative_valid,
+            fallback_reason=fallback_reason,
+            fallback_result=(
+                "not_checked" if last_overlap is None
+                else "accepted" if last_overlap.accepted else "rejected"
+            ),
+            fallback_overlap_height_fraction=(
+                "na" if last_overlap is None else f"{last_overlap.overlap_height_fraction:.6f}"
+            ),
+            fallback_block_scores=(
+                "na" if last_overlap is None else ",".join(
+                    "na" if score is None else f"{score:.6f}" for score in last_overlap.block_scores
+                )
+            ),
+            fallback_passed_blocks=0 if last_overlap is None else last_overlap.passed_blocks,
+        )
     if verified_frame is None:
         services.logger.event(
             "scroll_settle_trace",

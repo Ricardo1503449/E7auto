@@ -77,6 +77,8 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
             "stable_counts": "0,1,2",
             "settle_elapsed_ms": 400,
             "early_exit_ms": 400,
+            "verification_method": "primary",
+            "fallback_checks": 0,
         }
     ]
     verified = [fields for event, fields in logger.events if event == "scroll_verified"]
@@ -86,6 +88,15 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
     assert verified[0]["difference_threshold"] == 8
     assert verified[0]["settle_elapsed_ms"] == 400
     assert verified[0]["early_exit_ms"] == 400
+    assert "verification_method" not in verified[0]
+    assert "cumulative_shift_y" not in verified[0]
+    assert "fallback_checks" not in verified[0]
+    assert vision.overlap_reference_frames == []
+    assert vision.overlap_queries == []
+    stage = next(fields for event, fields in logger.events
+                 if event == "performance_stage" and fields.get("stage") == "scroll_to_bottom")
+    assert stage["capture_count"] == 4
+    assert stage["vision_calls"] == 7  # Three scroll measurements + four existing capture guards.
 
 
 def test_unverified_scroll_never_scans_bottom_or_refreshes() -> None:

@@ -7,7 +7,7 @@ from ..config import AppConfig, Point, Rect
 from ..domain import OverlayActivityStatus, RunState, StopReason
 from ..geometry import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
 from ..ports import CaptureError, DisplayGeometry, WindowRef
-from ..vision_types import InventoryMatch, Observation, PurchaseOutcome, ScrollMovementObservation
+from ..vision_types import InventoryMatch, Observation, PurchaseOutcome, ScrollMovementObservation, ScrollOverlapObservation
 from .dependencies import AutomationDependencies
 from .scrolling import FrameSample, ScrollProgress, ScrollServices, scroll_to_bottom
 from .snapshots import SnapshotPublisher
@@ -472,6 +472,19 @@ class AutomationEngine:
         mark = self._performance_mark()
         progress = ScrollProgress()
         outcome = "failed"
+        overlap_reference: object | None = None
+
+        def verify_overlap(
+            first: object, current: object, shift_x: float, shift_y: float,
+        ) -> ScrollOverlapObservation:
+            nonlocal overlap_reference
+            if overlap_reference is None:
+                overlap_reference = self._vision_call(
+                    self._deps.vision.prepare_scroll_overlap_reference, first,
+                )
+            return self._vision_call(
+                self._deps.vision.verify_scroll_overlap, overlap_reference, current, shift_x, shift_y,
+            )
 
         def dispatch_scroll(point: Point, delta: int, repetition: int) -> None:
             self._dispatch_input(
@@ -494,6 +507,8 @@ class AutomationEngine:
             measure_movement=lambda before, after: self._vision_call(
                 self._deps.vision.inventory_scroll_movement, before, after
             ),
+            verify_overlap=verify_overlap,
+            inventory_height=self._config.rois["inventory_list"].height,
             logger=self._deps.logger,
         )
         try:
@@ -503,6 +518,7 @@ class AutomationEngine:
             outcome = "verified"
             return samples
         finally:
+            overlap_reference = None
             self._log_performance_stage(
                 mark,
                 "scroll_to_bottom",

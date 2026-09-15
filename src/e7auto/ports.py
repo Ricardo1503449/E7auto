@@ -12,10 +12,13 @@ from .vision_types import (
     InventoryMatch,
     SkyStoneBalanceObservation,
     ScrollMovementObservation,
+    ScrollOverlapObservation,
     PurchaseOutcome,
 )
 
 Frame = NDArray[np.uint8]
+
+
 
 
 class CaptureError(RuntimeError):
@@ -110,6 +113,7 @@ class Clock(Protocol):
 class TextRunLogger(Protocol):
     def event(self, event: str, **fields: object) -> None: ...
 
+
     def close(self) -> None: ...
 
 
@@ -145,6 +149,12 @@ class GameVision(Protocol):
         before: object,
         after: object,
     ) -> ScrollMovementObservation: ...
+
+    def prepare_scroll_overlap_reference(self, frame: object) -> object: ...
+
+    def verify_scroll_overlap(
+        self, reference: object, current: object, shift_x: float, shift_y: float,
+    ) -> ScrollOverlapObservation: ...
 
     def sky_stone_balance(self, frame: object) -> SkyStoneBalanceObservation | None: ...
 

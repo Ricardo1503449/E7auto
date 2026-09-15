@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import deque
 
 from e7auto.config import Point, Rect
+from e7auto.vision_types import ScrollOverlapObservation
 from e7auto.vision import (
     InventoryMatch,
     Observation,
@@ -41,6 +42,7 @@ class ScriptedVision:
         scroll_movement: ScrollMovementObservation | None = None,
         scroll_movements: list[ScrollMovementObservation] | None = None,
         scroll_stability: list[ScrollMovementObservation] | None = None,
+        scroll_overlaps: list[ScrollOverlapObservation] | None = None,
         network_errors: list[bool] | None = None,
         network_retries: list[bool] | None = None,
     ) -> None:
@@ -64,6 +66,9 @@ class ScriptedVision:
         )
         self.scroll_movements = deque(scroll_movements or [])
         self.scroll_stability = deque(scroll_stability or [])
+        self.scroll_overlaps = deque(scroll_overlaps or [])
+        self.overlap_reference_frames: list[object] = []
+        self.overlap_queries: list[tuple[object, object, float, float]] = []
         self.default_scroll_stability = ScrollMovementObservation(
             0.5,
             0.005,
@@ -169,6 +174,20 @@ class ScriptedVision:
         if value is None:
             return None
         return SkyStoneBalanceObservation(value, 0.99, Rect(70, 0, 30, 10))
+
+    def prepare_scroll_overlap_reference(self, frame: object) -> object:
+        self.activity.append("prepare_scroll_overlap")
+        self.overlap_reference_frames.append(frame)
+        return object()
+
+    def verify_scroll_overlap(
+        self, reference: object, current: object, shift_x: float, shift_y: float,
+    ) -> ScrollOverlapObservation:
+        self.activity.append("verify_scroll_overlap")
+        self.overlap_queries.append((reference, current, shift_x, shift_y))
+        if self.scroll_overlaps:
+            return self.scroll_overlaps.popleft()
+        return ScrollOverlapObservation(False, "insufficient_matching_blocks", 0.66, (0.1,) * 4)
 
     def network_connection_error(self, frame: object) -> Observation | None:
         if self.network_errors:

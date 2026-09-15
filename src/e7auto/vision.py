@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import ceil, floor, isfinite
 
 import cv2
 import numpy as np
@@ -13,11 +14,18 @@ from .vision_types import (
     InventoryMatch,
     SkyStoneBalanceObservation,
     ScrollMovementObservation,
+    ScrollOverlapObservation,
+    SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION,
+    SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX,
     PurchaseOutcome,
 )
 
 
 _GLYPH_KERNEL = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+_SCROLL_OVERLAP_BORDER = 2
+_SCROLL_OVERLAP_MINIMUM_STDDEV = 8.0
+_SCROLL_OVERLAP_MINIMUM_SCORE = 0.75
+_SCROLL_OVERLAP_REQUIRED_BLOCKS = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -121,8 +129,68 @@ def measure_inventory_scroll_stability(
     )
 
 
+def prepare_scroll_overlap_reference(
+    frame: Frame | AdaptedFrame, roi: Rect, downsample_factor: int,
+) -> np.ndarray:
+    """Prepare only on demand; the caller owns this scroll's reference cache."""
+    if downsample_factor <= 0:
+        raise ValueError("Scroll overlap downsample factor must be positive")
+    gray = _inventory_gray(frame, roi)
+    size = (max(1, roi.width // downsample_factor), max(1, roi.height // downsample_factor))
+    return cv2.resize(gray, size, interpolation=cv2.INTER_AREA).astype(np.float32)
 
 
+def verify_scroll_overlap(
+    reference: np.ndarray,
+    current: Frame | AdaptedFrame,
+    roi: Rect,
+    shift_x: float,
+    shift_y: float,
+) -> ScrollOverlapObservation:
+    """Check the proposed translation, without searching for another match."""
+    if not all(isfinite(value) for value in (shift_x, shift_y)):
+        return ScrollOverlapObservation(False, "non_finite_shift", 0.0)
+    overlap = max(0.0, 1.0 - abs(shift_y) / roi.height)
+    if abs(shift_x) > SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX:
+        return ScrollOverlapObservation(False, "horizontal_shift", overlap)
+    if overlap < SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION:
+        return ScrollOverlapObservation(False, "insufficient_overlap", overlap)
+
+    height, width = reference.shape
+    dx, dy = shift_x * width / roi.width, shift_y * height / roi.height
+    border = _SCROLL_OVERLAP_BORDER
+    left, right = max(0, ceil(dx)) + border, min(width, floor(width + dx)) - border
+    top, bottom = max(0, ceil(dy)) + border, min(height, floor(height + dy)) - border
+    if right - left < 2 or bottom - top < 2:
+        return ScrollOverlapObservation(False, "insufficient_overlap", overlap)
+
+    # AdaptedFrame reuses its normalized ROI, including work done by the main gate.
+    gray = _inventory_gray(current, roi)
+    current_small = cv2.resize(gray, (width, height), interpolation=cv2.INTER_AREA).astype(np.float32)
+    aligned = cv2.warpAffine(
+        reference, np.array([[1, 0, dx], [0, 1, dy]], dtype=np.float32),
+        (width, height), flags=cv2.INTER_LINEAR,
+    )
+    first = aligned[top:bottom, left:right]
+    second = current_small[top:bottom, left:right]
+    scores: list[float | None] = []
+    passed = 0
+    for first_row, second_row in zip(np.array_split(first, 2), np.array_split(second, 2)):
+        for first_block, second_block in zip(
+            np.array_split(first_row, 2, axis=1), np.array_split(second_row, 2, axis=1),
+        ):
+            if min(float(first_block.std()), float(second_block.std())) < _SCROLL_OVERLAP_MINIMUM_STDDEV:
+                scores.append(None)
+                continue
+            score = float(cv2.matchTemplate(second_block, first_block, cv2.TM_CCOEFF_NORMED)[0, 0])
+            scores.append(score if isfinite(score) else None)
+            if isfinite(score) and score >= _SCROLL_OVERLAP_MINIMUM_SCORE:
+                passed += 1
+    accepted = passed >= _SCROLL_OVERLAP_REQUIRED_BLOCKS
+    return ScrollOverlapObservation(
+        accepted, "matched" if accepted else "insufficient_matching_blocks",
+        overlap, tuple(scores), passed,
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -486,7 +554,17 @@ class OpenCvGameVision:
             self._config.scroll.downsample_factor,
         )
 
+    def prepare_scroll_overlap_reference(self, frame: Frame | AdaptedFrame) -> np.ndarray:
+        return prepare_scroll_overlap_reference(
+            frame, self._config.rois["inventory_list"], self._config.scroll.downsample_factor,
+        )
 
+    def verify_scroll_overlap(
+        self, reference: np.ndarray, current: Frame | AdaptedFrame, shift_x: float, shift_y: float,
+    ) -> ScrollOverlapObservation:
+        return verify_scroll_overlap(
+            reference, current, self._config.rois["inventory_list"], shift_x, shift_y,
+        )
 
     @staticmethod
     def _neutral_bright_mask(image: Frame) -> np.ndarray:

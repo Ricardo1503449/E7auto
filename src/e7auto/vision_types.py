@@ -43,6 +43,20 @@ class ScrollMovementObservation:
     phase_response: float
 
 
+# Internal fallback policy; independent of the stationary-frame response threshold.
+SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION = 0.50
+SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX = 4.0
+
+
+@dataclass(frozen=True, slots=True)
+class ScrollOverlapObservation:
+    accepted: bool
+    reason: str
+    overlap_height_fraction: float
+    block_scores: tuple[float | None, ...] = ()
+    passed_blocks: int = 0
+
+
 class PurchaseOutcome(str, Enum):
     PENDING = "pending"
     SUCCESS = "success"
