@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from weakref import ReferenceType, ref
 
 from PySide6.QtCore import QEvent, QPointF, QRectF, QSize, Qt, QTimer
 from PySide6.QtGui import (
@@ -14,6 +15,12 @@ from PySide6.QtGui import (
     QPen,
 )
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QWidget
+from shiboken6 import isValid
+
+
+def _live_window(reference: ReferenceType[QMainWindow]) -> QMainWindow | None:
+    window = reference()
+    return window if window is not None and isValid(window) else None
 
 
 class _WindowControlButton(QPushButton):
@@ -119,7 +126,9 @@ class _TitleBar(QWidget):
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
-        self._window = window
+        # The window owns its chrome; a reverse strong reference defers their
+        # destruction to cyclic GC, which may run inside another Qt callback.
+        self._window_ref = ref(window)
         self.setObjectName("titleBar")
         self.setProperty("windowMaximized", False)
         self.setFixedHeight(self._HEIGHT)
@@ -166,25 +175,38 @@ class _TitleBar(QWidget):
         return button
 
     def _toggle_maximized(self) -> None:
-        if self._window.isMaximized():
-            self._window.showNormal()
+        window = _live_window(self._window_ref)
+        if window is None:
+            return
+        if window.isMaximized():
+            window.showNormal()
         else:
-            self._window.showMaximized()
+            window.showMaximized()
 
     def sync_maximize_state(self) -> None:
-        maximized = self._window.isMaximized()
+        window = _live_window(self._window_ref)
+        if window is None:
+            return
+        maximized = window.isMaximized()
         self._maximize.set_control_type("restore" if maximized else "maximize")
         self._maximize.setAccessibleName("还原" if maximized else "最大化")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
+        window = _live_window(self._window_ref)
+        if window is None:
+            event.ignore()
+            return
         if event.button() == Qt.MouseButton.LeftButton:
-            handle = self._window.windowHandle()
+            handle = window.windowHandle()
             if handle is not None and handle.startSystemMove():
                 event.accept()
                 return
         super().mousePressEvent(event)
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
+        if _live_window(self._window_ref) is None:
+            event.ignore()
+            return
         if event.button() == Qt.MouseButton.LeftButton:
             self._toggle_maximized()
             event.accept()
@@ -200,14 +222,18 @@ class _ResizeHandle(QWidget):
         cursor: Qt.CursorShape,
     ) -> None:
         super().__init__(window)
-        self._window = window
+        self._window_ref = ref(window)
         self._edges = edges
         self.setObjectName("resizeHandle")
         self.setCursor(cursor)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
+        window = _live_window(self._window_ref)
+        if window is None:
+            event.ignore()
+            return
         if event.button() == Qt.MouseButton.LeftButton:
-            handle = self._window.windowHandle()
+            handle = window.windowHandle()
             if handle is not None and handle.startSystemResize(self._edges):
                 event.accept()
                 return

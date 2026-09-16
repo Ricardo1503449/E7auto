@@ -33,6 +33,7 @@ See [development](../development/DEVELOPMENT.md) for extension rules and targete
 ## Data and threads
 
 - The Qt main thread owns `MainWindow` and `StatsOverlay` only.
+- The window owns its title bar and resize handles. Those controls keep weak back-references and validate the PySide wrapper before accessing the window, avoiding a Python ownership cycle and safely ignoring events after native destruction. Closing a production window retains the existing behavior; deterministic deletion is managed separately by UI test fixtures.
 - `AutomationWorker` runs the session on a `QThread` and publishes frozen `RuntimeSnapshot` objects through Qt signals.
 - `SnapshotPublisher` is the single counter source and emits the final snapshot once. Later mutation attempts are ignored.
 - Overlay activity is snapshot state rather than widget inference: startup publishes `已启动`, confirmed shop entry publishes `刷新ing...`, strategy main-screen recovery publishes `转运ing...`, and finalization publishes `已停止`. The static hotkey hint contains only F5. The overlay is always mouse-interactive and draggable; releasing a drag persists the position. Its top-left `收起` control switches to a draggable circular Logo view, and a click without dragging restores the full panel. Every run starts in the full-panel state. Only a final snapshot exposes the top-right close button so the user can hide the overlay without exiting the application. Starting another run hides the close button and shows the full overlay again.
