@@ -13,6 +13,7 @@
 - 开发产物使用 `python -m scripts.project.artifacts` 或 `scripts.common.paths` 分配目录；tasks按已登记功能归属，任务内部使用inputs/previews/results/scratch，不新增artifacts顶层任务目录。
 - 新功能先在layout.json登记功能名，再创建任务和样本目录；登记分类不会自动启用运行功能。未知分类/功能不能默认为shop或misc。
 - 规范、验证结论、发布记录按docs分类保存；原始输出放artifacts。新增测试按被测职责分类，临时输出使用tmp_path；公共fixture不得从其他test模块导入。
+- CHANGELOG只记录按版本划分的实际新增、修复、改进和移除；不新增发布准备、本机构建、发布等过程栏目，不记录版本同步、包名或测试/构建状态。相关记录放docs/releases/<版本>/；清理旧栏目时保留或迁移其中的实际行为变化。GitHub Release下载栏目按发布检查单另行维护。
 - build只存可再生构建输出，禁止放唯一来源、历史证据或一次性实验。归档为冻结资料，不允许成为新输出目录。
 - 每次新增/移动文件或更改输出路径后运行 `python -m scripts.project.check_layout`；该检查也扫描被忽略的本地产物。完成后报告检查和直接相关测试结果。
 - 获准提交后运行 `python -m scripts.project.check_layout --staged`，读取实际暂存内容；同时保留既有diff检查、模板登记检查和提交授权要求。不安装hook或配置CI。

@@ -21,9 +21,13 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
 
-## v1.3.2 local rebuild
+## v1.3.3 source preparation (not built)
 
-Current source targets `E7auto_v1.3.2_x64.zip`. Prior records below describe their original versions. This local rebuild does not include GitHub publishing.
+Current source targets `E7auto_v1.3.3_x64.zip`, with Windows file/product version `1.3.3.0`. The two native-crash fixes and source organization changes are recorded in [v1.3.3 validation](../releases/v1.3.3/VALIDATION.md). No v1.3.3 executable, ZIP, elevated compiled self-check or GitHub Release has been produced; those gates remain pending.
+
+## v1.3.2 local rebuild (historical)
+
+The v1.3.2 source targeted `E7auto_v1.3.2_x64.zip`. The records below describe that version's original scope and do not validate v1.3.3. That local rebuild did not include GitHub publishing.
 
 - [x] Initial 2026-09-15 build: version/environment checks and 50 focused tests passed. The 2026-09-16 same-version rebuild uses commit `1d0a198` with the masked Sky Stone icon; prior relevant tests were reused and environment verification passed again.
 - [x] Latest local standalone directory and ZIP rebuilt: 83,424,277-byte ZIP, 154 files match dist by CRC/read and SHA-256, 48 template-directory files and 11 UI assets match source. Full current and historical evidence: [v1.3.2 build validation](../releases/v1.3.2/VALIDATION.md).
@@ -65,6 +69,7 @@ Use a Windows x64 machine or VM with no Python installed.
 
 ## GitHub Release publishing
 
+- [ ] Keep CHANGELOG focused on actual version changes; store build/test/publication status in `docs/releases/<version>/`. The public Release download section below does not belong in CHANGELOG.
 - [ ] Keep `dist\launcher.dist` and every versioned ZIP as local ignored build output; do not add either path to the Git repository.
 - [ ] Create the versioned ZIP from the exact locally verified standalone directory and stream every entry to confirm successful decompression and CRC validation.
 - [ ] Create the matching version tag and GitHub Release from the reviewed release commit.
