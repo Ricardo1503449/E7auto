@@ -123,11 +123,9 @@ def test_future_build_embeds_and_verifies_windows_version_metadata(
     assert '"--file-description=E7auto Windows x64 shop automation"' in build_script
 
 
-def test_source_test_runner_isolates_wgc_from_qt() -> None:
+def test_source_test_runner_keeps_qt_and_wgc_in_one_process() -> None:
     runner = (ROOT / "scripts" / "test-source.ps1").read_text(encoding="utf-8")
 
-    first = "& $python -m pytest --ignore=tests/platform/test_wgc_capture.py"
-    second = "& $python -m pytest tests/platform/test_wgc_capture.py"
-    assert first in runner
-    assert second in runner
-    assert runner.index(first) < runner.index(second)
+    assert runner.count("& $python -m pytest") == 1
+    assert "--ignore" not in runner
+    assert "test_wgc_capture.py" not in runner

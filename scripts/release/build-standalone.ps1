@@ -107,6 +107,10 @@ try {
         [IO.Path]::GetDirectoryName($resolvedReleaseDir) -ne $distDir) {
         throw "Build publication paths are outside the configured output directories"
     }
+    & $python -B -m scripts.release.native_runtime --directory $compiledRelease
+    if ($LASTEXITCODE -ne 0) {
+        throw "Compiled MSVC runtime consistency check failed"
+    }
     if (Test-Path -LiteralPath $resolvedReleaseDir) {
         Remove-Item -LiteralPath $resolvedReleaseDir -Recurse -Force
     }

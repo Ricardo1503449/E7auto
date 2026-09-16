@@ -8,6 +8,13 @@ from ctypes import wintypes
 
 import numpy as np
 import win32gui
+
+from e7auto.platform.native_runtime import ensure_msvc_runtime
+
+# WinRT's private MSVCP140 14.29 must not be loaded before Qt's newer runtime.
+# This selects a native DLL only; it does not import Qt or initialize COM.
+ensure_msvc_runtime()
+
 from winrt.runtime import ApartmentType, init_apartment, uninit_apartment
 from winrt.windows.graphics.capture import Direct3D11CaptureFrame, Direct3D11CaptureFramePool, GraphicsCaptureSession
 from winrt.windows.graphics.capture.interop import create_for_window

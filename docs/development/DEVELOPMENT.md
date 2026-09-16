@@ -110,13 +110,13 @@ UI用例由 `tests/ui/conftest.py` 保持一个QApplication，并在每个用例
 
 窗口拥有的控件不得通过Python强引用反向拥有主窗口；需要回访时使用弱引用，并检查Python包装对象对应的C++对象仍有效。生命周期回归同时检查正常窗口操作、销毁后的事件和实际对象释放。原生压力用例在带超时的独立进程执行，检查退出码；默认循环垃圾回收保持开启，不以禁用GC或拆分普通用例绕过失败。
 
-WGC 测试必须单独启动 Python 进程，不能和 Qt UI 测试放在同一次 pytest 调用中：
+Qt与WGC测试现在可以在同一Python进程运行。WGC入口先通过 `platform/native_runtime.py` 选择兼容的MSVCP140运行库，再导入PyWinRT，避免其旧私有DLL先被加载。不要绕过该入口提前导入WinRT；若进程已加载不兼容旧DLL，明确报错并重启，不尝试卸载正在使用的运行库。生产COM初始化、截图资源及释放仍由工作线程管理。
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests/platform/test_wgc_capture.py -q
+.\.venv\Scripts\python.exe -m pytest tests/ui tests/platform/test_wgc_capture.py tests/platform/test_native_runtime.py -q
 ```
 
-`scripts/test-source.ps1` 保留原有全套分进程测试入口，只有明确需要全量测试时使用。离线测试使用替代服务和固定输入，不启动游戏或发送真实输入。
+`scripts/test-source.ps1` 已恢复单次pytest调用，不再排除WGC后另起进程；仍只有用户明确要求全量测试时才运行。两种导入顺序的原生回归在受控子进程检查正常退出，不能用拆分普通测试替代同进程验收。共存测试使用真实WinRT内存位图和Qt工作线程，不捕获游戏或桌面、不发送游戏输入。
 
 ## 构建与交付
 
@@ -126,6 +126,10 @@ powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
 ```
 
 构建继续使用根目录 `launcher.py`、现有配置和资源布局。源码测试与构建脚本契约通过，不等于已重新构建或验证新的独立程序。修改源码后需要另行执行构建和 [发布检查](RELEASE_CHECKLIST.md)，才能对新产物作出结论。
+
+构建成功后、发布前，`scripts.release.native_runtime` 将build/nuitka内的根目录和嵌套MSVC运行库副本统一为锁定Qt/Shiboken附带的兼容版本；不修改.venv、系统DLL或既有dist。发布验证检查缺失及旧版本副本。更新Qt或WinRT依赖时，必须复核MINIMUM_MSVC_VERSION、随包DLL及两种导入顺序，不能只更新pip版本号。
+
+运行库选择的最低版本当前为 `14.44.35211.0`。若进程已加载达到该要求的MSVCP140，则直接复用；否则源码从Shiboken安装目录、编译程序从可执行文件目录选择随包运行库。构建工具校验7个MSVC DLL，先检查输出路径，再统一副本，成功后才替换旧发行目录。项目内写入仅允许 `scripts.common.paths.BUILD_NUITKA_DIR` 下的构建产物；明确指定的项目外临时导出目录也受支持。工具拒绝链接目标越界，不能用于修补现有dist。
 
 ## 新增功能与模板
 

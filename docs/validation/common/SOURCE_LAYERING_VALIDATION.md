@@ -35,6 +35,8 @@
 
 专项证据目录：`artifacts/tasks/ui/20260916-170517-fix-native-lifecycle-crash-d4491581/`，原始基线在inputs，结果日志在results。
 
+更早的Qt/WGC隔离后来在独立任务中定位为MSVC运行库版本冲突，并由运行库选择及构建一致性检查替代；见[平台依赖验证](../platform/BACKGROUND_VALIDATION.md#2026-09-16-qtpywinrt原生运行库共存)。上述分层及UI阶段的分进程结果保留为历史事实。
+
 ## 证据与维护
 
 本地证据目录：`artifacts/maintenance/20260916-154205-source-layering-f9437fb7/`。包含源码基线、文件变化清单、模块迁移映射、受保护文件摘要、测试用例清单和UI当前/基线日志；一次性迁移脚本及复现副本位于scratch。

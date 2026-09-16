@@ -9,6 +9,7 @@ import os
 import sys
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+BUILD_NUITKA_DIR = PROJECT_ROOT / "build" / "nuitka"
 TEMPLATES_DIR = PROJECT_ROOT / "assets" / "templates"
 CALIBRATION_DIR = PROJECT_ROOT / "docs" / "calibration"
 CANDIDATES_DIR = PROJECT_ROOT / "artifacts" / "template-candidates"

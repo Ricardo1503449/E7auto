@@ -16,8 +16,10 @@
 新增回归测试放回所属目录，不向根目录追加test文件。根目录只保留本说明、`__init__.py`和需要时的`conftest.py`。
 项目路径从 `tests.helpers.paths` 导入；测试临时输出使用 `tmp_path`，不得写入fixtures。共用fixture放在helpers或conftest，不能从其他test模块导入。
 
-WGC测试 `platform/test_wgc_capture.py` 必须与Qt测试分进程。只运行改动直接相关的测试；完整入口 `scripts/test-source.ps1` 仅在用户要求全套验证时执行。
+WGC测试 `platform/test_wgc_capture.py` 与Qt测试允许同进程运行；platform/test_native_runtime.py检查兼容CRT、两种导入顺序以及真实WinRT内存位图在Qt工作线程中的生命周期。只运行改动直接相关的测试；完整入口 `scripts/test-source.ps1` 使用单次pytest，仍仅在用户要求全套验证时执行。
 
-源码依赖边界测试位于core/test_source_boundaries.py；源码迁移不改变本目录按被测职责分类的规则。WGC与Qt分进程，测试桩应替换新模块的实际调用位置。
+原生共存探针位于helpers/qt_wgc.py，复用helpers/qt.py的窗口清理，并在退出前释放WinRT对象、反初始化COM、销毁QThread。scripts/release/test_native_runtime.py验证构建DLL归一化、旧副本拒绝、既有dist保护及发布前执行顺序；scripts/project/test_entrypoints.py覆盖新工具的CLI入口。探针输出由调用用例捕获，临时文件只写tmp_path。
+
+源码依赖边界测试位于core/test_source_boundaries.py；源码迁移不改变本目录按被测职责分类的规则。测试桩应替换新模块的实际调用位置，不能通过模块导入顺序预先选择旧MSVC运行库。
 
 UI生命周期由ui/conftest.py统一管理：会话共用QApplication，用例结束后关闭并销毁本用例的新窗口、停止计时器、处理DeferredDelete，再回收Python对象。Qt辅助代码位于helpers/qt.py，不从helpers/__init__.py导出。ui/test_window_lifecycle.py检查窗口释放和失效包装对象，并在受控子进程进行多轮压力回归；不关闭GC来绕过崩溃。

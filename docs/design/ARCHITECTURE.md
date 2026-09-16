@@ -25,6 +25,12 @@ and amount rules. `resources/` validates catalogs and reads template pixels. `co
 separates data models, existing YAML schema names and loading; its file format is unchanged.
 `platform/` implements Windows services; `logging/` owns runtime logs and stop snapshots.
 
+Before importing PyWinRT, the WGC adapter calls `platform/native_runtime.py` to pin and validate
+the Qt-compatible MSVC runtime. This performs no Qt import or COM initialization. The old
+WinRT-private MSVCP140 must not win the process-wide dependency lookup. An already-loaded
+outdated runtime is rejected rather than unloaded. Source tests now cover Qt and WGC in the same
+process; release builds normalize root and nested CRT copies before publication.
+
 Project scripts and tests use the canonical modules. Legacy root modules and the old automation
 package have been removed after migrating callers. `scripts.project.check_layout` also checks
 source ownership, forbidden dependencies and deferred WGC imports in the selected disk/index view.

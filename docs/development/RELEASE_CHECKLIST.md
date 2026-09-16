@@ -6,9 +6,10 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 
 ## Local standalone gate
 
-- [ ] Run `powershell -ExecutionPolicy Bypass -File scripts\test-source.ps1`; it must run the Qt/non-WGC suite and the PyWinRT/WGC suite in separate Python processes, with both invocations passing.
+- [ ] When the full suite is explicitly authorized, run `powershell -ExecutionPolicy Bypass -File scripts\test-source.ps1`; Qt and WGC tests must pass in one pytest process, including the controlled native import-order/lifecycle regressions.
 - [ ] Run `.venv\Scripts\python.exe -m scripts.verify_environment`.
 - [ ] Build with `scripts\release\build-standalone.ps1` and project-local Nuitka cache.
+- [ ] Confirm native-runtime normalization completes before publication; root and nested MSVC DLLs must meet the locked Qt/Shiboken minimum. Do not retain the old WinRT-private MSVCP140 or an older compiler runtime at the distribution root.
 - [ ] Confirm the build uses Nuitka `--windows-uac-admin` and the resulting PE manifest requests administrator elevation.
 - [ ] Confirm Windows file/product versions are the four-part numeric form of the `pyproject.toml` version, and `E7auto.exe --self-check` reports the same package version.
 - [ ] Run `.venv\Scripts\python.exe -m scripts.release.verify_release`.

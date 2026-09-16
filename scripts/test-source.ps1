@@ -8,14 +8,11 @@ if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
 
 Push-Location $projectRoot
 try {
-    & $python -m pytest --ignore=tests/platform/test_wgc_capture.py
+    # The WGC entry point selects the Qt-compatible MSVC runtime before PyWinRT.
+    # Keep Qt and WGC together so import-order regressions cannot hide behind isolation.
+    & $python -m pytest
     if ($LASTEXITCODE -ne 0) {
-        throw "Qt/non-WGC test process failed with exit code $LASTEXITCODE"
-    }
-
-    & $python -m pytest tests/platform/test_wgc_capture.py
-    if ($LASTEXITCODE -ne 0) {
-        throw "PyWinRT/WGC test process failed with exit code $LASTEXITCODE"
+        throw "Source test process failed with exit code $LASTEXITCODE"
     }
 }
 finally {

@@ -23,6 +23,7 @@ from e7auto.features.penguin.configuration import CONTROLS
 from e7auto.resources.manifest import load_template_manifest
 from dataclasses import asdict
 from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR, create_artifact_run, finish_artifact_run
+from scripts.release.native_runtime import verify_native_runtime
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
@@ -495,6 +496,7 @@ def main() -> int:
         problems.append("runtime logs were bundled")
     problems.extend(verify_forbidden_release_files(release))
     problems.extend(verify_required_release_files(release))
+    problems.extend(verify_native_runtime(release))
     if not problems and (release / "config" / "internal.yaml").is_file():
         config_text = (release / "config" / "internal.yaml").read_text(encoding="utf-8")
         packaged_logging = yaml.safe_load(config_text).get("logging")
