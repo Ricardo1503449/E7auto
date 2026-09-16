@@ -23,7 +23,7 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 
 ## v1.3.3 local build
 
-The local `E7auto_v1.3.3_x64.zip` and standalone directory have been rebuilt from commit `99435b8`, with Windows file/product version `1.3.3.0`. Native-runtime normalization, resource/archive consistency and the elevated compiled self-check passed; Qt/WGC DLLs meet the locked runtime minimum. The packaged usage guide was synchronized afterward and the ZIP regenerated without recompiling executable code. Details and final archive measurements are in [v1.3.3 validation](../releases/v1.3.3/VALIDATION.md). No new full-suite run, game-operation validation, clean-Windows validation, version tag or GitHub Release was performed.
+The local `E7auto_v1.3.3_x64.zip` and standalone directory have been rebuilt from commit `99435b8`, with Windows file/product version `1.3.3.0`. Native-runtime normalization, resource/archive consistency and the elevated compiled self-check passed; Qt/WGC DLLs meet the locked runtime minimum. The packaged usage guide was synchronized afterward and the ZIP regenerated without recompiling executable code. Details and final archive measurements are in [v1.3.3 validation](../releases/v1.3.3/VALIDATION.md). The user subsequently authorized [GitHub Release v1.3.3](https://github.com/Ricardo1503449/E7auto/releases/tag/v1.3.3), tagged at `cf1ba67`; the uploaded ZIP name, size and server digest match the verified local archive. No new full-suite run, game-operation validation or clean-Windows validation was performed.
 
 ## v1.3.2 local rebuild (historical)
 

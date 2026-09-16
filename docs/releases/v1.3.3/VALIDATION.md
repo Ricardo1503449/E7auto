@@ -1,6 +1,6 @@
 # v1.3.3 源码与本机构建验证
 
-日期：2026-09-16。本机v1.3.3 EXE与ZIP已重建，资源、运行库、ZIP一致性及管理员编译版自检通过；未创建标签或发布GitHub Release。下方版本准备记录保留当时范围，本机产物以末节构建结果为准。
+日期：2026-09-16。本机v1.3.3 EXE与ZIP已重建，资源、运行库、ZIP一致性及管理员编译版自检通过；随后已按用户授权创建标签并发布GitHub Release。下方版本准备记录保留当时范围，构建与发布结果见对应章节。
 
 ## 改动与已有验证
 
@@ -38,4 +38,12 @@
 
 证据目录：`artifacts/releases/v1.3.3/20260916-195520-standalone-8d787353/`。构建日志与结果为 `build.log`、`build-result.json`，最终ZIP度量为 `archive-verification.json`，管理员验证为 `release-verification.txt` 与 `release-verification.exit`。原始摘要保存在本地证据中。
 
-本次本机验证不能替代真实游戏或纯净Windows验收。未创建标签或发布GitHub Release。
+本次本机验证不能替代真实游戏或纯净Windows验收；构建阶段没有自动发布，后续发布由用户另行授权。
+
+## GitHub Release发布
+
+2026-09-16 20:13（北京时间），按用户授权发布 [E7auto v1.3.3](https://github.com/Ricardo1503449/E7auto/releases/tag/v1.3.3)，为正式版本并标记Latest。标签 `v1.3.3` 指向已审核、已推送的 `cf1ba6746707d92beddfb44a47972713d51eb10f`。该提交相对编译基准仅更新5个文档，源码与运行资源保持一致，随包使用说明与标签中的文本一致（工作区CRLF与Git中的LF按行尾规范化核对）。
+
+唯一上传附件为 `E7auto_v1.3.3_x64.zip`，83,419,972字节，状态uploaded。GitHub返回的附件摘要与本机已验证ZIP一致；公开标题和说明遵循更新内容、修复、改进及末尾发布文件栏目的约定，不包含摘要值。
+
+发布计划、远端Release与标签响应、附件校验保存在 `artifacts/releases/v1.3.3/20260916-201055-github-release-dcd11e9d/`。本轮未重新构建或重复运行功能测试；真实游戏与纯净Windows的未验证范围保持不变。
