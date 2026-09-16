@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "features": [
+    "shop",
+    "penguin",
+    "common",
+    "platform",
+    "ui"
+  ],
+  "artifact_categories": [
+    "tasks",
+    "releases",
+    "git",
+    "maintenance",
+    "archive",
+    "template-candidates",
+    "template-registration"
+  ],
+  "task_sections": [
+    "inputs",
+    "previews",
+    "results",
+    "scratch"
+  ],
+  "archive_categories": [
+    "snapshots",
+    "backups",
+    "legacy"
+  ],
+  "docs_sections": [
+    "user",
+    "design",
+    "development",
+    "validation",
+    "releases",
+    "calibration"
+  ],
+  "test_sections": [
+    "core",
+    "vision",
+    "resources",
+    "platform",
+    "logging",
+    "automation",
+    "ui",
+    "scripts",
+    "helpers",
+    "fixtures"
+  ],
+  "test_script_sections": [
+    "calibration",
+    "validation",
+    "release",
+    "templates",
+    "project"
+  ],
+  "build_sections": [
+    "nuitka",
+    "staging"
+  ],
+  "calibration_records": {
+    "client_calibration_manifest.yaml": "shop/client_calibration_manifest.yaml",
+    "insufficient_funds_live_validation_manifest.yaml": "shop/insufficient_funds_live_validation_manifest.yaml",
+    "insufficient_funds_manifest.yaml": "shop/insufficient_funds_manifest.yaml",
+    "main_shop_icon_manifest.yaml": "shop/main_shop_icon_manifest.yaml",
+    "main_shop_layout_manifest.yaml": "shop/main_shop_layout_manifest.yaml",
+    "manifest.yaml": "shop/manifest.yaml",
+    "purchased_button_manifest.json": "shop/purchased_button_manifest.json",
+    "refresh_confirm_manifest.yaml": "shop/refresh_confirm_manifest.yaml",
+    "shop_exit_icon_manifest.yaml": "shop/shop_exit_icon_manifest.yaml",
+    "shop_refresh_button_manifest.yaml": "shop/shop_refresh_button_manifest.yaml",
+    "sky_stone_manifest.yaml": "shop/sky_stone_manifest.yaml",
+    "sky_stone_zero_wide_manifest.yaml": "shop/sky_stone_zero_wide_manifest.yaml",
+    "sanctuary_search_manifest.json": "penguin/sanctuary_search_manifest.json",
+    "overlay_position_calibration_manifest.yaml": "platform/overlay_position_calibration_manifest.yaml"
+  }
+}

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import calibration_record_path
 import json
+import argparse
 import hashlib
 import re
 import struct
@@ -20,7 +22,7 @@ from e7auto.config import LoggingConfig
 from e7auto.penguin_vision import CONTROLS
 from e7auto.template_manifest import load_template_manifest
 from dataclasses import asdict
-from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR
+from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR, create_artifact_run, finish_artifact_run
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
@@ -102,7 +104,7 @@ def verify_template_assets(
 ) -> list[str]:
     """Validate distributed images using source provenance kept outside the bundle."""
     problems: list[str] = []
-    crop_manifest_path = calibration_dir / "manifest.yaml"
+    crop_manifest_path = calibration_record_path("manifest.yaml", calibration_dir)
     runtime_required: set[str] = set()
     for profile in ("common", "shop", "penguin"):
         try:
@@ -124,24 +126,24 @@ def verify_template_assets(
                     raise ValueError(f"source record integrity mismatch: {profile}/{key}")
         except (ValueError, TypeError, KeyError, OSError) as exc:
             problems.append(str(exc))
-    purchased_button_manifest_path = calibration_dir / "purchased_button_manifest.json"
+    purchased_button_manifest_path = calibration_record_path("purchased_button_manifest.json", calibration_dir)
     single_manifest_paths = (
-        calibration_dir / "main_shop_icon_manifest.yaml",
-        calibration_dir / "shop_refresh_button_manifest.yaml",
-        calibration_dir / "shop_exit_icon_manifest.yaml",
+        calibration_record_path("main_shop_icon_manifest.yaml", calibration_dir),
+        calibration_record_path("shop_refresh_button_manifest.yaml", calibration_dir),
+        calibration_record_path("shop_exit_icon_manifest.yaml", calibration_dir),
     )
-    multi_manifest_paths = (calibration_dir / "refresh_confirm_manifest.yaml",)
-    sky_stone_manifest_path = calibration_dir / "sky_stone_manifest.yaml"
+    multi_manifest_paths = (calibration_record_path("refresh_confirm_manifest.yaml", calibration_dir),)
+    sky_stone_manifest_path = calibration_record_path("sky_stone_manifest.yaml", calibration_dir)
     sky_stone_zero_wide_manifest_path = (
-        calibration_dir / "sky_stone_zero_wide_manifest.yaml"
+        calibration_record_path("sky_stone_zero_wide_manifest.yaml", calibration_dir)
     )
-    insufficient_funds_manifest_path = calibration_dir / "insufficient_funds_manifest.yaml"
+    insufficient_funds_manifest_path = calibration_record_path("insufficient_funds_manifest.yaml", calibration_dir)
     insufficient_funds_live_manifest_path = (
-        calibration_dir / "insufficient_funds_live_validation_manifest.yaml"
+        calibration_record_path("insufficient_funds_live_validation_manifest.yaml", calibration_dir)
     )
-    client_calibration_manifest_path = calibration_dir / "client_calibration_manifest.yaml"
+    client_calibration_manifest_path = calibration_record_path("client_calibration_manifest.yaml", calibration_dir)
     overlay_position_manifest_path = (
-        calibration_dir / "overlay_position_calibration_manifest.yaml"
+        calibration_record_path("overlay_position_calibration_manifest.yaml", calibration_dir)
     )
     for manifest_path in (
         crop_manifest_path,
@@ -449,6 +451,7 @@ def verify_windows_versions(executable: Path, expected: str) -> list[str]:
 
 
 def main() -> int:
+    argparse.ArgumentParser(description="Verify the standalone release and save a managed report").parse_args()
     root = PROJECT_ROOT
     expected_version = project_version(root / "pyproject.toml")
     release = root / "dist" / "launcher.dist"

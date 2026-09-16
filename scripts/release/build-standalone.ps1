@@ -6,7 +6,7 @@ if (-not (Test-Path -LiteralPath $python)) {
     throw "Missing project interpreter: $python"
 }
 $usageFileName = (([char]0x4F7F, [char]0x7528, [char]0x8BF4, [char]0x660E) -join '') + ".txt"
-$usageGuide = Join-Path (Join-Path $projectRoot "docs") $usageFileName
+$usageGuide = Join-Path (Join-Path $projectRoot "docs\user") $usageFileName
 if (-not (Test-Path -LiteralPath $usageGuide -PathType Leaf)) {
     throw "Missing packaged usage guide: $usageGuide"
 }
@@ -16,7 +16,6 @@ if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
     throw "Missing source configuration: $sourceConfig"
 }
 $distDir = Join-Path $projectRoot "dist"
-$releaseConfig = Join-Path $distDir "internal.release.yaml"
 $pyproject = Join-Path $projectRoot "pyproject.toml"
 $versionMatch = [regex]::Match(
     [IO.File]::ReadAllText($pyproject),
@@ -54,15 +53,19 @@ if (-not (Test-Path -LiteralPath (Join-Path $uiAssetDir "shop-card-background.pn
 
 New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 
-# Never carry runtime output from a previous build into the release.
+# Every build has one managed output owner; logs and evidence stay outside build/.
+Push-Location $projectRoot
+try {
+    $runDirectory = & $python -B -m scripts.project.artifacts --kind releases --version $version --subject standalone
+    if ($LASTEXITCODE -ne 0) { throw "Unable to allocate release output" }
+} finally { Pop-Location }
+$buildId = Split-Path -Leaf $runDirectory
+$buildDir = Join-Path $projectRoot "build\nuitka\$buildId"
+$stagingDir = Join-Path $projectRoot "build\staging\$buildId"
+New-Item -ItemType Directory -Path $buildDir, $stagingDir -Force | Out-Null
+$releaseConfig = Join-Path $stagingDir "internal.release.yaml"
 $releaseDir = Join-Path $projectRoot "dist\launcher.dist"
-if (Test-Path -LiteralPath $releaseDir) {
-    $resolvedReleaseDir = [IO.Path]::GetFullPath($releaseDir)
-    if ([IO.Path]::GetDirectoryName($resolvedReleaseDir) -ne $distDir) {
-        throw "Refusing to remove build output outside dist: $resolvedReleaseDir"
-    }
-    Remove-Item -LiteralPath $resolvedReleaseDir -Recurse -Force
-}
+$buildSucceeded = $false
 $configText = [IO.File]::ReadAllText($sourceConfig)
 [IO.File]::WriteAllText($releaseConfig, $configText, [Text.UTF8Encoding]::new($false))
 
@@ -79,7 +82,7 @@ try {
         "--file-description=E7auto Windows x64 shop automation" `
         "--file-version=$windowsVersion" `
         "--product-version=$windowsVersion" `
-        --output-dir=dist `
+        "--output-dir=$buildDir" `
         --output-filename=E7auto.exe `
         --include-package=e7auto `
         --include-package=winrt.windows.foundation `
@@ -92,10 +95,22 @@ try {
         --noinclude-dlls=PySide6/qt-plugins/imageformats/qpdf.dll `
         --noinclude-dlls=qt6pdf.dll `
         --assume-yes-for-downloads `
-        launcher.py
+        launcher.py 2>&1 | Tee-Object -FilePath (Join-Path $runDirectory "build.log")
     if ($LASTEXITCODE -ne 0) {
         throw "Nuitka standalone build failed with exit code $LASTEXITCODE"
     }
+
+    # Publish only after compilation succeeds. Resolve both endpoints before moving.
+    $compiledRelease = (Resolve-Path -LiteralPath (Join-Path $buildDir "launcher.dist")).Path
+    $resolvedReleaseDir = [IO.Path]::GetFullPath($releaseDir)
+    if (-not $compiledRelease.StartsWith([IO.Path]::GetFullPath($buildDir) + '\') -or
+        [IO.Path]::GetDirectoryName($resolvedReleaseDir) -ne $distDir) {
+        throw "Build publication paths are outside the configured output directories"
+    }
+    if (Test-Path -LiteralPath $resolvedReleaseDir) {
+        Remove-Item -LiteralPath $resolvedReleaseDir -Recurse -Force
+    }
+    Move-Item -LiteralPath $compiledRelease -Destination $resolvedReleaseDir
 
     Remove-Item -LiteralPath $temporaryReleaseZip -Force -ErrorAction SilentlyContinue
     Compress-Archive `
@@ -116,8 +131,16 @@ try {
         }
         Remove-Item -LiteralPath $resolvedOldReleaseZip -Force
     }
+    $buildSucceeded = $true
 }
 finally {
+    $recordPath = Join-Path $runDirectory "task.json"
+    $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
+    $record.status = if ($buildSucceeded) { "complete" } else { "failed" }
+    $record | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $recordPath -Encoding utf8
+    [ordered]@{ succeeded = $buildSucceeded; build_id = $buildId; version = $version;
+        release_directory = $releaseDir; archive = $releaseZip } |
+        ConvertTo-Json | Set-Content -LiteralPath (Join-Path $runDirectory "build-result.json") -Encoding utf8
     Remove-Item -LiteralPath $releaseConfig -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $temporaryReleaseZip -Force -ErrorAction SilentlyContinue
     Pop-Location

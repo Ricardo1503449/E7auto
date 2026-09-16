@@ -21,6 +21,14 @@ if (-not (Test-Path -LiteralPath $validator -PathType Leaf)) {
     throw "Missing background validator: $validator"
 }
 
+Push-Location $projectRoot
+try {
+    $runDirectory = & $python -B -m scripts.project.artifacts --kind tasks --feature platform --subject "background-$Mode-validation"
+    if ($LASTEXITCODE -ne 0) { throw "Unable to allocate background validation output" }
+} finally { Pop-Location }
+$resultPath = Join-Path $runDirectory "results\background-$Mode-$CaptureBackend-validation.json"
+Write-Output "Validation result: $resultPath"
+
 $acknowledgement = if ($Mode -eq "navigation") {
     "--acknowledge-main-screen-covered"
 } else {
@@ -31,7 +39,8 @@ $arguments = @(
     $Mode,
     $acknowledgement,
     "--capture-backend",
-    $CaptureBackend
+    $CaptureBackend,
+    "--result-path", ('"{0}"' -f $resultPath)
 )
 if ($Mode -eq "scroll") {
     $arguments += @("--effect-observation-ms", $EffectObservationMs)
@@ -44,4 +53,9 @@ $process = Start-Process `
     -WindowStyle Hidden `
     -Wait `
     -PassThru
+if (Test-Path -LiteralPath $resultPath -PathType Leaf) {
+    Get-Content -LiteralPath $resultPath -Raw
+} else {
+    throw "Background validator produced no result file (exit code $($process.ExitCode))."
+}
 exit $process.ExitCode

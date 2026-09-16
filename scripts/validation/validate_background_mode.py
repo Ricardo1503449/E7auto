@@ -17,7 +17,7 @@ from e7auto.background_windows import Win32WindowMessageInputService
 from e7auto.config import Rect, load_config
 from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
 from e7auto.vision import OpenCvGameVision, TemplateRepository, measure_inventory_scroll
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path, finish_validation_output
 
 ROOT = PROJECT_ROOT
 CONFIG_PATH = ROOT / "config" / "internal.yaml"
@@ -27,6 +27,7 @@ def _write_result(path: Path, result: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     path.write_text(rendered + "\n", encoding="utf-8")
+    finish_validation_output(path)
     print(rendered)
 
 
@@ -801,14 +802,12 @@ def main() -> int:
             if args.mode == "scroll" and args.effect_observation_ms != 800
             else ""
         )
-        args.result_path = (
-            ROOT
-            / "logs"
-            / (
-                f"background-{args.mode}-{args.capture_backend}"
-                f"{delivery_suffix}{observation_suffix}-validation.json"
-            )
+        args.result_path = task_result_path(
+            f"background-{args.mode}", "platform",
+            f"background-{args.mode}-{args.capture_backend}"
+            f"{delivery_suffix}{observation_suffix}-validation.json",
         )
+    args.result_path = ensure_task_result_path(args.result_path)
     result: dict[str, object]
     try:
         if args.mode == "capture":

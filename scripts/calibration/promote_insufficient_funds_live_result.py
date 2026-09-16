@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import calibration_record_path
 import argparse
 import json
 
 import yaml
 
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, ensure_calibration_output_path
 from scripts.validation.validate_insufficient_funds import terminal_criteria
 
 
 ROOT = PROJECT_ROOT
-DEFAULT_SOURCE = ROOT / "logs" / "insufficient-funds-live-validation.json"
 DEFAULT_OUTPUT = (
-    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
+    calibration_record_path("insufficient_funds_live_validation_manifest.yaml")
 )
-def build_manifest(source_path: Path = DEFAULT_SOURCE) -> dict[str, object]:
+def build_manifest(source_path: Path) -> dict[str, object]:
     source = source_path.resolve()
     raw = json.loads(source.read_text(encoding="utf-8"))
 
@@ -102,11 +102,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Promote a directly passing insufficient-gold live recognition result"
     )
-    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
+    args.output = ensure_calibration_output_path(args.output, "insufficient_funds_live_validation_manifest.yaml")
     manifest = build_manifest(args.source)
-    args.output.resolve().write_text(
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )

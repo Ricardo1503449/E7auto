@@ -17,7 +17,7 @@ from e7auto.config import Rect, Size, TargetConfig
 from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
 from e7auto.ports import WindowRef, WindowState
 from e7auto.ui import StatsOverlay
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path
 
 
 ROOT = PROJECT_ROOT
@@ -287,17 +287,22 @@ def _validated_result_path(value: str) -> Path:
     result = Path(value).resolve()
     if not result.is_relative_to(ROOT.resolve()):
         raise argparse.ArgumentTypeError("result path must stay inside the project")
-    return result
+    try:
+        return ensure_task_result_path(result)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
 
 
 def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Calibrate the production overlay position")
-    parser.add_argument("--result", required=True, type=_validated_result_path)
+    parser.add_argument("--result", type=_validated_result_path)
     return parser.parse_args(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
+    if args.result is None:
+        args.result = task_result_path("overlay-position-calibration", "platform", "overlay-position.json")
     validate_source_environment(ROOT)
     enable_per_monitor_dpi_awareness()
     application = QApplication.instance() or QApplication(sys.argv[:1])

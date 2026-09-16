@@ -38,6 +38,12 @@ def _candidate_path(root: Path, path: Path) -> Path:
     for base in (root / "assets/templates", root / "docs/calibration", root / "config"):
         if path.is_relative_to(base.resolve()):
             raise ValueError("Candidate/plan output cannot be inside formal resource directories")
+    if path.is_relative_to(root.resolve()) and not path.is_relative_to((root / "artifacts/template-candidates").resolve()):
+        raise ValueError("Project candidate and plan files must be inside artifacts/template-candidates")
+    if path.is_relative_to(root.resolve()):
+        parts = path.relative_to((root / "artifacts/template-candidates").resolve()).parts
+        if len(parts) < 2 or not re.fullmatch(r"\d{8}-\d{6}-[0-9a-f]{8}", parts[0]):
+            raise ValueError("Project candidate/plan requires an exporter run directory")
     return path
 
 

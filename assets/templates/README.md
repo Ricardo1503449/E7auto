@@ -1,6 +1,6 @@
 # 模板目录
 
-后续新增功能必须遵循[模板资源组织与新增功能约定](../../docs/TEMPLATES.md)。提取工具默认仅输出候选；正式替换通过[统一登记流程](../../docs/TEMPLATE_WORKFLOW.md)同步图片、运行清单和来源记录。
+后续新增功能必须遵循[模板资源组织与新增功能约定](../../docs/development/TEMPLATES.md)。提取工具默认仅输出候选；正式替换通过[统一登记流程](../../docs/development/TEMPLATE_WORKFLOW.md)同步图片、运行清单和来源记录。
 
 | 目录 | 内容 |
 | --- | --- |
@@ -10,7 +10,7 @@
 | `common/network/` | 2张共用网络异常/重试模板 |
 | `penguin/` | 13张企鹅专用模板和运行必需的 `manifest.json` |
 
-PNG按功能和实际复用关系存放；根目录不再接收新图片。下文商店图片文件名相对于 `shop/`，数字和网络图片分别在对应的 `common/` 子目录。历史校准清单均位于 [docs/calibration](../../docs/calibration/)，其 `output_path` 相对于本模板根目录。每份运行清单的 `file` 相对于该清单所在目录。运行阈值及最终搜索区域均在 `config/internal.yaml` 中维护，清单只登记文件、来源和完整性。
+PNG按功能和实际复用关系存放；根目录不再接收新图片。下文商店图片文件名相对于 `shop/`，数字和网络图片分别在对应的 `common/` 子目录。历史校准清单均位于 [docs/calibration](../../docs/calibration)，其 `output_path` 相对于本模板根目录。每份运行清单的 `file` 相对于该清单所在目录。运行阈值及最终搜索区域均在 `config/internal.yaml` 中维护，清单只登记文件、来源和完整性。
 
 ## Calibrated templates
 
@@ -34,13 +34,13 @@ The main-screen extractor restores enclosed pale-blue holes inside the question-
 
 `insufficient_funds_live_validation_manifest.yaml` records the foreground administrator capture-only validation: five consecutive detections at confidence `0.9999991492`, unchanged client geometry, zero input, no terminal-confirm click, and no screenshot persistence.
 
-`sky_stone_icon.png` retains the original `62 x 75` canvas and every source RGB pixel. A deterministic binary alpha mask keeps only the top-bar Sky Stone gem and adjacent `+` marker: 1,742 pixels are opaque and 2,908 background pixels are transparent. Only alpha is changed; no artwork is generated or rescaled. The supplied 1536 x 864 client screenshot now matches the icon at 0.971766915 (threshold remains 0.93) and reads balance 23,711. See the [registration and validation record](../../docs/TEMPLATE_WORKFLOW_VALIDATION.md#天空石补登记证据). Separate deterministic alpha-masked glyph templates cover all digits `0-9`; the original narrow `0` comes from the repeated `3900` glyphs, `4` from the full-scale gold count in the combined top-bar source and is checked against `3924`, and `6` comes from `3867`. `sky_stone_manifest.yaml` records those sources and validations. `sky_stone_digit_0_wide.png` is a second source-derived `0` variant extracted from the first zero in the supplied gold balance `11,120,980`; it matches the adjacent Sky Stone `4501` zero at `0.993266`. `sky_stone_zero_wide_manifest.yaml` records the desktop source, automatic `(44,124,2322,1306)` client crop, and component geometry. Runtime retains both zero variants and uses their best score. The icon is located in a full-width top-bar-only search band; its right-side balance parser accepts a contiguous digit run of any visible length and stops before distant header controls.
+`sky_stone_icon.png` retains the original `62 x 75` canvas and every source RGB pixel. A deterministic binary alpha mask keeps only the top-bar Sky Stone gem and adjacent `+` marker: 1,742 pixels are opaque and 2,908 background pixels are transparent. Only alpha is changed; no artwork is generated or rescaled. The supplied 1536 x 864 client screenshot now matches the icon at 0.971766915 (threshold remains 0.93) and reads balance 23,711. See the [registration and validation record](../../docs/validation/templates/TEMPLATE_WORKFLOW_VALIDATION.md#天空石补登记证据). Separate deterministic alpha-masked glyph templates cover all digits `0-9`; the original narrow `0` comes from the repeated `3900` glyphs, `4` from the full-scale gold count in the combined top-bar source and is checked against `3924`, and `6` comes from `3867`. `sky_stone_manifest.yaml` records those sources and validations. `sky_stone_digit_0_wide.png` is a second source-derived `0` variant extracted from the first zero in the supplied gold balance `11,120,980`; it matches the adjacent Sky Stone `4501` zero at `0.993266`. `sky_stone_zero_wide_manifest.yaml` records the desktop source, automatic `(44,124,2322,1306)` client crop, and component geometry. Runtime retains both zero variants and uses their best score. The icon is located in a full-width top-bar-only search band; its right-side balance parser accepts a contiguous digit run of any visible length and stops before distant header controls.
 
 `client_calibration_manifest.yaml` records five full-window sources. Paired edge gradients first remove the title bar and desktop background, yielding exact `2322 x 1306` client crops at `(49,108)`, `(42,101)`, `(49,111)`, `(31,90)`, and `(32,125)`. The full client images are processed only in memory. The manifest stores verified entry/refresh/dialog/Sky Stone positions, OCR evidence, purchase-row geometry, and the partial config values without persisting a screenshot copy.
 
 `overlay_position_calibration_manifest.yaml` records the historical operator-confirmed `18 px` geometry and the client-relative offset `(-252,-145)`, which is retained as the first-launch/fallback default. Current runtime dragging persists an absolute screen position separately; the historical fixed rectangle is not a current runtime placement constraint.
 
-`manifest.yaml` records every source path, crop rectangle, output size, and channel count. The entry points below show their required arguments with `--help`. Supply the original images explicitly before reproducing assets; see the [input table](../../docs/DEVELOPMENT.md#校准工具输入). Historical manifest paths are provenance, not portable default inputs:
+`manifest.yaml` records every source path, crop rectangle, output size, and channel count. The entry points below show their required arguments with `--help`. Supply the original images explicitly before reproducing assets; see the [input table](../../docs/development/DEVELOPMENT.md#校准工具输入). Historical manifest paths are provenance, not portable default inputs:
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.calibration.crop_calibration_templates --help

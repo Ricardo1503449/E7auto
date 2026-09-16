@@ -8,12 +8,12 @@ if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
 
 Push-Location $projectRoot
 try {
-    & $python -m pytest --ignore=tests/test_wgc_capture.py
+    & $python -m pytest --ignore=tests/platform/test_wgc_capture.py
     if ($LASTEXITCODE -ne 0) {
         throw "Qt/non-WGC test process failed with exit code $LASTEXITCODE"
     }
 
-    & $python -m pytest tests/test_wgc_capture.py
+    & $python -m pytest tests/platform/test_wgc_capture.py
     if ($LASTEXITCODE -ne 0) {
         throw "PyWinRT/WGC test process failed with exit code $LASTEXITCODE"
     }

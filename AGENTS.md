@@ -7,9 +7,19 @@
 - 未经用户明确要求，不使用 Superpowers，不新增子代理或无必要的流程。
 - 浏览器任务结束后保留窗口；只有用户明确要求时才截图。
 
+## 目录与新文件生成（必须遵守）
+
+- 新增功能、修复、脚本输出、文档或测试文件前，阅读[目录与产物约定](docs/development/LAYOUT.md)。机器可读分类以 `scripts/project/layout.json` 为准。
+- 开发产物使用 `python -m scripts.project.artifacts` 或 `scripts.common.paths` 分配目录；tasks按已登记功能归属，任务内部使用inputs/previews/results/scratch，不新增artifacts顶层任务目录。
+- 新功能先在layout.json登记功能名，再创建任务和样本目录；登记分类不会自动启用运行功能。未知分类/功能不能默认为shop或misc。
+- 规范、验证结论、发布记录按docs分类保存；原始输出放artifacts。新增测试按被测职责分类，临时输出使用tmp_path；公共fixture不得从其他test模块导入。
+- build只存可再生构建输出，禁止放唯一来源、历史证据或一次性实验。归档为冻结资料，不允许成为新输出目录。
+- 每次新增/移动文件或更改输出路径后运行 `python -m scripts.project.check_layout`；该检查也扫描被忽略的本地产物。完成后报告检查和直接相关测试结果。
+- 获准提交后运行 `python -m scripts.project.check_layout --staged`，读取实际暂存内容；同时保留既有diff检查、模板登记检查和提交授权要求。不安装hook或配置CI。
+
 ## 模板资源与功能边界
 
-- 涉及功能新增、模板资源、识别配置或加载逻辑时，开始前阅读 [资源组织约定](docs/TEMPLATES.md)；涉及模板新增、修改或迁移时，同时阅读 [候选登记流程](docs/TEMPLATE_WORKFLOW.md)。具体参数和操作示例以对应文档为准。
+- 涉及功能新增、模板资源、识别配置或加载逻辑时，开始前阅读 [资源组织约定](docs/development/TEMPLATES.md)；涉及模板新增、修改或迁移时，同时阅读 [候选登记流程](docs/development/TEMPLATE_WORKFLOW.md)。具体参数和操作示例以对应文档为准。
 - 专用模板放入 `assets/templates/<feature>/`；只有实际被两个及以上功能复用，且图像、遮罩、基准尺寸和识别语义均适用的模板才放入 `common/<用途>/`。不能仅因控件同名就共享，也不复制同一共享模板到多个功能目录。
 - UI展示图放入 `assets/ui/`，离线测试样本放入 `tests/fixtures/`；候选和预览放入 `artifacts/`，不得混入正式模板目录。
 - 功能启动只加载自身及明确依赖的共享模板；另一功能资源缺失或损坏不得影响本功能。不得先加载全部模板再忽略多余项；未知功能或模板键必须报错，路径解析显式指定功能。

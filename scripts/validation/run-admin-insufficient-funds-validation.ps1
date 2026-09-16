@@ -3,7 +3,12 @@ $ErrorActionPreference = "Stop"
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $python = Join-Path $projectRoot ".venv\Scripts\python.exe"
 $validator = Join-Path $projectRoot "scripts\validation\validate_insufficient_funds.py"
-$resultPath = Join-Path $projectRoot "logs\insufficient-funds-live-validation.json"
+Push-Location $projectRoot
+try {
+    $runDirectory = & $python -B -m scripts.project.artifacts --kind tasks --feature shop --subject insufficient-funds-validation
+    if ($LASTEXITCODE -ne 0) { throw "Unable to allocate validation output" }
+} finally { Pop-Location }
+$resultPath = Join-Path $runDirectory "results\insufficient-funds-live-validation.json"
 
 if (-not (Test-Path -LiteralPath $python)) {
     throw "Missing project interpreter: $python"

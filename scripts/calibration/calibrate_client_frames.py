@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from scripts.common.paths import calibration_record_path
 from scripts.common.paths import template_relative_path
 import argparse
 
@@ -9,20 +10,20 @@ import numpy as np
 import yaml
 
 from scripts.common.image_io import read_rgba_png as read_png
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, ensure_calibration_output_path
 
 
 ROOT = PROJECT_ROOT
 BASELINE_WIDTH = 2322
 BASELINE_HEIGHT = 1306
 INSUFFICIENT_FUNDS_MANIFEST_PATH = (
-    ROOT / "docs" / "calibration" / "insufficient_funds_manifest.yaml"
+    calibration_record_path("insufficient_funds_manifest.yaml")
 )
 INSUFFICIENT_FUNDS_LIVE_MANIFEST_PATH = (
-    ROOT / "docs" / "calibration" / "insufficient_funds_live_validation_manifest.yaml"
+    calibration_record_path("insufficient_funds_live_validation_manifest.yaml")
 )
 MAIN_SHOP_LAYOUT_MANIFEST_PATH = (
-    ROOT / "docs" / "calibration" / "main_shop_layout_manifest.yaml"
+    calibration_record_path("main_shop_layout_manifest.yaml")
 )
 
 SOURCE_SPECS = {
@@ -684,11 +685,13 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "docs" / "calibration" / "client_calibration_manifest.yaml",
+        default=calibration_record_path("client_calibration_manifest.yaml"),
     )
     args = parser.parse_args()
+    args.output = ensure_calibration_output_path(args.output, "client_calibration_manifest.yaml")
     manifest = build_manifest({role: getattr(args, role + "_source") for role in SOURCE_SPECS})
-    args.output.resolve().write_text(
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False), encoding="utf-8"
     )
     return 0

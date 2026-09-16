@@ -7,7 +7,11 @@ __pycache__/
 *.log
 logs/
 state/
-build/
+build/*
+!build/README.md
+# Local task outputs are checked by scripts.project.check_layout even when ignored.
+artifacts/*
+!artifacts/README.md
 # Local build output only. Publish versioned ZIP files through GitHub Releases.
 dist/
 *.build/

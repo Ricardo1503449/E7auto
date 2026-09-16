@@ -9,18 +9,18 @@ import time
 from e7auto.config import Rect, load_config
 from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
 from e7auto.vision import OpenCvGameVision, TemplateRepository
-from scripts.common.paths import PROJECT_ROOT
+from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path, finish_validation_output
 
 
 ROOT = PROJECT_ROOT
 CONFIG_PATH = ROOT / "config" / "internal.yaml"
-RESULT_PATH = ROOT / "logs" / "insufficient-funds-live-validation.json"
 
 
 def _write_result(path: Path, result: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     path.write_text(rendered + "\n", encoding="utf-8")
+    finish_validation_output(path)
     print(rendered)
 
 
@@ -49,8 +49,11 @@ def main() -> int:
     parser.add_argument("--sample-count", type=int, default=5)
     parser.add_argument("--interval-ms", type=int, default=100)
     parser.add_argument("--foreground-wait-seconds", type=float, default=30.0)
-    parser.add_argument("--result-path", type=Path, default=RESULT_PATH)
+    parser.add_argument("--result-path", type=Path, default=None)
     args = parser.parse_args()
+    args.result_path = ensure_task_result_path(args.result_path) if args.result_path else task_result_path(
+        "insufficient-funds-validation", "shop", "insufficient-funds-live-validation.json"
+    )
 
     result: dict[str, object]
     capture = None
