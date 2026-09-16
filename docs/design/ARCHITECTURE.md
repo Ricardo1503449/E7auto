@@ -2,22 +2,31 @@
 
 ## Source organization
 
-`app.py` starts the application. `ui/main_window.py`, `ui/overlay.py`, `ui/pages/`,
-`ui/widgets.py`, and `ui/window_chrome.py` own the Qt presentation. `ui/worker.py`
-assembles production services and retains the worker-local WGC import.
+`app.py` starts the application. `bootstrap.py` selects the feature and assembles production services.
+`ui/` owns Qt presentation, thread adaptation and signals. The worker calls
+`create_production_session` from its `run()` method; WGC imports remain inside that factory.
 
-`automation/session.py` owns each run's lifecycle; `automation/engine.py` coordinates
-the business flow. `automation/stop_control.py` owns the shared stop/input lock,
-and `automation/snapshots.py` publishes immutable snapshots. `automation/scrolling.py`
-accepts narrow callbacks for guarded input, capture, active time, vision and logging;
-it does not access engine internals. Progress metrics survive a failed scroll so the
-engine can still emit its final performance record.
+`core/` defines geometric types, service ports, shared observations and the existing runtime snapshot.
+`runtime/` owns the guarded window/capture/input services, active clock, network recovery,
+entry navigation, stop lock, snapshot publication and session cleanup. `RuntimeSession` receives
+an explicit flow factory and `RunPolicy`; it does not choose or import feature implementations.
+`RuntimeContext` carries one run's shared state. Shop cache invalidation is an injected recovery
+callback, not a network-service dependency on shop fields.
 
-`ports.py` defines service contracts, including `GameVision`; `vision_types.py`
-defines their recognition results. `vision.py` implements recognition and re-exports
-the existing result names for import compatibility. Public UI and automation entry
-points are retained by their package `__init__.py` files. See [development](../development/DEVELOPMENT.md)
-for script locations, focused testing, and planning-file recovery.
+`features/shop/` owns the shop flow, inventory/purchase rules, refresh/balance strategies,
+scroll navigation and shop image measurements. `features/penguin/` owns the independent exchange
+flow, control/price recognition and feature resource configuration. Both flows compose a runtime;
+neither inherits or imports the other. Their recognition protocols and business results live in
+`contracts.py` beside the corresponding feature.
+
+`vision/` provides array matching, ROI adaptation, shared glyph matching and network recognition.
+Shop and penguin detectors compose these components, retaining independent color masks, thresholds
+and amount rules. `resources/` validates catalogs and reads template pixels. `configuration/`
+separates data models, existing YAML schema names and loading; its file format is unchanged.
+`platform/` implements Windows services; `logging/` owns runtime logs and stop snapshots.
+
+Project scripts and tests use the canonical modules. Legacy root modules and the old automation
+package have been removed after migrating callers. See [development](../development/DEVELOPMENT.md) for extension rules and targeted testing.
 
 ## Data and threads
 
@@ -58,7 +67,7 @@ A button match at the anchor threshold (0.93) returns `SUCCESS_BUTTON`; the engi
 
 ## Ports
 
-`ports.py` defines replaceable runtime-integrity, window, capture, client-coordinate input, hotkey, overlay, clock, and logger interfaces. Offline tests supply only fakes. The production WGC capture implementation is isolated in `wgc_capture.py` and loaded only inside the automation worker; window-message input is isolated in `background_windows.py`; OpenCV recognition and inventory-scroll measurement are isolated in `vision.py` and accept in-memory arrays only.
+`core/ports.py` defines replaceable runtime-integrity, window, capture, client-coordinate input, hotkey, overlay, clock, and logger interfaces. Offline tests supply only fakes. The production WGC capture implementation is isolated in `platform/wgc_capture.py` and loaded only inside the automation worker; window-message input is isolated in `platform/input.py`; shared OpenCV algorithms live in `vision/`, with shop detection and scroll measurements in `features/shop/`; recognition accepts in-memory arrays only.
 
 WGC validates positive `ContentSize` against the copied surface dimensions, then slices the valid top-left content before selecting a client-crop coordinate origin. Item/pool dimensions may include invisible borders while content matches DWM visible bounds; their inequality alone is not a capture failure. The existing crop maps valid content to DWM bounds or the outer window rectangle, or accepts client-sized content directly. Invalid/truncated content, unmappable geometry and client overflow still fail closed; engine window/display guards remain unchanged. Client output is contiguous, including the client-only path with surface padding.
 
@@ -66,15 +75,15 @@ Text logs include aggregate `performance_stage` records for inventory scans, scr
 
 ## Penguin exchange
 
-`automation/penguin.py` implements the separate 50-penguin batch flow. It inherits guarded preparation/input and network recovery from `AutomationEngine`, overriding execution, post-recovery capture and normal completion; it never enters shop scans, refresh strategies or balance verification. `AutomationSession.run_penguins` shares F5 registration and resource cleanup. `RuntimeSnapshot` stores the feature id and separate successful-batch count/limit.
+`features/penguin/flow.py` implements the separate 50-penguin batch flow. It composes `RuntimeContext` for guarded preparation/input and network recovery, selecting fresh capture after recovery and providing its own normal completion; it has no shop scan, refresh strategy or balance dependency. `AutomationSession.run_penguins` shares F5 registration and resource cleanup. `RuntimeSnapshot` stores the feature id and separate successful-batch count/limit.
 
 Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including instant recovery with zero elapsed delay. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
 
-`penguin_vision.py` validates the approved RGBA control assets. Every dialog needs max/cancel controls and the purchase-button body; the full 5100 template plus separately decoded yellow price digits authorize purchase. Only price-field pixels enter the digit reader. Existing digit shapes are reused with an independent yellow mask and confidence gate. Unknown prices are distinct from a positively decoded non-5100 price. A lower price after max must survive the settling window before normal completion.
+`features/penguin/configuration.py` validates the approved controls; `features/penguin/vision.py` recognizes them using shared matching and digit components. Every dialog needs max/cancel controls and the purchase-button body; the full 5100 template plus separately decoded yellow price digits authorize purchase. Only price-field pixels enter the digit reader. Existing digit shapes are reused with an independent yellow mask and confidence gate. Unknown prices are distinct from a positively decoded non-5100 price. A lower price after max must survive the settling window before normal completion.
 
 `ui/pages/penguin.py` owns the purchase-limit input, read-only estimated leaf cost (`limit * 5100`, thousands-separated or `—` for invalid input), start button and F5 hint. The estimate reads no game balance. `StatsOverlay` switches between shop statistics and the four penguin lines while retaining drag/collapse. Reconfiguring hides stale labels before deferred Qt deletion. Returning to the function center after a stop hides the overlay; opening a settings page keeps it hidden until the next run positions it. Only one task can run at once.
 
-Main-screen shop and sanctuary entry now share `AutomationEngine._enter_with_retry` and its destination/main recheck helper. A confirmed main-screen observation is passed directly to the click; timeout rechecks produce fresh observations before authorizing a retry. Both entries permit at most three clicks, preserve the shop's destination-first recheck behavior, and retain guarded input/F5. Only the main-screen sanctuary icon skips its former duplicate recognition. After sanctuary arrival, the forest entry retains its independent stable pre-click recognition. Purchase submissions do not use this helper.
+Main-screen shop and sanctuary entry now share `RuntimeContext.enter_with_retry` and its destination/main recheck helper. A confirmed main-screen observation is passed directly to the click; timeout rechecks produce fresh observations before authorizing a retry. Both entries permit at most three clicks, preserve the shop's destination-first recheck behavior, and retain guarded input/F5. Only the main-screen sanctuary icon skips its former duplicate recognition. After sanctuary arrival, the forest entry retains its independent stable pre-click recognition. Purchase submissions do not use this helper.
 
 The shared entry helper accepts an optional timeout override. Sanctuary passes 10,000 ms for both post-click arrival and subsequent destination/main recheck to tolerate its transition animation; shop retains its configured 5,000 ms. Successful stable detection continues immediately. Neither an unrecognized transition nor timeout alone permits another click; only stable main-screen evidence does. F5 interrupts both waits.
 
@@ -86,11 +95,11 @@ Templates are grouped under `assets/templates/shop`, `penguin`, and `common/{dig
 
 ### Shared main-screen column and recognition configuration
 
-Both entry detectors read `rois.left_icon_column` and their respective `vision.entry_thresholds` (color and structure). Other penguin controls and price-digit thresholds also come from YAML. `template_manifest.py` loads common/shop/penguin catalogs using the same baseline, contained-path, PNG-dimension and SHA-256 checks. Catalog `source.crop` describes provenance only and cannot generate or override search rectangles. The catalogs are runtime resources; source screenshots and historical calibration records are not runtime dependencies. Feature loading remains isolated (31 shop/shared images or 26 penguin/shared images).
+Both entry detectors read `rois.left_icon_column` and their respective `vision.entry_thresholds` (color and structure). Other penguin controls and price-digit thresholds also come from YAML. `resources/manifest.py` loads common/shop/penguin catalogs using the same baseline, contained-path, PNG-dimension and SHA-256 checks. Catalog `source.crop` describes provenance only and cannot generate or override search rectangles. The catalogs are runtime resources; source screenshots and historical calibration records are not runtime dependencies. Feature loading remains isolated (31 shop/shared images or 26 penguin/shared images).
 
 ### One-shot startup wake
 
-Shop and penguin initial entry use `AutomationEngine._wait_startup_icon`. The first absent entry observation dispatches `wake_main_screen_startup` at configured `main_screen_wake` through the existing stop/window/coordinate guards, then starts a fresh 10-second active recognition budget. An engine-local flag prevents repeated startup wake attempts; normal reentry and destination checks do not enable this branch. Network recovery invalidates the interrupted startup capture before recognition or wake authorization, resets stability, and excludes recovery duration from the budget. Both entries retain their configured matching and stable-frame requirements (penguin retains its minimum of two frames).
+Shop and penguin initial entry use `RuntimeContext.wait_startup_icon`. The first absent entry observation dispatches `wake_main_screen_startup` at configured `main_screen_wake` through the existing stop/window/coordinate guards, then starts a fresh 10-second active recognition budget. A runtime-local flag prevents repeated startup wake attempts; normal reentry and destination checks do not enable this branch. Network recovery invalidates the interrupted startup capture before recognition or wake authorization, resets stability, and excludes recovery duration from the budget. Both entries retain their configured matching and stable-frame requirements (penguin retains its minimum of two frames).
 
 ## v1.3.2 diagnostics and scroll fallback
 

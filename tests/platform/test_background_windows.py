@@ -6,15 +6,10 @@ from tests.helpers.paths import ROOT
 import pytest
 import win32con
 
-from e7auto import background_windows
-from e7auto.background_windows import (
-    BackgroundInputError,
-    Win32WindowMessageInputService,
-    _pack_signed_point,
-    _pack_wheel_wparam,
-)
-from e7auto.config import Point
-from e7auto.ports import WindowRef
+import e7auto.platform.input as background_windows
+from e7auto.platform.input import BackgroundInputError, Win32WindowMessageInputService, _pack_signed_point, _pack_wheel_wparam
+from e7auto.core.types import Point
+from e7auto.core.ports import WindowRef
 
 
 

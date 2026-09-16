@@ -5,35 +5,16 @@ from pathlib import Path
 from typing import Sequence
 import threading
 
-from PySide6.QtCore import (
-    QElapsedTimer,
-    QPoint,
-    QPointF,
-    QRect,
-    QRectF,
-    QSize,
-    Qt,
-    QTimer,
-    Signal,
-    Slot,
-)
-from PySide6.QtGui import (
-    QColor,
-    QMouseEvent,
-    QPaintEvent,
-    QPainter,
-    QPainterPath,
-    QPen,
-    QPixmap,
-    QResizeEvent,
-)
+from PySide6.QtCore import QElapsedTimer, QPoint, QPointF, QRect, QRectF, QSize, Qt, QTimer, Signal, Slot
+from PySide6.QtGui import QColor, QMouseEvent, QPaintEvent, QPainter, QPainterPath, QPen, QPixmap, QResizeEvent
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
 import win32con
 import win32gui
 
-from ..config import AppConfig, Point, Rect, TargetConfig
-from ..domain import OverlayActivityStatus, RuntimeSnapshot
-from ..overlay_position import OverlayPositionStore, SavedOverlayPosition
+from e7auto.configuration.models import AppConfig, TargetConfig
+from e7auto.core.types import Point, Rect
+from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot
+from e7auto.ui.position import OverlayPositionStore, SavedOverlayPosition
 
 
 @dataclass(slots=True)

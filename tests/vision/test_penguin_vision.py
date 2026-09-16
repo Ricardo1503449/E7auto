@@ -7,10 +7,13 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.config import ConfigError, Rect, Size, load_config
-from e7auto.geometry import CoordinateTransform, adapt_frame
-from e7auto.penguin_vision import PenguinVision, with_penguin_config
-from e7auto.vision import TemplateRepository
+from e7auto.configuration.models import ConfigError
+from e7auto.core.types import Rect, Size
+from e7auto.configuration.loader import load_config
+from e7auto.vision.frames import CoordinateTransform, adapt_frame
+from e7auto.features.penguin.vision import PenguinVision
+from e7auto.features.penguin.configuration import with_penguin_config
+from e7auto.resources.templates import TemplateRepository
 from tests.helpers.paths import ROOT, FIXTURES_DIR
 
 

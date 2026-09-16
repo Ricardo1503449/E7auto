@@ -11,7 +11,7 @@ from e7auto.ui import MainWindow, StatsOverlay, AutomationWorker
 assert MainWindow.__module__ == 'e7auto.ui.main_window'
 assert StatsOverlay.__module__ == 'e7auto.ui.overlay'
 assert AutomationWorker.__module__ == 'e7auto.ui.worker'
-assert 'e7auto.wgc_capture' not in sys.modules
+assert 'e7auto.platform.wgc_capture' not in sys.modules
 assert not any(name == 'winrt' or name.startswith('winrt.') for name in sys.modules)
 """
     result = subprocess.run(

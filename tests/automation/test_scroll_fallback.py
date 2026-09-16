@@ -4,11 +4,11 @@ from dataclasses import replace
 
 import pytest
 
-from e7auto.config import Rect
-from e7auto.domain import StopReason
-from e7auto.vision_types import ScrollMovementObservation, ScrollOverlapObservation
+from e7auto.core.types import Rect
+from e7auto.core.domain import StopReason
+from e7auto.features.shop.contracts import ScrollMovementObservation, ScrollOverlapObservation
 from tests.helpers import FakeClock, FakeHotkeys, ScriptedVision, make_config
-from .support import run_session
+from tests.automation.support import run_session
 
 
 def movement(y: float = 0.0, x: float = 0.0, response: float = 0.95):

@@ -8,11 +8,11 @@ import sys
 from pathlib import Path
 
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import QApplication
 
-from . import __version__
-from .platform_windows import enable_per_monitor_dpi_awareness
-from .ui import MainWindow
+from e7auto import __version__
+from e7auto.platform.windows import enable_per_monitor_dpi_awareness
+from e7auto.ui import MainWindow
 
 
 def set_windows_app_user_model_id() -> None:
@@ -42,7 +42,7 @@ def validate_source_environment(root: Path) -> None:
 
 def validate_wgc_import() -> tuple[bool, str]:
     try:
-        from .wgc_capture import WindowsGraphicsCaptureService
+        from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
 
         if WindowsGraphicsCaptureService is None:
             raise RuntimeError("WGC capture service is unavailable")

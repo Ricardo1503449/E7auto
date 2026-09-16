@@ -18,9 +18,9 @@ import win32api
 import yaml
 
 from e7auto import __version__
-from e7auto.config import LoggingConfig
-from e7auto.penguin_vision import CONTROLS
-from e7auto.template_manifest import load_template_manifest
+from e7auto.configuration.models import LoggingConfig
+from e7auto.features.penguin.configuration import CONTROLS
+from e7auto.resources.manifest import load_template_manifest
 from dataclasses import asdict
 from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR, create_artifact_run, finish_artifact_run
 

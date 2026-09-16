@@ -2,18 +2,13 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from .support import run_session, balances_for_refreshes, compact_strategy_config
-from e7auto.automation import AutomationEngine, SnapshotPublisher, StopController
-from e7auto.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
-from e7auto.vision import PurchaseOutcome
-from tests.helpers import (
-    FakeHotkeys,
-    FakeClock,
-    ScriptedVision,
-    make_config,
-    make_dependencies,
-    match,
-)
+from tests.automation.support import run_session, balances_for_refreshes, compact_strategy_config
+from e7auto.features.shop.flow import ShopFlow as AutomationEngine
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
+from e7auto.features.shop.contracts import PurchaseOutcome
+from tests.helpers import FakeHotkeys, FakeClock, ScriptedVision, make_config, make_dependencies, match
 
 
 def test_no_target_strategy_runs_all_recovery_stages_then_stops() -> None:
@@ -286,18 +281,18 @@ def test_network_reconnect_pauses_active_clock_and_restores_overlay_status() -> 
         publisher,
         frozenset(target.target_id for target in make_config().targets),
     )
-    engine._capture_raw = lambda: object()  # type: ignore[method-assign]
+    engine.runtime.capture_raw = lambda: object()  # type: ignore[method-assign]
     engine._trusted_sky_stone_balance = 321
     engine._pending_top_scan = ()
     publisher.mutate(
         lambda snapshot: snapshot.with_overlay_status(OverlayActivityStatus.REFRESHING)
     )
 
-    engine._handle_network_exception(object())
+    engine.runtime.handle_network_exception(object())
 
     assert snapshots[-2].overlay_status is OverlayActivityStatus.RECONNECTING
     assert snapshots[-1].overlay_status is OverlayActivityStatus.REFRESHING
-    assert engine._active_monotonic() == 0.0
+    assert engine.runtime.active_monotonic() == 0.0
     assert engine._trusted_sky_stone_balance is None
     assert engine._pending_top_scan is None
     assert any(

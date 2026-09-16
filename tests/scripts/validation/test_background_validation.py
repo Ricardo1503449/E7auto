@@ -7,8 +7,8 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from e7auto.config import Point, Rect
-from e7auto.ports import WindowRef, WindowState
+from e7auto.core.types import Point, Rect
+from e7auto.core.ports import WindowRef, WindowState
 from scripts.validation import validate_background_mode
 from tests.helpers import make_config
 from tests.helpers.paths import ROOT

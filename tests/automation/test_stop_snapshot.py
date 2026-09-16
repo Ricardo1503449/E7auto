@@ -6,14 +6,16 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.automation import AutomationSession, SnapshotPublisher, StopController
-from e7auto.automation.engine import AutomationEngine
-from e7auto.automation.penguin import PenguinEngine
-from e7auto.automation.stop_control import StopExecution
-from e7auto.config import LoggingConfig
-from e7auto.domain import RuntimeSnapshot, StopReason
-from e7auto.ports import CaptureError
-from e7auto.run_logging import RunLogManager
+from e7auto.bootstrap import AutomationSession
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.features.shop.flow import ShopFlow as AutomationEngine
+from e7auto.features.penguin.flow import PenguinFlow as PenguinEngine
+from e7auto.runtime.stop_control import StopExecution
+from e7auto.configuration.models import LoggingConfig
+from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.core.ports import CaptureError
+from e7auto.logging.run import RunLogManager
 from tests.helpers import FakeCapture, FakeClock, FakeHotkeys, FakeLogger, ScriptedVision, make_config, make_dependencies
 
 
@@ -42,13 +44,13 @@ def test_cache_is_latest_raw_reference_survives_capture_failure_and_can_be_relea
     deps, clock = dependencies()
     initial = RuntimeSnapshot.initial("cache", (), 0)
     engine = AutomationEngine(make_config(), deps, StopController(), SnapshotPublisher(initial, lambda _: None), frozenset())
-    engine._prepare()
+    engine.runtime.prepare()
     assert engine.cached_game_frame() is None
-    engine._capture_raw()
+    engine.runtime.capture_raw()
     first = engine.cached_game_frame()
     assert first.frame is deps.capture.last
     clock.sleep(2)
-    engine._capture_raw()
+    engine.runtime.capture_raw()
     second = engine.cached_game_frame()
     assert second is not first
     assert second.frame is deps.capture.last
@@ -56,7 +58,7 @@ def test_cache_is_latest_raw_reference_survives_capture_failure_and_can_be_relea
     assert datetime.fromisoformat(second.captured_at).tzinfo is not None
     deps.capture.fail = True
     with pytest.raises(StopExecution) as error:
-        engine._capture_raw()
+        engine.runtime.capture_raw()
     assert error.value.reason is StopReason.CAPTURE_FAILURE
     assert engine.cached_game_frame() is second
     engine.release_cached_game_frame()
@@ -75,15 +77,15 @@ def test_exception_saves_last_cache_once_before_closing_capture(tmp_path, monkey
     def execute(engine):
         engines.append(engine)
         assert engine.cached_game_frame() is None
-        engine._prepare()
-        engine._capture_raw()
-        engine._capture_raw()
+        engine.runtime.prepare()
+        engine.runtime.capture_raw()
+        engine.runtime.capture_raw()
         clock.sleep(2.5)
-        engine._network_paused_seconds = 2.0  # Frame age must include the network wait.
+        engine.runtime.network_paused_seconds = 2.0  # Frame age must include the network wait.
         if failure == "internal": raise ValueError("original internal failure")
         if failure == "capture":
             deps.capture.fail = True
-            engine._capture_raw()
+            engine.runtime.capture_raw()
         raise StopExecution(expected, "original diagnostic detail")
 
     engine_type = PenguinEngine if penguins else AutomationEngine
@@ -123,8 +125,8 @@ def test_expected_stops_never_encode_or_save(tmp_path, monkeypatch, reason):
 
     def execute(engine):
         engines.append(engine)
-        engine._prepare()
-        engine._capture_raw()
+        engine.runtime.prepare()
+        engine.runtime.capture_raw()
         raise StopExecution(reason)
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
@@ -143,12 +145,12 @@ def test_failure_in_normal_return_home_saves_final_cached_frame(tmp_path, monkey
     deps, _ = dependencies(log)
 
     def execute(engine):
-        engine._prepare()
-        engine._capture_raw()
+        engine.runtime.prepare()
+        engine.runtime.capture_raw()
         raise StopExecution(StopReason.BUDGET_COMPLETE)
 
     def finish(engine, reason):
-        engine._capture_raw()
+        engine.runtime.capture_raw()
         raise StopExecution(StopReason.ENTRY_FAILURE, "exit recognition failed")
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
@@ -179,8 +181,8 @@ def test_writer_exception_does_not_replace_original_error_or_prevent_cleanup(mon
     deps, _ = dependencies(logger)
 
     def execute(engine):
-        engine._prepare()
-        engine._capture_raw()
+        engine.runtime.prepare()
+        engine.runtime.capture_raw()
         raise StopExecution(StopReason.INPUT_FAILURE, "original input error")
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
@@ -201,8 +203,8 @@ def test_second_run_cannot_reuse_first_runs_cache(tmp_path, monkeypatch):
         def execute(engine):
             assert engine.cached_game_frame() is None
             if index == 0:
-                engine._prepare()
-                engine._capture_raw()
+                engine.runtime.prepare()
+                engine.runtime.capture_raw()
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT)
 
         monkeypatch.setattr(AutomationEngine, "execute", execute)
@@ -218,8 +220,8 @@ def test_actual_png_encoding_failure_preserves_session_error_and_closes_resource
     deps, _ = dependencies(log)
 
     def execute(engine):
-        engine._prepare()
-        engine._capture_raw()
+        engine.runtime.prepare()
+        engine.runtime.capture_raw()
         raise StopExecution(StopReason.REFRESH_BALANCE_MISMATCH, "original balance detail")
 
     def fail_encode(*_): raise OSError("synthetic codec failure")

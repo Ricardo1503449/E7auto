@@ -2,20 +2,10 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from e7auto.automation import AutomationSession
-from e7auto.config import RefreshStrategyConfig
-from e7auto.domain import RuntimeSnapshot
-from tests.helpers import (
-    FakeHotkeys,
-    FakeClock,
-    FakeInput,
-    FakeOverlay,
-    FakeRuntimeEnvironment,
-    FakeWindowService,
-    ScriptedVision,
-    make_config,
-    make_dependencies,
-)
+from e7auto.bootstrap import AutomationSession
+from e7auto.configuration.models import RefreshStrategyConfig
+from e7auto.core.domain import RuntimeSnapshot
+from tests.helpers import FakeHotkeys, FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, make_dependencies
 
 
 def run_session(

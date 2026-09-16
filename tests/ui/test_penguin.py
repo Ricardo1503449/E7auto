@@ -7,8 +7,8 @@ import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QAbstractButton, QLabel, QLineEdit
 
-from e7auto.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
-from e7auto.config import Rect
+from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
+from e7auto.core.types import Rect
 from e7auto.ui import MainWindow, StatsOverlay, OverlayCommand
 from tests.helpers import make_config
 

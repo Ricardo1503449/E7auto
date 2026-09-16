@@ -7,14 +7,11 @@ import time
 
 from PySide6.QtCore import QObject, Signal, Slot
 
-from ..automation import AutomationDependencies, AutomationSession, SystemClock
-from ..background_windows import Win32WindowMessageInputService
-from ..config import AppConfig
-from ..domain import RuntimeSnapshot, StopReason
-from ..platform_windows import Win32F5HotkeyService, Win32RuntimeEnvironment, Win32WindowService
-from ..run_logging import RunLogManager
-from ..vision import OpenCvGameVision, TemplateRepository
-from .overlay import StatsOverlay
+from e7auto.bootstrap import create_production_session
+from e7auto.configuration.models import AppConfig
+from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.logging.run import RunLogManager
+from e7auto.ui.overlay import StatsOverlay
 
 
 class AutomationWorker(QObject):
@@ -44,32 +41,9 @@ class AutomationWorker(QObject):
         run_id = uuid.uuid4().hex[:12]
         logger = RunLogManager(self._project_root / "logs", self._config.logging).start(run_id)
         try:
-            # Load PyWinRT/WGC only inside the automation worker.  Keeping the
-            # native WGC modules out of the Qt startup path avoids mixing their
-            # COM lifetime with the UI thread and makes shutdown deterministic.
-            from ..wgc_capture import WindowsGraphicsCaptureService
-
-            templates = TemplateRepository(self._config)
-            if self._purchase_limit is None:
-                vision = OpenCvGameVision(self._config, templates)
-            else:
-                from ..penguin_vision import PenguinVision
-                vision = PenguinVision(self._config, templates)
-            dependencies = AutomationDependencies(
-                windows=Win32WindowService(),
-                capture=WindowsGraphicsCaptureService(logger=logger),
-                inputs=Win32WindowMessageInputService(),
-                overlay=self._overlay,
-                vision=vision,
-                clock=SystemClock(),
-                logger=logger,
-                runtime=Win32RuntimeEnvironment(),
-            )
-            session = AutomationSession(
-                self._config,
-                dependencies,
-                Win32F5HotkeyService(),
-                self.snapshot.emit,
+            session = create_production_session(
+                self._config, "shop" if self._purchase_limit is None else "penguin",
+                self._overlay, logger, self.snapshot.emit,
             )
             enabled_optional = (
                 frozenset({"friendship_points"})

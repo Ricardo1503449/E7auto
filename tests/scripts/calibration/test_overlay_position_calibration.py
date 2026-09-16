@@ -10,14 +10,11 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
-from e7auto.config import Rect, Size, load_config
-from e7auto.ports import WindowState
+from e7auto.core.types import Rect, Size
+from e7auto.configuration.loader import load_config
+from e7auto.core.ports import WindowState
 from e7auto.ui import StatsOverlay
-from scripts.calibration.calibrate_overlay_position import (
-    confirmed_result,
-    load_position_calibration_config,
-    position_calibration_initial_state_is_valid,
-)
+from scripts.calibration.calibrate_overlay_position import confirmed_result, load_position_calibration_config, position_calibration_initial_state_is_valid
 from scripts.release.verify_release import verify_template_assets
 from tests.helpers import make_config
 

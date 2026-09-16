@@ -6,10 +6,15 @@
 | --- | --- |
 | `src/e7auto/app.py` | 启动、环境检查及资源根目录解析 |
 | `src/e7auto/ui/` | 主窗口、悬浮窗、功能页面、控件与 Qt 工作线程 |
-| `src/e7auto/automation/` | 自动化流程、会话、停止控制、快照发布与滚动校验 |
-| `src/e7auto/ports.py` | 可替换服务接口，包括 `GameVision` |
-| `src/e7auto/vision_types.py` | 不依赖具体 OpenCV 实现的识别结果类型 |
-| `src/e7auto/vision.py` | 模板匹配、天空石数字识别及图像位移测量 |
+| `src/e7auto/bootstrap.py` | 显式选择功能、构造流程与生产服务 |
+| `src/e7auto/core/` | 几何基础类型、运行状态、公共观察结果和平台服务接口 |
+| `src/e7auto/runtime/` | 会话、窗口守卫、截图、输入锁、网络恢复、导航、快照与性能统计 |
+| `src/e7auto/features/shop/` | 商店流程、商品扫描/购买、刷新策略、滚动及专用识别 |
+| `src/e7auto/features/penguin/` | 企鹅流程、专用识别、资源配置校验及接口 |
+| `src/e7auto/vision/` | 共用模板匹配、数字字形、帧适配和网络识别 |
+| `src/e7auto/resources/` | 模板清单完整性校验、图片读取 |
+| `src/e7auto/configuration/` | 配置数据模型、YAML结构规则与加载；文件格式和参数保持原约定 |
+| `src/e7auto/platform/`、`src/e7auto/logging/` | Windows窗口/消息输入/WGC，以及运行日志/异常截图 |
 | `scripts/calibration/` | 模板提取、校准、校准证据归档；悬浮窗位置校准需要实机 |
 | `scripts/validation/` | 实机验证器及管理员启动脚本 |
 | `scripts/release/` | Nuitka 构建与发布产物校验 |
@@ -18,11 +23,11 @@
 | `tests/helpers/`、`tests/fixtures/` | 配置工厂、替代服务和固定测试图片 |
 | `config/`、`assets/` | 当前运行配置、模板与 UI 资源 |
 
-`ui/__init__.py` 和 `automation/__init__.py` 保留主要公开导入入口。内部实现直接依赖具体模块，避免从包入口反向导入。测试替换依赖时，应替换使用该依赖的模块，例如 `e7auto.ui.main_window.QThread`。
+UI入口仍在 `ui/__init__.py`；源码调用使用明确模块。旧 `automation/`、根部 `config.py`、`vision.py` 等入口已迁移，项目内脚本和测试已同步，不保留无调用方的转发实现。测试替换依赖时，替换实际使用者，例如 `e7auto.ui.main_window.QThread`、`e7auto.bootstrap.TemplateRepository`。
 
-`AutomationSession` 管理单轮生命周期；`AutomationEngine` 编排业务；`StopController` 统一协调停止请求与输入派发。`scrolling.py` 通过 `ScrollServices` 接收捕获、受控滚动、检查点、计时、识别和日志回调，不持有引擎对象。所有输入仍经过引擎的窗口检查和同一把停止锁。
+`bootstrap.AutomationSession` 保留商店/企鹅启动请求，`runtime.session.RuntimeSession` 接收流程工厂和停止策略，管理单轮生命周期。`ShopFlow` 与 `PenguinFlow` 平级组合 `RuntimeContext`，互不导入或继承。网络恢复只更新共享恢复代次、计时和状态，通过回调使商店失效自己的缓存；企鹅保留恢复后重新截图策略。`StopController` 仍用同一把锁协调停止与输入。商店 `scrolling.py` 通过窄回调使用受控输入、截图、计时与识别，不持有流程对象。
 
-`ui/worker.py` 负责组装生产服务。WGC/PyWinRT 只在工作线程的 `run()` 内导入；不能为方便导出而将它们移到 UI 包初始化阶段。
+`ui/worker.py` 负责Qt线程、信号及启动失败上报，在 `run()` 中调用 `bootstrap.create_production_session`。WGC/PyWinRT只在该工厂被工作线程调用后导入，或在独立的 `app.validate_wgc_import` 自检入口导入；UI及包导入不得提前加载。功能流程、识别算法和共享运行层不得直接调用Windows实现。
 
 ## 环境与运行
 

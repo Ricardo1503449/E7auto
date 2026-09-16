@@ -4,8 +4,8 @@ from typing import Callable
 
 import numpy as np
 
-from e7auto.config import Point, Rect, Size
-from e7auto.ports import CachedGameFrame, DisplayGeometry, WindowRef, WindowState
+from e7auto.core.types import Point, Rect, Size
+from e7auto.core.ports import CachedGameFrame, DisplayGeometry, WindowRef, WindowState
 
 
 class FakeClock:

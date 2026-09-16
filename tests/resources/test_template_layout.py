@@ -6,9 +6,11 @@ import shutil
 import pytest
 import yaml
 
-from e7auto.config import COMMON_TEMPLATE_KEYS, ConfigError, load_config
-from e7auto.penguin_vision import with_penguin_config
-from e7auto.vision import TemplateRepository
+from e7auto.configuration.schema import COMMON_TEMPLATE_KEYS
+from e7auto.configuration.models import ConfigError
+from e7auto.configuration.loader import load_config
+from e7auto.features.penguin.configuration import with_penguin_config
+from e7auto.resources.templates import TemplateRepository
 from scripts.common.paths import CALIBRATION_DIR, calibration_output_dirs
 from scripts.release.verify_release import verify_template_assets
 from tests.helpers.paths import ROOT

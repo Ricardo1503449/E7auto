@@ -1,8 +1,8 @@
 from __future__ import annotations
 import os
 from pathlib import Path
-from e7auto.run_logging import RunLogManager
-from e7auto.config import LoggingConfig
+from e7auto.logging.run import RunLogManager
+from e7auto.configuration.models import LoggingConfig
 
 def test_text_logger_is_utf8_and_file_count_is_bounded(tmp_path: Path) -> None:
     manager = RunLogManager(tmp_path, LoggingConfig(30, 2))

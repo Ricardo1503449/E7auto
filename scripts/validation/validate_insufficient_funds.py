@@ -6,9 +6,11 @@ import ctypes
 import json
 import time
 
-from e7auto.config import Rect, load_config
-from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
-from e7auto.vision import OpenCvGameVision, TemplateRepository
+from e7auto.core.types import Rect
+from e7auto.configuration.loader import load_config
+from e7auto.platform.windows import Win32WindowService, enable_per_monitor_dpi_awareness
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateRepository
 from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path, finish_validation_output
 
 
@@ -71,7 +73,7 @@ def main() -> int:
         result_roi = config.rois["purchase_result"]
         vision = OpenCvGameVision(config, TemplateRepository(config))
         enable_per_monitor_dpi_awareness()
-        from e7auto.wgc_capture import WindowsGraphicsCaptureService
+        from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
 
         windows = Win32WindowService()
         capture = WindowsGraphicsCaptureService()

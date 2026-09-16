@@ -10,8 +10,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from e7auto.config import ConfigError, LoggingConfig, load_config
-from e7auto.run_logging import RunLogManager, _field_value, _message
+from e7auto.configuration.models import ConfigError, LoggingConfig
+from e7auto.configuration.loader import load_config
+from e7auto.logging.run import RunLogManager, _field_value, _message
 
 
 def test_group_retention_removes_whole_run(tmp_path: Path) -> None:

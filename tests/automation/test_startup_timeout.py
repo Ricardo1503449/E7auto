@@ -4,12 +4,14 @@ from dataclasses import replace
 
 import pytest
 
-from e7auto.automation import AutomationEngine, SnapshotPublisher, StopController
-from e7auto.automation.stop_control import StopExecution
-from e7auto.domain import RuntimeSnapshot, StopReason
+from e7auto.features.shop.flow import ShopFlow as AutomationEngine
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.runtime.stop_control import StopExecution
+from e7auto.core.domain import RuntimeSnapshot, StopReason
 from tests.helpers import FakeClock, FakeInput, ScriptedVision, make_config, make_dependencies
 
-from .support import run_session
+from tests.automation.support import run_session
 
 
 def startup_config():
@@ -70,7 +72,7 @@ def test_reentry_main_icon_still_times_out_after_five_seconds() -> None:
         config, deps, StopController(), SnapshotPublisher(initial, lambda _: None),
         frozenset(t.target_id for t in config.targets),
     )
-    engine._prepare()
+    engine.runtime.prepare()
 
     with pytest.raises(StopExecution) as stopped:
         engine._enter_store()

@@ -7,16 +7,11 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.config import Rect, Size
-from e7auto.automation.scrolling import ScrollProgress, ScrollServices, scroll_to_bottom
-from e7auto.geometry import AdaptedFrame, CoordinateTransform
-from e7auto.vision import (
-    OpenCvGameVision,
-    measure_inventory_scroll,
-    measure_inventory_scroll_stability,
-    prepare_scroll_overlap_reference,
-    verify_scroll_overlap,
-)
+from e7auto.core.types import Rect, Size
+from e7auto.features.shop.scrolling import ScrollProgress, ScrollServices, scroll_to_bottom
+from e7auto.vision.frames import AdaptedFrame, CoordinateTransform
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability, prepare_scroll_overlap_reference, verify_scroll_overlap
 from tests.helpers import FakeClock, FakeLogger, make_config
 from tests.helpers.paths import FIXTURES_DIR
 

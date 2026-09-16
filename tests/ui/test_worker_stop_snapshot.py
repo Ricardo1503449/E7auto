@@ -6,8 +6,9 @@ from types import SimpleNamespace
 import pytest
 
 import e7auto.ui.worker as worker_module
-from e7auto.domain import StopReason
-from e7auto.run_logging import RunLogger
+import e7auto.bootstrap as bootstrap_module
+from e7auto.core.domain import StopReason
+from e7auto.logging.run import RunLogger
 from tests.helpers import make_config
 
 
@@ -15,8 +16,8 @@ from tests.helpers import make_config
 def test_worker_setup_failure_records_missing_cache_without_starting_capture(tmp_path, monkeypatch, writer_fails):
     def fail_templates(*_): raise ValueError("template setup failure")
     def forbidden_capture(*args, **kwargs): raise AssertionError("Capture must not start")
-    monkeypatch.setitem(sys.modules, "e7auto.wgc_capture", SimpleNamespace(WindowsGraphicsCaptureService=forbidden_capture))
-    monkeypatch.setattr(worker_module, "TemplateRepository", fail_templates)
+    monkeypatch.setitem(sys.modules, "e7auto.platform.wgc_capture", SimpleNamespace(WindowsGraphicsCaptureService=forbidden_capture))
+    monkeypatch.setattr(bootstrap_module, "TemplateRepository", fail_templates)
     if writer_fails:
         def fail_writer(*args, **kwargs): raise OSError("diagnostic writer failed")
         monkeypatch.setattr(RunLogger, "save_stop_snapshot", fail_writer)

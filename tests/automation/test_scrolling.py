@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from .support import run_session
-from e7auto.config import Point, ScrollConfig
-from e7auto.domain import StopReason
-from e7auto.vision import PurchaseOutcome, ScrollMovementObservation
+from tests.automation.support import run_session
+from e7auto.core.types import Point
+from e7auto.configuration.models import ScrollConfig
+from e7auto.core.domain import StopReason
+from e7auto.features.shop.contracts import PurchaseOutcome, ScrollMovementObservation
 from tests.helpers import FakeClock, ScriptedVision, make_config, match
 
 

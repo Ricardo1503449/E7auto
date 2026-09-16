@@ -3,16 +3,18 @@ from dataclasses import replace
 
 import pytest
 
-from e7auto.automation import AutomationEngine, SnapshotPublisher, StopController
-from e7auto.automation.penguin import PenguinEngine
-from e7auto.automation.stop_control import StopExecution
-from e7auto.config import Point, Rect, Size
-from e7auto.domain import RuntimeSnapshot, StopReason
-from e7auto.ports import DisplayGeometry
+from e7auto.features.shop.flow import ShopFlow as AutomationEngine
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.features.penguin.flow import PenguinFlow as PenguinEngine
+from e7auto.runtime.stop_control import StopExecution
+from e7auto.core.types import Point, Rect, Size
+from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.core.ports import DisplayGeometry
 from tests.helpers import FakeClock, FakeInput, FakeWindowService, ScriptedVision, make_config, make_dependencies
 
-from .support import run_session
-from .test_penguin import PenguinGame, run as run_penguin
+from tests.automation.support import run_session
+from tests.automation.test_penguin import PenguinGame, run as run_penguin
 
 
 def make_engine(feature, *, windows=None):
@@ -26,7 +28,7 @@ def make_engine(feature, *, windows=None):
                RuntimeSnapshot.initial("wake-test", (), 0))
     cls = PenguinEngine if feature == "penguin" else AutomationEngine
     engine = cls(config, deps, control, SnapshotPublisher(initial, lambda _: None), frozenset())
-    engine._prepare()
+    engine.runtime.prepare()
     return engine, vision, clock
 
 
@@ -37,15 +39,15 @@ def engine_state(request):
 
 def wait_icon(engine, detector=None):
     penguin = isinstance(engine, PenguinEngine)
-    return engine._wait_startup_icon(
+    return engine.runtime.wait_startup_icon(
         "sanctuary_entry" if penguin else "main_shop_icon",
-        detector or engine._deps.vision.main_shop_icon,
+        detector or engine.runtime.deps.vision.main_shop_icon,
         minimum_stable_frames=2 if penguin else 1,
     )
 
 
 def wake_events(engine):
-    return [fields for name, fields in engine._deps.logger.events
+    return [fields for name, fields in engine.runtime.deps.logger.events
             if name == "input" and fields.get("action") == "wake_main_screen_startup"]
 
 
@@ -53,17 +55,17 @@ def test_visible_icon_never_sends_wake(engine_state):
     engine, vision, _ = engine_state
     vision.main_visible = True
     assert wait_icon(engine) is not None
-    assert engine._deps.inputs.actions == []
-    assert engine._deps.capture.calls == 3
+    assert engine.runtime.deps.inputs.actions == []
+    assert engine.runtime.deps.capture.calls == 3
     assert wake_events(engine) == []
 
 
 def test_first_miss_wakes_immediately_then_requires_three_fresh_frames(engine_state):
     engine, vision, clock = engine_state
-    engine._deps.inputs.trigger_once = lambda: setattr(vision, "main_visible", True)
+    engine.runtime.deps.inputs.trigger_once = lambda: setattr(vision, "main_visible", True)
     assert wait_icon(engine) is not None
-    assert engine._deps.inputs.actions == [("click", Point(50, 40), None)]
-    assert engine._deps.capture.calls == 4
+    assert engine.runtime.deps.inputs.actions == [("click", Point(50, 40), None)]
+    assert engine.runtime.deps.capture.calls == 4
     assert clock.monotonic() == pytest.approx(.3)
     assert len(wake_events(engine)) == 1
 
@@ -88,7 +90,7 @@ def test_failed_wake_times_out_without_additional_clicks(engine_state):
         wait_icon(engine)
     assert stopped.value.reason is StopReason.RECOGNITION_TIMEOUT
     assert 10 <= clock.monotonic() < 10.2
-    assert engine._deps.inputs.actions == [("click", Point(50, 40), None)]
+    assert engine.runtime.deps.inputs.actions == [("click", Point(50, 40), None)]
     # Even an accidental second startup wait in this engine cannot resend it.
     with pytest.raises(StopExecution):
         wait_icon(engine)
@@ -99,29 +101,29 @@ def test_f5_after_missing_observation_blocks_wake(engine_state):
     engine, _, _ = engine_state
 
     def detect(frame):
-        engine._control.request(StopReason.MANUAL_F5)
+        engine.runtime.control.request(StopReason.MANUAL_F5)
         return None
 
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine, detect)
     assert stopped.value.reason is StopReason.MANUAL_F5
-    assert engine._deps.inputs.actions == []
+    assert engine.runtime.deps.inputs.actions == []
 
 
 def test_f5_immediately_after_wake_blocks_further_capture_and_entry(engine_state):
     engine, _, _ = engine_state
-    engine._deps.inputs.trigger_once = lambda: engine._control.request(StopReason.MANUAL_F5)
+    engine.runtime.deps.inputs.trigger_once = lambda: engine.runtime.control.request(StopReason.MANUAL_F5)
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine)
     assert stopped.value.reason is StopReason.MANUAL_F5
-    assert len(wake_events(engine)) == 1 and engine._deps.capture.calls == 1
+    assert len(wake_events(engine)) == 1 and engine.runtime.deps.capture.calls == 1
 
 
 def test_window_change_before_wake_blocks_input(engine_state):
     engine, _, _ = engine_state
 
     def detect(frame):
-        windows = engine._deps.windows
+        windows = engine.runtime.deps.windows
         rect = windows.state.client_bounds
         windows.state = replace(windows.state, client_bounds=replace(rect, x=rect.x+1))
         return None
@@ -129,7 +131,7 @@ def test_window_change_before_wake_blocks_input(engine_state):
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine, detect)
     assert stopped.value.reason is StopReason.WINDOW_ABNORMAL
-    assert engine._deps.inputs.actions == []
+    assert engine.runtime.deps.inputs.actions == []
 
 
 def test_failed_input_is_not_retried(engine_state, monkeypatch):
@@ -140,7 +142,7 @@ def test_failed_input_is_not_retried(engine_state, monkeypatch):
         attempted.append(point)
         raise OSError("injected wake failure")
 
-    monkeypatch.setattr(engine._deps.inputs, "click", fail)
+    monkeypatch.setattr(engine.runtime.deps.inputs, "click", fail)
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine)
     assert stopped.value.reason is StopReason.INPUT_FAILURE
@@ -153,10 +155,10 @@ def test_wake_uses_scaled_client_center_not_desktop_coordinates(feature):
         1, r"\\.\DISPLAY1", Rect(0, 0, 200, 160), Size(200, 160), 96,
     ))
     engine, vision, _ = make_engine(feature, windows=windows)
-    engine._deps.inputs.trigger_once = lambda: setattr(vision, "main_visible", True)
+    engine.runtime.deps.inputs.trigger_once = lambda: setattr(vision, "main_visible", True)
     assert wait_icon(engine) is not None
     assert windows.state.client_bounds.width == 150 and windows.state.client_bounds.height == 120
-    assert engine._deps.inputs.actions == [("click", Point(75, 60), None)]
+    assert engine.runtime.deps.inputs.actions == [("click", Point(75, 60), None)]
 
 
 @pytest.mark.parametrize("after_wake, recovered_visible", [(False, True), (True, True), (True, False)])
@@ -171,7 +173,7 @@ def test_recovery_uses_fresh_frames_and_never_resends_startup_wake(engine_state,
             clock.sleep(12)  # Recovery exceeds the recognition budget but is excluded.
         return frame
 
-    engine._capture_raw = capture
+    engine.runtime.capture_raw = capture
     vision.network_connection_error = lambda frame: vision._observation("network") if frame == "error" else None
     vision.network_retry = lambda frame: None
 

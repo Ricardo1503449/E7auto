@@ -6,10 +6,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from e7auto.config import ConfigError, Point, Rect, Size, load_config
-from e7auto.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
-from e7auto.run_logging import RunLogManager
-from e7auto.config import LoggingConfig
+from e7auto.configuration.models import ConfigError
+from e7auto.core.types import Point, Rect, Size
+from e7auto.configuration.loader import load_config
+from e7auto.core.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
+from e7auto.logging.run import RunLogManager
+from e7auto.configuration.models import LoggingConfig
 
 
 def test_default_configuration_loads_after_completed_calibration() -> None:

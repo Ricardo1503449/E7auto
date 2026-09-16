@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 import yaml
 
-from e7auto.template_manifest import load_template_manifest
+from e7auto.resources.manifest import load_template_manifest
 from scripts.common.candidates import write_candidate_png
 from scripts.common.image_io import write_png
 from scripts.common import paths

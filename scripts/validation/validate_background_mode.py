@@ -13,10 +13,13 @@ import numpy as np
 import win32api
 import win32gui
 
-from e7auto.background_windows import Win32WindowMessageInputService
-from e7auto.config import Rect, load_config
-from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
-from e7auto.vision import OpenCvGameVision, TemplateRepository, measure_inventory_scroll
+from e7auto.platform.input import Win32WindowMessageInputService
+from e7auto.core.types import Rect
+from e7auto.configuration.loader import load_config
+from e7auto.platform.windows import Win32WindowService, enable_per_monitor_dpi_awareness
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateRepository
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll
 from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path, finish_validation_output
 
 ROOT = PROJECT_ROOT
@@ -305,14 +308,14 @@ def _base_context(args: argparse.Namespace):
 
 def _capture_service(name: str):
     if name == "wgc":
-        from e7auto.wgc_capture import WindowsGraphicsCaptureService
+        from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
 
         return WindowsGraphicsCaptureService()
     raise RuntimeError(f"unsupported capture backend: {name}")
 
 
 def _wgc_diagnostic() -> str:
-    from e7auto.wgc_capture import WindowsGraphicsCaptureService
+    from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
 
     return WindowsGraphicsCaptureService.support_diagnostic()[1]
 

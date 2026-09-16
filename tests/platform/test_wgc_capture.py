@@ -8,11 +8,11 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from e7auto import wgc_capture
-from e7auto.background_windows import BackgroundCaptureError
-from e7auto.config import Rect
-from e7auto.ports import WindowRef
-from e7auto.wgc_capture import WindowsGraphicsCaptureService, _copy_software_bitmap
+import e7auto.platform.wgc_capture as wgc_capture
+from e7auto.platform.input import BackgroundCaptureError
+from e7auto.core.types import Rect
+from e7auto.core.ports import WindowRef
+from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService, _copy_software_bitmap
 
 
 class FakeReference(bytearray):

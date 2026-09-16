@@ -11,8 +11,10 @@ import cv2
 import numpy as np
 import yaml
 
-from e7auto.config import Point, Rect, load_config
-from e7auto.vision import OpenCvGameVision, TemplateData, TemplateRepository
+from e7auto.core.types import Point, Rect
+from e7auto.configuration.loader import load_config
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateData, TemplateRepository
 
 from tests.helpers import make_config
 

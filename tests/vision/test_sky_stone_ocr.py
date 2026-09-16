@@ -8,9 +8,12 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.config import Rect, Size, load_config
-from e7auto.geometry import CoordinateTransform, adapt_frame
-from e7auto.vision import OpenCvGameVision, TemplateRepository, _DigitMatch
+from e7auto.core.types import Rect, Size
+from e7auto.configuration.loader import load_config
+from e7auto.vision.frames import CoordinateTransform, adapt_frame
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateRepository
+from e7auto.vision.digits import _DigitMatch
 
 from tests.helpers import make_config
 
@@ -37,8 +40,8 @@ def test_existing_digit_templates_generate_cached_stroke_variants() -> None:
     config = load_config(ROOT / "config" / "internal.yaml")
     vision = OpenCvGameVision(config, TemplateRepository(config))
 
-    first, widths = vision._sky_stone_template_variants()
-    second, second_widths = vision._sky_stone_template_variants()
+    first, widths = vision._digits.template_variants()
+    second, second_widths = vision._digits.template_variants()
 
     assert first is second
     assert widths is second_widths

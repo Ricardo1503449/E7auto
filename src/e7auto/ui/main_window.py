@@ -7,17 +7,18 @@ from PySide6.QtCore import QEvent, QRect, QSize, Qt, QThread, QTimer, Slot
 from PySide6.QtGui import QCloseEvent, QIcon, QResizeEvent
 from PySide6.QtWidgets import QFrame, QMainWindow, QStackedWidget, QVBoxLayout
 
-from ..config import ConfigError, LoggingConfig, load_config
-from ..domain import RunState, RuntimeSnapshot, StopReason
-from ..overlay_position import OverlayPositionStore
-from ..run_logging import RunLogManager
-from ..penguin_vision import with_penguin_config
-from .overlay import StatsOverlay
-from .pages.function_center import _FunctionCenterPage
-from .pages.shop import _ShopFeaturePage
-from .pages.penguin import _PenguinFeaturePage
-from .window_chrome import _TitleBar, _ResizeHandle
-from .worker import AutomationWorker
+from e7auto.configuration.models import ConfigError, LoggingConfig
+from e7auto.configuration.loader import load_config
+from e7auto.core.domain import RunState, RuntimeSnapshot, StopReason
+from e7auto.ui.position import OverlayPositionStore
+from e7auto.logging.run import RunLogManager
+from e7auto.features.penguin.configuration import with_penguin_config
+from e7auto.ui.overlay import StatsOverlay
+from e7auto.ui.pages.function_center import _FunctionCenterPage
+from e7auto.ui.pages.shop import _ShopFeaturePage
+from e7auto.ui.pages.penguin import _PenguinFeaturePage
+from e7auto.ui.window_chrome import _TitleBar, _ResizeHandle
+from e7auto.ui.worker import AutomationWorker
 
 
 class MainWindow(QMainWindow):

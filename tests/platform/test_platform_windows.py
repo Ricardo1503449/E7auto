@@ -5,16 +5,10 @@ from types import SimpleNamespace
 import pytest
 import pywintypes
 
-from e7auto import platform_windows
-from e7auto.platform_windows import (
-    Win32F5HotkeyService,
-    Win32RuntimeEnvironment,
-    Win32WindowService,
-    WindowLookupError,
-    WindowOperationError,
-)
-from e7auto.config import Rect
-from e7auto.ports import WindowRef
+import e7auto.platform.windows as platform_windows
+from e7auto.platform.windows import Win32F5HotkeyService, Win32RuntimeEnvironment, Win32WindowService, WindowLookupError, WindowOperationError
+from e7auto.core.types import Rect
+from e7auto.core.ports import WindowRef
 
 
 def install_single_window(monkeypatch: pytest.MonkeyPatch, process_path: str) -> None:

@@ -9,9 +9,9 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.config import LoggingConfig
-from e7auto.ports import CachedGameFrame
-from e7auto.run_logging import RunLogManager
+from e7auto.configuration.models import LoggingConfig
+from e7auto.core.ports import CachedGameFrame
+from e7auto.logging.run import RunLogManager
 
 
 def cached():

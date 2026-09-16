@@ -4,12 +4,15 @@ from dataclasses import replace
 
 import pytest
 
-from e7auto.automation import AutomationSession, SnapshotPublisher, StopController
-from e7auto.automation.penguin import PenguinEngine
-from e7auto.config import Point, Rect
-from e7auto.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
-from e7auto.penguin_vision import CONTROLS, PenguinDialog
-from e7auto.vision_types import Observation
+from e7auto.bootstrap import AutomationSession
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.features.penguin.flow import PenguinFlow as PenguinEngine
+from e7auto.core.types import Point, Rect
+from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
+from e7auto.features.penguin.configuration import CONTROLS
+from e7auto.features.penguin.contracts import PenguinDialog
+from e7auto.core.observations import Observation
 from tests.helpers import FakeClock, FakeHotkeys, FakeInput, make_config, make_dependencies
 
 
@@ -507,7 +510,7 @@ def test_recovery_discards_interrupted_frame_and_restarts_stability():
     # Two stable observations before interruption cannot count toward the
     # three fresh stable observations required after recovery.
     frames = iter(["before1", "before2", "error", "cleared", "after1", "after2", "after3"])
-    engine._capture_raw = lambda: next(frames)
+    engine.runtime.capture_raw = lambda: next(frames)
     seen = []
     def detector(frame):
         seen.append(frame)

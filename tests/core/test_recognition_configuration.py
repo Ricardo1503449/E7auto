@@ -6,9 +6,13 @@ from tests.helpers.paths import ROOT
 import pytest
 import yaml
 
-from e7auto.config import ConfigError, EntryThresholds, Rect, load_config
-from e7auto.penguin_vision import PenguinVision, with_penguin_config
-from e7auto.vision import OpenCvGameVision, TemplateRepository
+from e7auto.configuration.models import ConfigError, EntryThresholds
+from e7auto.core.types import Rect
+from e7auto.configuration.loader import load_config
+from e7auto.features.penguin.vision import PenguinVision
+from e7auto.features.penguin.configuration import with_penguin_config
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateRepository
 
 
 

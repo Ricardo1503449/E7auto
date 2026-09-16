@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import pytest
 
-from e7auto.vision import TemplateRepository
+from e7auto.resources.templates import TemplateRepository
 
 from tests.helpers import make_config
 

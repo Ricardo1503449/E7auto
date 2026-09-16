@@ -7,13 +7,15 @@ import numpy as np
 import pytest
 import cv2
 
-from e7auto import platform_windows
-from e7auto.config import DisplayConfig, Point, Rect, Size
-from e7auto.domain import StopReason
-from e7auto.geometry import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
-from e7auto.platform_windows import Win32WindowService, WindowOperationError
-from e7auto.ports import DisplayGeometry, WindowRef
-from e7auto.vision import OpenCvGameVision, TemplateData
+import e7auto.platform.windows as platform_windows
+from e7auto.configuration.models import DisplayConfig
+from e7auto.core.types import Point, Rect, Size
+from e7auto.core.domain import StopReason
+from e7auto.vision.frames import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
+from e7auto.platform.windows import Win32WindowService, WindowOperationError
+from e7auto.core.ports import DisplayGeometry, WindowRef
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.resources.templates import TemplateData
 
 from tests.helpers import FakeWindowService, ScriptedVision, make_config
 from tests.automation.support import run_session

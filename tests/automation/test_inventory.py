@@ -4,9 +4,9 @@ from dataclasses import replace
 
 import pytest
 
-from .support import run_session
-from e7auto.domain import StopReason
-from e7auto.vision import PurchaseOutcome
+from tests.automation.support import run_session
+from e7auto.core.domain import StopReason
+from e7auto.features.shop.contracts import PurchaseOutcome
 from tests.helpers import ScriptedVision, make_config, match
 
 

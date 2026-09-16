@@ -2,19 +2,15 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from .support import run_session
-from e7auto.automation import AutomationEngine, SnapshotPublisher, StopController
-from e7auto.config import Point, Rect
-from e7auto.domain import RuntimeSnapshot, StopReason
-from e7auto.vision import Observation, PurchaseOutcome
-from tests.helpers import (
-    FakeHotkeys,
-    FakeInput,
-    ScriptedVision,
-    make_config,
-    make_dependencies,
-    match,
-)
+from tests.automation.support import run_session
+from e7auto.features.shop.flow import ShopFlow as AutomationEngine
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.stop_control import StopController
+from e7auto.core.types import Point, Rect
+from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.core.observations import Observation
+from e7auto.features.shop.contracts import PurchaseOutcome
+from tests.helpers import FakeHotkeys, FakeInput, ScriptedVision, make_config, make_dependencies, match
 
 
 def test_budget_below_cost_never_refreshes() -> None:
@@ -90,7 +86,7 @@ def test_high_confidence_refresh_confirmation_uses_fast_path_and_detected_anchor
         SnapshotPublisher(initial, snapshots.append),
         frozenset(target.target_id for target in config.targets),
     )
-    engine._prepare()
+    engine.runtime.prepare()
     engine._trusted_sky_stone_balance = 100
     engine._wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
 
@@ -140,7 +136,7 @@ def test_lower_confidence_refresh_confirmation_keeps_three_frame_gate() -> None:
         SnapshotPublisher(initial, snapshots.append),
         frozenset(target.target_id for target in config.targets),
     )
-    engine._prepare()
+    engine.runtime.prepare()
     engine._trusted_sky_stone_balance = 100
     engine._wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
 

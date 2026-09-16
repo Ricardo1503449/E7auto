@@ -13,9 +13,10 @@ from PySide6.QtWidgets import QApplication, QLabel, QMessageBox, QPushButton, QV
 import yaml
 
 from e7auto.app import validate_source_environment
-from e7auto.config import Rect, Size, TargetConfig
-from e7auto.platform_windows import Win32WindowService, enable_per_monitor_dpi_awareness
-from e7auto.ports import WindowRef, WindowState
+from e7auto.core.types import Rect, Size
+from e7auto.configuration.models import TargetConfig
+from e7auto.platform.windows import Win32WindowService, enable_per_monitor_dpi_awareness
+from e7auto.core.ports import WindowRef, WindowState
 from e7auto.ui import StatsOverlay
 from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path
 

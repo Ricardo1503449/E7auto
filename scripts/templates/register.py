@@ -15,7 +15,7 @@ import cv2
 import numpy as np
 import yaml
 
-from e7auto.template_manifest import load_template_manifest
+from e7auto.resources.manifest import load_template_manifest
 from scripts.common.paths import PROJECT_ROOT, feature_directory
 
 

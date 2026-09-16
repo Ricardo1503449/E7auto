@@ -5,9 +5,10 @@ from scripts.common.paths import calibration_record_path
 
 import yaml
 
-from e7auto.config import load_config
+from e7auto.configuration.loader import load_config
 
-from e7auto.config import Point, load_config
+from e7auto.core.types import Point
+from e7auto.configuration.loader import load_config
 from scripts.calibration.calibrate_client_frames import SOURCE_SPECS, build_manifest
 from tests.helpers.paths import ROOT
 MANIFEST_PATH = calibration_record_path("client_calibration_manifest.yaml")

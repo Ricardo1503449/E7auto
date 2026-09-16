@@ -1,16 +1,8 @@
 from __future__ import annotations
 
-from .services import (
-    FakeClock,
-    FakeWindowService,
-    FakeCapture,
-    FakeInput,
-    FakeRuntimeEnvironment,
-    FakeOverlay,
-    FakeLogger,
-)
-from .vision import ScriptedVision
-from e7auto.automation import AutomationDependencies
+from tests.helpers.services import FakeClock, FakeWindowService, FakeCapture, FakeInput, FakeRuntimeEnvironment, FakeOverlay, FakeLogger
+from tests.helpers.vision import ScriptedVision
+from e7auto.runtime.dependencies import AutomationDependencies
 
 
 def make_dependencies(

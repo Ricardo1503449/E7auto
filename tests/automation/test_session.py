@@ -2,23 +2,14 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from .support import run_session
-from e7auto.automation import SnapshotPublisher
-from e7auto.config import Point, Rect
-from e7auto.domain import RuntimeSnapshot, StopReason
-from e7auto.ports import WindowState
-from e7auto.vision import Observation, PurchaseOutcome, ScrollMovementObservation
-from tests.helpers import (
-    FakeHotkeys,
-    FakeClock,
-    FakeInput,
-    FakeOverlay,
-    FakeRuntimeEnvironment,
-    FakeWindowService,
-    ScriptedVision,
-    make_config,
-    match,
-)
+from tests.automation.support import run_session
+from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.core.types import Point, Rect
+from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.core.ports import WindowState
+from e7auto.core.observations import Observation
+from e7auto.features.shop.contracts import PurchaseOutcome, ScrollMovementObservation
+from tests.helpers import FakeHotkeys, FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, match
 
 
 def test_entry_success_resizes_window_and_scans_both_screens() -> None:

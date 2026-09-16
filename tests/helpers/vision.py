@@ -2,15 +2,10 @@ from __future__ import annotations
 
 from collections import deque
 
-from e7auto.config import Point, Rect
-from e7auto.vision_types import ScrollOverlapObservation
-from e7auto.vision import (
-    InventoryMatch,
-    Observation,
-    PurchaseOutcome,
-    ScrollMovementObservation,
-    SkyStoneBalanceObservation,
-)
+from e7auto.core.types import Point, Rect
+from e7auto.features.shop.contracts import ScrollOverlapObservation
+from e7auto.features.shop.contracts import InventoryMatch, PurchaseOutcome, ScrollMovementObservation, SkyStoneBalanceObservation
+from e7auto.core.observations import Observation
 
 
 def match(target: str, screen: str = "top", slot_order: int = 0) -> InventoryMatch:

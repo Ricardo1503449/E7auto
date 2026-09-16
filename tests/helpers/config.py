@@ -2,20 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from e7auto.config import (
-    AppConfig,
-    EntryThresholds,
-    DisplayConfig,
-    LoggingConfig,
-    Point,
-    Rect,
-    RefreshStrategyConfig,
-    ScrollConfig,
-    Size,
-    SlotConfig,
-    TargetConfig,
-    TimingConfig,
-)
+from e7auto.configuration.models import AppConfig, EntryThresholds, DisplayConfig, LoggingConfig, RefreshStrategyConfig, ScrollConfig, SlotConfig, TargetConfig, TimingConfig
+from e7auto.core.types import Point, Rect, Size
 
 
 def make_config(

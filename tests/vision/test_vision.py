@@ -5,16 +5,13 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
-from e7auto.config import Rect
-from e7auto.vision import (
-    Observation,
-    OpenCvGameVision,
-    PurchaseOutcome,
-    TemplateData,
-    measure_inventory_scroll,
-    measure_inventory_scroll_stability,
-)
-from e7auto.config import Point
+from e7auto.core.types import Rect
+from e7auto.core.observations import Observation
+from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
+from e7auto.features.shop.contracts import PurchaseOutcome
+from e7auto.resources.templates import TemplateData
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
+from e7auto.core.types import Point
 
 from tests.helpers import make_config
 
@@ -187,7 +184,7 @@ def test_inventory_matches_sort_by_slot_order_only() -> None:
         }
         return Observation(template_key, 0.99, roi, Point(roi.x, roi.y)) if (template_key, roi) in pairs else None
 
-    vision._match_bgr = fake_match  # type: ignore[method-assign]
+    vision._matcher.match_bgr = fake_match  # type: ignore[method-assign]
     matches = vision.scan_inventory(np.zeros((80, 100, 3), dtype=np.uint8), "top")
     assert [(item.target_id, item.slot_order) for item in matches] == [("ore", 0), ("wood", 1)]
 
@@ -209,7 +206,7 @@ def test_inventory_scan_classifies_the_highest_confidence_state_per_slot() -> No
             return None
         return Observation(template_key, confidence, roi, Point(roi.x, roi.y))
 
-    vision._match_bgr = fake_match  # type: ignore[method-assign]
+    vision._matcher.match_bgr = fake_match  # type: ignore[method-assign]
     matches = vision.scan_inventory(np.zeros((80, 100, 3), dtype=np.uint8), "top")
 
     assert [(item.target_id, item.is_purchased) for item in matches] == [
@@ -224,14 +221,16 @@ def test_inventory_scan_prepares_bgr_once_and_prunes_targets_and_slots() -> None
     class InventorySpyVision(OpenCvGameVision):
         def __init__(self) -> None:
             super().__init__(config, ArrayTemplates({}))
+            self._matcher.prepare_bgr = self.prepare_bgr
+            self._matcher.match_bgr = self.match_bgr
             self.bgr_calls = 0
             self.match_calls: list[tuple[str, Rect]] = []
 
-        def _bgr(self, frame):  # type: ignore[override]
+        def prepare_bgr(self, frame):  # type: ignore[override]
             self.bgr_calls += 1
             return np.ascontiguousarray(frame[:, :, :3])
 
-        def _match_bgr(self, frame, template_key, roi, threshold):
+        def match_bgr(self, frame, template_key, roi, threshold):
             self.match_calls.append((template_key, roi))
             return None
 

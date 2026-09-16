@@ -8,9 +8,10 @@ from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QWidget
 import pytest
 
-from e7auto.config import Rect, load_config
-from e7auto.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason, TargetTally
-from e7auto.overlay_position import OverlayPositionStore, SavedOverlayPosition
+from e7auto.core.types import Rect
+from e7auto.configuration.loader import load_config
+from e7auto.core.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason, TargetTally
+from e7auto.ui.position import OverlayPositionStore, SavedOverlayPosition
 from e7auto.ui import OverlayCommand, StatsOverlay
 from tests.helpers import make_config
 from tests.helpers.paths import ROOT
