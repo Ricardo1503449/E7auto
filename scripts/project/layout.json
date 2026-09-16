@@ -73,5 +73,55 @@
     "sky_stone_zero_wide_manifest.yaml": "shop/sky_stone_zero_wide_manifest.yaml",
     "sanctuary_search_manifest.json": "penguin/sanctuary_search_manifest.json",
     "overlay_position_calibration_manifest.yaml": "platform/overlay_position_calibration_manifest.yaml"
+  },
+  "source_rules": {
+    "layers": [
+      "core",
+      "runtime",
+      "features",
+      "vision",
+      "resources",
+      "configuration",
+      "platform",
+      "logging",
+      "ui"
+    ],
+    "root_modules": [
+      "e7auto",
+      "e7auto.__main__",
+      "e7auto.app",
+      "e7auto.bootstrap"
+    ],
+    "compatibility_modules": [],
+    "legacy_modules": [
+      "e7auto.automation",
+      "e7auto.automation.dependencies",
+      "e7auto.automation.engine",
+      "e7auto.automation.penguin",
+      "e7auto.automation.scrolling",
+      "e7auto.automation.session",
+      "e7auto.automation.snapshots",
+      "e7auto.automation.stop_control",
+      "e7auto.background_windows",
+      "e7auto.config",
+      "e7auto.domain",
+      "e7auto.geometry",
+      "e7auto.overlay_position",
+      "e7auto.penguin_vision",
+      "e7auto.platform_windows",
+      "e7auto.ports",
+      "e7auto.run_logging",
+      "e7auto.template_manifest",
+      "e7auto.vision_types",
+      "e7auto.wgc_capture"
+    ],
+    "deferred_wgc_imports": {
+      "e7auto.bootstrap": [
+        "create_production_session"
+      ],
+      "e7auto.app": [
+        "validate_wgc_import"
+      ]
+    }
   }
 }

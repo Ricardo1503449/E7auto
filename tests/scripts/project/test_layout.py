@@ -6,9 +6,7 @@ import subprocess
 
 import pytest
 
-from scripts.common.paths import (
-    LAYOUT_POLICY, create_artifact_run, ensure_task_result_path, calibration_record_path,
-)
+from scripts.common.paths import LAYOUT_POLICY, create_artifact_run, ensure_task_result_path, calibration_record_path
 from scripts.project.check_layout import check_layout
 
 
@@ -25,6 +23,22 @@ def put(root, name, text="test"):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return path
+
+
+def test_source_dependencies_are_checked_from_index_not_worktree(project):
+    bad = 'from e7auto.features.penguin.flow import PenguinFlow\n'
+    good = 'from e7auto.runtime.context import RuntimeContext\n'
+    name = 'src/e7auto/features/shop/flow.py'
+    put(project, name, bad)
+    subprocess.run(['git', 'init', '-q'], cwd=project, check=True, capture_output=True)
+    subprocess.run(['git', 'add', '.'], cwd=project, check=True, capture_output=True)
+    put(project, name, good)
+    assert check_layout(project) == []
+    assert any('features cannot import each other' in error for error in check_layout(project, staged=True))
+    subprocess.run(['git', 'add', name], cwd=project, check=True, capture_output=True)
+    put(project, name, bad)
+    assert any('features cannot import each other' in error for error in check_layout(project))
+    assert check_layout(project, staged=True) == []
 
 
 def test_runs_are_unique_and_records_own_outputs(project):

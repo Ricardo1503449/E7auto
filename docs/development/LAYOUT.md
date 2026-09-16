@@ -38,13 +38,14 @@
 
 ## 检查与交付
 
+源码按core/runtime/features/vision/resources/configuration/platform/logging/ui分层，组装位于bootstrap.py，具体职责见[开发指南](DEVELOPMENT.md)。source_rules记录允许的源码层、根入口、禁止重新引用的旧模块以及允许延迟导入WGC的工厂。功能名与tasks、fixtures使用同一登记表；测试仍按被测职责分类，不按源码树机械复制目录。
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.project.check_layout
 .\.venv\Scripts\python.exe -m scripts.project.check_layout --staged
 ```
 
-第一条检查工作区，也扫描被Git忽略的artifacts和build；检查归属、文件类型、任务记录、归档完整性及Markdown本地链接。第二条读取Git索引的实际文件和规则，不能用未暂存的修正掩盖待提交问题。它检查整个待提交树，不修改索引。
+第一条检查工作区，也扫描被Git忽略的artifacts和build；检查归属、文件类型、任务记录、归档完整性、Markdown本地链接以及源码位置/依赖边界。第二条读取Git索引的实际文件和规则，不能用未暂存的修正掩盖待提交问题。它检查整个待提交树，不修改索引。
 
 每次新增/移动文件或更改输出默认值后运行工作区检查。获准提交后，检查暂存范围、`git diff --cached --check`和staged布局；涉及正式模板继续执行专用的check_changes检查。
 

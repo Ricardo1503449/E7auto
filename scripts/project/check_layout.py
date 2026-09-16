@@ -12,6 +12,7 @@ import subprocess
 from urllib.parse import unquote
 
 from scripts.common.paths import PROJECT_ROOT
+from scripts.project.check_dependencies import check_dependencies
 
 RUN_ID = re.compile(r"\d{8}-\d{6}-[a-z][a-z0-9-]*-[0-9a-f]{8}")
 VERSION = re.compile(r"v\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?")
@@ -67,7 +68,7 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
             name = raw_name.decode("utf-8")
             if stage != b"0":
                 errors.append(f"Unmerged index entry: {name}")
-            if mode == b"120000" and name.split("/")[0] in {"docs", "tests", "artifacts", "build"}:
+            if mode == b"120000" and name.split("/")[0] in {"docs", "tests", "artifacts", "build", "src"}:
                 errors.append(f"Staged symlink in managed directory: {name}")
             blobs[name] = oid.decode()
         paths = set(blobs)
@@ -80,7 +81,7 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
         def exists(name: str) -> bool:
             return name in paths or any(p.startswith(name.rstrip("/") + "/") for p in paths)
     else:
-        paths = _files(root, ["docs", "tests", "artifacts", "build", "scripts"], errors)
+        paths = _files(root, ["docs", "tests", "artifacts", "build", "scripts", "src"], errors)
         paths.update(name for name in ["README.md", "AGENTS.md", "pyproject.toml"] if (root / name).is_file())
 
         def read(name: str) -> bytes:
@@ -303,6 +304,7 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
                     errors.append(f"Tool must use shared artifact/build paths: {name}:{node.lineno}")
             if name.startswith(("scripts/validation/", "scripts/calibration/")) and segments[1] == "logs":
                 errors.append(f"Development validation must not default to runtime logs: {name}:{node.lineno}")
+    errors.extend(check_dependencies(paths, read, policy))
     return sorted(set(errors))
 
 

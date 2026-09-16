@@ -54,3 +54,11 @@
 - 只运行直接相关的边界、单元或回归测试；未经要求不跑全套测试，不重复已通过且内容未变的测试。
 - 提交前检查暂存文件范围和 `git diff --cached --check`。若提交与推送一起获准，连续完成并核对远端引用。
 - 不因上述规则初始化 Git 仓库、不自动安装本地 Git hook，也不修改 `.git/config`。
+
+## 源码分层与功能接入
+
+- 修改源码前阅读docs/design/ARCHITECTURE.md和docs/development/DEVELOPMENT.md；源码位置、旧入口禁用名单和WGC延迟导入规则以layout.json的source_rules为准。
+- 业务实现放features/<feature>；不同功能互不导入或继承，共享运行和图像能力分别放runtime、vision。共享层不得反向依赖功能、UI或bootstrap。
+- 新功能通过bootstrap显式组装流程、配置、识别与停止策略，依赖FeatureFlow及各功能识别契约；不得通过继承商店流程获得公共能力。
+- 运行源码不得依赖scripts或tests。功能/共享运行/识别代码依赖平台接口，不直接导入Win32、WGC或Qt实现；WGC仅允许在批准的工作线程工厂或自检函数内延迟导入。
+- 新增模块或调整依赖后执行布局/源码边界检查及直接相关测试；不得通过动态拼接导入、扩大豁免或恢复旧入口绕过检查。

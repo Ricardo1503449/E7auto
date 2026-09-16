@@ -26,7 +26,9 @@ separates data models, existing YAML schema names and loading; its file format i
 `platform/` implements Windows services; `logging/` owns runtime logs and stop snapshots.
 
 Project scripts and tests use the canonical modules. Legacy root modules and the old automation
-package have been removed after migrating callers. See [development](../development/DEVELOPMENT.md) for extension rules and targeted testing.
+package have been removed after migrating callers. `scripts.project.check_layout` also checks
+source ownership, forbidden dependencies and deferred WGC imports in the selected disk/index view.
+See [development](../development/DEVELOPMENT.md) for extension rules and targeted testing.
 
 ## Data and threads
 

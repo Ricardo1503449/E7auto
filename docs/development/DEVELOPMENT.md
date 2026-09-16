@@ -23,11 +23,20 @@
 | `tests/helpers/`、`tests/fixtures/` | 配置工厂、替代服务和固定测试图片 |
 | `config/`、`assets/` | 当前运行配置、模板与 UI 资源 |
 
-UI入口仍在 `ui/__init__.py`；源码调用使用明确模块。旧 `automation/`、根部 `config.py`、`vision.py` 等入口已迁移，项目内脚本和测试已同步，不保留无调用方的转发实现。测试替换依赖时，替换实际使用者，例如 `e7auto.ui.main_window.QThread`、`e7auto.bootstrap.TemplateRepository`。
+UI入口仍在 `ui/__init__.py`；源码调用使用明确模块。旧 `automation/`、根部 `config.py`、`vision.py` 等入口已迁移，项目内脚本和测试已同步，不保留无调用方的转发实现。机器规则中的legacy_modules是禁止新代码引用的旧入口名单。测试替换依赖时，替换实际使用者，例如 `e7auto.ui.main_window.QThread`、`e7auto.bootstrap.TemplateRepository`。
 
 `bootstrap.AutomationSession` 保留商店/企鹅启动请求，`runtime.session.RuntimeSession` 接收流程工厂和停止策略，管理单轮生命周期。`ShopFlow` 与 `PenguinFlow` 平级组合 `RuntimeContext`，互不导入或继承。网络恢复只更新共享恢复代次、计时和状态，通过回调使商店失效自己的缓存；企鹅保留恢复后重新截图策略。`StopController` 仍用同一把锁协调停止与输入。商店 `scrolling.py` 通过窄回调使用受控输入、截图、计时与识别，不持有流程对象。
 
 `ui/worker.py` 负责Qt线程、信号及启动失败上报，在 `run()` 中调用 `bootstrap.create_production_session`。WGC/PyWinRT只在该工厂被工作线程调用后导入，或在独立的 `app.validate_wgc_import` 自检入口导入；UI及包导入不得提前加载。功能流程、识别算法和共享运行层不得直接调用Windows实现。
+
+## 源码依赖与后续扩展
+
+- 新功能先登记layout.json的功能名，在 `features/<feature>/` 放流程、识别及契约；在bootstrap显式接入工厂、配置/资源选择、完成策略，再接入UI和发布校验。登记目录名不会自动启用功能。
+- 功能间禁止导入和继承；共享层禁止反向导入功能实现或UI。跨功能复用先提取语义确实一致的公共组件，专用滚动/金额规则继续留在所属功能。
+- 新bug修改所属模块；不建立根部helper、misc或fix副本，不把修复脚本塞入运行包。公共fixture仍留在tests/helpers。
+- `scripts.project.check_layout` 同时执行源码位置和依赖检查。它解析绝对/相对导入、函数内部导入和字面量动态导入；工作区与staged使用各自的源码、规则视图。动态拼接模块名不在静态检查保证内，不应使用它绕开依赖规则。
+- 边界测试位于 `tests/core/test_source_boundaries.py`，包括跨功能导入、底层反向依赖、旧入口引用、Win32越界和WGC提前导入；索引与工作区差异测试仍在tests/scripts/project。不会安装hook或配置CI。
+- 配置YAML和RuntimeSnapshot继续维持兼容的聚合格式；此次拆分源码职责，不改变运行配置格式、UI字段、识别阈值或模板字节。
 
 ## 环境与运行
 

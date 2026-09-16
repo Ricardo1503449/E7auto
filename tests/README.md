@@ -17,3 +17,5 @@
 项目路径从 `tests.helpers.paths` 导入；测试临时输出使用 `tmp_path`，不得写入fixtures。共用fixture放在helpers或conftest，不能从其他test模块导入。
 
 WGC测试 `platform/test_wgc_capture.py` 必须与Qt测试分进程。只运行改动直接相关的测试；完整入口 `scripts/test-source.ps1` 仅在用户要求全套验证时执行。
+
+源码依赖边界测试位于core/test_source_boundaries.py；源码迁移不改变本目录按被测职责分类的规则。WGC与Qt分进程，测试桩应替换新模块的实际调用位置。
