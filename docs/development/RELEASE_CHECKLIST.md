@@ -21,9 +21,9 @@ Do not run Nuitka or rebuild `dist\launcher.dist` during incremental development
 - [ ] Confirm source and packaged logging use the unified defaults: 7 days, 20 runs, 10 MB per file, 3 backups, 500 MB total target; no logging mode selector.
 - [ ] Confirm the PE machine is AMD64. Do not label the build ARM64-compatible.
 
-## v1.3.3 source preparation (not built)
+## v1.3.3 local build
 
-Current source targets `E7auto_v1.3.3_x64.zip`, with Windows file/product version `1.3.3.0`. The two native-crash fixes and source organization changes are recorded in [v1.3.3 validation](../releases/v1.3.3/VALIDATION.md). No v1.3.3 executable, ZIP, elevated compiled self-check or GitHub Release has been produced; those gates remain pending.
+The local `E7auto_v1.3.3_x64.zip` and standalone directory have been rebuilt from commit `99435b8`, with Windows file/product version `1.3.3.0`. Native-runtime normalization, resource/archive consistency and the elevated compiled self-check passed; Qt/WGC DLLs meet the locked runtime minimum. The packaged usage guide was synchronized afterward and the ZIP regenerated without recompiling executable code. Details and final archive measurements are in [v1.3.3 validation](../releases/v1.3.3/VALIDATION.md). No new full-suite run, game-operation validation, clean-Windows validation, version tag or GitHub Release was performed.
 
 ## v1.3.2 local rebuild (historical)
 
