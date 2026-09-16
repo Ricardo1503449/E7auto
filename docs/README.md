@@ -11,3 +11,5 @@
 - [后台能力与Qt/PyWinRT运行库共存验证](validation/platform/BACKGROUND_VALIDATION.md)
 
 `validation/<主题>/` 保存验证结论、范围和限制。原始输出保存在本地 `artifacts/`，不复制到规范文档中。
+
+新版本的验证记录在最终提交前集中整理；构建与上传的阶段状态留在本地产物，公开下载状态以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准。历史版本记录保留原有验收事实。

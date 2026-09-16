@@ -32,6 +32,7 @@
 - 工具通过create_artifact_run或task_result_path创建默认输出。不得自行拼接artifacts根目录下的新任务名。
 - 验证器默认生成任务results，显式指定项目内结果路径时必须指向已有管理任务。明确指定项目外的临时/导出路径仍支持；不自动把用户输入复制到工程。
 - 发布构建自动创建releases/<版本>/<构建ID>，编译目录和临时配置使用同一个ID。日志/构建结果写入对应release任务，成功产物发布到dist。
+- 同一构建的build-inputs.json、build-artifact.json、release-verification.json和publish-check.json直接放该release任务根目录；发布后的远端响应和上传结果也放本地产物，不写回README或发布清单。docs/releases/<版本>/只在最终提交前集中整理验证结论及限制。
 - 可复用工具写入scripts对应模块；仅本次任务使用的脚本写入scratch。程序实际运行日志和用户状态仍使用logs和state，不属于开发实验结果。
 - 文档规范更新当前有效行为；验证文档记录结论、范围、限制和证据位置。原始日志与图像不写入docs。新bug先更新所属主题文档，避免final/v2/fix等平铺文档。
 - 归档只用于明确授权保留的历史资料。每份归档由_archive.json冻结文件清单和SHA-256，禁止作为工具输出目录。迁移前后以映射和摘要核验，未完成登记事务不得移动或清除。

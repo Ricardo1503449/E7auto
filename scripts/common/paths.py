@@ -16,6 +16,10 @@ CANDIDATES_DIR = PROJECT_ROOT / "artifacts" / "template-candidates"
 LAYOUT_POLICY = PROJECT_ROOT / "scripts" / "project" / "layout.json"
 
 
+def release_runs_dir(root: Path = PROJECT_ROOT) -> Path:
+    return root / "artifacts" / "releases"
+
+
 def layout_policy() -> dict:
     return json.loads(LAYOUT_POLICY.read_text(encoding="utf-8"))
 

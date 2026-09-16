@@ -13,7 +13,7 @@
 - 开发产物使用 `python -m scripts.project.artifacts` 或 `scripts.common.paths` 分配目录；tasks按已登记功能归属，任务内部使用inputs/previews/results/scratch，不新增artifacts顶层任务目录。
 - 新功能先在layout.json登记功能名，再创建任务和样本目录；登记分类不会自动启用运行功能。未知分类/功能不能默认为shop或misc。
 - 规范、验证结论、发布记录按docs分类保存；原始输出放artifacts。新增测试按被测职责分类，临时输出使用tmp_path；公共fixture不得从其他test模块导入。
-- CHANGELOG只记录按版本划分的实际新增、修复、改进和移除；不新增发布准备、本机构建、发布等过程栏目，不记录版本同步、包名或测试/构建状态。相关记录放docs/releases/<版本>/；清理旧栏目时保留或迁移其中的实际行为变化。GitHub Release下载栏目按发布检查单另行维护。
+- CHANGELOG只记录按版本划分的实际新增、修复、改进和移除；不新增发布准备、本机构建、发布等过程栏目。版本验证结论在收尾提交前写入docs/releases/<版本>/；构建过程、上传状态、远端核对写入本地artifacts/releases。清理旧栏目时保留实际行为变化，历史验证记录不因新流程重写。
 - build只存可再生构建输出，禁止放唯一来源、历史证据或一次性实验。归档为冻结资料，不允许成为新输出目录。
 - 每次新增/移动文件或更改输出路径后运行 `python -m scripts.project.check_layout`；该检查也扫描被忽略的本地产物。完成后报告检查和直接相关测试结果。
 - 获准提交后运行 `python -m scripts.project.check_layout --staged`，读取实际暂存内容；同时保留既有diff检查、模板登记检查和提交授权要求。不安装hook或配置CI。
@@ -51,6 +51,9 @@
 
 ## Git 与验证
 
+- 准备发布的批次按“修改与相关测试→同步版本/文档→构建验收→集中提交推送→Release”执行；日常开发仍可阶段提交，不因commit自动构建。源码/配置/资源/随包说明在构建前定稿，构建后只补不参与打包的验证结论。
+- README使用固定Release下载入口；使用说明不写待构建等临时状态；RELEASE_CHECKLIST只保存通用规则。发布结果记录在GitHub和本地产物，不仅为“已发布”追加仓库文档commit。
+- 构建自动执行release.workflow的preflight/capture/seal；管理员发布验收带--run-dir，最终提交后执行release.workflow check核对构建输入、ZIP和验收记录。打包输入变化须重建；不手改快照放行旧包。缺少新流程记录的历史包不能伪造快照追认。
 - 修改完成后列出文件及验证结果，等待用户明确授权后才提交；未经授权不推送。
 - 只运行直接相关的边界、单元或回归测试；未经要求不跑全套测试，不重复已通过且内容未变的测试。
 - 提交前检查暂存文件范围和 `git diff --cached --check`。若提交与推送一起获准，连续完成并核对远端引用。

@@ -120,10 +120,30 @@ Qt与WGC测试现在可以在同一Python进程运行。WGC入口先通过 `plat
 
 ## 构建与交付
 
+准备发布的一批修改按下面顺序执行；普通开发可以随时提交，不要求每次commit都打包：
+
+1. 完成修改及直接相关测试，集中同步版本号、CHANGELOG、README源码版本和随包使用说明。
+2. 执行构建与新产物验收。打包输入此时定稿；验收后把实际结论及限制一次写入版本记录。
+3. 用户授权后集中commit/push。只修改未打包的验证记录不需要重建；源码、配置、资源、随包说明或构建工具变化需要重建并重新验收。
+4. 通过最终提交一致性检查，确认该提交已推送；获发布授权后创建标签、上传已验证ZIP。
+5. 核对远端标签和附件，结果保存到本地产物。发布成功后不再为了更新“已发布”状态修改仓库文档。
+
 ```powershell
+.\.venv\Scripts\python.exe -B -m scripts.release.workflow preflight
 powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
-.\.venv\Scripts\python.exe -m scripts.release.verify_release
+# 替换为构建脚本打印的实际目录：
+$releaseRun = '<构建脚本打印的Release record directory>'
+# 管理员PowerShell中执行编译版验收：
+.\.venv\Scripts\python.exe -B -m scripts.release.verify_release --run-dir $releaseRun
+# 补齐版本记录并完成获授权的commit/push后：
+.\.venv\Scripts\python.exe -B -m scripts.release.workflow check --run-dir $releaseRun --revision HEAD
 ```
+
+构建入口自动检查版本/文档与环境，编译前capture记录输入，压缩后seal检查编译期间输入未变、ZIP和dist逐文件一致及打包资源匹配。最后的check还要求最终Git提交包含同一组输入，并存在绑定该产物的成功编译版验收记录。可以先构建未提交修改，再集中提交；Git行尾转换按实际过滤规则核对，图片字节保持精确匹配。新增或删除输入文件也会使旧包失效。
+
+输入范围为src/e7auto、assets/templates、assets/ui、scripts/release、scripts/common，以及launcher.py、pyproject.toml、requirements.lock、config/internal.yaml、随包使用说明和存在时的.gitattributes；不包含未打包的验证记录。后续构建入口增加新的输入目录时，须同步workflow的输入范围和边界测试。检查不自动提交、推送或创建Release，也不替代编译版自检与实机验证；直接绕过工具不在保证范围内。已有v1.3.3包和标签保持原样，缺少新快照的历史构建不补造记录。
+
+流程边界及当前验收范围见[发布流程验证](../validation/common/RELEASE_WORKFLOW_VALIDATION.md)。
 
 构建继续使用根目录 `launcher.py`、现有配置和资源布局。源码测试与构建脚本契约通过，不等于已重新构建或验证新的独立程序。修改源码后需要另行执行构建和 [发布检查](RELEASE_CHECKLIST.md)，才能对新产物作出结论。
 
@@ -133,7 +153,9 @@ powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
 
 ## 更新日志与发布记录
 
-`CHANGELOG.md` 保留版本号和日期，按实际内容使用新增、修复、改进、移除等分类；不添加发布准备、本机构建、发布等过程栏目。版本同步、目标包名、构建进度、测试数量、验收结果及是否已发布统一记入 `docs/releases/<版本>/`，原始日志保存在对应本地产物目录。版本标题本身不表示产物已发布。
+`CHANGELOG.md` 保留版本号和日期，按实际内容使用新增、修复、改进、移除等分类；不添加发布准备、本机构建、发布等过程栏目。README保留项目介绍、源码版本及固定下载入口；随包使用说明只写对应版本的使用方式，不跟踪构建/上传状态。RELEASE_CHECKLIST只保存通用流程，不逐版本追加执行日志。
+
+`docs/releases/<版本>/` 在最终提交前一次记录版本范围、已完成的验证结论和未覆盖场景，不预写发布成功，也不在上传后补提交状态。编译日志、阶段进度、包摘要、上传结果和远端核对保存在 `artifacts/releases/<版本>/<构建ID>/`；实际公开发布状态以GitHub Release为准。历史记录保留原事实，不为符合新流程删除证据。
 
 整理历史条目时，删除重复的版本和打包说明；栏目中包含的真实行为变化应迁回该版本的对应分类，已有验证证据保留在原记录中。GitHub Release页面的下载文件栏目与CHANGELOG职责不同，继续遵循[发布检查单](RELEASE_CHECKLIST.md)。
 

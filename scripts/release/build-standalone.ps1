@@ -51,11 +51,13 @@ if (-not (Test-Path -LiteralPath (Join-Path $uiAssetDir "shop-card-background.pn
     throw "Missing shop card background"
 }
 
-New-Item -ItemType Directory -Path $distDir -Force | Out-Null
-
 # Every build has one managed output owner; logs and evidence stay outside build/.
 Push-Location $projectRoot
 try {
+    & $python -B -m scripts.release.workflow preflight
+    if ($LASTEXITCODE -ne 0) { throw "Synchronize version and documents before building" }
+    & $python -B -m scripts.verify_environment
+    if ($LASTEXITCODE -ne 0) { throw "Source environment verification failed" }
     $runDirectory = & $python -B -m scripts.project.artifacts --kind releases --version $version --subject standalone
     if ($LASTEXITCODE -ne 0) { throw "Unable to allocate release output" }
 } finally { Pop-Location }
@@ -72,6 +74,9 @@ $configText = [IO.File]::ReadAllText($sourceConfig)
 $env:NUITKA_CACHE_DIR = Join-Path $projectRoot ".nuitka-cache"
 Push-Location $projectRoot
 try {
+    & $python -B -m scripts.release.workflow capture --run-dir $runDirectory
+    if ($LASTEXITCODE -ne 0) { throw "Unable to capture build inputs" }
+    New-Item -ItemType Directory -Path $distDir -Force | Out-Null
     & $python -m nuitka `
         --mode=standalone `
         --enable-plugin=pyside6 `
@@ -121,6 +126,8 @@ try {
         -LiteralPath (Get-ChildItem -LiteralPath $releaseDir -Force).FullName `
         -DestinationPath $temporaryReleaseZip `
         -CompressionLevel Optimal
+    & $python -B -m scripts.release.workflow seal --run-dir $runDirectory --archive $temporaryReleaseZip --directory $releaseDir
+    if ($LASTEXITCODE -ne 0) { throw "Build inputs or ZIP contents changed during compilation" }
     Move-Item -LiteralPath $temporaryReleaseZip -Destination $releaseZip -Force
 
     # Retain the newly completed archive only. Failed builds/archives never reach this cleanup.
@@ -145,6 +152,7 @@ finally {
     [ordered]@{ succeeded = $buildSucceeded; build_id = $buildId; version = $version;
         release_directory = $releaseDir; archive = $releaseZip } |
         ConvertTo-Json | Set-Content -LiteralPath (Join-Path $runDirectory "build-result.json") -Encoding utf8
+    Write-Host "Release record directory: $runDirectory"
     Remove-Item -LiteralPath $releaseConfig -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $temporaryReleaseZip -Force -ErrorAction SilentlyContinue
     Pop-Location

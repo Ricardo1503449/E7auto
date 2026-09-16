@@ -2,13 +2,11 @@
 
 E7auto 是一款面向 Windows x64 的安全停止型商店自动化应用，使用 Python 3.12、Qt Widgets、OpenCV、Windows Graphics Capture 和标准 Win32 窗口消息输入构建。
 
-当前检入源码版本为 `v1.3.3`，配置已针对经过验证的目标主机完成全部校准，并设置了 `calibration_complete: true`。当该校准门控、必要模板或安全关键几何信息缺失时，配置加载仍会安全失败，并且不会发送任何输入。Windows x64 构建包 `E7auto_v1.3.3_x64.zip` 已完成本机验证并发布到 [GitHub Release](https://github.com/Ricardo1503449/E7auto/releases/tag/v1.3.3)；GitHub 推送与发布属于独立操作，不由本地构建自动执行。
+当前检入源码版本为 `v1.3.3`，配置已针对经过验证的目标主机完成校准，并设置了 `calibration_complete: true`。当校准门控、必要模板或安全关键几何信息缺失时，配置加载会安全失败，不发送输入。可下载版本及附件以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准；源码版本与已发布版本可能不同。
 
 详细界面行为、刷新策略、校准和窗口适配规则见 [用户行为与运行策略](docs/design/BEHAVIOR.md)。
 
-v1.3.3 修复Qt窗口生命周期与Qt/PyWinRT运行库冲突，并包含此前完成的源码分层、文档和开发产物分类约束。源码与本机构建验证范围见[v1.3.3记录](docs/releases/v1.3.3/VALIDATION.md)。
-
-此前 v1.3.2 改善主界面入口识别、隐藏界面启动唤醒与滚动校验，增加异常停止缓存帧诊断，并整理模板配置和登记流程。天空石图标已去除背景，保持原始RGB、尺寸和识别阈值，修复反馈截图中的刷新前余额识别超时；模板维护新增项目规则和本地来源检查。2026-09-16基于提交 `1d0a198` 重建同版本EXE与ZIP，沿用已有相关测试，资源一致性、ZIP完整性和管理员编译版自检通过，详见[本机构建记录](docs/releases/v1.3.2/VALIDATION.md)。
+各版本的功能变化见[更新日志](CHANGELOG.md)，验证结论见[项目文档](docs/README.md)。
 
 功能中心还提供“红叶换企鹅”：从游戏主界面进入成长祭坛，按每批 50 个企鹅自动购买，达到成功批次上限或红叶不足一整批时正常返回主界面。设置页提供购买次数上限、只读的“预计消耗红叶”（上限 × 5,100）、启动按钮和 F5 提示；预计值不是实时余额读取。悬浮窗保留最终耗时与购买次数，返回功能中心时隐藏，下次启动后重新显示。网络异常会自动重连，恢复后继续画面确认，已提交的购买不会重复提交。详见 [红叶换企鹅运行规则](docs/design/BEHAVIOR.md#红叶换企鹅)。红叶换企鹅自 v1.3.0 提供；v1.3.1 的商店识别改进继续保留。
 
@@ -56,7 +54,7 @@ powershell -ExecutionPolicy Bypass -File scripts\test-source.ps1
 
 `scripts/test-source.ps1` 是全套测试入口，仅在明确要求全量验证时运行；Qt与WGC使用同一次pytest调用。增量修改按[开发指南](docs/development/DEVELOPMENT.md)只运行直接相关测试。
 
-最新源码包含[UI生命周期修复](docs/validation/common/SOURCE_LAYERING_VALIDATION.md#2026-09-16-后续ui生命周期修复)和[Qt/PyWinRT运行库修复](docs/validation/platform/BACKGROUND_VALIDATION.md#2026-09-16-qtpywinrt原生运行库共存)。本机v1.3.3 EXE与ZIP已包含这两项修复；上面的v1.3.2构建记录保留其原有验收范围。
+准备发布时，按[开发指南的发布顺序](docs/development/DEVELOPMENT.md#构建与交付)先同步文档、构建验收，再集中提交推送，最后发布Release。
 
 ## 校准与发布
 
@@ -70,7 +68,9 @@ powershell -ExecutionPolicy Bypass -File scripts\test-source.ps1
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\release\build-standalone.ps1
-.\.venv\Scripts\python.exe -m scripts.release.verify_release
+# 将占位内容替换为构建脚本打印的完整目录，在管理员终端执行验收：
+$releaseRun = '<构建脚本打印的Release record directory>'
+.\.venv\Scripts\python.exe -B -m scripts.release.verify_release --run-dir $releaseRun
 ```
 
 构建脚本会嵌入 `requireAdministrator` UAC 清单并生成与 `pyproject.toml` 版本一致的 `E7auto_v<版本>_x64.zip`。只有新版独立目录成功构建且新版 ZIP 成功压缩后，脚本才会删除 `dist` 中其他版本的 ZIP；构建或压缩失败时会保留旧 ZIP。`dist` 仅保存本机构建结果，不纳入 Git 跟踪；通过发布检查的版本化 ZIP 应作为 GitHub Release 附件上传。

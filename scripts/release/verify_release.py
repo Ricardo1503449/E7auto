@@ -24,6 +24,7 @@ from e7auto.resources.manifest import load_template_manifest
 from dataclasses import asdict
 from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR, create_artifact_run, finish_artifact_run
 from scripts.release.native_runtime import verify_native_runtime
+from scripts.release.workflow import record_validation
 
 
 USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
@@ -452,7 +453,9 @@ def verify_windows_versions(executable: Path, expected: str) -> list[str]:
 
 
 def main() -> int:
-    argparse.ArgumentParser(description="Verify the standalone release and save a managed report").parse_args()
+    parser = argparse.ArgumentParser(description="Verify the standalone release; bind results to a build with --run-dir")
+    parser.add_argument("--run-dir", type=Path, help="Managed release directory printed by the build script")
+    args = parser.parse_args()
     root = PROJECT_ROOT
     expected_version = project_version(root / "pyproject.toml")
     release = root / "dist" / "launcher.dist"
@@ -526,7 +529,13 @@ def main() -> int:
                     problems.append(
                         "compiled self-check version does not match pyproject.toml"
                     )
-    print(json.dumps({"release": str(release), "problems": problems, "self_check": self_check}, indent=2))
+    report = {"release": str(release), "problems": problems, "self_check": self_check}
+    if args.run_dir is not None:
+        try:
+            record_validation(args.run_dir, report, root)
+        except (ValueError, OSError, KeyError) as exc:
+            problems.append(f"cannot bind release verification to build: {exc}")
+    print(json.dumps(report, indent=2))
     return 1 if problems else 0
 
 

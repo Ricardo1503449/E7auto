@@ -17,6 +17,7 @@ from tests.helpers.paths import ROOT
 CLI_MODULES = [
     "release.verify_release",
     "release.native_runtime",
+    "release.workflow",
     "project.artifacts",
     "project.check_layout",
     "templates.check_changes",
