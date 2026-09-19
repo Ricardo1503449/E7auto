@@ -56,10 +56,14 @@ class ModuleCardSpec:
 
 
 class _ToggleSwitch(QAbstractButton):
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self, parent: QWidget | None = None, *,
+        object_name: str = "friendshipPointsToggle",
+        accessible_name: str = "购买友情点数",
+    ) -> None:
         super().__init__(parent)
-        self.setObjectName("friendshipPointsToggle")
-        self.setAccessibleName("购买友情点数")
+        self.setObjectName(object_name)
+        self.setAccessibleName(accessible_name)
         self.setCheckable(True)
         self.setChecked(False)
         self.setCursor(Qt.CursorShape.PointingHandCursor)

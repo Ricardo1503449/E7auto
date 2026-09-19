@@ -27,6 +27,7 @@ class AutomationWorker(QObject):
         overlay: StatsOverlay,
         *,
         purchase_limit: int | None = None,
+        continuous_refresh: bool = False,
     ):
         super().__init__()
         self._config = config
@@ -35,6 +36,7 @@ class AutomationWorker(QObject):
         self._project_root = project_root
         self._overlay = overlay
         self._purchase_limit = purchase_limit
+        self._continuous_refresh = continuous_refresh
 
     @Slot()
     def run(self) -> None:
@@ -54,6 +56,7 @@ class AutomationWorker(QObject):
                 final = session.run(
                     self._refresh_limit, run_id,
                     enabled_optional_target_ids=enabled_optional,
+                    continuous_refresh=self._continuous_refresh,
                 )
             else:
                 final = session.run_penguins(self._purchase_limit, run_id)

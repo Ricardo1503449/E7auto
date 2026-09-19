@@ -61,6 +61,8 @@ class AutomationSession:
         refresh_limit: int,
         run_id: str | None = None,
         enabled_optional_target_ids: frozenset[str] = frozenset(),
+        *,
+        continuous_refresh: bool = False,
     ) -> RuntimeSnapshot:
         if isinstance(refresh_limit, bool) or not isinstance(refresh_limit, int) or refresh_limit < 0:
             raise ValueError("refresh_limit must be a non-negative integer")
@@ -84,13 +86,20 @@ class AutomationSession:
             refresh_limit,
         )
         self._dependencies.logger.event(
+            "refresh_mode",
+            continuous_refresh=continuous_refresh,
+        )
+        self._dependencies.logger.event(
             "target_selection",
             enabled=",".join(sorted(enabled_target_ids)),
             disabled=",".join(sorted(selectable_ids - set(enabled_target_ids))),
         )
         return self._runner.run(
             initial,
-            lambda control, publisher: ShopFlow(self._config, self._dependencies, control, publisher, enabled_target_ids),
+            lambda control, publisher: ShopFlow(
+                self._config, self._dependencies, control, publisher, enabled_target_ids,
+                continuous_refresh=continuous_refresh,
+            ),
             RUN_POLICY,
         )
 

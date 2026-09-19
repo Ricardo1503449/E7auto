@@ -22,6 +22,19 @@ def _record_refresh_strategy_outcome(
     self,
     mandatory_targets_found: frozenset[str],
 ) -> tuple[str, int] | None:
+    # Statistics apply to both modes; only staged mode advances the strategy.
+    if mandatory_targets_found:
+        self._consecutive_no_target_refreshes = 0
+    else:
+        self._consecutive_no_target_refreshes += 1
+    self.runtime.publisher.mutate(
+        lambda snapshot: snapshot.with_refreshes_without_mandatory_target(
+            self._consecutive_no_target_refreshes
+        )
+    )
+    if self._continuous_refresh:
+        return None
+
     if mandatory_targets_found:
         self.runtime.deps.logger.event(
             "refresh_strategy_reset",
@@ -31,19 +44,9 @@ def _record_refresh_strategy_outcome(
         )
         self._refresh_strategy_stage = 0
         self._refreshes_without_mandatory_target = 0
-        self._consecutive_no_target_refreshes = 0
-        self.runtime.publisher.mutate(
-            lambda snapshot: snapshot.with_refreshes_without_mandatory_target(0)
-        )
         return None
 
     self._refreshes_without_mandatory_target += 1
-    self._consecutive_no_target_refreshes += 1
-    self.runtime.publisher.mutate(
-        lambda snapshot: snapshot.with_refreshes_without_mandatory_target(
-            self._consecutive_no_target_refreshes
-        )
-    )
     batch_limit = self.runtime.config.refresh_strategy.batch_refreshes[
         self._refresh_strategy_stage
     ]

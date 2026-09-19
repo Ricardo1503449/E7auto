@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import pytest
 
 from tests.automation.support import run_session, balances_for_refreshes, compact_strategy_config
 from e7auto.features.shop.flow import ShopFlow as AutomationEngine
@@ -9,6 +10,53 @@ from e7auto.runtime.stop_control import StopController
 from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
 from e7auto.features.shop.contracts import PurchaseOutcome
 from tests.helpers import FakeHotkeys, FakeClock, ScriptedVision, make_config, make_dependencies, match
+
+
+@pytest.mark.parametrize("continuous_refresh, expected_count", [(False, 49), (True, 60)])
+def test_refresh_mode_controls_full_strategy_and_final_exit(continuous_refresh, expected_count):
+    vision = ScriptedVision(balances=balances_for_refreshes(60))
+    final, snapshots, _, _, _, _, logger = run_session(
+        vision, limit=180, continuous_refresh=continuous_refresh,
+    )
+    assert final.refresh_spent == expected_count * 3
+    assert final.refreshes_without_mandatory_target == expected_count
+    assert final.stop_reason is (
+        StopReason.BUDGET_COMPLETE if continuous_refresh else StopReason.REFRESH_STRATEGY_EXHAUSTED
+    )
+    waits = [fields for event, fields in logger.events if event == "refresh_strategy_wait_started"]
+    assert [item["seconds"] for item in waits] == ([] if continuous_refresh else [5, 180, 5])
+    if not continuous_refresh:
+        assert [snapshot.refreshes_without_mandatory_target for index, snapshot in enumerate(snapshots)
+                if snapshot.overlay_status is OverlayActivityStatus.TRANSFERRING
+                and snapshots[index - 1].overlay_status is not OverlayActivityStatus.TRANSFERRING] == [13, 26, 39]
+    else:
+        assert not any(snapshot.overlay_status is OverlayActivityStatus.TRANSFERRING for snapshot in snapshots)
+        assert not any(event.startswith("refresh_strategy_") for event, _ in logger.events)
+    actions = [fields["action"] for event, fields in logger.events if event == "input"]
+    assert actions.count("open_shop") == (1 if continuous_refresh else 4)
+    assert actions.count("exit_shop") == (1 if continuous_refresh else 4)
+    assert actions[-1] == "exit_shop"
+    assert vision.scan_calls == ["top", "bottom"] * (expected_count + 1)
+    assert [fields for event, fields in logger.events if event == "refresh_mode"] == [
+        {"continuous_refresh": continuous_refresh}
+    ]
+
+
+@pytest.mark.parametrize("target, expected_streak", [("wood", 0), ("ore", 0), ("friendship_points", 2)])
+def test_continuous_refresh_keeps_target_streak_semantics(target, expected_streak):
+    vision = ScriptedVision(
+        top=[(), (), (match(target),), ()], bottom=[()] * 3,
+        purchase=[PurchaseOutcome.SUCCESS], balances=balances_for_refreshes(2),
+    )
+    final, snapshots, _, _, _, _, logger = run_session(
+        vision, limit=6, config=make_config(include_friendship=True),
+        enabled_optional_target_ids=frozenset({"friendship_points"}), continuous_refresh=True,
+    )
+    assert final.stop_reason is StopReason.BUDGET_COMPLETE
+    assert 1 in [snapshot.refreshes_without_mandatory_target for snapshot in snapshots]
+    assert final.refreshes_without_mandatory_target == expected_streak
+    assert next(tally.acquired for tally in final.targets if tally.target_id == target) == 1
+    assert not any(event.startswith("refresh_strategy_") for event, _ in logger.events)
 
 
 def test_no_target_strategy_runs_all_recovery_stages_then_stops() -> None:
@@ -260,7 +308,8 @@ def test_shop_reentry_invalidates_verified_balance_before_next_refresh() -> None
     )
 
 
-def test_network_reconnect_pauses_active_clock_and_restores_overlay_status() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+def test_network_reconnect_pauses_active_clock_and_restores_overlay_status(continuous_refresh) -> None:
     vision = ScriptedVision(
         network_errors=[True, True, False],
         network_retries=[False],
@@ -280,6 +329,7 @@ def test_network_reconnect_pauses_active_clock_and_restores_overlay_status() -> 
         control,
         publisher,
         frozenset(target.target_id for target in make_config().targets),
+        continuous_refresh=continuous_refresh,
     )
     engine.runtime.capture_raw = lambda: object()  # type: ignore[method-assign]
     engine._trusted_sky_stone_balance = 321
@@ -295,6 +345,7 @@ def test_network_reconnect_pauses_active_clock_and_restores_overlay_status() -> 
     assert engine.runtime.active_monotonic() == 0.0
     assert engine._trusted_sky_stone_balance is None
     assert engine._pending_top_scan is None
+    assert engine._continuous_refresh is continuous_refresh
     assert any(
         event == "trusted_sky_stone_balance_invalidated"
         and fields == {"reason": "network_recovery", "value": 321}

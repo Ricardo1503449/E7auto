@@ -20,6 +20,7 @@ def run_session(
     enabled_optional_target_ids: frozenset[str] = frozenset(),
     clock: FakeClock | None = None,
     runtime: FakeRuntimeEnvironment | None = None,
+    continuous_refresh: bool = False,
 ):
     snapshots: list[RuntimeSnapshot] = []
     deps, fake_windows, fake_inputs, fake_overlay, logger = make_dependencies(
@@ -35,6 +36,7 @@ def run_session(
         limit,
         "test-run",
         enabled_optional_target_ids=enabled_optional_target_ids,
+        continuous_refresh=continuous_refresh,
     )
     return final, snapshots, fake_windows, fake_inputs, fake_overlay, fake_hotkeys, logger
 

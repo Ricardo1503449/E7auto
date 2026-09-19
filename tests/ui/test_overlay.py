@@ -18,7 +18,8 @@ from tests.helpers.paths import ROOT
 import e7auto.ui.overlay as overlay_module
 
 
-def test_stats_overlay_keeps_one_size_for_all_runtime_values() -> None:
+@pytest.mark.parametrize("miss_count", [50, 100, 9_999_999, 2_147_483_647 // 3])
+def test_stats_overlay_keeps_one_size_for_all_runtime_values(miss_count) -> None:
     application = QApplication.instance() or QApplication([])
     overlay = StatsOverlay()
     config = make_config(include_friendship=True)
@@ -36,7 +37,7 @@ def test_stats_overlay_keeps_one_size_for_all_runtime_values() -> None:
         ),
         refresh_spent=9_999_999,
         refresh_limit=9_999_999,
-        refreshes_without_mandatory_target=9_999_999,
+        refreshes_without_mandatory_target=miss_count,
         overlay_status=OverlayActivityStatus.REFRESHING,
     )
 
@@ -52,7 +53,7 @@ def test_stats_overlay_keeps_one_size_for_all_runtime_values() -> None:
         overlay.update_snapshot(maximum)
         application.processEvents()
         assert overlay.size() == fixed_size
-        assert overlay._no_target.text() == "已经9999999次未出货"
+        assert overlay._no_target.text() == f"已经{miss_count}次未出货"
         assert overlay._status.text() == "当前状态：刷新ing..."
 
         reconnecting = maximum.with_overlay_status(OverlayActivityStatus.RECONNECTING)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import pytest
 
 from tests.automation.support import run_session
 from e7auto.features.shop.flow import ShopFlow as AutomationEngine
@@ -13,9 +14,11 @@ from e7auto.features.shop.contracts import PurchaseOutcome
 from tests.helpers import FakeHotkeys, FakeInput, ScriptedVision, make_config, make_dependencies, match
 
 
-def test_budget_below_cost_never_refreshes() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+@pytest.mark.parametrize("limit", [0, 2])
+def test_budget_below_cost_never_refreshes(continuous_refresh, limit) -> None:
     final, _, _, inputs, _, _, _ = run_session(
-        ScriptedVision(top=[()], bottom=[()]), limit=2
+        ScriptedVision(top=[()], bottom=[()]), limit=limit, continuous_refresh=continuous_refresh,
     )
     assert final.refresh_spent == 0
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
@@ -23,13 +26,14 @@ def test_budget_below_cost_never_refreshes() -> None:
     assert len([action for action, _, _ in inputs.actions if action == "click"]) == 2
 
 
-def test_exact_budget_refresh_scans_last_inventory_completely() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+def test_exact_budget_refresh_scans_last_inventory_completely(continuous_refresh) -> None:
     vision = ScriptedVision(
         top=[(), ()],
         bottom=[(), ()],
         balances=[3927, 3924],
     )
-    final, _, _, inputs, _, _, logger = run_session(vision, limit=3)
+    final, _, _, inputs, _, _, logger = run_session(vision, limit=3, continuous_refresh=continuous_refresh)
     assert final.refresh_spent == 3
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert vision.scan_calls == ["top", "bottom", "top", "bottom"]
@@ -284,7 +288,8 @@ def test_refresh_retry_rejects_changed_balance_without_second_click() -> None:
     assert clicks == [Point(5, 5), Point(90, 70)]
 
 
-def test_f5_after_unacknowledged_refresh_blocks_retry_click() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+def test_f5_after_unacknowledged_refresh_blocks_retry_click(continuous_refresh) -> None:
     vision = ScriptedVision(
         top=[()],
         bottom=[()],
@@ -306,6 +311,7 @@ def test_f5_after_unacknowledged_refresh_blocks_retry_click() -> None:
         limit=3,
         inputs=inputs,
         hotkeys=hotkeys,
+        continuous_refresh=continuous_refresh,
     )
 
     assert final.stop_reason is StopReason.MANUAL_F5
@@ -321,7 +327,8 @@ def test_refresh_failure_does_not_charge_budget() -> None:
     assert final.refresh_spent == 0
 
 
-def test_concurrent_top_detection_cannot_act_before_exact_minus_three_balance() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+def test_concurrent_top_detection_cannot_act_before_exact_minus_three_balance(continuous_refresh) -> None:
     vision = ScriptedVision(
         top=[(), (match("wood"),)],
         bottom=[()],
@@ -329,7 +336,7 @@ def test_concurrent_top_detection_cannot_act_before_exact_minus_three_balance() 
         balances=[100, 96],
     )
 
-    final, _, _, inputs, _, _, _ = run_session(vision, limit=3)
+    final, _, _, inputs, _, _, _ = run_session(vision, limit=3, continuous_refresh=continuous_refresh)
 
     assert final.stop_reason is StopReason.REFRESH_BALANCE_MISMATCH
     assert final.refresh_spent == 0
@@ -370,9 +377,10 @@ def test_refresh_waits_through_stable_old_balance_then_accepts_stable_minus_thre
     ]
 
 
-def test_balance_below_refresh_cost_stops_before_refresh_click() -> None:
+@pytest.mark.parametrize("continuous_refresh", [False, True])
+def test_balance_below_refresh_cost_stops_before_refresh_click(continuous_refresh) -> None:
     vision = ScriptedVision(top=[()], bottom=[()], balances=[2])
-    final, _, _, inputs, _, _, _ = run_session(vision, limit=3)
+    final, _, _, inputs, _, _, _ = run_session(vision, limit=3, continuous_refresh=continuous_refresh)
     assert final.stop_reason is StopReason.REFRESH_BALANCE_MISMATCH
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]

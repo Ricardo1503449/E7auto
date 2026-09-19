@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QSpinBox,
     QStackedWidget,
     QWidget,
@@ -234,21 +235,28 @@ def test_function_center_reflows_and_future_cards_are_deliberate_placeholders(
         application.processEvents()
 
 
-def test_friendship_toggle_changes_only_when_switch_itself_is_clicked(
+@pytest.mark.parametrize("name, label_text", [
+    ("friendshipPointsToggle", "购买友情点数"),
+    ("continuousRefreshToggle", "连续刷新"),
+])
+def test_setting_toggle_changes_only_when_switch_itself_is_clicked(
     tmp_path: Path,
+    name: str,
+    label_text: str,
 ) -> None:
     application = QApplication.instance() or QApplication([])
     window = MainWindow(tmp_path)
     shop_card = window.findChild(QAbstractButton, "shopModuleCard")
-    toggle = window.findChild(QAbstractButton, "friendshipPointsToggle")
+    toggle = window.findChild(QAbstractButton, name)
     friendship_label = next(
         label
         for label in window.findChildren(QLabel)
-        if label.text() == "购买友情点数"
+        if label.text() == label_text
     )
     try:
         assert shop_card is not None
         assert toggle is not None
+        assert toggle.accessibleName() == label_text
         shop_card.click()
         window.show()
         application.processEvents()
@@ -261,12 +269,58 @@ def test_friendship_toggle_changes_only_when_switch_itself_is_clicked(
         application.processEvents()
         assert toggle.isChecked()
         assert toggle.hasFocus()
+        other = window._friendship_points if name == "continuousRefreshToggle" else window._continuous_refresh
+        assert not other.isChecked()
 
         focused_image = toggle.grab().toImage()
         toggle.clearFocus()
         application.processEvents()
         unfocused_image = toggle.grab().toImage()
         assert focused_image == unfocused_image
+        toggle.setFocus()
+        QTest.keyClick(toggle, Qt.Key.Key_Space)
+        assert not toggle.isChecked()
+        assert not any(button.isChecked() for button in (
+            window._friendship_points, window._continuous_refresh,
+        ))
+    finally:
+        window.close()
+        application.processEvents()
+
+
+def test_continuous_refresh_layout_selection_and_small_window_scroll(tmp_path):
+    application = QApplication.instance() or QApplication([])
+    window = MainWindow(tmp_path)
+    try:
+        window._show_shop_page()
+        window.resize(window.minimumSize())
+        window.show()
+        application.processEvents()
+        page = window._shop_feature_page
+        toggle = page.continuous_refresh_toggle
+        assert not toggle.isChecked()
+        assert toggle.size() == page.friendship_toggle.size()
+        assert toggle.geometry().top() > page.friendship_toggle.geometry().bottom()
+        assert toggle.geometry().right() == page.friendship_toggle.geometry().right()
+        assert [label.text() for label in page.findChildren(QLabel)] == [
+            "刷新秘密商店", "运行设置", "天空石消耗上限", "购买友情点数", "连续刷新",
+            "运行快捷键", "F5", "结束脚本",
+        ]
+        toggle.setChecked(True)
+        assert not page.friendship_toggle.isChecked()
+        page.back_button.click()
+        window._show_shop_page()
+        assert toggle.isChecked()
+        scroll = page.findChild(QScrollArea, "featureScrollArea")
+        assert scroll is not None
+        scroll.ensureWidgetVisible(page.start_button)
+        application.processEvents()
+        center = page.start_button.mapTo(scroll.viewport(), page.start_button.rect().center())
+        assert scroll.viewport().rect().contains(center)
+        assert scroll.horizontalScrollBar().maximum() == 0
+        fresh_window = MainWindow(tmp_path)
+        assert not fresh_window._continuous_refresh.isChecked()
+        fresh_window.close()
     finally:
         window.close()
         application.processEvents()

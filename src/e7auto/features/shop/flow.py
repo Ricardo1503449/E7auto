@@ -20,10 +20,12 @@ class ShopFlow:
     """Shop business state composed with a shared runtime."""
     def __init__(self, config: AppConfig, dependencies: AutomationDependencies[ShopVisionPort],
                  control: StopController, publisher: SnapshotPublisher,
-                 enabled_target_ids: frozenset[str] = frozenset()) -> None:
+                 enabled_target_ids: frozenset[str] = frozenset(), *,
+                 continuous_refresh: bool = False) -> None:
         self.runtime = RuntimeContext(config, dependencies, control, publisher,
                                       on_recovery=self._invalidate_trusted_balance)
         self._enabled_target_ids = enabled_target_ids
+        self._continuous_refresh = continuous_refresh
         self._mandatory_target_ids = frozenset(
             target.target_id for target in config.targets if not target.user_selectable
         )

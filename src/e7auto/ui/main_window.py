@@ -81,6 +81,7 @@ class MainWindow(QMainWindow):
         self._limit_label = self._shop_feature_page.limit_label
         self._limit = self._shop_feature_page.limit_input
         self._friendship_points = self._shop_feature_page.friendship_toggle
+        self._continuous_refresh = self._shop_feature_page.continuous_refresh_toggle
         self._start = self._shop_feature_page.start_button
         self._start.clicked.connect(self._start_run)
         self._limit.textChanged.connect(self._on_limit_text_changed)
@@ -335,6 +336,7 @@ class MainWindow(QMainWindow):
         self._start.setEnabled(False)
         self._limit.setEnabled(False)
         self._friendship_points.setEnabled(False)
+        self._continuous_refresh.setEnabled(False)
         self._shop_feature_page.back_button.setEnabled(False)
         self._penguin_feature_page.setEnabled(False)
         thread = QThread(self)
@@ -342,6 +344,7 @@ class MainWindow(QMainWindow):
             config, 0 if penguins else limit,
             False if penguins else self._friendship_points.isChecked(),
             self._project_root, self._overlay,
+            continuous_refresh=False if penguins else self._continuous_refresh.isChecked(),
             **({"purchase_limit": limit} if penguins else {}),
         )
         worker.moveToThread(thread)
@@ -368,6 +371,7 @@ class MainWindow(QMainWindow):
         self._overlay.stop_elapsed_timer()
         self._limit.setEnabled(True)
         self._friendship_points.setEnabled(True)
+        self._continuous_refresh.setEnabled(True)
         self._shop_feature_page.back_button.setEnabled(True)
         self._penguin_feature_page.setEnabled(True)
         self._thread = None

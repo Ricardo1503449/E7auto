@@ -84,6 +84,17 @@ class _ShopFeaturePage(QWidget):
         friendship_row.addWidget(self.friendship_toggle)
         settings_layout.addLayout(friendship_row)
 
+        continuous_row = QHBoxLayout()
+        continuous_label = QLabel("连续刷新")
+        continuous_label.setObjectName("settingLabel")
+        self.continuous_refresh_toggle = _ToggleSwitch(
+            object_name="continuousRefreshToggle", accessible_name="连续刷新",
+        )
+        continuous_row.addWidget(continuous_label)
+        continuous_row.addStretch(1)
+        continuous_row.addWidget(self.continuous_refresh_toggle)
+        settings_layout.addLayout(continuous_row)
+
         self.start_button = QPushButton("启动脚本")
         self.start_button.setObjectName("startButton")
         self.start_button.setCursor(Qt.CursorShape.PointingHandCursor)
