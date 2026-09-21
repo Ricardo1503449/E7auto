@@ -2,7 +2,7 @@
 
 E7auto 是一款面向 Windows x64 的安全停止型商店自动化应用，使用 Python 3.12、Qt Widgets、OpenCV、Windows Graphics Capture 和标准 Win32 窗口消息输入构建。
 
-当前检入源码版本为 `v1.3.3`，配置已针对经过验证的目标主机完成校准，并设置了 `calibration_complete: true`。当校准门控、必要模板或安全关键几何信息缺失时，配置加载会安全失败，不发送输入。可下载版本及附件以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准；源码版本与已发布版本可能不同。
+当前检入源码版本为 `v1.3.4`，配置已针对经过验证的目标主机完成校准，并设置了 `calibration_complete: true`。当校准门控、必要模板或安全关键几何信息缺失时，配置加载会安全失败，不发送输入。可下载版本及附件以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准；源码版本与已发布版本可能不同。
 
 详细界面行为、刷新策略、校准和窗口适配规则见 [用户行为与运行策略](docs/design/BEHAVIOR.md)。
 
