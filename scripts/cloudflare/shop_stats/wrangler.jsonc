@@ -1,0 +1,21 @@
+{
+  "name": "e7auto-shop-stats",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-03",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "e7auto-shop-stats",
+      "database_id": "5bfd13fa-6173-40b7-b8fd-048846df9a1d",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "INGEST_LIMITER",
+      "namespace_id": "1001",
+      "simple": {"limit": 120, "period": 60}
+    }
+  ]
+}

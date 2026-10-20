@@ -1,0 +1,10 @@
+{
+  "name": "e7auto-shop-stats-tools",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22.0.0"},
+  "devDependencies": {
+    "wrangler": "4.147.0",
+    "miniflare": "5.20261001.0-alpha"
+  }
+}

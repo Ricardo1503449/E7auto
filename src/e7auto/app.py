@@ -59,7 +59,8 @@ def main() -> int:
         raise RuntimeError("E7auto supports Windows x64 only")
     root = project_root()
     validate_source_environment(root)
-    if "--self-check" in sys.argv:
+    if "--self-check" in sys.argv or "--self-check-statistics-https" in sys.argv:
+        from e7auto.ui.reporting_check import check_reporting_runtime
 
         compiled = bool(getattr(sys, "frozen", False) or "__compiled__" in globals())
         wgc_importable, wgc_import_error = validate_wgc_import()
@@ -84,6 +85,8 @@ def main() -> int:
             "wgc_importable": wgc_importable,
             "wgc_import_error": wgc_import_error,
         }
+        result.update(check_reporting_runtime(root,
+            include_https="--self-check-statistics-https" in sys.argv))
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return (
             0
@@ -92,6 +95,7 @@ def main() -> int:
             and result["ui_assets_present"]
             and not result["venv_bundled"]
             and result["wgc_importable"]
+            and result["statistics_runtime_ready"]
             else 2
         )
     enable_per_monitor_dpi_awareness()

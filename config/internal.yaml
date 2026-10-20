@@ -60,6 +60,10 @@ points:
   refresh_confirm_button: {x: 1356, y: 834}
   confirm_button: {x: 1485, y: 925}
 
+statistics:
+  # 首次部署后填写真实 HTTPS 服务根地址；留空时仅本地保存，不发送请求。
+  api_base_url: "https://e7auto-shop-stats.e7auto-stats.workers.dev"
+
 targets:
   - id: covenant_bookmark
     display_name: 圣约书签
