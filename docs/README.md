@@ -1,6 +1,6 @@
 # 项目文档
 
-- [使用说明](user/使用说明.txt)
+- [使用说明](user/使用说明.md)
 - [架构](design/ARCHITECTURE.md)与[行为规则](design/BEHAVIOR.md)
 - [开发指南](development/DEVELOPMENT.md)
 - [目录与产物约定](development/LAYOUT.md)

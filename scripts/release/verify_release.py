@@ -20,14 +20,18 @@ import yaml
 from e7auto import __version__
 from e7auto.configuration.models import LoggingConfig
 from e7auto.features.penguin.configuration import CONTROLS
+from e7auto.features.chaos.configuration import with_chaos_config
+from e7auto.features.chaos.lineups import LINEUPS
+from e7auto.configuration.loader import load_config
 from e7auto.resources.manifest import load_template_manifest
 from dataclasses import asdict
 from scripts.common.paths import PROJECT_ROOT, CALIBRATION_DIR, create_artifact_run, finish_artifact_run
 from scripts.release.native_runtime import verify_native_runtime
 from scripts.release.workflow import record_validation
+from scripts.release.installer import verify_registration
 
 
-USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.txt"
+USAGE_GUIDE_FILENAME = "\u4f7f\u7528\u8bf4\u660e.md"
 UI_ICON_SIZES = (16, 24, 32, 48, 64, 128, 256, 1024)
 FORBIDDEN_RELEASE_GLOBS = (
     "cv2/opencv_videoio_ffmpeg*.dll",
@@ -64,6 +68,7 @@ def verify_ui_assets(ui_dir: Path) -> list[str]:
     }
     required_pngs["shop-card-background.png"] = None
     required_pngs["penguin-card-background.png"] = None
+    required_pngs["chaos-card-background.png"] = None
     for name, expected_size in required_pngs.items():
         path = ui_dir / name
         if not path.is_file():
@@ -108,13 +113,13 @@ def verify_template_assets(
     problems: list[str] = []
     crop_manifest_path = calibration_record_path("manifest.yaml", calibration_dir)
     runtime_required: set[str] = set()
-    for profile in ("common", "shop", "penguin"):
+    for profile in ("common", "shop", "penguin", "chaos"):
         try:
             catalog_path = template_dir / profile / "manifest.json"
             registered, _ = load_template_manifest(catalog_path, (2322, 1306))
             runtime_required.update(path.relative_to(template_dir.resolve()).as_posix() for path in registered.values())
             catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
-            for key, entry in catalog["templates"].items():
+            for key, entry in {**catalog.get("retired_templates", {}), **catalog["templates"]}.items():
                 source = entry.get("source", {})
                 if not isinstance(source, dict) or "record" not in source:
                     continue
@@ -453,12 +458,13 @@ def verify_windows_versions(executable: Path, expected: str) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Verify the standalone release; bind results to a build with --run-dir")
+    parser = argparse.ArgumentParser(description="Verify an installed release and bind it to the Setup EXE")
     parser.add_argument("--run-dir", type=Path, help="Managed release directory printed by the build script")
+    parser.add_argument('--directory', type=Path, required=True, help='Actual custom installation directory')
     args = parser.parse_args()
     root = PROJECT_ROOT
     expected_version = project_version(root / "pyproject.toml")
-    release = root / "dist" / "launcher.dist"
+    release = args.directory.resolve()
     executable = release / "E7auto.exe"
     problems: list[str] = []
     if not executable.is_file():
@@ -473,13 +479,22 @@ def main() -> int:
         )
     if not (release / "config" / "internal.yaml").is_file():
         problems.append("missing internal configuration")
+    if not (release / "config" / "chaos.yaml").is_file():
+        problems.append("missing Chaos configuration")
+    else:
+        try:
+            for lineup in LINEUPS:
+                with_chaos_config(load_config(release / "config" / "internal.yaml", template_profile="chaos"),
+                                  lineup_id=lineup.key)
+        except ValueError as exc:
+            problems.append(f"invalid Chaos scene/resource bindings: {exc}")
     if not (release / USAGE_GUIDE_FILENAME).is_file():
         problems.append(f"missing end-user usage guide: {USAGE_GUIDE_FILENAME}")
     else:
         usage_title = (release / USAGE_GUIDE_FILENAME).read_text(
             encoding="utf-8"
         ).splitlines()[0]
-        if usage_title != f"E7auto v{expected_version} x64 使用说明":
+        if usage_title != f"# E7auto v{expected_version} x64 使用说明":
             problems.append(
                 f"end-user usage guide has the wrong version title: {usage_title}"
             )
@@ -495,8 +510,6 @@ def main() -> int:
         problems.extend(verify_ui_assets(ui_dir))
     if any(path.name == ".venv" for path in release.rglob(".venv")):
         problems.append(".venv was bundled")
-    if (release / "logs").exists():
-        problems.append("runtime logs were bundled")
     problems.extend(verify_forbidden_release_files(release))
     problems.extend(verify_required_release_files(release))
     problems.extend(verify_native_runtime(release))
@@ -529,7 +542,10 @@ def main() -> int:
                     problems.append(
                         "compiled self-check version does not match pyproject.toml"
                     )
-    report = {"release": str(release), "problems": problems, "self_check": self_check}
+    registration_problems = verify_registration(release, expected_version)
+    problems.extend(registration_problems)
+    report = {"release": str(release), "problems": problems, "self_check": self_check,
+              "installation_verified": not registration_problems}
     if args.run_dir is not None:
         try:
             record_validation(args.run_dir, report, root)
