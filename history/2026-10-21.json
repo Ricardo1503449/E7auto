@@ -1,0 +1,19 @@
+{
+  "pools": {
+    "continuous": {
+      "skystone_spent": 339,
+      "covenant_purchases": 4,
+      "mystic_purchases": 0,
+      "covenant_per_100": 1.1799410029498525,
+      "mystic_per_100": 0
+    },
+    "transfer": {
+      "skystone_spent": 2439,
+      "covenant_purchases": 35,
+      "mystic_purchases": 9,
+      "covenant_per_100": 1.4350143501435015,
+      "mystic_per_100": 0.36900369003690037
+    }
+  },
+  "updated_at": "2026-10-20T11:25:47.476Z"
+}
