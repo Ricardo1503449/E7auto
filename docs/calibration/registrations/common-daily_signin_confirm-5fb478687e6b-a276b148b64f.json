@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "key": "daily_signin_confirm",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "target_filename": "daily_reset/daily_signin_confirm.png",
+  "source": {
+    "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 020224.png",
+    "sha256": "fc2e07c1ab0eecbc4d653e84883f4ea5a5b00dfdfbb43aadf2f956d123bf2b72",
+    "client_crop": [
+      41,
+      97,
+      2322,
+      1306
+    ]
+  },
+  "crop": [
+    1706,
+    1149,
+    482,
+    120
+  ],
+  "mask": "button",
+  "candidate_sha256": "5fb478687e6b71681f8b28a364b3228aaf5f63f91c02b8b6b6d3c2716432971e",
+  "editing_basis": "User-provided screenshot; lossless client and template cropping, unchanged BGR, alpha-only mask.",
+  "proposed_recognition": {
+    "roi": [
+      1600,
+      1080,
+      650,
+      220
+    ],
+    "threshold": 0.96,
+    "structure_threshold": 0.8
+  },
+  "validation": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-131549-daily-reset-candidate-review-548937a1\\results\\validation.json",
+    "sha256": "7acc8c9af034c4184fe1c0f539e2c15717b084aceb83e267a8d38dd1f488c16f",
+    "results": [
+      {
+        "key": "daily_signin_confirm",
+        "source": "020205",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020205",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020205",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020224",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 1.0,
+        "bounds": [
+          1706,
+          1149,
+          482,
+          120
+        ]
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020224",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9869883060455322,
+        "bounds": [
+          1706,
+          1149,
+          482,
+          120
+        ]
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020224",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.971403181552887,
+        "bounds": [
+          1707,
+          1149,
+          482,
+          120
+        ]
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020236",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020236",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020236",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020246",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020246",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "daily_signin_confirm",
+        "source": "020246",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      }
+    ]
+  },
+  "approval_status": "approved",
+  "approval_basis": "User approved the text-only revision and all other templates; explicitly requested shared resources immediately.",
+  "original_candidate_source": "D:\\E7auto\\artifacts\\template-candidates\\20260927-132050-b5b4ba11\\sources\\daily_signin_confirm.json"
+}

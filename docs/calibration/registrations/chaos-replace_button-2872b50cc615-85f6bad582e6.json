@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "replace_button",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6349c760-0a6c-4b9e-bbb7-2fcb1d6c7219.png",
+  "original_sha256": "48061eb5413797b13fecbb0101eb9bf2f341624abd025b458de86646959f17c9",
+  "client_rect": [
+    47,
+    121,
+    2322,
+    1306
+  ],
+  "crop": [
+    1166,
+    422,
+    52,
+    62
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "replace_active",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1166,
+        422,
+        52,
+        62
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_prepare",
+      "kind": "real_negative",
+      "score": 0.69042,
+      "structure": 0.073076,
+      "location": [
+        1153,
+        591,
+        52,
+        62
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "replace_active",
+      "kind": "synthetic_1536x864",
+      "score": 0.997499,
+      "structure": 0.961013,
+      "location": [
+        1184,
+        719,
+        52,
+        62
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision9_masks\\replace_button.png",
+  "mask_sha256": "5db5599b326d50a281a305129751dd6a68add9a5f0c1687e83d094cd02d664b2",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "2872b50cc615bc5e77c866693a535dd984d6c62f35536ece1b47223eb110cae1",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision9.json",
+      "sha256": "a3065da2dee4a5b7378d661ddfe35f9c28b211d937a560c6115da0bad5ae713c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\replace_button.source.json",
+    "sha256": "69128f9818ce041db1f0bec6a8a98fa556b57bcce2c3e8b35b7115a5d1601bb9"
+  },
+  "search_roi": [
+    730,
+    200,
+    980,
+    850
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留两个黄色环形箭头；蓝色圆形按钮、周围英雄与其他背景透明。仍在骑士盾牌相对区域内定位并点击。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "replace_button"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision9_validation.json",
+      "sha256": "d2edba7d598ca610347107a4c54b4375dc85f9bed594447031501d05e23cb679"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "replace_button.png",
+  "target_filename": "formation/replace_button.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-replace_button-2872b50cc615-7a5bc79fd79a.json",
+    "record_sha256": "7a5bc79fd79affdd905fc73f67a53f1698582a84b3e280c325537439d957cb1f"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

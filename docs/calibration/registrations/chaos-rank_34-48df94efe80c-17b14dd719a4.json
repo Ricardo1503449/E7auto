@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_34",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-ad8df7c8-047b-48dc-89fc-103409a25414.png",
+  "original_sha256": "849d28edbff6e0c50c207128a964382e644ecb3dc2e4e882df237c05481a3fa4",
+  "client_rect": null,
+  "crop": [
+    30,
+    16,
+    354,
+    56
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision7_masks\\rank_34.png",
+  "mask_sha256": "081f3c8e993b46a9843b90b4d7f85e315ab25c56e82d874a6dcff2cfaa38d4f1",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "48df94efe80cef2e7ed93dc1cba6220f911ae63665cf357950f790a597267f6e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision7.json",
+      "sha256": "504a89f5ba667ce83f70f356adbcecb228885242e5c1265f5ee0540178a1e8bb"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_34.source.json",
+    "sha256": "27248846ada5a1bd0329354a83e6d60c7b23507bb588431cd3489b30d92e4467"
+  },
+  "search_roi": [
+    1280,
+    335,
+    680,
+    170
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "补全两侧等阶图标的青色三角和渐变斜边，保留数字、转换箭头及Max字样；底图透明，原始RGB不变。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "rank_34"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision7_validation.json",
+      "sha256": "ea91344854b976e7f51c6e64d41bb8db0687327f9bd61237d839516f21911c6b"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "rank_34.png",
+  "target_filename": "camp/rank_34.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-rank_34-48df94efe80c-50d26ec7ab24.json",
+    "record_sha256": "50d26ec7ab24ac640b7074078def000b2ac6e19d43802578e6221f2d9272051c"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_tablet_continue",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 180200.png",
+  "original_sha256": "d124bbf21ff0cbfd05067612de552bf957ce9f0855b3c3b0d0053db718af1086",
+  "client_rect": [
+    48,
+    96,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    849,
+    1114,
+    624,
+    142
+  ],
+  "review_status": "approved",
+  "editing_basis": "Original BGR unchanged; alpha-only crop; no redraw or resizing.",
+  "note": "保留完整继续探查按钮及边框装饰，外围背景透明。现有continue_exploration在该截图未达阈值，独立候选不替换原模板。",
+  "validation": [
+    {
+      "key": "event_tablet_continue",
+      "kind": "native",
+      "source": "tablet_ticket",
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        849,
+        1114,
+        624,
+        142
+      ]
+    },
+    {
+      "key": "event_tablet_continue",
+      "kind": "synthetic_1536x864",
+      "source": "tablet_ticket",
+      "passed": true,
+      "score": 0.981564,
+      "structure": 0.967801,
+      "location": [
+        849,
+        1114,
+        624,
+        142
+      ]
+    },
+    {
+      "key": "event_tablet_continue",
+      "kind": "real_negative",
+      "source": "tablet_options",
+      "passed": true,
+      "score": 0.509284,
+      "structure": -0.054669,
+      "location": [
+        924,
+        1100,
+        624,
+        142
+      ]
+    },
+    {
+      "key": "event_tablet_continue",
+      "kind": "real_negative",
+      "source": "tablet_confirm",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.998776,
+      "location": [
+        849,
+        1114,
+        624,
+        142
+      ]
+    },
+    {
+      "key": "event_tablet_continue",
+      "kind": "real_negative",
+      "source": "tablet_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.056533,
+      "location": [
+        849,
+        1144,
+        624,
+        142
+      ]
+    }
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    830,
+    1090,
+    720,
+    216
+  ],
+  "approved_candidate_sha256": "7711e2aee89f4a71b5ea3357565c517d0ccf77bc744c0566d2d80610308bac47",
+  "approval_statement": "通过审核，还有一个问题是，像这这种有自己独特流程的事件，你是怎么分文件组织的",
+  "operation": "relocate",
+  "previous_filename": "event_tablet_continue.png",
+  "target_filename": "buttons/event_tablet_continue.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_tablet_continue-7711e2aee89f-e9d9f257e5b0.json",
+    "record_sha256": "e9d9f257e5b098e4a6861688de7635defc6f6ad364cd1d8e3172affc5c1aeb9c"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

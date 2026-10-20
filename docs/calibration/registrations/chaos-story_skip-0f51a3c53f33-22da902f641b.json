@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "story_skip",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\battle\\story_skip.png",
+  "original_sha256": "2fb5069b37be1fa66aa22088133d0f194f09ac10d9fd24d4382ffef1d809260f",
+  "original_backup": "artifacts\\tasks\\chaos\\20261013-235839-story-skip-text-only-1ac83bfe\\inputs\\assets\\templates\\chaos\\battle\\story_skip.png",
+  "original_registration": "docs/calibration/registrations/chaos-story_skip-2fb5069b37be-e41327bfbce2.json",
+  "crop": [
+    2,
+    7,
+    70,
+    33
+  ],
+  "candidate_sha256": "0f51a3c53f3393c4757b87fa695af1073c9419d9f28628b6731e18c72e4f85e6",
+  "editing_basis": "User explicitly requested removing the arrow from the existing template and changing the color gate to 0.93. Exact RGBA crop retains all 1060 original text-mask pixels; no redraw, sharpening, resampling or replacement from the user-sized image.",
+  "text_support_pixels": 1060,
+  "arrow_included": false,
+  "original_rgba_unchanged": true,
+  "review_status": "approved",
+  "approval": "User: follow my proposed removal of the arrow and color threshold 0.93; execute.",
+  "roi": [
+    2080,
+    0,
+    242,
+    150
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "action": [
+    0.5,
+    0.5303030303030303
+  ],
+  "action_offset": [
+    24,
+    0
+  ],
+  "action_basis": "For an original template origin (x,y), preserve original button anchor (x+61,y+24.5). The cropped text begins at (x+2,y+7); its configured anchor is (x+2+35+24,y+7+17.5). The fractional vertical action is applied before baseline rounding; client offsets are scaled once.",
+  "validation": {
+    "origin": "Read-only memory experiments already executed in this conversation; reused without re-scanning after authorization.",
+    "original_sha256": "2fb5069b37be1fa66aa22088133d0f194f09ac10d9fd24d4382ffef1d809260f",
+    "crop": [
+      2,
+      7,
+      70,
+      33
+    ],
+    "candidate_pixels_equal_tested_crop": true,
+    "positive": {
+      "source": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\QQ图片20261013231955.png",
+      "sha256": "0be92339d483c7e94af981a0a79842e08e00070d9c0c2a5f87edf660778ad482",
+      "client_crop": [
+        1,
+        38,
+        1536,
+        864
+      ],
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "accepted_color": 0.9672462344169617,
+      "accepted_structure": 0.8031827807426453,
+      "best_color_passing_structure": 0.9838520884513855,
+      "structure_at_best_color": 0.9131189584732056,
+      "passed": true
+    },
+    "alternate_threshold": {
+      "threshold": 0.97,
+      "structure_threshold": 0.8,
+      "accepted_color": 0.9716701507568359,
+      "accepted_structure": 0.825181245803833,
+      "passed": true
+    },
+    "negative": {
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "original_baseline": 14,
+      "original_native": 3,
+      "synthetic_resizes": 56,
+      "checks": 73,
+      "false_hits": 0,
+      "sizes": [
+        [
+          2322,
+          1306
+        ],
+        [
+          1536,
+          864
+        ],
+        [
+          1920,
+          1080
+        ],
+        [
+          2304,
+          1296
+        ],
+        [
+          2560,
+          1440
+        ]
+      ],
+      "baseline_samples": [
+        "battle_auto",
+        "battle_exit",
+        "battle_menu",
+        "boss_prepare",
+        "boss_victory",
+        "victory_normal",
+        "elite_victory",
+        "failed",
+        "levelup",
+        "loot_set_a",
+        "loot_set_b",
+        "loot_set_c",
+        "loot_selected_right",
+        "reward_leave"
+      ],
+      "native_samples": [
+        "current_loot_stop",
+        "recruitment_filter",
+        "rank_result"
+      ]
+    },
+    "limitations": [
+      "One independent 1536x864 story-positive screenshot.",
+      "Synthetic resized negative screens are not independent native captures.",
+      "Other story backgrounds, animation sequences and live game clicks remain unverified."
+    ]
+  },
+  "validation_record": "artifacts\\tasks\\chaos\\20261013-235839-story-skip-text-only-1ac83bfe\\results\\image-validation-reuse.json"
+}

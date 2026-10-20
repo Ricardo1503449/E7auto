@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "ticket_warrior",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-8ed2506f-ff0f-4c8e-8ee4-3bf7b87a01f4.png",
+  "original_sha256": "230503273943af35c0b7c03503d460b70d10292d2dbbe99982e41276150be349",
+  "client_rect": null,
+  "crop": [
+    67,
+    46,
+    195,
+    240
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "twins_recruited",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        811,
+        339,
+        195,
+        240
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_empty",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        811,
+        339,
+        195,
+        240
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_initial",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        811,
+        339,
+        195,
+        240
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "twins_recruited",
+      "kind": "synthetic_1536x864",
+      "score": 0.989868,
+      "structure": 0.936675,
+      "location": [
+        811,
+        340,
+        195,
+        240
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\ticket_warrior.png",
+  "mask_sha256": "0f7037610be499e2a5190edc42686bd852a028a6ef9b8cfa21005eb1cfa7ef3a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "4f73a6b2e1e232625fff23ed4d8b1fc5cb95c598640bd4cd7d69d53966de2bd4",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\ticket_warrior.source.json",
+    "sha256": "190125bd07a85215cab1dd81c9a3412c2d943dc9afdb33b936739c1099acb04c"
+  },
+  "search_roi": [
+    50,
+    120,
+    2250,
+    1040
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "ticket_warrior"
+  ],
+  "additional_validation_records": []
+}

@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_warning_sign_low_health",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_warning_sign_low_health.png",
+  "original_sha256": "53f00f8f23e1299734813b11ff392633e510c0a73031f1f4e4e87d45405b7c59",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_warning_sign_low_health-53f00f8f23e1-ce17d9c1e63b.json",
+    "record_sha256": "ce17d9c1e63ba12a261eb0e0d6a6cf9c6b9b3d7039a1552f8d7912282dc7af70"
+  },
+  "canvas_size": [
+    1848,
+    157
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1848,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 36208,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_warning_sign_low_health",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 442.485
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1850,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_warning_sign_low_health",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health"
+      ],
+      "scores": [
+        0.9908384680747986,
+        0.9908384680747986,
+        0.9908384680747986
+      ],
+      "anchors": [
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 64.318
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9874807000160217,
+        "anchor": [
+          1224,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_warning_sign_low_health",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health"
+      ],
+      "scores": [
+        0.9983973503112793,
+        0.9983973503112793,
+        0.9983973503112793
+      ],
+      "anchors": [
+        [
+          1530,
+          901
+        ],
+        [
+          1530,
+          901
+        ],
+        [
+          1530,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 84.323
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9971826672554016,
+        "anchor": [
+          1530,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_warning_sign_low_health",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health"
+      ],
+      "scores": [
+        0.9869773983955383,
+        0.9869773983955383,
+        0.9869773983955383
+      ],
+      "anchors": [
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 109.776
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9803421497344971,
+        "anchor": [
+          1836,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_warning_sign_low_health",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health",
+        "event_warning_sign_low_health"
+      ],
+      "scores": [
+        0.9893599152565002,
+        0.9893599152565002,
+        0.9893599152565002
+      ],
+      "anchors": [
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 113.153
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9864398837089539,
+        "anchor": [
+          2040,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "state_or_stage_cross_negative",
+      "source_key": "event_warning_sign",
+      "key": "event_warning_sign_low_health",
+      "size": [
+        2322,
+        1306
+      ],
+      "hit": "None",
+      "passed": true
+    },
+    {
+      "kind": "state_or_stage_cross_negative",
+      "source_key": "event_warning_sign",
+      "key": "event_warning_sign_low_health",
+      "size": [
+        1536,
+        864
+      ],
+      "hit": "None",
+      "passed": true
+    },
+    {
+      "kind": "state_or_stage_cross_negative",
+      "source_key": "event_warning_sign",
+      "key": "event_warning_sign_low_health",
+      "size": [
+        2304,
+        1296
+      ],
+      "hit": "None",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

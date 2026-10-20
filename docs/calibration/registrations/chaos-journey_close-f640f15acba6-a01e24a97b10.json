@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "journey_close",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-3dce146c-8af6-4a24-bf24-57221f0013b4.png",
+  "original_sha256": "84f69df9e585c34fbc48c7e095cfca6318ea2a2583db70801edc3a95d2247a7f",
+  "client_rect": [
+    65,
+    110,
+    2322,
+    1306
+  ],
+  "crop": [
+    1108,
+    1244,
+    151,
+    26
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "run_result",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999998,
+      "location": [
+        1108,
+        1244,
+        151,
+        26
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "run_result",
+      "kind": "synthetic_1536x864",
+      "score": 0.995598,
+      "structure": 0.830282,
+      "location": [
+        1108,
+        1244,
+        151,
+        26
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\journey_close.png",
+  "mask_sha256": "48a4e3bfa9dd7c84e07e54b5426b5b0eff7f807365a0996f0543bfc92f253759",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "f640f15acba65fea1ebd0d247b3da13b041507bb18fd86a0c4f069c5dfde0823",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\journey_close.source.json",
+    "sha256": "512d6ae1ad200ce52073de0089a126ed0febf30761797e1e59041b921be04bfe"
+  },
+  "search_roi": [
+    1000,
+    1190,
+    440,
+    116
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮只保留文字笔画（关闭控件同时保留左侧图标），去除底图；原图RGB像素保持，待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "journey_close"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ]
+}

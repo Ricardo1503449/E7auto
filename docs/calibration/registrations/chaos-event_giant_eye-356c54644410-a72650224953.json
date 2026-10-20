@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_giant_eye",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 230128.png",
+  "original_sha256": "7e1855371f2b4457015c68d2d557965138a5bd871366a1cd587be8bac5183655",
+  "client_rect": [
+    58,
+    110,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    219,
+    1069,
+    1896,
+    158
+  ],
+  "editing_basis": "原图BGR保持；只保留三项标题和下方说明文字，包括黄色固定奖励名称；放大镜、边框、图案和背景透明。",
+  "review_status": "approved_by_user",
+  "validation": {
+    "candidate_checks": [
+      {
+        "kind": "candidate_positive",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          219,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "candidate_positive",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "score": 0.980224,
+        "structure": 0.945436,
+        "location": [
+          219,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "real_negative",
+        "name": "eye_intro",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.060069,
+        "location": [
+          201,
+          1148,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "eye_prepare",
+        "passed": true,
+        "score": 0.0,
+        "structure": -0.178265,
+        "location": [
+          277,
+          1066,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "eye_reward",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.155526,
+        "location": [
+          106,
+          960,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "eye_text",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.002266,
+        "location": [
+          111,
+          1138,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "torch",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.168005,
+        "location": [
+          422,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "mimic",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.173907,
+        "location": [
+          419,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "trap",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.064948,
+        "location": [
+          0,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "tablet",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.164553,
+        "location": [
+          423,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.198553,
+        "location": [
+          420,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment_subchoice",
+        "passed": true,
+        "score": 0.205962,
+        "structure": 0.148323,
+        "location": [
+          238,
+          1069,
+          1896,
+          158
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "golem",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.188948,
+        "location": [
+          424,
+          1069,
+          1896,
+          158
+        ]
+      }
+    ],
+    "reuse_checks": [
+      {
+        "source": "eye_prepare",
+        "key": "prepare_event",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='prepare_event', confidence=0.9999993443489075, bounds=Rect(x=38, y=24, width=270, height=72), anchor=Point(x=173, y=60))"
+      },
+      {
+        "source": "eye_prepare",
+        "key": "start_battle",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='start_battle', confidence=0.9999992847442627, bounds=Rect(x=1665, y=1134, width=614, height=133), anchor=Point(x=1972, y=1200))"
+      },
+      {
+        "source": "eye_reward",
+        "key": "event_reward_close",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='event_reward_close', confidence=0.9979236721992493, bounds=Rect(x=1080, y=1230, width=185, height=50), anchor=Point(x=1172, y=1255))"
+      },
+      {
+        "source": "eye_text",
+        "key": "text_continue",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.9993292689323425, bounds=Rect(x=1149, y=1268, width=23, height=16), anchor=Point(x=1160, y=1276))"
+      },
+      {
+        "source": "eye_options",
+        "key": "text_continue",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "source": "eye_prepare",
+        "key": "event_reward_close",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "source": "eye_intro",
+        "key": "text_continue",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": "observe_only",
+        "passed": true,
+        "detected": false,
+        "hit": "None"
+      },
+      {
+        "source": "eye_prepare",
+        "key": "prepare_event",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='prepare_event', confidence=0.9923294186592102, bounds=Rect(x=38, y=24, width=270, height=72), anchor=Point(x=173, y=60))"
+      },
+      {
+        "source": "eye_prepare",
+        "key": "start_battle",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='start_battle', confidence=0.98823082447052, bounds=Rect(x=1665, y=1134, width=614, height=133), anchor=Point(x=1972, y=1200))"
+      },
+      {
+        "source": "eye_reward",
+        "key": "event_reward_close",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='event_reward_close', confidence=0.9566668272018433, bounds=Rect(x=1080, y=1230, width=185, height=50), anchor=Point(x=1172, y=1255))"
+      },
+      {
+        "source": "eye_text",
+        "key": "text_continue",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.9595181941986084, bounds=Rect(x=1149, y=1268, width=23, height=16), anchor=Point(x=1160, y=1276))"
+      },
+      {
+        "source": "eye_options",
+        "key": "text_continue",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "source": "eye_prepare",
+        "key": "event_reward_close",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "source": "eye_intro",
+        "key": "text_continue",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": "observe_only",
+        "passed": true,
+        "detected": false,
+        "hit": "None"
+      }
+    ],
+    "failures": [],
+    "limitations": [
+      "只有一张选项真实正例；1536×864为人工缩放样本。",
+      "前置文本截图中的三角是否显示单独记录，不能用没有三角的静态帧验证点击推进。",
+      "未提供事件战斗中或返回地图截图，未进行自动化实机测试。"
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "approval_message": "通过，但是要纠正一点，首张截图其实显示了三角",
+  "intro_triangle_correction": "首张真实截图中三角存在；旧文字模板漏识别，原observe_only结果不能解释为不存在。现由独立文字三角修复任务校验。"
+}

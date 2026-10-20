@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruit_confirm",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f3886cdf-e550-4f93-b71d-8e81723ffa94.png",
+  "original_sha256": "3fb43000f3938e9c3975ff9db5ec63917c18544213ad5039bdc84228425e638f",
+  "client_rect": null,
+  "crop": [
+    28,
+    35,
+    613,
+    135
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "xiaochun_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "peini_selected",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "arowell_selected",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "xiaochun_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.981982,
+      "structure": 0.958377,
+      "location": [
+        1665,
+        1133,
+        613,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\recruit_confirm.png",
+  "mask_sha256": "76b9b94e6c52827f11af101450ba37b328a391c79ea8dc262153c02d24eb59b6",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "ee162a9fbb5d82430916892b53abfa45238c8fe26cc022f04d5295e255bcf517",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruit_confirm.source.json",
+    "sha256": "8c7d7f7e1f3776c8ec0a879fa1131e44a59a871fd0586d4ee1b42824c50c7e2c"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.967,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "recruit_confirm"
+  ],
+  "additional_validation_records": []
+}

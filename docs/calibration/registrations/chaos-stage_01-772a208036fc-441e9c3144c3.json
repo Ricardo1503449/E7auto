@@ -1,0 +1,897 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_01",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 152450.png",
+  "original_sha256": "cfa4feb211788f1eda370ff7bdc32b9b4e9981aa6086411f312b27c660d78c13",
+  "client_rect": [
+    44,
+    96,
+    2322,
+    1306
+  ],
+  "crop": [
+    1024,
+    96,
+    110,
+    73
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "editing_basis": "Original BGR pixels preserved exactly. Only alpha changed. All five templates share a 110x73 canvas; no glyph resizing or redrawing.",
+  "mask": {
+    "method": "grayscale < 145; retain two connected components with area >= 100 pixels",
+    "retained_pixels": 1686,
+    "total_pixels": 8030
+  },
+  "candidate_sha256": "772a208036fc497f67d0bc9cf67c9c0d07dc08bfcf30f032322859e493eb6c52",
+  "review_status": "approved",
+  "search_roi": [
+    960,
+    20,
+    1300,
+    1060
+  ],
+  "threshold": 0.985,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "stage_01",
+      "source": "new_unlocked",
+      "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 152450.png",
+      "source_sha256": "cfa4feb211788f1eda370ff7bdc32b9b4e9981aa6086411f312b27c660d78c13",
+      "kind": "source_self",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "new_unlocked",
+      "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 152450.png",
+      "source_sha256": "cfa4feb211788f1eda370ff7bdc32b9b4e9981aa6086411f312b27c660d78c13",
+      "kind": "synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "new_unlocked",
+      "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 152450.png",
+      "source_sha256": "cfa4feb211788f1eda370ff7bdc32b9b4e9981aa6086411f312b27c660d78c13",
+      "kind": "synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_top",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "kind": "real_sample",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_top",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "kind": "synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_top",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "kind": "synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_scrolled",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_scrolled.png",
+      "source_sha256": "ca5cbb0298cf5bed8f3dee7874b787a5eb89ffcf953f82d4b470040a4806dbfe",
+      "kind": "real_sample",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected_detected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "stage_01",
+      "source": "old_scrolled",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_scrolled.png",
+      "source_sha256": "ca5cbb0298cf5bed8f3dee7874b787a5eb89ffcf953f82d4b470040a4806dbfe",
+      "kind": "synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected_detected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "stage_01",
+      "source": "old_scrolled",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_scrolled.png",
+      "source_sha256": "ca5cbb0298cf5bed8f3dee7874b787a5eb89ffcf953f82d4b470040a4806dbfe",
+      "kind": "synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected_detected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "stage_01",
+      "source": "old_one_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_one_selected.png",
+      "source_sha256": "ecca6a55fc6407a5d0027745254260a984601c18d38a79fea041c7f29902fd25",
+      "kind": "real_sample",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_one_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_one_selected.png",
+      "source_sha256": "ecca6a55fc6407a5d0027745254260a984601c18d38a79fea041c7f29902fd25",
+      "kind": "synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "key": "stage_01",
+      "source": "old_one_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\stage_one_selected.png",
+      "source_sha256": "ecca6a55fc6407a5d0027745254260a984601c18d38a79fea041c7f29902fd25",
+      "kind": "synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected_detected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    }
+  ],
+  "gray_validation": [],
+  "limitations": [
+    "Artificial scales are not independent captures at smaller live client sizes.",
+    "Static screenshot checks do not verify live clicking, dragging or multi-frame stability."
+  ],
+  "approval": {
+    "date": "2026-09-25",
+    "user_instruction": "模板通过，正式登记吧，然后出给出标注识别范围的预览图",
+    "approved_candidate_sha256": "772a208036fc497f67d0bc9cf67c9c0d07dc08bfcf30f032322859e493eb6c52"
+  },
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260925-154026-stage-two-five-candidates-81a64b7b\\results\\digit_only_validation.json",
+      "sha256": "b273cb7988b5eeab49f6ef987c1c200bc53b3ca75183a7f929dead6ff44ad5ff"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260925-154026-stage-two-five-candidates-81a64b7b\\results\\supplemental_samples_validation.json",
+      "sha256": "bb786018d4f4a2fcad9523bae63e7ea3f9018d81773f7e27801b45f7a1e38547"
+    }
+  ],
+  "supplemental_validation": [
+    {
+      "case": "160037",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_capture",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160037",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 2,
+      "actual_stages": [
+        2
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9995138645172119,
+          "bounds": [
+            995,
+            218,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160037",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160037",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 2,
+      "actual_stages": [
+        2
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9935404658317566,
+          "bounds": [
+            995,
+            218,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160037",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160037",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 2,
+      "actual_stages": [
+        2
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9957417845726013,
+          "bounds": [
+            995,
+            218,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_capture",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 4,
+      "actual_stages": [
+        4
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9995965957641602,
+          "bounds": [
+            995,
+            544,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 4,
+      "actual_stages": [
+        4
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9962090849876404,
+          "bounds": [
+            995,
+            544,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160043",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 4,
+      "actual_stages": [
+        4
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9950734376907349,
+          "bounds": [
+            995,
+            545,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_capture",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 5,
+      "actual_stages": [
+        5
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.998317301273346,
+          "bounds": [
+            995,
+            707,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 5,
+      "actual_stages": [
+        5
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9978787302970886,
+          "bounds": [
+            995,
+            707,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": false,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160049",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 5,
+      "actual_stages": [
+        5
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9963746070861816,
+          "bounds": [
+            995,
+            708,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_capture",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 1,
+      "actual_stages": [
+        1
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9975759387016296,
+          "bounds": [
+            995,
+            55,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9930452108383179,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 1,
+      "actual_stages": [
+        1
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9962179064750671,
+          "bounds": [
+            995,
+            54,
+            1199,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "artificial_scale",
+      "key": "stage_01",
+      "expected_detected": true,
+      "selected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9942002296447754,
+          "bounds": [
+            1024,
+            96,
+            110,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "case": "160625",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "existing_highlight_and_digit_containment",
+      "key": "stage_selected",
+      "expected_stage": 1,
+      "actual_stages": [
+        1
+      ],
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9971494674682617,
+          "bounds": [
+            995,
+            55,
+            1199,
+            146
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_teacher",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-03a07b7a-55c1-4020-8562-836165a62648.png",
+  "original_sha256": "65a40952212a2ef628ee9d71989a220458806f0faeaf03cd34be9f158962d708",
+  "client_rect": null,
+  "crop": [
+    9,
+    14,
+    293,
+    46
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "thief_list",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1263,
+        941,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_thief",
+      "kind": "real_positive",
+      "score": 0.951053,
+      "structure": 0.821523,
+      "location": [
+        663,
+        751,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filtered",
+      "kind": "real_positive",
+      "score": 0.97632,
+      "structure": 0.8496,
+      "location": [
+        663,
+        751,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.973303,
+      "structure": 0.822131,
+      "location": [
+        1263,
+        941,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision3_masks\\hero_teacher.png",
+  "mask_sha256": "575721c8a84c059fd290ed3113841b28ce2309883114c8b231349aab29e795a8",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "11da97bb34f931c43a11a1b0ecbdaa8e195731a3991058fa15b7fa8fd56128ee",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision3.json",
+      "sha256": "f2cb614cf612884641f2450764bdb232dd37fa8444b97d41f999c7b5e5263792"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_teacher.source.json",
+    "sha256": "35951341033fc515e7ae9367e3b75fc7c62f9305f6a1bff36247f63db07534c7"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.936,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第三轮：以已有游戏截图中无遮挡的同名文字辅助限定末尾字形；仅修改透明遮罩，保留本图RGB像素。已通过的图标及其他模板保持不变。待复审。"
+  ],
+  "resource_scenes": [
+    "hero_teacher"
+  ],
+  "additional_validation_records": []
+}

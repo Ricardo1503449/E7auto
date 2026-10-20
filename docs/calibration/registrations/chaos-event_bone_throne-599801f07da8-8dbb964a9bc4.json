@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_bone_throne",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-28 104736.png",
+  "original_sha256": "db8fd496fc247e7c52dfe82427419c9d573e62eaf3617a87e500dbdbe7104fa8",
+  "client_rect": [
+    30,
+    76,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    264,
+    1069,
+    1837,
+    168
+  ],
+  "candidate_sha256": "599801f07da8062d9eeed0742af8628116ffc3bc2ef9ee86abe06d45fc006de1",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      264,
+      1069
+    ],
+    "titles": [
+      [
+        129,
+        5,
+        155,
+        32
+      ],
+      [
+        728,
+        5,
+        336,
+        33
+      ],
+      [
+        1401,
+        5,
+        370,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "throne_options",
+      "expected": "event_bone_throne",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_bone_throne', confidence=1.0, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=1.0, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=1.0, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 864.342
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_bone_throne",
+        "event_blood_shelter",
+        "event_cage"
+      ]
+    },
+    {
+      "source": "throne_options",
+      "expected": "event_bone_throne",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_bone_throne', confidence=0.988836944103241, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=0.988836944103241, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=0.988836944103241, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 823.969
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_bone_throne",
+        "event_cage",
+        "event_blood_shelter"
+      ]
+    },
+    {
+      "source": "throne_options",
+      "expected": "event_bone_throne",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_bone_throne', confidence=0.981624186038971, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=0.981624186038971, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_bone_throne', confidence=0.981624186038971, bounds=Rect(x=264, y=1069, width=1837, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 869.848
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_bone_throne",
+        "event_blood_shelter",
+        "event_cage"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test. The selected-hero sample shows Twins, while the completion sample shows Xiaochun 3->4; they validate separate UI states, not an uninterrupted hero selection sequence.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "validation_passed": true,
+  "validation_report_sha256": "8f04ace5a61fb54281ecfe26d079333c2e679263e25761de2bc5d499b55301e8",
+  "visible_pixels_unchanged": true,
+  "flow_proposal": [
+    "existing lineup rank priority",
+    "right option",
+    "event rank entry",
+    "rank up one step using existing result verification and confirmed rank-card closing",
+    "text triangle",
+    "original-floor map"
+  ],
+  "approval": "通过",
+  "validation_reuse": "Reuse all 122 recorded checks; approved PNG, ROI, thresholds and algorithms unchanged."
+}

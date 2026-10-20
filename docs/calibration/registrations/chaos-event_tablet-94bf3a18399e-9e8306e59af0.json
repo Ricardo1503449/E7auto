@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_tablet",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_tablet.png",
+  "original_sha256": "93e42ee29d6760976ee5a1515257dd9bce8e85191c8829423b991fc366a85151",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_tablet-93e42ee29d67-b20c23464705.json",
+    "record_sha256": "b20c2346470531cd183b65e7950cea558cf12af4904bd9304879bea5f4d5fee3"
+  },
+  "canvas_size": [
+    939,
+    157
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      939,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 5664,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_tablet",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-182615-event-tablet-templates-19f47814\\inputs\\tablet_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_tablet",
+        "event_tablet",
+        "event_tablet"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1510,
+          1110
+        ],
+        [
+          1510,
+          1110
+        ],
+        [
+          1510,
+          1110
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 195.216
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1510,
+          1110
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-182615-event-tablet-templates-19f47814\\inputs\\tablet_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_tablet",
+        "event_tablet",
+        "event_tablet"
+      ],
+      "scores": [
+        0.9912880063056946,
+        0.9912880063056946,
+        0.9912880063056946
+      ],
+      "anchors": [
+        [
+          999,
+          734
+        ],
+        [
+          999,
+          734
+        ],
+        [
+          999,
+          734
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 47.078
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9871780872344971,
+        "anchor": [
+          999,
+          734
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-182615-event-tablet-templates-19f47814\\inputs\\tablet_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_tablet",
+        "event_tablet",
+        "event_tablet"
+      ],
+      "scores": [
+        0.9893273711204529,
+        0.9893273711204529,
+        0.9893273711204529
+      ],
+      "anchors": [
+        [
+          1248,
+          918
+        ],
+        [
+          1248,
+          918
+        ],
+        [
+          1248,
+          918
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 55.085
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9861387610435486,
+        "anchor": [
+          1248,
+          918
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-182615-event-tablet-templates-19f47814\\inputs\\tablet_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_tablet",
+        "event_tablet",
+        "event_tablet"
+      ],
+      "scores": [
+        0.980125367641449,
+        0.980125367641449,
+        0.980125367641449
+      ],
+      "anchors": [
+        [
+          1499,
+          1102
+        ],
+        [
+          1499,
+          1102
+        ],
+        [
+          1499,
+          1102
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 64.535
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9790315628051758,
+        "anchor": [
+          1499,
+          1102
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-182615-event-tablet-templates-19f47814\\inputs\\tablet_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_tablet",
+        "event_tablet",
+        "event_tablet"
+      ],
+      "scores": [
+        0.9917125105857849,
+        0.9917125105857849,
+        0.9917125105857849
+      ],
+      "anchors": [
+        [
+          1665,
+          1224
+        ],
+        [
+          1665,
+          1224
+        ],
+        [
+          1665,
+          1224
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 71.973
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9890879392623901,
+        "anchor": [
+          1665,
+          1224
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

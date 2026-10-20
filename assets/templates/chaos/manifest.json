@@ -1,0 +1,2339 @@
+{
+  "schema_version": 1,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "templates": {
+    "home_battle": {
+      "file": "entry/home_battle.png",
+      "sha256": "8c0a472a234d52e4bcab6f2e7431843650a048aafb8e4f5b1b9c8c777976c9dd",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-home_battle-8c0a472a234d-ded5e9c28076.json",
+        "record_sha256": "ded5e9c2807636922bbae15ba9f60c3b02f76ff326bab2b5209225c126092bbb"
+      }
+    },
+    "battle_title": {
+      "file": "entry/battle_title.png",
+      "sha256": "2992b4f4cab81aa4f660f4669f6e49c3ad0d25a31cb8d715f10d0f64c382e106",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-battle_title-2992b4f4cab8-29ce658e306c.json",
+        "record_sha256": "29ce658e306c4c42590639920b95307dac972a7f08257e0ce54f23df6915cd41"
+      }
+    },
+    "exploration_card": {
+      "file": "entry/exploration_card.png",
+      "sha256": "628332f5ea295c1f038b48e11a716286e8e333775075f932bf11022c2ab437ba",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-exploration_card-628332f5ea29-82d889803d96.json",
+        "record_sha256": "82d889803d960b08939867e6d593cd1ad83e3e4bd243c384f5a9491eb30134cf"
+      }
+    },
+    "exploration_back": {
+      "file": "entry/exploration_back.png",
+      "sha256": "63ea93ffa9a2e24ea95164a080f5728aa44caea0065c4565ca9eb563d204b35c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-exploration_back-63ea93ffa9a2-447dde5023a8.json",
+        "record_sha256": "447dde5023a805759909f71e9d84afb87b89fb60b8934d78ac91584885bd6390"
+      }
+    },
+    "intro_enter": {
+      "file": "buttons/intro_enter.png",
+      "sha256": "1296631964737ff7559c35e8a423dba0f9c3a82beb7678fb8f6c9833f9baa732",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-intro_enter-129663196473-0e34f23b07e0.json",
+        "record_sha256": "0e34f23b07e0a54378042dfe1859cc1d9f230f324122c27d68d7291de51e86df"
+      }
+    },
+    "lobby_research": {
+      "file": "entry/lobby_research.png",
+      "sha256": "ed759d9d801425f270eb9d6b3fd0a86028ab12ee87fe9444351af172f6b5208d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-lobby_research-ed759d9d8014-3c9bbf32626a.json",
+        "record_sha256": "3c9bbf32626ae42a4e00284584be1728ec6b387b1466952007ea8fccc9d8668c"
+      }
+    },
+    "start_exploration": {
+      "file": "buttons/start_exploration.png",
+      "sha256": "5bf515d8ebd4436f0da12e516f90a2d1903b4df07d0d1b95b6c6d202086a96b4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-start_exploration-5bf515d8ebd4-5663cfbf84da.json",
+        "record_sha256": "5663cfbf84da7962d81ba15830930ec8f989c0ab678c863a6f5a376516fe6671"
+      }
+    },
+    "stage_one": {
+      "file": "entry/stage_one.png",
+      "sha256": "47ca206331db286f6877870a4a296e78a989ab59a4cff77622a8cb83f41c34f0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_one-47ca206331db-d63bd3a3b189.json",
+        "record_sha256": "d63bd3a3b189d6f4be3c1210cfcdec5eb8a7b368f365139f8c15e7c57370c8cf"
+      }
+    },
+    "stage_three": {
+      "file": "entry/stage_three.png",
+      "sha256": "c6601b73ad01a3e82114f001c7e1e31c449012029807747a14026c2adaa6d479",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_three-c6601b73ad01-11fb21d0ef4f.json",
+        "record_sha256": "11fb21d0ef4f0f6ccef669a3f6eadbfbcc02a24c5b4509d529713f39beecebd0"
+      }
+    },
+    "stage_01": {
+      "file": "entry/stage_01.png",
+      "sha256": "772a208036fc497f67d0bc9cf67c9c0d07dc08bfcf30f032322859e493eb6c52",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_01-772a208036fc-441e9c3144c3.json",
+        "record_sha256": "441e9c3144c3ef9ece5d2d321cc38937d4629c7ba72c86a4566731969f27d6ce"
+      }
+    },
+    "stage_selected": {
+      "file": "entry/stage_selected.png",
+      "sha256": "94cd054bf3326883b596a52a4aaa410342c7f761b4cf3945188a7247a38df33e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_selected-94cd054bf332-68d235fe3c17.json",
+        "record_sha256": "68d235fe3c17c82edb988e83637a81226feec0a7bcf9c682ebc05632b368f36a"
+      }
+    },
+    "stage_confirm": {
+      "file": "buttons/stage_confirm.png",
+      "sha256": "a8512e622e1f1b41400f9af96cd300fa17a50efe8125792e2ed37288bb80f49e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_confirm-a8512e622e1f-fceb7132c880.json",
+        "record_sha256": "fceb7132c8806333b1845f9af1d2043d4b45d7208c902fdca94a3b9383b6996e"
+      }
+    },
+    "contract": {
+      "file": "entry/contract.png",
+      "sha256": "0026855bb65452e08248d9086d6ea1b6178195215b194373e7982fe4934ea122",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-contract-0026855bb654-07911291caf7.json",
+        "record_sha256": "07911291caf754c8b40cb5d62fc7a16afd4a23efe89ea4ed77b1060757338b3f"
+      }
+    },
+    "contract_selected": {
+      "file": "entry/contract_selected.png",
+      "sha256": "a2706ed4ccd47d13922f819423da8b574c760d474f9e0d3efe1ec23c176dd32a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-contract_selected-a2706ed4ccd4-eb02cdf1175f.json",
+        "record_sha256": "eb02cdf1175f0dd70f8be2ff680e236d0284ae7b736e7a9ed19c83aa4391f91e"
+      }
+    },
+    "supply_confirm": {
+      "file": "buttons/supply_confirm.png",
+      "sha256": "c9415fa9a78ac84a23ec4db07fc6e08c2826ebdfb86a45dcb1527b3f27674660",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-supply_confirm-c9415fa9a78a-f26afb4373bd.json",
+        "record_sha256": "f26afb4373bd6120b1183a500f72816226b534c58f47e3a4207a2c09401ec97f"
+      }
+    },
+    "ticket_thief": {
+      "file": "recruitment/ticket_thief.png",
+      "sha256": "2f4c2a055a8ea0112d75925ad20ecfb6b4df52ce918d8a7f668931cc32382438",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-ticket_thief-2f4c2a055a8e-17db0ddb803a.json",
+        "record_sha256": "17db0ddb803a2978db841b108992c1d610af4c5a8585887bd5962738472e5872"
+      }
+    },
+    "title_thief": {
+      "file": "recruitment/title_thief.png",
+      "sha256": "391e39f8c55ded083ec7dc2c052e0b6f89fbeea711e64c19671daf480e774702",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-title_thief-391e39f8c55d-1f35c044f9a2.json",
+        "record_sha256": "1f35c044f9a2358dc46879b94e5aeaa6a7872f09ea525283ec8f4d45293ced96"
+      }
+    },
+    "ticket_soul": {
+      "file": "recruitment/ticket_soul.png",
+      "sha256": "ea695eb105c87850e35ecb7e199c79199e051637806ede073a43f7e8c97e48d8",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-ticket_soul-ea695eb105c8-16cd3055ee45.json",
+        "record_sha256": "16cd3055ee4528ec2a7c869e30e3ba6d91db5443244103a3516f68e31d8d7259"
+      }
+    },
+    "title_soul": {
+      "file": "recruitment/title_soul.png",
+      "sha256": "1307218a0e8ba98223d80038a7cebdfe35f2d5f84ac9c159eb91d7525c5af426",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-title_soul-1307218a0e8b-720c92b15a25.json",
+        "record_sha256": "720c92b15a25c706ae164e3ecedf85895763068e1e4d1cc1f329f9455f4986e1"
+      }
+    },
+    "ticket_warrior": {
+      "file": "recruitment/ticket_warrior.png",
+      "sha256": "4f73a6b2e1e232625fff23ed4d8b1fc5cb95c598640bd4cd7d69d53966de2bd4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-ticket_warrior-4f73a6b2e1e2-0bd2a52cfe60.json",
+        "record_sha256": "0bd2a52cfe60af4e4d397a422108ede99cca3e525a0b38c57d54aa001f8cfd52"
+      }
+    },
+    "title_warrior": {
+      "file": "recruitment/title_warrior.png",
+      "sha256": "cd514306d01d41e0d661d4d0bb56bcec6735902a66d7c6d9cc2e1e2c705e7e34",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-title_warrior-cd514306d01d-23584979c63a.json",
+        "record_sha256": "23584979c63aed98bdd665aa124b65a7dbd5a6c5255256e4939f06456d4f2dff"
+      }
+    },
+    "ticket_knight": {
+      "file": "recruitment/ticket_knight.png",
+      "sha256": "5e70f79bff98f9fa6104917f4e6789ece1723585fe9d037a59c352547e2f9c40",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-ticket_knight-5e70f79bff98-fdb02eac14d4.json",
+        "record_sha256": "fdb02eac14d40d6ee6fbd39af73f76b3f23a8a12a2820e97921ee1a3a45358be"
+      }
+    },
+    "title_knight": {
+      "file": "recruitment/title_knight.png",
+      "sha256": "8624a1a01fa71313fc120ae7f04f58983aa49dae3eb1cbfb6e0e25100f0d9782",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-title_knight-8624a1a01fa7-ef5b2b1bb2e0.json",
+        "record_sha256": "ef5b2b1bb2e097070d2f6a14f4ddf405d6652b9e527b82ad1146f1acf201db15"
+      }
+    },
+    "ticket_all": {
+      "file": "recruitment/ticket_all.png",
+      "sha256": "5786638df6ababdeb3e3c65b12d76863bdd1ca626454c57ef91454445175b7d6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-ticket_all-5786638df6ab-d0ee9dcf660e.json",
+        "record_sha256": "d0ee9dcf660e67e413cdb19bb64a5c79409d3f7e1987b01344f72ee433151461"
+      }
+    },
+    "title_all": {
+      "file": "recruitment/title_all.png",
+      "sha256": "a358a4d19e4d9b38376badc645fd113d20a3e07d3e587ea9dafe434a8dc1fda4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-title_all-a358a4d19e4d-45e70bc022a5.json",
+        "record_sha256": "45e70bc022a526dc0134087714803a0f00769caca07c298f058f9786988b2ab0"
+      }
+    },
+    "filter_light": {
+      "file": "recruitment/filter_light.png",
+      "sha256": "e465db181cec1b7a74e7f63e82256b036ff64be3fedb16ea10ce3c9b583626e5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_light-e465db181cec-6e5d3daae6a0.json",
+        "record_sha256": "6e5d3daae6a07ec115a67882e3e901f8357847d5cd5bcc07bf4972aea3f764aa"
+      }
+    },
+    "filter_dark": {
+      "file": "recruitment/filter_dark.png",
+      "sha256": "d415efd9b8852e0921ecb547dbdc9bb3292073c60313d0db576d43acb2f7b60a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_dark-d415efd9b885-4506be146810.json",
+        "record_sha256": "4506be1468109427a03fcdc2e1fc82726c450c4e37ea7ccbeae3c2e597384de2"
+      }
+    },
+    "filter_icon_dark": {
+      "file": "recruitment/filter_icon_dark.png",
+      "sha256": "e819906d23a360292c554f16b3f56fc0dd4978cc390c5cad3cefc8226df2a16d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_dark-e819906d23a3-137f976a56e6.json",
+        "record_sha256": "137f976a56e6b2d23b5845823f15d48bc7d0aba52561556292192fe1674c8fdb"
+      }
+    },
+    "filter_icon_light": {
+      "file": "recruitment/filter_icon_light.png",
+      "sha256": "2dc48ca6844afda6b3536601d22f51302f06b851b430ff44a3b0ed87d0a36a48",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_light-2dc48ca6844a-59c367133f8a.json",
+        "record_sha256": "59c367133f8aac81ab75c873a2fef453aec924110711a9e815bf90ca2c58f1ac"
+      }
+    },
+    "filter_icon_thief_filter": {
+      "file": "recruitment/filter_icon_thief_filter.png",
+      "sha256": "d385b788933b8a0e4f80d108821e41aeaa01cf6dd7c2b1991017e5bc3b1e62de",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_thief_filter-d385b788933b-99662864ba7d.json",
+        "record_sha256": "99662864ba7d668bf2aa1223c1c4295b8d0dad365af87fe64485a4447eec0db2"
+      }
+    },
+    "filter_icon_water": {
+      "file": "recruitment/filter_icon_water.png",
+      "sha256": "191cb98db2b6dff479b90c6fe622c5ec81d01fb49829994e45a1315702d1f3cf",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_water-191cb98db2b6-7a8ed3850e8e.json",
+        "record_sha256": "7a8ed3850e8ebb62b3aaf112f1701809353ebdc7994124b30162b299c7cbee5d"
+      }
+    },
+    "filter_water_selected": {
+      "file": "recruitment/filter_water_selected.png",
+      "sha256": "820cf31a4b5d8609f3a7c9e44dab9da5a723d3a9c2549976c42ceb0acfbc43e1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_water_selected-820cf31a4b5d-9342206156a4.json",
+        "record_sha256": "9342206156a4d55ad6900a65bcfa08f2d6459a4f41608ddb2269a02d5e4a5270"
+      }
+    },
+    "filter_dark_selected": {
+      "file": "recruitment/filter_dark_selected.png",
+      "sha256": "10bf5945f8f0157bf901547f67f733b6ca337de04ae4c7150edfa15d8a0c5a5b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_dark_selected-10bf5945f8f0-da568b91d42b.json",
+        "record_sha256": "da568b91d42b61f561e69648038cfa22464fd45965b927a42b84bc3bc46b277c"
+      }
+    },
+    "filter_light_selected": {
+      "file": "recruitment/filter_light_selected.png",
+      "sha256": "ed6f09a1e050d622f773754d6311992f2b4c3027f2eb9b15c99ce5b862d84f74",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_light_selected-ed6f09a1e050-c0476dd622d5.json",
+        "record_sha256": "c0476dd622d5adb6b64d1fe01a5897d72d7e1dc3f2f69294be48f94389d7007e"
+      }
+    },
+    "filter_thief_selected": {
+      "file": "recruitment/filter_thief_selected.png",
+      "sha256": "b6060a5ee9f692a1b93f3db00155d003bade7b6ed91630ca4db667156b332682",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_thief_selected-b6060a5ee9f6-676a731d5d73.json",
+        "record_sha256": "676a731d5d73f074e23b0db4f7972f9fe6b157854c084c64ae22ca57bfc7c784"
+      }
+    },
+    "hero_twins": {
+      "file": "recruitment/hero_twins.png",
+      "sha256": "edd8a444a38275f335f48eb6cee2c5d2c2beb9cedd78725d83d7c47aa7d8a8e2",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_twins-edd8a444a382-31e97a191550.json",
+        "record_sha256": "31e97a191550af27fb2167c47fb68ee6b337e8f44c046137708fc781da9f6e05"
+      }
+    },
+    "recruited_twins": {
+      "file": "recruitment/recruited_twins.png",
+      "sha256": "d884d76ca52519e164f5afb65229ba073d86661382982f235370a134babf5a06",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_twins-d884d76ca525-4bd1424dfaf6.json",
+        "record_sha256": "4bd1424dfaf68d571b64bca13fae38dc67d843407c8a8bc7b04e3bfebb201456"
+      }
+    },
+    "selected_name_twins": {
+      "file": "recruitment/selected_name_twins.png",
+      "sha256": "047b0a45bc98ad253c18064678bf3d42590ca157a31b55439cdda8b63f668f47",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_twins-047b0a45bc98-97fc814c2f1b.json",
+        "record_sha256": "97fc814c2f1b54a22102d03f9c3b15d4388b94ca089ffde1d377ac0297f02ff0"
+      }
+    },
+    "hero_peini": {
+      "file": "recruitment/hero_peini.png",
+      "sha256": "09e4bb3971bb324db996122709b6e0d529b1dfa4f78a7daedf6ba7fb9488e693",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_peini-09e4bb3971bb-5154c29e0c4f.json",
+        "record_sha256": "5154c29e0c4f04e8a2112894c3037a915e930e8949a8f7696a0ec10924504d42"
+      }
+    },
+    "recruited_peini": {
+      "file": "recruitment/recruited_peini.png",
+      "sha256": "197b9fcd252f770d64b4faaa158328472a749cb3696751a13a028a22361f264c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_peini-197b9fcd252f-148d872e91be.json",
+        "record_sha256": "148d872e91be54a6802104466fed3597c8c8592ab59f66458b58b7224d381de5"
+      }
+    },
+    "selected_name_peini": {
+      "file": "recruitment/selected_name_peini.png",
+      "sha256": "585a30676b5c0e5b6b16c2d565455363aaa21f47067f9eaf9993e4683b7381a9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_peini-585a30676b5c-7676750ec6dc.json",
+        "record_sha256": "7676750ec6dc30dcdb9d0cc7514bc6a0db94a875e2b69746ce86e8610ea39259"
+      }
+    },
+    "hero_xiaochun": {
+      "file": "recruitment/hero_xiaochun.png",
+      "sha256": "8b6b35ba4f172a82c1a0511ed28b946c62aa0d7a45d865e558f489ea63241d1e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_xiaochun-8b6b35ba4f17-3f86b0795575.json",
+        "record_sha256": "3f86b079557566ff364be5f66effa2368eaf8cf4f1dfdf7b62510e354591e224"
+      }
+    },
+    "recruited_xiaochun": {
+      "file": "recruitment/recruited_xiaochun.png",
+      "sha256": "d2c599b21631bd1636c6566ba72c76652c010507689fd0a38669ac9ae3e10438",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_xiaochun-d2c599b21631-a61c6c93ea28.json",
+        "record_sha256": "a61c6c93ea28a441de6267f57fefd8624684377bbbb127bf5c7967f3efc7809c"
+      }
+    },
+    "selected_name_xiaochun": {
+      "file": "recruitment/selected_name_xiaochun.png",
+      "sha256": "f2fdc205a589475d9e286bc5f4a24aa68a0cc8f3f8a2d2f003177b26307914c0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_xiaochun-f2fdc205a589-fa08640f1537.json",
+        "record_sha256": "fa08640f1537b8ab34686047262f38b48cd5ead9410280450125cd3e864b599d"
+      }
+    },
+    "hero_arowell": {
+      "file": "recruitment/hero_arowell.png",
+      "sha256": "89547460e6c8e29e2179d43e3ea3bfdca74d10ffa94c8397fd62ed9e08af02a7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_arowell-89547460e6c8-4ac218c77df6.json",
+        "record_sha256": "4ac218c77df60ae1e22cd61b1894dddaa3500dc8a0e30b82457d2da19a45bacd"
+      }
+    },
+    "recruited_arowell": {
+      "file": "recruitment/recruited_arowell.png",
+      "sha256": "c28f7f1b938b768140839baada19e2b5bfa3fa1cb3f0b2ec903d388bf73795ac",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_arowell-c28f7f1b938b-e0cb3e1f2765.json",
+        "record_sha256": "e0cb3e1f276562918bfbd8903b7395ebe037a917c9e563b00baf4314e0dd79c7"
+      }
+    },
+    "selected_name_arowell": {
+      "file": "recruitment/selected_name_arowell.png",
+      "sha256": "0112e80b9e3e01d2491f9146f11b26daf820746a1c5f594709a6c0a000134414",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_arowell-0112e80b9e3e-487c05703aef.json",
+        "record_sha256": "487c05703aef47c08d9ce6bc499e6ab44a06c30c0ba42385ba5bf82501ce034d"
+      }
+    },
+    "hero_teacher": {
+      "file": "recruitment/hero_teacher.png",
+      "sha256": "11da97bb34f931c43a11a1b0ecbdaa8e195731a3991058fa15b7fa8fd56128ee",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_teacher-11da97bb34f9-ffae8dca2888.json",
+        "record_sha256": "ffae8dca2888e303c2bf3fdd10cbf0e8d11c612e74f2287105d7a7c8ddeaf220"
+      }
+    },
+    "recruited_teacher": {
+      "file": "recruitment/recruited_teacher.png",
+      "sha256": "1d495f45d53cd6fa49f62ae2c612e5c62c3ed3b9371ae4768925cb4815609d73",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_teacher-1d495f45d53c-760fa19c7a86.json",
+        "record_sha256": "760fa19c7a8661a4a9c45b79a5634020f6bf75b2323f02ba3b7e783750f81706"
+      }
+    },
+    "hero_selected_border": {
+      "file": "recruitment/hero_selected_border.png",
+      "sha256": "6bdceb664795982386061319de5a58b4903da8e00169ce2fc2bdd5826e753bbd",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_selected_border-6bdceb664795-48325a677e97.json",
+        "record_sha256": "48325a677e9793b6a06f8644ab8373b651bfdf07fe5de4c8a60216af815579ce"
+      }
+    },
+    "recruit_confirm": {
+      "file": "buttons/recruit_confirm.png",
+      "sha256": "ee162a9fbb5d82430916892b53abfa45238c8fe26cc022f04d5295e255bcf517",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruit_confirm-ee162a9fbb5d-22689e395c97.json",
+        "record_sha256": "22689e395c975d94da195e15a5812ef3ebd6b25dc4504126f0af05927479c118"
+      }
+    },
+    "recruit_enter": {
+      "file": "buttons/recruit_enter.png",
+      "sha256": "b22c25a33bb9f27978eed3b324b06aa3f04548dc400469b99d59c8dee50f56d1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruit_enter-b22c25a33bb9-8bbb14d17774.json",
+        "record_sha256": "8bbb14d1777408c814cc554ca37320f7ef8c47bf4a523e2a2f8af26876cd25c0"
+      }
+    },
+    "map_hero": {
+      "file": "map/map_hero.png",
+      "sha256": "d6d988b00860f67b7f968f591a1a2b7e169a36194da1fb855c19ce8279d1ee6b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-map_hero-d6d988b00860-aa90ee1ca5f8.json",
+        "record_sha256": "aa90ee1ca5f8cd9a400246f8f46714f5a95bcc1d01c7fd23d175129ca587e049"
+      }
+    },
+    "map_title_outer": {
+      "file": "map/map_title_outer.png",
+      "sha256": "74c4b6bfd535fb197803ee65f78559e8f0bde61fa706eca467c34da3cbac4877",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-map_title_outer-74c4b6bfd535-5a1aaeb31e80.json",
+        "record_sha256": "5a1aaeb31e80cb09f3381e93b0ec1f8d00f562e8bd03c64f57f21c3e0345a72e"
+      }
+    },
+    "map_title_center": {
+      "file": "map/map_title_center.png",
+      "sha256": "67744c06a5171e8bc68c74e35553081654db927658e057aa2b9401fb3192e5a1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-map_title_center-67744c06a517-4d22d8b29014.json",
+        "record_sha256": "4d22d8b29014a2846a3a4ec63c19eb647d7db48c613803e2626e4261b400b6bd"
+      }
+    },
+    "map_title_deep": {
+      "file": "map/map_title_deep.png",
+      "sha256": "b73d61902562faab1bf607a89964ca768044d535dcf59966c291359cd17a6dc4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-map_title_deep-b73d61902562-f102e0ae15cc.json",
+        "record_sha256": "f102e0ae15cc3f5ac41a1eaf2c6053a7f6211904160a7e5039d9a7b73915dde6"
+      }
+    },
+    "node_normal": {
+      "file": "map/node_normal.png",
+      "sha256": "feaaa43799f6fd7715176ce9259557f8982c55bc2e56a3bdaca11bb9be614d3b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_normal-feaaa43799f6-4d131255e542.json",
+        "record_sha256": "4d131255e54261f18e30bd74a43eddfbd84ad6baba5157b5f74c393e93c5ca17"
+      }
+    },
+    "node_event": {
+      "file": "map/node_event.png",
+      "sha256": "3dbcdb3364b8e79a1c09fb46f8f94ea27902193c2bbd12c27f5a6a7d18e65f1c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_event-3dbcdb3364b8-8f197c2141c7.json",
+        "record_sha256": "8f197c2141c7fe9bd55073bb76815313be4927e7706b2d5292bd19860dac3237"
+      }
+    },
+    "node_rest": {
+      "file": "map/node_rest.png",
+      "sha256": "11418a8a17c8bf67cfc84623eb435941eef5b0e3380f98f8cb2c29145bf67dd5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_rest-11418a8a17c8-31d35e8e4914.json",
+        "record_sha256": "31d35e8e491405e66273b19f4d1a52f7964e76f718b31e194ff49fa17eb0e772"
+      }
+    },
+    "node_shop": {
+      "file": "map/node_shop.png",
+      "sha256": "0894cd58784918e91f13194677a1b76848415c94ce5c20c2672f515730a78370",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_shop-0894cd587849-46089e46562f.json",
+        "record_sha256": "46089e46562fb0d4a12b4bd3fb30495bf16ce0c267ce954386c26a4f4981727c"
+      }
+    },
+    "node_boss": {
+      "file": "map/node_boss.png",
+      "sha256": "3072c1fad1fab49f072e3f5cc14304cce4c99689a3575630a0f2d612fea7b130",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_boss-3072c1fad1fa-2f4f3b4169d3.json",
+        "record_sha256": "2f4f3b4169d307f921a16ae88e2bd65c7bd07531173664d288fcaf961021000b"
+      }
+    },
+    "node_elite": {
+      "file": "map/node_elite.png",
+      "sha256": "1825d8e735c954fd50bb0bbcb2b4eaa0c6acca13020878fc57ef0875893b1b2f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_elite-1825d8e735c9-c28b16d2b2c6.json",
+        "record_sha256": "c28b16d2b2c6b5654be29c3dc51f656f552ac835acbe387e36768a1af866252e"
+      }
+    },
+    "node_loot": {
+      "file": "map/node_loot.png",
+      "sha256": "b78f301eb8bea713b8cf97774eb11d141809b8010a8943813508e14e35044353",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_loot-b78f301eb8be-289e85be88d0.json",
+        "record_sha256": "289e85be88d01b1771778e40847477bb3a8ac9c72f615bcd53398d9531e0db2f"
+      }
+    },
+    "node_triangle": {
+      "file": "map/node_triangle.png",
+      "sha256": "f478d424e7facdc9d00b32b0a4acc5f7cbdd824ca4a4671a320db0606e94797a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_triangle-f478d424e7fa-dc4b449a930c.json",
+        "record_sha256": "dc4b449a930c79b75066ee63503223fd8b6771fe11660ad36600028dedafc9fd"
+      }
+    },
+    "node_gray_normal": {
+      "file": "map/node_gray_normal.png",
+      "sha256": "e8e051b0409e7f66d5f285d2b5aae6f42314e7776219b2a5899e32f367c281ca",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_normal-e8e051b0409e-923dbe1b621d.json",
+        "record_sha256": "923dbe1b621dee4548abaa4cfd565a410c3f9c489c586639d05b99cae94ef97c"
+      }
+    },
+    "node_gray_event": {
+      "file": "map/node_gray_event.png",
+      "sha256": "cbb33fefdb4d732660f474ebd57cbcc86d7f5a91d981d83cdffa71875e45891b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_event-cbb33fefdb4d-60ee3da79b7f.json",
+        "record_sha256": "60ee3da79b7fdf9738768f274542c9db2d28ecced952072819cef560a96a1f45"
+      }
+    },
+    "node_gray_loot": {
+      "file": "map/node_gray_loot.png",
+      "sha256": "24b978daad579f7a3b17ec77ade8f881ab7385007b967222fb0cb8ec3c6a5b94",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_loot-24b978daad57-a5ad9efde8ce.json",
+        "record_sha256": "a5ad9efde8ceee1572ad9f4d32fcccdaf0f083386858ebc6b8e3efbb66db7ccd"
+      }
+    },
+    "node_gray_rest": {
+      "file": "map/node_gray_rest.png",
+      "sha256": "cd77118b9f39fbbc8755144d62d2d5893f02c225c6b0239aa89cebd5025e05aa",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_rest-cd77118b9f39-ae3c1834f315.json",
+        "record_sha256": "ae3c1834f315fad4fd7c86e7003128cdea40ef1720f1097072f02ec8974fa601"
+      }
+    },
+    "node_gray_shop": {
+      "file": "map/node_gray_shop.png",
+      "sha256": "8154b19e16bd46e2d306aee2ac9889d2488eb56f624cd38de39e0bae5f844486",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_shop-8154b19e16bd-01cd04419c3e.json",
+        "record_sha256": "01cd04419c3e677bd8690d1219be8c01f9c300e5e325c99674c7b8f9fff0f347"
+      }
+    },
+    "node_gray_elite": {
+      "file": "map/node_gray_elite.png",
+      "sha256": "eabe7b78776d7651e4cb219d9c60571cfaede15fff595822d0fabc59fa9188f6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_elite-eabe7b78776d-8e7d300de10e.json",
+        "record_sha256": "8e7d300de10e3226a6928943862ba53ee0cd7117d2a1bf449f04a0ca23132f62"
+      }
+    },
+    "node_gray_boss": {
+      "file": "map/node_gray_boss.png",
+      "sha256": "cd99571773524699acaa58cf07ef09ae6ee1fab7e594281190b56335104c6ff1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_boss-cd9957177352-6bf93687cb67.json",
+        "record_sha256": "6bf93687cb67167c172f2ac51a1df46214154f49a1d785eeadbb826c25edee0f"
+      }
+    },
+    "node_enter": {
+      "file": "buttons/node_enter.png",
+      "sha256": "518a715e289dff0aaa48dec00f4562061ae5e971cdf1e85253af896b2cdbc007",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_enter-518a715e289d-d1d545fa341e.json",
+        "record_sha256": "d1d545fa341ec80abf9e47f41af5a40ec2a20602dafd29b7c3aa758c7dfa4343"
+      }
+    },
+    "prepare_normal": {
+      "file": "battle/prepare_normal.png",
+      "sha256": "777ef127958b7c1ee1b0c8c052880ebd659c099cfec12b95b9a0641996055cd4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-prepare_normal-777ef127958b-eb1bde245f33.json",
+        "record_sha256": "eb1bde245f332ece2202da43cea64a9e6afd7b780f8535a4dfb1428d8b5315cf"
+      }
+    },
+    "prepare_elite": {
+      "file": "battle/prepare_elite.png",
+      "sha256": "fdae0a40969415aeb28d961387484118e6be396e0f3616c736987106678ff0f4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-prepare_elite-fdae0a409694-0577238b4dd8.json",
+        "record_sha256": "0577238b4dd8d5cc0e53f24bbb8efb8a8e0c3c7f30973ca52f36da5efbd1ccf0"
+      }
+    },
+    "prepare_boss": {
+      "file": "battle/prepare_boss.png",
+      "sha256": "570666b84e5da9b92fe1fc03e16a91381908fa996d70ab21a57b645e8a08134b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-prepare_boss-570666b84e5d-9bab3b732683.json",
+        "record_sha256": "9bab3b7326831ca7cbc4a11319558d6f2f22153c982e2d3673da726c91dc778a"
+      }
+    },
+    "start_battle": {
+      "file": "buttons/start_battle.png",
+      "sha256": "cd86591c8c2310c4de464daecaebc2d7d4cc0749b479f82dfe8217d1dbc43690",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-start_battle-cd86591c8c23-89e0b733fbf9.json",
+        "record_sha256": "89e0b733fbf9f2eab0d1be1641b03a101867a564aabbad3f199de62d54ff4b0f"
+      }
+    },
+    "auto_static": {
+      "file": "battle/auto_static.png",
+      "sha256": "8249a0ff85eff6ad2e0697bec06feee95fd037deb04d47913331a421d8d2550a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-auto_static-8249a0ff85ef-11fcf27f5540.json",
+        "record_sha256": "11fcf27f55400e53430ed6fe8efa52b3fe8e5cf4fbdb308b38ae9562fcd55ce3"
+      }
+    },
+    "levelup": {
+      "file": "battle/levelup.png",
+      "sha256": "30d4ca73c7b59c30626fbfec9fdf3424df0c284c98f4dc3d3f0dcd78fad055ff",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-levelup-30d4ca73c7b5-bdf3ec23c2e8.json",
+        "record_sha256": "bdf3ec23c2e830aaee14aadbca7ba0246737db5b16fa5054b44f662b05c7c694"
+      }
+    },
+    "levelup_close": {
+      "file": "buttons/levelup_close.png",
+      "sha256": "2b2f3c00a87f5e65dbc0d8b4c5212cb96fe12b5f1531ccfb7f51f1abdb889c0e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-levelup_close-2b2f3c00a87f-3b30b83ea4b5.json",
+        "record_sha256": "3b30b83ea4b59dd159701d95ead0a9355bccbc8bfcedc4a1e4a8656832a13d60"
+      }
+    },
+    "victory": {
+      "file": "battle/victory.png",
+      "sha256": "37b8543039583072f0691d558d5e9b82e72dd168d467eb44eb387bc66ceba983",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-victory-37b854303958-13ceacd4f752.json",
+        "record_sha256": "13ceacd4f7524bb2ab6884dfcaa4846de9301b76334d17ba4e5fd25c2ef47337"
+      }
+    },
+    "failed": {
+      "file": "battle/failed.png",
+      "sha256": "9508d705aa628909a2d40ea55c6e214df87e787e82e9759c3105d08289ed8c98",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-failed-9508d705aa62-aff5b7301b18.json",
+        "record_sha256": "aff5b7301b18be018d4f636664b7c1faa75ed5c161b15c67643b4da884abd881"
+      }
+    },
+    "continue_exploration": {
+      "file": "buttons/continue_exploration.png",
+      "sha256": "1acee9a745ae8ea51fc4feed5ada5f1b93835e0a824c8fab1abb27d421200ac5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-continue_exploration-1acee9a745ae-d6df85bdafb7.json",
+        "record_sha256": "d6df85bdafb79a0f742b69c0ad0936fae59b44104811d45f9d7ec46f41bedc93"
+      }
+    },
+    "elite_choose_reward": {
+      "file": "buttons/elite_choose_reward.png",
+      "sha256": "49c4d9ed3db8b8a193e85dbb555c149d7e8ff794f1774a31133a26044511b2ee",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-elite_choose_reward-49c4d9ed3db8-b1e6d9d96082.json",
+        "record_sha256": "b1e6d9d960822b6a97829dc7e86162815508893d2cee90076094b809f86e4200"
+      }
+    },
+    "elite_claim_complete": {
+      "file": "battle/elite_claim_complete.png",
+      "sha256": "33b44b434112660e856bba4ecf2ffb9f6a575ab9723cca54c39961fa67e96e27",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-elite_claim_complete-33b44b434112-51c903a1d8d8.json",
+        "record_sha256": "51c903a1d8d8f70260693c8044d8f64d899f0e67c94f01d52cc70679e74a2cfd"
+      }
+    },
+    "boss_claim_complete": {
+      "file": "battle/boss_claim_complete.png",
+      "sha256": "6e252022631f82c392b88eac8924c22bb3205064d25245ceba1fd381f4ad7c8a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-boss_claim_complete-6e252022631f-295d45f4a59a.json",
+        "record_sha256": "295d45f4a59a86543331462c8a0efc6f002062071678419a9211cca364a75567"
+      }
+    },
+    "unclaimed_prompt": {
+      "file": "battle/unclaimed_prompt.png",
+      "sha256": "a0f3f5f9ef3346073bd4fc0d115cc34d8620cafff35d58763b46ec540574634a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-unclaimed_prompt-a0f3f5f9ef33-dda384a931e0.json",
+        "record_sha256": "dda384a931e062449df11262a5b2e9d3a3c388e7bd54909263f0529f7e6c516f"
+      }
+    },
+    "unclaimed_confirm": {
+      "file": "buttons/unclaimed_confirm.png",
+      "sha256": "a37015c3d0874c993850c113a2f228d59fd38cf6a9c8c241ec2d672b23089db1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-unclaimed_confirm-a37015c3d087-58c3c586f17d.json",
+        "record_sha256": "58c3c586f17dec14d9ddad56ffc2ac232c5d6709bf021bda7927e4995f1c1253"
+      }
+    },
+    "journey_result": {
+      "file": "battle/journey_result.png",
+      "sha256": "816a96a20b989f375df0b92a6d3c80e91f3d7251562ea8a11e131a417a9e1c89",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-journey_result-816a96a20b98-72431c80b191.json",
+        "record_sha256": "72431c80b1918e11a00c5626ccaea689b815e5884a7b2df78928138227eddabb"
+      }
+    },
+    "journey_close": {
+      "file": "buttons/journey_close.png",
+      "sha256": "02fe5cc96c4fe560e0d3705850fb22c7b02bc192f98690c17afca397190f0c0b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-journey_close-02fe5cc96c4f-a338ce0e0f02.json",
+        "record_sha256": "a338ce0e0f029493a9895ba315d24eacafa0e1c429e1e051a70b569e1be63f57"
+      }
+    },
+    "camp_rank": {
+      "file": "camp/camp_rank.png",
+      "sha256": "01a820e25ebf68c5a9c43b517e36cd63add0da7ec534ecba1f68460109622122",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-camp_rank-01a820e25ebf-b985b50b7eb9.json",
+        "record_sha256": "b985b50b7eb95df52aadb7035365274154820b247106c78b9830845c45b916bd"
+      }
+    },
+    "camp_rank_done": {
+      "file": "camp/camp_rank_done.png",
+      "sha256": "6f5fd01d32307c6782e9caabf91fc2a2e87a76087470074ce911eb575773d0be",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-camp_rank_done-6f5fd01d3230-2c1a93853ef2.json",
+        "record_sha256": "2c1a93853ef2bef4071add2b89f3dbdb68a8ba649ba5251a0222a7ae8b226206"
+      }
+    },
+    "rank_title": {
+      "file": "camp/rank_title.png",
+      "sha256": "6765c352f0411ee189619f14719f5a2dbedca418577b244fa9fa18a1fcbcc7d5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_title-6765c352f041-391cb00cf240.json",
+        "record_sha256": "391cb00cf2406f5e8a55858d41f4109cb4b2e2cf5c91d8a7f019d74af01bc81f"
+      }
+    },
+    "rank_confirm": {
+      "file": "buttons/rank_confirm.png",
+      "sha256": "8125a1ea9fc7f2ed815f3c62e0db33b264d0deaff8f8e203cc42bdc3038d6bf7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_confirm-8125a1ea9fc7-524344c12d64.json",
+        "record_sha256": "524344c12d64cc9754d085490a1e833e5fb80bff88f86b13a52a7b3f5eed35b0"
+      }
+    },
+    "rank_close": {
+      "file": "buttons/rank_close.png",
+      "sha256": "7fe09bebda5a96c71d7e6e36d80a2986ee8ebe394c74ce091aa7cb99d01e3db9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_close-7fe09bebda5a-0419826d3bce.json",
+        "record_sha256": "0419826d3bced884f53dafc442ee86fad32138be20c6e3f61819f536f7f9e9bd"
+      }
+    },
+    "bench_teacher": {
+      "file": "formation/bench_teacher.png",
+      "sha256": "0c6b32ef79b2622c7a6b5ced3b6f2de899c4f2c136b8a16236be7a53dafb3c55",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-bench_teacher-0c6b32ef79b2-b9360202b7a1.json",
+        "record_sha256": "b9360202b7a1b6ab1fa4d0ea5e1fa97767eb1de73c0c16566abd205d7006ead9"
+      }
+    },
+    "bench_arowell": {
+      "file": "formation/bench_arowell.png",
+      "sha256": "1e7b97b394cd2ca4950f33b22b73abc0dc361b4b1b2659a66b463bd7c5cefc46",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-bench_arowell-1e7b97b394cd-d6269b6feafa.json",
+        "record_sha256": "d6269b6feafac4d92b72cb7515a8687479feea161ee20069a65ddf6e48a4837b"
+      }
+    },
+    "bench_selected": {
+      "file": "formation/bench_selected.png",
+      "sha256": "c68ce5ed8314ecd7db6951586aed5d4276a6aa1548a120190b909570da68a611",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-bench_selected-c68ce5ed8314-459e089458e3.json",
+        "record_sha256": "459e089458e34ddd01d8b7c8b3acc0760b43eccb4275e3232f05d3a0c23495dc"
+      }
+    },
+    "formation_knight": {
+      "file": "formation/formation_knight.png",
+      "sha256": "862b4cd80f1b8b64e6c53fdc61ef605649769bf65b59ba2d5222bb924c71f232",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-formation_knight-862b4cd80f1b-0aa5a1577090.json",
+        "record_sha256": "0aa5a15770904a28bc079993538cf283800d945bd7e55972903b36dcc5bace16"
+      }
+    },
+    "replace_button": {
+      "file": "formation/replace_button.png",
+      "sha256": "2872b50cc615bc5e77c866693a535dd984d6c62f35536ece1b47223eb110cae1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-replace_button-2872b50cc615-85f6bad582e6.json",
+        "record_sha256": "85f6bad582e6fb2686f50ade135ac593dfaba129bb585824108fb7268e10ce0d"
+      }
+    },
+    "event_torch": {
+      "file": "events/options/event_torch.png",
+      "sha256": "27f3eeefac38bae6ef576b67848b3a8bd62302274d7356f46384548ee4771bc6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_torch-27f3eeefac38-b73e46e8d120.json",
+        "record_sha256": "b73e46e8d120f5cbc76c815b6c1bde675fb2612a0c60a109c92edc7986354804"
+      }
+    },
+    "event_mimic": {
+      "file": "events/options/event_mimic.png",
+      "sha256": "224a24b4904ee136c7436495f14df9a6c59035aa4db42b42cab23e1e2e68db57",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_mimic-224a24b4904e-786804530cf0.json",
+        "record_sha256": "786804530cf0e6302ffbd97b68716c758da4af92b9cc1a728d186a7595e7d6d0"
+      }
+    },
+    "text_continue": {
+      "file": "events/text_continue.png",
+      "sha256": "07b047a4230aa07740474b0ba635144ef7a35518aa2ff66e44dd73c7ed8705f6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-text_continue-07b047a4230a-3419a3092a9a.json",
+        "record_sha256": "3419a3092a9a070104dc6e98d5ee3582dff714f626dee9959520af502ca5991e"
+      }
+    },
+    "loot_ominous_crystal": {
+      "file": "loot/loot_ominous_crystal.png",
+      "sha256": "550eedb0cf013de17ad4ecfb4bfd59058aaf9d1eab4bfba2fd86c476eed901f7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_ominous_crystal-550eedb0cf01-d7a8cf2b34e4.json",
+        "record_sha256": "d7a8cf2b34e403f501459c628ee3c3f29fe9635eb16d74f13b36aa2a9fb68e01"
+      }
+    },
+    "loot_old_sword": {
+      "file": "loot/loot_old_sword.png",
+      "sha256": "f881f60ad095f6abfc4023ec8f2ef0827dbf8860f2f8e9fe090710173450ff07",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_old_sword-f881f60ad095-e76de168178e.json",
+        "record_sha256": "e76de168178e2adaafcfbfa24821f70e31b4ecc8f650548c023613b9ad649c2d"
+      }
+    },
+    "loot_lightning": {
+      "file": "loot/loot_lightning.png",
+      "sha256": "496ce9261709ed535a10ef4d72b8940d4195c643db60f1272d69c28a5e33bc57",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_lightning-496ce9261709-050cb8bd66ae.json",
+        "record_sha256": "050cb8bd66ae8b2756572cae6930341e1b118eac5fe7ba8998183d421ca3c5aa"
+      }
+    },
+    "loot_dimension_core": {
+      "file": "loot/loot_dimension_core.png",
+      "sha256": "f1740f9f97fb78e60f52d19253ad81c89fcbb5d05f089905db9278f6b442cd76",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dimension_core-f1740f9f97fb-053bad3842a0.json",
+        "record_sha256": "053bad3842a0202a1b1910d8ff5f83910b514a50dc58c0e457140161593b2eec"
+      }
+    },
+    "loot_priest_ring": {
+      "file": "loot/loot_priest_ring.png",
+      "sha256": "eaa10e928e66fd4d32fe1b1faab46f37223e195c6f7211c8a09b287b47aa7b99",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_priest_ring-eaa10e928e66-9bfee9bb1ea7.json",
+        "record_sha256": "9bfee9bb1ea79a58672e0d310217b8d73cc9311437304a159f92ff04b121d95d"
+      }
+    },
+    "loot_star_shard": {
+      "file": "loot/loot_tablet_star_shard.png",
+      "sha256": "4c376fca76172fdb0557cbc016b7f4688bb078658dacacd46da6c8fcc3ba490c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_star_shard-4c376fca7617-4ac035a1821b.json",
+        "record_sha256": "4ac035a1821bca7f05c504c43cdc2385e8641319064b5dbdca03a142e419b92f"
+      }
+    },
+    "loot_confession": {
+      "file": "loot/loot_chalice_confession.png",
+      "sha256": "528be8d934a9224d092d16bb31f513f21b6a4f021be8c2084980134037079d73",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_confession-528be8d934a9-bbc7acfe1b1a.json",
+        "record_sha256": "bbc7acfe1b1afbe5d6c940bbc0ef11080b310f80d207e46696c2615b1adb45c7"
+      }
+    },
+    "loot_sky_gate": {
+      "file": "loot/loot_tablet_sky_gate.png",
+      "sha256": "2425e2072b874477467760ef2d3cd206eae36bd3062785ab2e571e4e9bb24e3e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_sky_gate-2425e2072b87-8622ed05e8fd.json",
+        "record_sha256": "8622ed05e8fd7a76f62128c32de4e0061da6b4be910930ad34a17e69de088af7"
+      }
+    },
+    "loot_painting_guard": {
+      "file": "loot/loot_painting_guard.png",
+      "sha256": "4a6d76d8f7550da3b449a0b1e270f8bcacee65071c0486b9ec67cb9f983b543c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_guard-4a6d76d8f755-d26ea7d54e17.json",
+        "record_sha256": "d26ea7d54e17033e543bbd622cdc515752ad260c886302e7304218b57883a383"
+      }
+    },
+    "loot_painting_fire": {
+      "file": "loot/loot_painting_fire.png",
+      "sha256": "c1da6bbd12c3c9251086a90721ff3bf00540a79370d9aeb735d92224171ddabf",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_fire-c1da6bbd12c3-d1b8e1866bcf.json",
+        "record_sha256": "d1b8e1866bcf6aafb01cc414a9e5d71b8e9c8636729a28c3969b52b7a2e44cd9"
+      }
+    },
+    "loot_painting_mez": {
+      "file": "loot/loot_painting_mez.png",
+      "sha256": "6dd9f6233d6b0f6d651c61f4e4d64121e427bcd3744a1c032a765b269224012f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_mez-6dd9f6233d6b-dabb9c8b0cf3.json",
+        "record_sha256": "dabb9c8b0cf3e1fa3910d5ff3b6c3f3fc725d0dafb989f46570806fc6e481021"
+      }
+    },
+    "loot_selected": {
+      "file": "loot/loot_selected.png",
+      "sha256": "a87f487bebe44b9a58f536ea7f97a18b76f108fb1a096706b7ab7d40df6050df",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_selected-a87f487bebe4-23932b69c7a8.json",
+        "record_sha256": "23932b69c7a8449db98e9a1a92a19c4fe8699b80a77ade47ddeb33dc2de8a25c"
+      }
+    },
+    "loot_confirm": {
+      "file": "buttons/loot_confirm.png",
+      "sha256": "1948b1c7aa01086d9d56cde5ebfddaee616f59ff5d36d3a4f5a7164c9618c877",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_confirm-1948b1c7aa01-d01258c08207.json",
+        "record_sha256": "d01258c082072ffb3917380c6eed277d9890e245045d6d5027410b89e2ae4dbe"
+      }
+    },
+    "supply_get_loot": {
+      "file": "loot/supply_get_loot.png",
+      "sha256": "fa88db7386a21f51f92fdb81f5e57ccaa3748495432d2de72a9d66b5a1766248",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-supply_get_loot-fa88db7386a2-df4a412cba60.json",
+        "record_sha256": "df4a412cba60f54300343b4dd844efd466e0f733be296e42ed0ff08d8416dfaf"
+      }
+    },
+    "supply_loot_done": {
+      "file": "loot/supply_loot_done.png",
+      "sha256": "6932ebfd55582f3a02700bcc4e7dce57f0cf00e18cddf2a68912658f7c5e74e9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-supply_loot_done-6932ebfd5558-6a66274380d4.json",
+        "record_sha256": "6a66274380d41d8d07111349e82c001771b9bfdd9522822cbb92eda73c1625b3"
+      }
+    },
+    "investment": {
+      "file": "shop/investment.png",
+      "sha256": "19e65f701f96072be5abee3535806f39ad3fba811fac9ea1f674d02989af704e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-investment-19e65f701f96-50af0e1d87c3.json",
+        "record_sha256": "50af0e1d87c307c8e6675d9560eebb2001ca7115362cd636af458b464c6a036f"
+      }
+    },
+    "investment_entry": {
+      "file": "buttons/investment_entry.png",
+      "sha256": "961d55df33b2e2e8e3e5c5daac06ef7169ed1a1f25f8fc50ff88a63b3876d005",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-investment_entry-961d55df33b2-6717fd262260.json",
+        "record_sha256": "6717fd262260f97d706342b54946b2e0db790202f86f0d63cf669d889faa198e"
+      }
+    },
+    "purchase_title": {
+      "file": "shop/purchase_title.png",
+      "sha256": "0102a02a0f89ff17a7216c83a811bba855b07e956801ab5156303c55884c1ee6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-purchase_title-0102a02a0f89-9a6bc433308e.json",
+        "record_sha256": "9a6bc433308e99ca302388952135f21e68281a666fab2c8c5b109920d7b6f866"
+      }
+    },
+    "purchase_item": {
+      "file": "shop/purchase_item.png",
+      "sha256": "d94ed3bbb73123ded7d402be9a7a06634c3ed330c9658ec70d4e8df7fa3643fa",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-purchase_item-d94ed3bbb731-7a929d84a1cb.json",
+        "record_sha256": "7a929d84a1cb9b8b1ccb9b90bf31eabbdb84f41e8f6df32fc1777ee6814393ba"
+      }
+    },
+    "purchase_confirm": {
+      "file": "buttons/purchase_confirm.png",
+      "sha256": "6fe7abfd5db04b561b69367b8e72b4bafdac2b94505d38dcb5e95e32bfae2f14",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-purchase_confirm-6fe7abfd5db0-da906ae495e0.json",
+        "record_sha256": "da906ae495e09c4cc5fb327ae96977c36d0b823ffc504c33304b9832b231bcac"
+      }
+    },
+    "investment_done": {
+      "file": "buttons/investment_done.png",
+      "sha256": "7dd83a43f4269d8471e1bf4828dd29ab032d8f49283ec9ff18a434495ca86b52",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-investment_done-7dd83a43f426-e74f5b106b51.json",
+        "record_sha256": "e74f5b106b51c574bbdc76576c4b301e00d3e255ed199470f8b23e115800aaa1"
+      }
+    },
+    "shop_leave": {
+      "file": "buttons/shop_leave.png",
+      "sha256": "6bb7b4dcf2b243782ce9c157c1d44eafe046a19936c0d277192c7979bd292eae",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-shop_leave-6bb7b4dcf2b2-16f991b6ad4e.json",
+        "record_sha256": "16f991b6ad4eaf1b088456eb0dd80cf28217cafe4af00b9861c48c319b19dfb8"
+      }
+    },
+    "shop_leave_prompt": {
+      "file": "shop/shop_leave_prompt.png",
+      "sha256": "d434cf78a8c0778b7b802be0c7305ac53b5d05535567ef4fc63acd1ec853437d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-shop_leave_prompt-d434cf78a8c0-f58eb26611db.json",
+        "record_sha256": "f58eb26611db3ebfd2e75fb7e17862e4d1a5707af811d7ac91bdefd9d9eea388"
+      }
+    },
+    "event_trap": {
+      "file": "events/options/event_trap.png",
+      "sha256": "1689f20fe23346972fb63fa286bcfa95bf065f999486f93df8f7271e7d81a44e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_trap-1689f20fe233-c20b0a5a3fdd.json",
+        "record_sha256": "c20b0a5a3fdde364407a64f16ddfcf67a46aaafb37553b8f86fac9e632a7f8ef"
+      }
+    },
+    "prepare_event": {
+      "file": "battle/prepare_event.png",
+      "sha256": "d64834fedcf33d80675212e4110d8aa0dc8b969be7715e32c5ee88d1cc0a7d1f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-prepare_event-d64834fedcf3-c86d31ae630d.json",
+        "record_sha256": "c86d31ae630df27a3221c6614fe2925a720c66fd02e7ef7992d1c49a6d7a9b92"
+      }
+    },
+    "event_tablet": {
+      "file": "events/options/event_tablet.png",
+      "sha256": "94bf3a18399e8150e77cbd8a623fd2fa4841b75b1d64509dfc4cd251edfc3b60",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_tablet-94bf3a18399e-9e8306e59af0.json",
+        "record_sha256": "9e8306e59af01735a31734173e8594032b64d048fb9582370b57cad3e80e375d"
+      }
+    },
+    "event_tablet_continue": {
+      "file": "buttons/event_tablet_continue.png",
+      "sha256": "7711e2aee89f4a71b5ea3357565c517d0ccf77bc744c0566d2d80610308bac47",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_tablet_continue-7711e2aee89f-578bbcff25dc.json",
+        "record_sha256": "578bbcff25dcf5875c9e7724644c7af5ee1d4dcf925eaa8b862e41db6296e817"
+      }
+    },
+    "event_vestment": {
+      "file": "events/options/event_vestment.png",
+      "sha256": "2e2b10fad5a834d3f6a58efa3289b24d8052d0ab9fbfd9925782d19818fae32e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_vestment-2e2b10fad5a8-5a5be0453aab.json",
+        "record_sha256": "5a5be0453aab37de815247cbd3013147698b7fa727922df08511f8669476efa9"
+      }
+    },
+    "event_vestment_no_loot": {
+      "file": "events/options/event_vestment_no_loot.png",
+      "sha256": "3aecc6787c78f516f2197be425d1b96768ed23629aaa362bea5b0aea6f65bd7e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_vestment_no_loot-3aecc6787c78-175112470a8a.json",
+        "record_sha256": "175112470a8a7a2700ee0d220a6b9566c040d55bfeb336b91c9700fdfcbf6ab6"
+      }
+    },
+    "loot_automaton_heart": {
+      "file": "loot/loot_automaton_heart.png",
+      "sha256": "4d6f17c2d34bb247e0449163a44ac7bc3ba81e4b0b4097fc6356eec0de4cd9ee",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_automaton_heart-4d6f17c2d34b-b2540e177df8.json",
+        "record_sha256": "b2540e177df80a5cb6cfbff02469f740ccbf2babd2a1247ddc34040d85ef0dea"
+      }
+    },
+    "loot_sun_shield": {
+      "file": "loot/loot_sun_shield.png",
+      "sha256": "71c2cf2ada044ede96d3a6549b8c5ce17cb8179b49b709166c327c0a5b9b57af",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_sun_shield-71c2cf2ada04-e1946ac8b8e8.json",
+        "record_sha256": "e1946ac8b8e840f7e04d8764cc4ed1c40b068e42adcff780aef2b52c29e5df69"
+      }
+    },
+    "loot_dimension_pouch": {
+      "file": "loot/loot_dimension_pouch.png",
+      "sha256": "a80b9b78ab78833bc21d2270d380feb2e6dad62c3008d5526a779cd4fede4f16",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dimension_pouch-a80b9b78ab78-66796e86582d.json",
+        "record_sha256": "66796e86582d688d99267214e46afa5fa5cd3a3be5c75d606aff65ad78c63fef"
+      }
+    },
+    "loot_painting_panorama": {
+      "file": "loot/loot_painting_panorama.png",
+      "sha256": "1a4ca44c885682be1806e7c1852cd6f153a36d278044a2295d3128a652b4d65f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_panorama-1a4ca44c8856-7c8276a52b7b.json",
+        "record_sha256": "7c8276a52b7bc4d810ec14e55e43f85071b9295a057879a7450172c61d4300cd"
+      }
+    },
+    "loot_painting_sanctuary": {
+      "file": "loot/loot_painting_sanctuary.png",
+      "sha256": "9081a709b5db3a0112f796e0dc732934f50a285f2e3236c9f7804318db867aeb",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_sanctuary-9081a709b5db-39534f30ac91.json",
+        "record_sha256": "39534f30ac91d39a77027f340b819f4145c47f6e2dd2965235738b7f6cb40919"
+      }
+    },
+    "loot_painting_blind_war": {
+      "file": "loot/loot_painting_blind_war.png",
+      "sha256": "05c587741331c432e78459c21a22600af55d347d03d3ebc0864fb9ff5b79e533",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_blind_war-05c587741331-59607f036581.json",
+        "record_sha256": "59607f036581a8b43306c3332efdaa24a89cc4797f54ec4d65f5989941676007"
+      }
+    },
+    "loot_statue_two_faces": {
+      "file": "loot/loot_statue_two_faces.png",
+      "sha256": "31885c5f583d400a2c175f3bde26665d4fe1d0d698db51e92bf70c41fed1f9f7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_two_faces-31885c5f583d-94c308b824d3.json",
+        "record_sha256": "94c308b824d3d2058f5e278e0df741fa79a662a1c705da509efc9c122caa5b5f"
+      }
+    },
+    "loot_tablet_persecution": {
+      "file": "loot/loot_tablet_persecution.png",
+      "sha256": "0f3bed80550ae4e6681df273380563997a05d355e0b261170cbf21b2e6f73fe0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_persecution-0f3bed80550a-29418c7cdc74.json",
+        "record_sha256": "29418c7cdc74eb9ffff7d699056084a916cf16918311086ed2fdd6bf5cbd2c69"
+      }
+    },
+    "loot_chalice_offering": {
+      "file": "loot/loot_chalice_offering.png",
+      "sha256": "87b0ea268a13027dd185577d515d01d0e3c3ad3694ce3c37e9325647d0fb92a0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_chalice_offering-87b0ea268a13-5dfb522d6fe1.json",
+        "record_sha256": "5dfb522d6fe127bb1845b1a135e85cd5b6ca29bce3dfd905e7e3a2b70024048a"
+      }
+    },
+    "loot_chalice_redemption": {
+      "file": "loot/loot_chalice_redemption.png",
+      "sha256": "55133a2e911a58377dc7916b282b3b6924ea97c0de7635264bebae0d97502aba",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_chalice_redemption-55133a2e911a-8e3fc25b89e4.json",
+        "record_sha256": "8e3fc25b89e4c8a0410fa451f2729620d5fbb50a9341597b56c1cbd5e6d4b0dd"
+      }
+    },
+    "loot_ancient_key": {
+      "file": "loot/loot_ancient_key.png",
+      "sha256": "be47fc64f3d3857320065af6f1714a09bda30c6f8a02ca273f5008c9261a1219",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_ancient_key-be47fc64f3d3-ef9bb2673c8d.json",
+        "record_sha256": "ef9bb2673c8d53cc03bb6287b6d0f6ba288578c18bdc0e79f81a38aa4cbb765a"
+      }
+    },
+    "loot_world_tree_leaf": {
+      "file": "loot/loot_world_tree_leaf.png",
+      "sha256": "52005525763e207fbe02ef6ac77a1e4ca343dae70ea40c4c1dc643fea5ce112f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_world_tree_leaf-52005525763e-103521b4033e.json",
+        "record_sha256": "103521b4033e00c661e98b41a1e7456effd4a617d0813ef639f6274405d30699"
+      }
+    },
+    "loot_star_book": {
+      "file": "loot/loot_star_book.png",
+      "sha256": "f0e40a960b7f6068b6ac5e8e192e1470022ffec9eda5e87e183e1b8fd1b72f37",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_star_book-f0e40a960b7f-795ec5a0e928.json",
+        "record_sha256": "795ec5a0e9282d3419dc632918e207a6ea6832214f85d9f19bf5a882ac0c665b"
+      }
+    },
+    "loot_beast_scale": {
+      "file": "loot/loot_beast_scale.png",
+      "sha256": "421cb9c5810653ea6a09a7088b57c5b6aa55d947b7a1bb4112ccecf35e53b90f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_beast_scale-421cb9c58106-f4be5674c3d4.json",
+        "record_sha256": "f4be5674c3d40383f5b5f24af52a8c9c5aff14677faf1507a037c37b6a72f19b"
+      }
+    },
+    "loot_statue_gazer": {
+      "file": "loot/loot_statue_gazer.png",
+      "sha256": "99bafa09e454ee892b3604f155419d7d7e243c0da81b334fc1fae6d0efe50129",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_gazer-99bafa09e454-04d86beb2dce.json",
+        "record_sha256": "04d86beb2dcefa9a6f7d81d4606e290441002f3304075431c402ceba7828ab08"
+      }
+    },
+    "loot_tablet_prosperity": {
+      "file": "loot/loot_tablet_prosperity.png",
+      "sha256": "8d8fd97644af4b28cf43c1be7c5f0fb98d150d1f01d0913ac58757f05ecab71d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_prosperity-8d8fd97644af-1f25a9a7814b.json",
+        "record_sha256": "1f25a9a7814b4fce6e9d7d0ef0da1dabc37f0a8ca4cd0d4f2d41cabd1d56ef03"
+      }
+    },
+    "loot_painting_cosmos": {
+      "file": "loot/loot_painting_cosmos.png",
+      "sha256": "ba1763d8da94a475f5db22339caa96a89a16e9574c7978fd735797fce682d989",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_cosmos-ba1763d8da94-ceb916f5dfb6.json",
+        "record_sha256": "ceb916f5dfb6ffe3e64402624165a612f4d3b9f942b897f91a693a18f4ea0c60"
+      }
+    },
+    "loot_painting_apostasy": {
+      "file": "loot/loot_painting_apostasy.png",
+      "sha256": "ec795e9409eb44473488c6561a0374cfee69c81f79ca59701b8864f8de17eabb",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_apostasy-ec795e9409eb-38dc5f5d9095.json",
+        "record_sha256": "38dc5f5d9095dc99c69fb8ddd010bbbc88b85c3e1cd09de82fb8bcdc508cf481"
+      }
+    },
+    "loot_chalice_silent": {
+      "file": "loot/loot_chalice_silent.png",
+      "sha256": "a1ed048e6b12f66f32711ef40281288ef2d93d9287503fe25a05d2ce4243cc50",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_chalice_silent-a1ed048e6b12-1be556ee6e2d.json",
+        "record_sha256": "1be556ee6e2db7cb611ae7ecd1238e797f0ac626cb4a9ffa432e0934044bbeca"
+      }
+    },
+    "loot_painting_silent_agreement": {
+      "file": "loot/loot_painting_silent_agreement.png",
+      "sha256": "50b3c904e8778e3f238081b2da5d8130dc48d6259d2002191296b2e814bbe781",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_silent_agreement-50b3c904e877-247c440ef5d6.json",
+        "record_sha256": "247c440ef5d60b3d9b474c6d4717a57ba356d59aecd10a54ad241a6bfa60b136"
+      }
+    },
+    "loot_painting_forgotten_legend": {
+      "file": "loot/loot_painting_forgotten_legend.png",
+      "sha256": "7382e2433e883efd97b031eee1405c8c40cd16776d741fedcc3c69ffbc0e37b6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_forgotten_legend-7382e2433e88-aba55f990c53.json",
+        "record_sha256": "aba55f990c53bc8df162ebf617926c6c476ba7a69af34807de413a4df60af523"
+      }
+    },
+    "loot_statue_sleeping_priest": {
+      "file": "loot/loot_statue_sleeping_priest.png",
+      "sha256": "63cc527d31ec819267f2262e13a0e5f28c3cf4df630d1740e10794a5f42a2fd9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_sleeping_priest-63cc527d31ec-a1aa93870760.json",
+        "record_sha256": "a1aa93870760d90579e79d32234bc14b34fd3f32a2f5ddd8a446ffb4badc3bf1"
+      }
+    },
+    "loot_tablet_dusk_stars": {
+      "file": "loot/loot_tablet_dusk_stars.png",
+      "sha256": "e0e4637cceda46c85f121f69fdb2b61240700915d8cfbd5733fd4593f5fe448f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_dusk_stars-e0e4637cceda-117ae07fa7ce.json",
+        "record_sha256": "117ae07fa7ce46844de10667602002e19c45b65e1ecf96ed435a4b22d6cf0e8d"
+      }
+    },
+    "loot_priest_unfinished_record": {
+      "file": "loot/loot_priest_unfinished_record.png",
+      "sha256": "03f18a85d3a31d04105e58d8de7fb13ce4f0d40483ff3001c9534d4a7cf3a1ae",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_priest_unfinished_record-03f18a85d3a3-fa7251fd1127.json",
+        "record_sha256": "fa7251fd112761252a22b068a49429404a13a6131a74c35ae2c73b8b6386a69a"
+      }
+    },
+    "loot_old_shield": {
+      "file": "loot/loot_old_shield.png",
+      "sha256": "a504f7309e2347bf0a412e795682f683de1951735d82e0b83e45f5ff2d686dbe",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_old_shield-a504f7309e23-69f10392280a.json",
+        "record_sha256": "69f10392280ab2a1f0f88183192f9394d93b8f5cbc965551b4ad90f081c9e188"
+      }
+    },
+    "loot_twin_star_ring": {
+      "file": "loot/loot_twin_star_ring.png",
+      "sha256": "687f569c6caa2d786900b21faa2ffbac25cfcc9ac294eaa01c027098edae3784",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_twin_star_ring-687f569c6caa-fc9824dbf2d9.json",
+        "record_sha256": "fc9824dbf2d9a38b4d62171b9a0b6f3bcda9e77cae11f81451df2357f3a21517"
+      }
+    },
+    "loot_summon_mark": {
+      "file": "loot/loot_summon_mark.png",
+      "sha256": "8b076d7527efbe740740716550ead843acc4ee306c985721b6a933579c7c43fd",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_summon_mark-8b076d7527ef-37d798827a1b.json",
+        "record_sha256": "37d798827a1b2639f93231c7471edc74bc914264fa4279eba2812c4a0712664d"
+      }
+    },
+    "loot_dice_hero": {
+      "file": "loot/loot_dice_hero.png",
+      "sha256": "148d568157ad28daf67b1a5e00945d8629753627e8412950abfe2bad03eb807f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dice_hero-148d568157ad-873267818221.json",
+        "record_sha256": "873267818221ffca92b0f29995ed13181c4181dbbe8804fc02dfb805e80e3f0c"
+      }
+    },
+    "loot_tablet_sleeping_forest": {
+      "file": "loot/loot_tablet_sleeping_forest.png",
+      "sha256": "46fbd3dc4cf9e3dbf3521e788d22cd90e1ea20438700d9ac13a192b0e36eacd4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_sleeping_forest-46fbd3dc4cf9-b1cc74d8261b.json",
+        "record_sha256": "b1cc74d8261bf319515616692e146a495163e89fd88c9ccf5ced7dbfa22ac17e"
+      }
+    },
+    "event_golem": {
+      "file": "events/options/event_golem.png",
+      "sha256": "af2d474a36d8fb4e5498d43b463253c5f81272861a1d770a446762c5ac0f7fda",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_golem-af2d474a36d8-ef4c39f87d37.json",
+        "record_sha256": "ef4c39f87d3769a491cb1052d0c15610e377115b94a0e9d6b3cf1f07d68beb24"
+      }
+    },
+    "event_giant_eye": {
+      "file": "events/options/event_giant_eye.png",
+      "sha256": "1c1986005cd5b2153a6f96c670f44a1357539bdcc622ea65a3bd1320eea61172",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_giant_eye-1c1986005cd5-0cd7fbe136da.json",
+        "record_sha256": "0cd7fbe136da42d76a537d9f11c6421303746397b8689dec62b08cd441205bb1"
+      }
+    },
+    "event_prison": {
+      "file": "events/options/event_prison.png",
+      "sha256": "44e3b56133394dc28e4f463f0b6725f2979fda1241b8a65a4942703fc995b49b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_prison-44e3b5613339-bbc5f8cb535a.json",
+        "record_sha256": "bbc5f8cb535a0225f3fd7f606be9b88a457aaffd47b5dccc119c53d59b59a2d4"
+      }
+    },
+    "event_cage": {
+      "file": "events/options/event_cage.png",
+      "sha256": "2df20fc9b484f36006799d8808f62a67f67da0e5e24a2ec5652b55e0239d1c9b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_cage-2df20fc9b484-0f1f1b6f81fb.json",
+        "record_sha256": "0f1f1b6f81fb6be183a660c0673ffe76650c55a70ffe067954b1cf4758b41636"
+      }
+    },
+    "event_altar": {
+      "file": "events/options/event_altar.png",
+      "sha256": "a909346e76268beb01395f90051e788b049fed8b3fa75c89ac1dda3d08394b6f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_altar-a909346e7626-2d0fef14d2a6.json",
+        "record_sha256": "2d0fef14d2a6bc5f48fc94378ba98a4069a9517ebeda2d19623a4f7d9f77c615"
+      }
+    },
+    "event_sword": {
+      "file": "events/options/event_sword.png",
+      "sha256": "fe0a5a9f1b79998ef2ba5be328934233c2549945ebdcb58709efab48140c3081",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_sword-fe0a5a9f1b79-214cb7954a96.json",
+        "record_sha256": "214cb7954a96058c599b17453484db36dc8b5bde399d69aa14b66db83bb0ec85"
+      }
+    },
+    "event_cairn": {
+      "file": "events/options/event_cairn.png",
+      "sha256": "7bd328c0697ed58d450157d3da4ad5827dca774ee4c1836c0899e6822c7f6e2b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_cairn-7bd328c0697e-0475928200b8.json",
+        "record_sha256": "0475928200b882a42d3e4134e218ed047fafc014571c4b732c630050799dbbe8"
+      }
+    },
+    "event_mushroom": {
+      "file": "events/options/event_mushroom.png",
+      "sha256": "e6663a8398e956432ecab8aa0e9cbcbdd32160bef1d9c8d839da62b4324c3c59",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_mushroom-e6663a8398e9-c04a5a3bd23d.json",
+        "record_sha256": "c04a5a3bd23d851e4eb73df8b36973829d5c8df669dbf5e3554acc77da042af4"
+      }
+    },
+    "event_rank_enter": {
+      "file": "buttons/event_rank_enter.png",
+      "sha256": "b8549f7cf228ea6f6ed30e4c694e917838531a723457b4f7b760a6fda475e3c1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_rank_enter-b8549f7cf228-1f397ddde7d5.json",
+        "record_sha256": "1f397ddde7d54c023c5d43ef821820f4dff16fc52299f87cad617f8e170faae3"
+      }
+    },
+    "event_library": {
+      "file": "events/options/event_library.png",
+      "sha256": "f189401ce95cd94fc28110b8fe85e32f1e95e993ad40a830a9ce2eb77a95bee9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_library-f189401ce95c-cf517b2bf09e.json",
+        "record_sha256": "cf517b2bf09ed908d2ea32686942eb34b91974ad0d7b708a17b0b5f22433f716"
+      }
+    },
+    "event_flame": {
+      "file": "events/options/event_flame.png",
+      "sha256": "a160352ec33968de3eab77faa260ecf354dd899bdc50e05b32ca861b1e601e2b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_flame-a160352ec339-9ee5083820d5.json",
+        "record_sha256": "9ee5083820d51e6cfa3cffd1bba6f8c131ebb8930ed2b461ede0c6c25713a77a"
+      }
+    },
+    "event_torn_map": {
+      "file": "events/options/event_torn_map.png",
+      "sha256": "62cc8e5b48bb09217e7c57b3c3bc886b0cf8a332dd787beff6c8f9d45556b5c9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_torn_map-62cc8e5b48bb-5bee19b8e42f.json",
+        "record_sha256": "5bee19b8e42fcfa20470573ce49539fbd9d59fb788da62ea6f3c39c4ed742810"
+      }
+    },
+    "event_mural": {
+      "file": "events/options/event_mural.png",
+      "sha256": "8a3dfc34d8d4b0d8c10730cbe954e33ccbc1d3e9fa39a7106f1bd518eb221977",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_mural-8a3dfc34d8d4-8f23edbd5a3e.json",
+        "record_sha256": "8f23edbd5a3e689bd3e9f26e59d1c55edf5b1217b6f26be138ce9d6fc3f93fac"
+      }
+    },
+    "event_blood_shelter": {
+      "file": "events/options/event_blood_shelter.png",
+      "sha256": "bff877d1e83f353ed16793386b35f86fd455737c2c0f2fd5536ef5c336638317",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_blood_shelter-bff877d1e83f-43c2db33b98c.json",
+        "record_sha256": "43c2db33b98c12978a12cdda80d39917bb2dcd8b52bc18518f0b313f2e1e8025"
+      }
+    },
+    "event_passage": {
+      "file": "events/options/event_passage.png",
+      "sha256": "5cb4066a0c5ba302b3dad8018ba275d90a0b62fd9ede05ccb75d2e3f480facb5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_passage-5cb4066a0c5b-0fb066273aa0.json",
+        "record_sha256": "0fb066273aa03d6a8440148ed4d118bc8d84c8c4623cfa1ada72e37343aa0376"
+      }
+    },
+    "event_observatory": {
+      "file": "events/options/event_observatory.png",
+      "sha256": "a25055c4d617dadf2552c0ab359d65ca4497b6082b79965a97e7c1a26e3a4815",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_observatory-a25055c4d617-fee70101fdaa.json",
+        "record_sha256": "fee70101fdaa23a1fd0c331b9bc3c7916d3ee6a846c1892ad34704825b1644a3"
+      }
+    },
+    "event_recruit_enter": {
+      "file": "buttons/event_recruit_enter.png",
+      "sha256": "b7e78d8dc9f1d4e7b3e1b9f286efcfcd9d340821884935a7f857c864ed53ae59",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_recruit_enter-b7e78d8dc9f1-c4c324da758d.json",
+        "record_sha256": "c4c324da758ded27d749d25fe6c71420aa80284e51a1090538387a24c75a1082"
+      }
+    },
+    "event_battle_rank_done": {
+      "file": "buttons/event_battle_rank_done.png",
+      "sha256": "cb3a67a0a998347555e9e33b11297e8083a869d500d09a5b9d4e2eca0329be5b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_battle_rank_done-cb3a67a0a998-80d97f4966bb.json",
+        "record_sha256": "80d97f4966bb0b5845cebe99c2ced849cc6573040a514aafc55c251f345f7811"
+      }
+    },
+    "loot_moon_charm": {
+      "file": "loot/loot_moon_charm.png",
+      "sha256": "f812af35d60b5f53e1da4de880f8c8b5ba3294fb7dbe07af208394fd3ac15ef9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_moon_charm-f812af35d60b-cab07d4ac09e.json",
+        "record_sha256": "cab07d4ac09eba127a4d8a1fba49555cbebb01a5fb289687d3b43f33f74e1d1c"
+      }
+    },
+    "loot_shrine_fragment": {
+      "file": "loot/loot_shrine_fragment.png",
+      "sha256": "1dde3d2b07e058db9aab454c814ede4be64abb3fdfca61c7c50ecdda32ffb512",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_shrine_fragment-1dde3d2b07e0-371c4ebdfcda.json",
+        "record_sha256": "371c4ebdfcda7874dbe7e9c909443785c8b6d097773818282c456c05e19178eb"
+      }
+    },
+    "loot_statue_star_child": {
+      "file": "loot/loot_statue_star_child.png",
+      "sha256": "1f395acda36b34097dabbf0088e92c45dafcc46bde91211c4144434b728c02a3",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_star_child-1f395acda36b-9aba87a50756.json",
+        "record_sha256": "9aba87a507567bbe1762bdc525ae122b35b9987f63ab325229d34c8b8b531268"
+      }
+    },
+    "loot_tablet_comet_prophecy": {
+      "file": "loot/loot_tablet_comet_prophecy.png",
+      "sha256": "f51dcbf5a6a6500bdfd6f7d9f0adb55a3c541c31f9c29aabf2dc5358f8afb0c0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_comet_prophecy-f51dcbf5a6a6-6ce428be6ccb.json",
+        "record_sha256": "6ce428be6ccb649d2377dce64a403a596ca5d4668363a22ddac13bb6c0cce4ed"
+      }
+    },
+    "loot_tablet_silver_oath": {
+      "file": "loot/loot_tablet_silver_oath.png",
+      "sha256": "a4809fc16fed92764c313e075e0dce7de835633f1ccf2c2c9b54d2fa0a8e940b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_silver_oath-a4809fc16fed-6ad325c3c6e1.json",
+        "record_sha256": "6ad325c3c6e170cc8d0a741200a427bf68830ea83348b4955bd66274276a3704"
+      }
+    },
+    "loot_chalice_dark_communion": {
+      "file": "loot/loot_chalice_dark_communion.png",
+      "sha256": "e79dd8bf4db8132ece101be98145df556c9ca23467247beafc5d62a9f1281650",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_chalice_dark_communion-e79dd8bf4db8-ee635a35eaac.json",
+        "record_sha256": "ee635a35eaac22802f82599f68ae73e73cdd435ea83c4d8d047d37f8ccf14bf7"
+      }
+    },
+    "loot_painting_star_mineral": {
+      "file": "loot/loot_painting_star_mineral.png",
+      "sha256": "72d6122ab32923797a09d928eb33ffda85c1bb7d71e1bb569f0563c13d2a8625",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_star_mineral-72d6122ab329-39b041762d08.json",
+        "record_sha256": "39b041762d08ccab1e632c26f1059d2f18560d1dcb6b0c20bcccad03c360cd18"
+      }
+    },
+    "loot_time_sand": {
+      "file": "loot/loot_time_sand.png",
+      "sha256": "39036a53ebb23c657c8f92fa942db2c64aef6acd7d2babb74a863d51ea6a8ed7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_time_sand-39036a53ebb2-70903ffe43be.json",
+        "record_sha256": "70903ffe43be89e22a0aaa326f7c40b91f25adcf24b236c115e1783cf3f87a4f"
+      }
+    },
+    "loot_painting_ruins_below": {
+      "file": "loot/loot_painting_ruins_below.png",
+      "sha256": "b5413849baab11991e5dca66a4e366cde0291ef9b1350caafc1a691df6e93bc6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_ruins_below-b5413849baab-1dcff5661ee5.json",
+        "record_sha256": "1dcff5661ee5dc723fbfc54209d3d6851100e703a03e37c95b1309d4980e2cd3"
+      }
+    },
+    "loot_dice_fate": {
+      "file": "loot/loot_dice_fate.png",
+      "sha256": "852d125955c970b7c2aec4ee80e9622ec332d88c092af9c7b11817761e042d34",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dice_fate-852d125955c9-34165f7a4546.json",
+        "record_sha256": "34165f7a45464c356fa8e1ca466921725e8266f589db36688310a35066a1f022"
+      }
+    },
+    "loot_transcendence_crystal": {
+      "file": "loot/loot_transcendence_crystal.png",
+      "sha256": "62fc23e0f330eb4114f506cae21b01bc75706ac67e85e95733313afbfa62c665",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_transcendence_crystal-62fc23e0f330-127f68d78582.json",
+        "record_sha256": "127f68d78582d4ce49cf567f0de321cdb1e197ee8dd1c3d889c40bf3953e00c5"
+      }
+    },
+    "loot_statue_whisperer": {
+      "file": "loot/loot_statue_whisperer.png",
+      "sha256": "cb9c139e858b72ca9dd59a94b442b4b51621beb396bbe8f2a48a64aa3d2df425",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_whisperer-cb9c139e858b-a4e4bc1cac7c.json",
+        "record_sha256": "a4e4bc1cac7c98371ac1b9a288cf744386df7f4e99fd2f69300fa7f977ae5742"
+      }
+    },
+    "loot_statue_lost_light": {
+      "file": "loot/loot_statue_lost_light.png",
+      "sha256": "439e4f11f99b85955b112ff418fe89a85abfb9e08ca89b0ce0d84f1666f662ec",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_lost_light-439e4f11f99b-20060518c3b7.json",
+        "record_sha256": "20060518c3b7e5a38ee63d25eecfb01a273fa36201a66f0b86552a1c0df7d3e8"
+      }
+    },
+    "loot_statue_guardian_judgment": {
+      "file": "loot/loot_statue_guardian_judgment.png",
+      "sha256": "50963ad69c65e1748a4f310eb9cd3716d24af44605338fb03493627aa22ded44",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_guardian_judgment-50963ad69c65-a2d3b77328cb.json",
+        "record_sha256": "a2d3b77328cbc57a48c39cfac633ffc1590e95d3f703c418d7de95a4dff92e91"
+      }
+    },
+    "loot_statue_prayer": {
+      "file": "loot/loot_statue_prayer.png",
+      "sha256": "f4ce166a753dfa40d111a923d2ce27036f96506e48a9278e17b30487f5c4eb0c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_prayer-f4ce166a753d-d2d5621c1305.json",
+        "record_sha256": "d2d5621c1305bdf64afc896ebce6e43156938b1f8e2c40d4ba7b08d782c8bc2c"
+      }
+    },
+    "loot_chalice_seal_hymn": {
+      "file": "loot/loot_chalice_seal_hymn.png",
+      "sha256": "26059060c810d372cd800c1bb70a68b75cac2250e70bfacb295743cd3d86b7d6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_chalice_seal_hymn-26059060c810-80c1cb829730.json",
+        "record_sha256": "80c1cb8297302bb761412f9ded44b18c8b87ca5f2af87d1c5d4221165533fee5"
+      }
+    },
+    "loot_tablet_comet_altar": {
+      "file": "loot/loot_tablet_comet_altar.png",
+      "sha256": "7004467732bfa7cd26fdb61a0c1d15010745e4344d530563a98b36e515585357",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_comet_altar-7004467732bf-49bec8371a01.json",
+        "record_sha256": "49bec8371a01cf965353b146f8f5eb97fed84aa3dc3333a62cebb32db15c6820"
+      }
+    },
+    "loot_starlight_bottle": {
+      "file": "loot/loot_starlight_bottle.png",
+      "sha256": "92bce547927a63fefeca222eb1e47c77251878396525090a1a5bb941715d3e1f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_starlight_bottle-92bce547927a-05f1af56c31b.json",
+        "record_sha256": "05f1af56c31b53898e49a9c7ee49b8f7ca3c7b4ff24b7c7a40e9492551ef567c"
+      }
+    },
+    "loot_dimension_crystal_pillar": {
+      "file": "loot/loot_dimension_crystal_pillar.png",
+      "sha256": "5bcc2ec5d2b09ff36207b6dfe5e6146e890a02a4cede99f2e2809aba7c16d00c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dimension_crystal_pillar-5bcc2ec5d2b0-a850b9bda299.json",
+        "record_sha256": "a850b9bda299896481c9b815482226cfd3ac1304a617681b4245f30ed098a23c"
+      }
+    },
+    "loot_dice_revival": {
+      "file": "loot/loot_dice_revival.png",
+      "sha256": "86f958829a00f6546960eae0a1a64e83fead2b0fa45878fc4a76e67654967f29",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dice_revival-86f958829a00-3d03e286d916.json",
+        "record_sha256": "3d03e286d916720a3b8bcb15b93b863596fda1acc0b9cb313a652455946a828b"
+      }
+    },
+    "loot_dead_compass": {
+      "file": "loot/loot_dead_compass.png",
+      "sha256": "b5faa9dcf8540aa46f43d50a11ec87619ab2f5853b4e5f483e6aed783ea8ca3d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_dead_compass-b5faa9dcf854-2abbdba43999.json",
+        "record_sha256": "2abbdba43999c7b38d5f1f71fcf747ff5d99b449fec5aa1232043bc349c5a7c2"
+      }
+    },
+    "loot_tablet_flame_record": {
+      "file": "loot/loot_tablet_flame_record.png",
+      "sha256": "6443627dda861c4b034dae33290eb9637295eaacf7872e03473fcb649289d0db",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_flame_record-6443627dda86-5ee0f44473a5.json",
+        "record_sha256": "5ee0f44473a50e2471b1c8dff26cceb5a6319b8dc46a5cc7a6bac06aa5f165cd"
+      }
+    },
+    "loot_guardian_claw": {
+      "file": "loot/loot_guardian_claw.png",
+      "sha256": "a53c9b0ae6b5faead8f0dad195ad8f80f03f131ae5b68d686197c744349fe8ee",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_guardian_claw-a53c9b0ae6b5-f68ffd70594c.json",
+        "record_sha256": "f68ffd70594c5dccf1cff0e9e87ef81b0c99c69a0d6c4ca589b03418a5212793"
+      }
+    },
+    "loot_reroll_anchor": {
+      "file": "buttons/loot_reroll_anchor.png",
+      "sha256": "0525aa4e7b0325cfcd869bc6bc680775db6dd049ea54f253d7ecdf19711e2ee8",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_reroll_anchor-0525aa4e7b03-9cf7f203d8aa.json",
+        "record_sha256": "9cf7f203d8aa81dc11f18f28cd5be198928f38cc93d9ede9e0e1b90309adc21d"
+      }
+    },
+    "event_backpack": {
+      "file": "events/options/event_backpack.png",
+      "sha256": "0652cfd89b4f2c209d26706c93f1d3eca6a5fe32e098b0e288f575cf2a5a9e70",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_backpack-0652cfd89b4f-e81e11328738.json",
+        "record_sha256": "e81e11328738153acea5305d7749a564d7fe50fda6a9e93b36447592bb99c4d8"
+      }
+    },
+    "event_spirit_door": {
+      "file": "events/options/event_spirit_door.png",
+      "sha256": "1dad83df87b63d1505593bc96d867971194f1effb720a895aa3e5f11bafd78b7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_spirit_door-1dad83df87b6-9d698cefcd96.json",
+        "record_sha256": "9d698cefcd962791dd55c743343d629c078751ed09f9c9c2cdf781016236148a"
+      }
+    },
+    "event_ghost": {
+      "file": "events/options/event_ghost.png",
+      "sha256": "483180d01598ac3bec3fdd687af1573cb5f803b83c345fe3d1c3778d2a44f3e7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_ghost-483180d01598-915d69eacdb2.json",
+        "record_sha256": "915d69eacdb25ae448b45cc42ff1a4d59d84f0813678995fa27b1ecaaf49aab5"
+      }
+    },
+    "loot_alchemy_flask": {
+      "file": "loot/loot_alchemy_flask.png",
+      "sha256": "fddc8c048d8b8539e67cbefef2fad6c673e852ae5afff6e46cfa3e4e9803bd97",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_alchemy_flask-fddc8c048d8b-860e8a1dd1c6.json",
+        "record_sha256": "860e8a1dd1c66e1b6811bb7009ff80806373bf43831707e22bff27af4a396b7d"
+      }
+    },
+    "loot_sealed_letter": {
+      "file": "loot/loot_sealed_letter.png",
+      "sha256": "d521f58a3d9c05f10d35b8fcf1338bdd3e3bc6316208b32e6dc2fd1f25db9206",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_sealed_letter-d521f58a3d9c-62f1751afeb2.json",
+        "record_sha256": "62f1751afeb2b33bbab77d5b67729732a3af7c8989b6104ad4856841a4c7a177"
+      }
+    },
+    "loot_temple_investigation_badge": {
+      "file": "loot/loot_temple_investigation_badge.png",
+      "sha256": "e50aa8d5ccbb5f3574f190371c122232041aa26df028c128b598ce3ab683f5e6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_temple_investigation_badge-e50aa8d5ccbb-8fb3f00cf227.json",
+        "record_sha256": "8fb3f00cf22773233cf45336e0f9b40927ff11423e71002fade379972205c5b6"
+      }
+    },
+    "loot_painting_suppression_night": {
+      "file": "loot/loot_painting_suppression_night.png",
+      "sha256": "2d197a74df4e107ef109e36314a339e01da437bf4704732b396ec7b72fe3dad5",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_suppression_night-2d197a74df4e-490f8bf53df4.json",
+        "record_sha256": "490f8bf53df40a3649734443b029cb59852cd13722ad8d4a78c6fdd87582a6e6"
+      }
+    },
+    "loot_beacon_ring": {
+      "file": "loot/loot_beacon_ring.png",
+      "sha256": "56dab359d3fb97af41e76bb94a7ff6d9b6e7348d0196ba3db844112212acc266",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_beacon_ring-56dab359d3fb-d0733cf0eb39.json",
+        "record_sha256": "d0733cf0eb39dceedb43d8f3d7ee552c8ebcf2598e237fd485bdff07e568ac2f"
+      }
+    },
+    "loot_summoning_ritual_disk": {
+      "file": "loot/loot_summoning_ritual_disk.png",
+      "sha256": "e2c9aa851566c7b92902945a49e578bb9d4726c6680fc69dd36911f1b05be4da",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_summoning_ritual_disk-e2c9aa851566-bc93ffc2c723.json",
+        "record_sha256": "bc93ffc2c723f97ef9ef49dc90b9fa9b2c2be2e19d226aa4521d69bddecae969"
+      }
+    },
+    "loot_painting_flame_hymn": {
+      "file": "loot/loot_painting_flame_hymn.png",
+      "sha256": "c2f689bd9513e0bfa2e09da1d723132a028a3cabfa817f4bcd1d16d2c3f39750",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_flame_hymn-c2f689bd9513-760a3393e17d.json",
+        "record_sha256": "760a3393e17dd79e0bea61f64e4a2633ca30d67492f9b3cdf0401707efaead2f"
+      }
+    },
+    "loot_tablet_spirit_king_invitation": {
+      "file": "loot/loot_tablet_spirit_king_invitation.png",
+      "sha256": "7658784bf7d83dbee0d1f80eb0b8395908da3ed295fb69823bed0f02e24092cc",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_tablet_spirit_king_invitation-7658784bf7d8-33ce79f36f51.json",
+        "record_sha256": "33ce79f36f51a18dab3c3f28ab166ff410c66196a0fac383956edf12e5ce1f60"
+      }
+    },
+    "loot_statue_blind_saint": {
+      "file": "loot/loot_statue_blind_saint.png",
+      "sha256": "2ed94d3e5aeea5b23aabbbe0cca54c7b27d7a0921babb0f193154753e6eba44d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_blind_saint-2ed94d3e5aee-9dd1d4dd0d5e.json",
+        "record_sha256": "9dd1d4dd0d5e5ee56f0796e59a8e75fdf34de9c5694131c6a2c8e07e375715dc"
+      }
+    },
+    "loot_painting_road_to_sky_gate": {
+      "file": "loot/loot_painting_road_to_sky_gate.png",
+      "sha256": "541c0e1ce4e8597cd6761f0e069e088e0337025dbdda0c2793cf4b83585490d3",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_painting_road_to_sky_gate-541c0e1ce4e8-e03791b93b3a.json",
+        "record_sha256": "e03791b93b3a5acfe0baa335cc81ff27ecdf30976304dc45d3958dfe4de88c3e"
+      }
+    },
+    "event_erased_records": {
+      "file": "events/options/event_erased_records.png",
+      "sha256": "89b99b196e7c47243d41bed82e12b0de3ef71d1220f9722a5640d0a9ba2b8f1d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_erased_records-89b99b196e7c-f0d2262b449c.json",
+        "record_sha256": "f0d2262b449cc9c13edf109cbc364db677692443031e06cffa2618c50922c5f7"
+      }
+    },
+    "event_fairy_dance": {
+      "file": "events/options/event_fairy_dance.png",
+      "sha256": "9e1666433b5e2db388bcc87ad599b8a72d94ef6a09b06dc0e3e2edc012475b9b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_fairy_dance-9e1666433b5e-bd8379614e3a.json",
+        "record_sha256": "bd8379614e3ad810f36dec72c173906f9a727e5843d11559f1bddfbae7f87081"
+      }
+    },
+    "event_blue_flame_altar": {
+      "file": "events/options/event_blue_flame_altar.png",
+      "sha256": "4ecf040e9483507bccf20d39f06f2291e299ac02a924c03670f1da427e16b8d3",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_blue_flame_altar-4ecf040e9483-2d8ea2e6a9f2.json",
+        "record_sha256": "2d8ea2e6a9f2dfdd5d56f67466f8fff3eda95f2ad6a0603c267252d1de19c577"
+      }
+    },
+    "event_broken_mask": {
+      "file": "events/options/event_broken_mask.png",
+      "sha256": "66e70d4c3872e7d5e1bd3239d636e87df92a743782b5a6ef97a20c8274c8f86e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_broken_mask-66e70d4c3872-d090e820b768.json",
+        "record_sha256": "d090e820b7687bade67156d646dbf8440b3986b9f1a6d08e90b5ce10ef5f4254"
+      }
+    },
+    "event_ancient_corridor": {
+      "file": "events/options/event_ancient_corridor.png",
+      "sha256": "655a35ecb00d071d777372e6ab1faf25281f07249d1df0ab0a6933958c5c9c54",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_ancient_corridor-655a35ecb00d-8211571f9f47.json",
+        "record_sha256": "8211571f9f47d1d4c98584351ad01484bd4f3980e88c83e02ddfd91e68640d79"
+      }
+    },
+    "event_angry_inscription": {
+      "file": "events/options/event_angry_inscription.png",
+      "sha256": "87cc79fa56e46453afcaaacc17a681e215aba3bed8447ddc999c17e09a354ca7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_angry_inscription-87cc79fa56e4-87624b206867.json",
+        "record_sha256": "87624b206867c799e2a31351e957780f4d8b38e91675a189ccb1bb0f5609e8b4"
+      }
+    },
+    "event_ancient_stele": {
+      "file": "events/options/event_ancient_stele.png",
+      "sha256": "647c31de02749790548e9d1a858147c4c49b3951e2ab1a66cc7316b681c39388",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_ancient_stele-647c31de0274-b031784f2c8d.json",
+        "record_sha256": "b031784f2c8dc6484aba65a30b233568eb73567ed6586376c7023042cc61568e"
+      }
+    },
+    "event_blood_meteorite": {
+      "file": "events/options/event_blood_meteorite.png",
+      "sha256": "df566d3f85a316c600f0c467a77ef23b07eff76a547e889175ce513074a64874",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_blood_meteorite-df566d3f85a3-7f33bc061006.json",
+        "record_sha256": "7f33bc061006b5a384357aca3724bef3a8c2ea3f18ac0c16a3cfc323572049d1"
+      }
+    },
+    "event_windy_cliff": {
+      "file": "events/options/event_windy_cliff.png",
+      "sha256": "66703e895776dc435a8a593d666493ac54f3b5220cb9f14fe693ea2f7ed258f0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_windy_cliff-66703e895776-94fd561cdf3e.json",
+        "record_sha256": "94fd561cdf3e674733100efcb3c38ae6e5dea17bea1e0048a17d3e0bcaeed3c9"
+      }
+    },
+    "event_forked_path": {
+      "file": "events/options/event_forked_path.png",
+      "sha256": "4b3bd14cee7203702074eace861ae75b07c37ed82233a02f46b188a44c0e4455",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_forked_path-4b3bd14cee72-a91511804313.json",
+        "record_sha256": "a91511804313695dea47a0e95bda74aea3cb3a84f02c8ea352317eee518fa85a"
+      }
+    },
+    "event_starlight_flower": {
+      "file": "events/options/event_starlight_flower.png",
+      "sha256": "6eadc50d175fdd3797f2df0b75b38cdfa3f1e3121fe0f62f19c83614e58a9c32",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_starlight_flower-6eadc50d175f-9680e5e2e793.json",
+        "record_sha256": "9680e5e2e793be2b1ae401bb59f86ea0bb0557aedf66d0be64dbbaed41711db4"
+      }
+    },
+    "event_grieving_woman": {
+      "file": "events/options/event_grieving_woman.png",
+      "sha256": "f2202c94045688b9ed3f49e8d0096b6136f98c80371328f58ae8a70f19c39957",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_grieving_woman-f2202c940456-e9e8c0b9a4c4.json",
+        "record_sha256": "e9e8c0b9a4c424bedd2b3e67c0eb341ea28bbe3f72aeeeda1991330096635cf2"
+      }
+    },
+    "loot_watcher_breastplate": {
+      "file": "loot/loot_watcher_breastplate.png",
+      "sha256": "705b07dcc2ac2c355eae9c00cc34c470e21da48e44fec4b5afb13b2682374e4d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_watcher_breastplate-705b07dcc2ac-638c975ac2c5.json",
+        "record_sha256": "638c975ac2c510f73ad9ede62e2b4c83d645873521020d43264eecc5296bfffc"
+      }
+    },
+    "loot_glowing_stone": {
+      "file": "loot/loot_glowing_stone.png",
+      "sha256": "37e61c273607d4574883c4900cc44991b316e99ed57a5242ee80e0e4747ae6ae",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_glowing_stone-37e61c273607-8be098457249.json",
+        "record_sha256": "8be098457249793e03b04e5502b30f5746db6726b01eaf38ae767898f083296a"
+      }
+    },
+    "loot_statue_watcher": {
+      "file": "loot/loot_statue_watcher.png",
+      "sha256": "9c7a8133123dc0aa861952d4e221df1fbdad2cec09ee6c7aac9df2662ded926b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-loot_statue_watcher-9c7a8133123d-eb6c06e0e73d.json",
+        "record_sha256": "eb6c06e0e73d111b5e48e409e5cb7ab65d120917e30e7f2755508702f3e14845"
+      }
+    },
+    "event_withered_garden": {
+      "file": "events/options/event_withered_garden.png",
+      "sha256": "e784a049a0c769a0559e8ea516f122e03e01c8a868c2c799375fa37c1a4ca95f",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_withered_garden-e784a049a0c7-7c342ebbce1a.json",
+        "record_sha256": "7c342ebbce1ae45e509edad1135e7267fe3ca0b81b804b4bdcaf0f48822f117b"
+      }
+    },
+    "event_prayer_room": {
+      "file": "events/options/event_prayer_room.png",
+      "sha256": "f5290198955b3aca5077c1688e69287aa417c0b7d93c7d74c7fc3bdd589d5faf",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_prayer_room-f5290198955b-a08e57a72dca.json",
+        "record_sha256": "a08e57a72dca151463916f3770e52b7174a3615f3da7c331bc48aaae3835b205"
+      }
+    },
+    "event_golden_patterns": {
+      "file": "events/options/event_golden_patterns.png",
+      "sha256": "550408f0ca444f76c7c0ce36b657d2b257f9c44e35dd99ff206098c65c2deefa",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_golden_patterns-550408f0ca44-ae6a2642f06a.json",
+        "record_sha256": "ae6a2642f06aae7b7fcf6932de0c599ac54233c54d059a68f2ee723cafa65faa"
+      }
+    },
+    "event_clear_pond": {
+      "file": "events/options/event_clear_pond.png",
+      "sha256": "8c308f8b7ad010bb4ebfb127fa995e5560067a4016bb653fa16a0ecf9ee601e0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_clear_pond-8c308f8b7ad0-16d428ca8b15.json",
+        "record_sha256": "16d428ca8b1524b1897d7df403c517d9cbaff2679e08691a7290fc0fa71d20dc"
+      }
+    },
+    "investment_insufficient_item": {
+      "file": "shop/investment_insufficient_item.png",
+      "sha256": "9f04fd4fd6eb17622e5787c078f4f95350a7fa8a292b7a6aa33f31394a2fc174",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-investment_insufficient_item-9f04fd4fd6eb-a4c41abb9383.json",
+        "record_sha256": "a4c41abb93834d21dbf3478e022e2eea571478f39dfc31e64dcb3e0c35115771"
+      }
+    },
+    "health_restore": {
+      "file": "shop/health_restore.png",
+      "sha256": "17322dafc64dcb04c20a4fb708008218278f9703cf522f3cf404de6c8c60ccf0",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-health_restore-17322dafc64d-4c3055913aea.json",
+        "record_sha256": "4c3055913aea46f17258421e555d085ed4574297b8b453ed763f584f98a6ca36"
+      }
+    },
+    "health_restore_unavailable": {
+      "file": "shop/health_restore_unavailable.png",
+      "sha256": "d56c354cf0ef1d0e9cd562f6934c00f38575617bf2bf34a7cbaf7f7cc0a85bca",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-health_restore_unavailable-d56c354cf0ef-d9f6f7334206.json",
+        "record_sha256": "d9f6f73342069e6b9fde9f0e3474b44b64dfbc76eca59d2c2f12a6a6217ce8c0"
+      }
+    },
+    "shop_health_entry": {
+      "file": "shop/shop_health_entry.png",
+      "sha256": "f239b85a232c2f78323e037799a87389e61dd27d5711adb0376286fc7d746a3e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-shop_health_entry-f239b85a232c-7c6d08f26012.json",
+        "record_sha256": "7c6d08f260127785fbda67f987a96b2ae954665bafabcb83d55362a4b245abc3"
+      }
+    },
+    "purchase_health_restore": {
+      "file": "shop/purchase_health_restore.png",
+      "sha256": "39372c3c0a677d9439201be489379b69e66e91159569384a8fb9068f407b409b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-purchase_health_restore-39372c3c0a67-c0e25833529b.json",
+        "record_sha256": "c0e25833529b60bfb1a4f67e107caca16ab626d54ed447d0c60807e76d5161b2"
+      }
+    },
+    "health_restore_done": {
+      "file": "shop/health_restore_done.png",
+      "sha256": "4f379abfdba14d5c02e678a2b6a9762edc404e1206d5c84e53f3755bc1286698",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-health_restore_done-4f379abfdba1-761715fb3875.json",
+        "record_sha256": "761715fb38755c32d6a5aa46ef3714f0c6ad8be2d0332872a2480e1d426890cd"
+      }
+    },
+    "stage_02": {
+      "file": "entry/stage_02.png",
+      "sha256": "c8dd5dd9cf94c3aebfed1c279fb5dede36e031cca491d8a2845471e57a439917",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_02-c8dd5dd9cf94-c73449deaea7.json",
+        "record_sha256": "c73449deaea795168c8ce112a4a639653051f4c6bc81f7ac3e4b4e9744bd8cd5"
+      }
+    },
+    "stage_03": {
+      "file": "entry/stage_03.png",
+      "sha256": "c77346626f57b2c1e2cea59b61b26fb2e35c980f25d9a0da75a621d6df8b58df",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_03-c77346626f57-32ea138d7a66.json",
+        "record_sha256": "32ea138d7a664569067377b5ee013069d3cc133d5b757728b9761001a4d6f49d"
+      }
+    },
+    "stage_04": {
+      "file": "entry/stage_04.png",
+      "sha256": "270989d0f3214cfcaaca4364b0e9dbbad8039e710b6cc8845288b09f560ade71",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_04-270989d0f321-96221aef28af.json",
+        "record_sha256": "96221aef28afc3b8e9abc323bdd6c3c2d460ef75e0d1336544802432b6e3ca18"
+      }
+    },
+    "stage_05": {
+      "file": "entry/stage_05.png",
+      "sha256": "49749047a3fd380f416cf2b20ae39315b0a7294a3ad3377ae912f66c03ebfa0e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_05-49749047a3fd-f0d19868e02d.json",
+        "record_sha256": "f0d19868e02d7f8a81da5f710fe39c6d5f7dcaf108b461de87f0c64a35458424"
+      }
+    },
+    "stage_two": {
+      "file": "entry/stage_two.png",
+      "sha256": "6b851710b0a5129e398f0a9fafec68265d45b4d5cd7ddf07e810803f478df1dd",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_two-6b851710b0a5-d9fefcec5a76.json",
+        "record_sha256": "d9fefcec5a766e44e69105ca7075db5003ca9c5ff210c51e7ae77b7ec1068733"
+      }
+    },
+    "stage_four": {
+      "file": "entry/stage_four.png",
+      "sha256": "95921163af01dfc507777d426a6c9012c338ac72cad5d1dcf090a9719b3d55d9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_four-95921163af01-c633b71db6d4.json",
+        "record_sha256": "c633b71db6d41ffed94153022ab48bd538b83ad113d8ad33806ff3451a4f1b7b"
+      }
+    },
+    "stage_five": {
+      "file": "entry/stage_five.png",
+      "sha256": "3450336a6a2c310e980838d0e1110c1f2d8906fef4bc3c6d5e5e380614d2acd7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-stage_five-3450336a6a2c-a03cc0f1a31f.json",
+        "record_sha256": "a03cc0f1a31f545a117db6866085bcf2acbb0c124be2d2e4484e3f35ad3627ca"
+      }
+    },
+    "story_skip": {
+      "file": "battle/story_skip.png",
+      "sha256": "0f51a3c53f3393c4757b87fa695af1073c9419d9f28628b6731e18c72e4f85e6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-story_skip-0f51a3c53f33-22da902f641b.json",
+        "record_sha256": "22da902f641b7267b4aeeeb9e499c738900fcaf7040e0445f25cbfb30291764b"
+      }
+    },
+    "story_skip_prompt": {
+      "file": "battle/story_skip_prompt.png",
+      "sha256": "f26c064e8dd6af0f77bc29d22ea50d5971e415a569f482d45d26b7435f96ba5a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-story_skip_prompt-f26c064e8dd6-7eaf7ab7eb28.json",
+        "record_sha256": "7eaf7ab7eb28e287abb8d7792f24609ce3ddcb5ca9bf98c065e1f18e9da0931e"
+      }
+    },
+    "event_vestment_with_loot": {
+      "file": "events/options/event_vestment_with_loot.png",
+      "sha256": "7152bd29f11899e0a0c69e5dfb2801b190b8bd6f45471078a77307042b914bd7",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_vestment_with_loot-7152bd29f118-5bbc5d56abf4.json",
+        "record_sha256": "5bbc5d56abf4db83d43ff74a36b341815aa75056a16384c97f7db1765cce04e7"
+      }
+    },
+    "event_warning_sign": {
+      "file": "events/options/event_warning_sign.png",
+      "sha256": "13195a93a46bc9e5b7626b687a5ccb797b7b038995d8cc49bfef593cf2f906e2",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_warning_sign-13195a93a46b-5641d1f244fb.json",
+        "record_sha256": "5641d1f244fb7b21d742879368d1d9d0dda5e93dfa88bf580c6aef27a3a4939d"
+      }
+    },
+    "event_mysterious_footprints": {
+      "file": "events/options/event_mysterious_footprints.png",
+      "sha256": "8e5f070c8e86c277ca2c0f7f7f9462c84f94694d1e43e82f645ec47910b05d85",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_mysterious_footprints-8e5f070c8e86-63abc2388e93.json",
+        "record_sha256": "63abc2388e93196dd111c626d97a2890eb2d5d049d8bb3e05938507ab536bb70"
+      }
+    },
+    "event_old_armory": {
+      "file": "events/options/event_old_armory.png",
+      "sha256": "af1a865bad15ca8a60470082434ee9d6fe309868ed46b64dc7081d5f9140a65b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_old_armory-af1a865bad15-1261dd2c4fb7.json",
+        "record_sha256": "1261dd2c4fb71e3ada7e5c7c395903afad7380fd209c15f54dc961e75f2cd3df"
+      }
+    },
+    "event_old_armory_left": {
+      "file": "events/options/event_old_armory_left.png",
+      "sha256": "14a2bc56e5f6e4e306e41b5c4db1fa1407208af626cfb746387689cd0e04605c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_old_armory_left-14a2bc56e5f6-f64262b8a354.json",
+        "record_sha256": "f64262b8a3549f55dc708685f35fc54750317a1ae2d5ce09137c09c1f334a456"
+      }
+    },
+    "event_blood_circle": {
+      "file": "events/options/event_blood_circle.png",
+      "sha256": "ee9e14b6cfc340ffd4924f31167979f5810d8b27b9c7fed63733e087b495a922",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_blood_circle-ee9e14b6cfc3-178d5db5b00c.json",
+        "record_sha256": "178d5db5b00c70f370d1e510205d01835cf6779aa52418a03f1ae64d58beb6af"
+      }
+    },
+    "event_grimoire": {
+      "file": "events/options/event_grimoire.png",
+      "sha256": "52be8ed0a9a9a4de84d14c5d55e5a406583982653ae867a5649101c33524d4e2",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_grimoire-52be8ed0a9a9-a37dacb2b038.json",
+        "record_sha256": "a37dacb2b03894eb0302fa63f81479e9711f06fb4b6ebaf63b3cbd6346215435"
+      }
+    },
+    "rank_value_1": {
+      "file": "camp/rank_value_1.png",
+      "sha256": "9c647d4f114f4f948beaf064e7e5dc5e83c35a72aab53bbc30ae0671e837949b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_value_1-9c647d4f114f-854f475cfa6c.json",
+        "record_sha256": "854f475cfa6c878f441183989c84eb3e4916c64bed2419dee6f75deabe58937e"
+      }
+    },
+    "rank_value_2": {
+      "file": "camp/rank_value_2.png",
+      "sha256": "74fd981ca8660ca51b17d1d7f0584a51f8f5a56d81a07b0bc7a882b9d8c43ecb",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_value_2-74fd981ca866-edb3d54c0ff3.json",
+        "record_sha256": "edb3d54c0ff39733ca265f37d761a3336a46a43a3699a9cf97629cae6c4a6914"
+      }
+    },
+    "rank_value_3": {
+      "file": "camp/rank_value_3.png",
+      "sha256": "e431d69920acb2c440a0192440608b7cc1a77f45fe2181b222ab4316d9b5313a",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_value_3-e431d69920ac-12537b4f410a.json",
+        "record_sha256": "12537b4f410ab5370b821387d33995ff663fbf4d7a04661713bc24bc8910d966"
+      }
+    },
+    "rank_value_4": {
+      "file": "camp/rank_value_4.png",
+      "sha256": "1c357efa9a5fe746b77f6682217eff236ed10cdf065b6a519101fa6e42a7daeb",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_value_4-1c357efa9a5f-3326095cea52.json",
+        "record_sha256": "3326095cea52214a653623197271ff2091d83c3362b746779879385b42c53d95"
+      }
+    },
+    "rank_value_5": {
+      "file": "camp/rank_value_5.png",
+      "sha256": "d7b7104fa61fb3fb29bb1e3d1ddd3c888901bb890b9f332a85caeb586a7af4a8",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_value_5-d7b7104fa61f-52f1d7888815.json",
+        "record_sha256": "52f1d788881531c408c711668dbc28639688c94601e1b6a138e963c7b503eb5a"
+      }
+    },
+    "filter_icon_fire": {
+      "file": "recruitment/filter_icon_fire.png",
+      "sha256": "d1f2a3092dc2d459b28e962afcea76b87bbba2a631fd38b41fce9195ab02329e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_fire-d1f2a3092dc2-50c8ef3d18a0.json",
+        "record_sha256": "50c8ef3d18a0d9109d02b03908e25a70ad0103b142d3de90f18248f4e271580f"
+      }
+    },
+    "filter_fire_selected": {
+      "file": "recruitment/filter_fire_selected.png",
+      "sha256": "7e1c92b5588de0610cff3486f216051c1e5be8358c6137c76298e0f0c6f728af",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_fire_selected-7e1c92b5588d-d4bff38ec37d.json",
+        "record_sha256": "d4bff38ec37d1862daecc41bda6e06935850f0cdaca19f3345380e6bf1118c76"
+      }
+    },
+    "hero_ivanna": {
+      "file": "recruitment/hero_ivanna.png",
+      "sha256": "08dba1c1421c6a2c520b09cc7d43cad2bafd494f7b03cbb5bfbc6a843649db32",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_ivanna-08dba1c1421c-18f99cb8122b.json",
+        "record_sha256": "18f99cb8122b7fbb40d0515576065647e921c61f0b48d30bc2522212fcf4ec20"
+      }
+    },
+    "selected_name_ivanna": {
+      "file": "recruitment/selected_name_ivanna.png",
+      "sha256": "6ec2ef842040de258fc62f450f4b94980b6561303043abfa9f9d64cd3b8c746d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_ivanna-6ec2ef842040-e9fa5be2b074.json",
+        "record_sha256": "e9fa5be2b07411b940d0d777c8537d0b8354abc7dd0b579165aa409106a91ad7"
+      }
+    },
+    "recruited_ivanna": {
+      "file": "recruitment/recruited_ivanna.png",
+      "sha256": "6e2140f45a3d852f25a1549921f701bb202a9389c407464ed68c076ecc01846b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_ivanna-6e2140f45a3d-2b326946ad19.json",
+        "record_sha256": "2b326946ad19842eea009d2ac96b6cff315867aa354ddcf5cfcdba35766c3ea7"
+      }
+    },
+    "selected_name_teacher": {
+      "file": "recruitment/selected_name_teacher.png",
+      "sha256": "228eb997a23db61e7b29ccdd8894431266bdf681fff18a5d7d1d683639246320",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_teacher-228eb997a23d-b4eb9b5efb3b.json",
+        "record_sha256": "b4eb9b5efb3bacb0c5e74353884e7ab6eeee6b9ceb7cc812a909ab014a18f4d5"
+      }
+    },
+    "recruited_teacher_initial": {
+      "file": "recruitment/recruited_teacher_initial.png",
+      "sha256": "9bd08a29f6b4d7db2ccf66e6af553c15aed51d957585c63e5713bf2c058dcc64",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_teacher_initial-9bd08a29f6b4-37d4e27be34c.json",
+        "record_sha256": "37d4e27be34c07c5384b414ed553a32e403a1539fd28ded48ad69402e23f3f0b"
+      }
+    },
+    "hero_shadow_rose": {
+      "file": "recruitment/hero_shadow_rose.png",
+      "sha256": "40a0a75bfbc5b968d2cb42be86f0e4718855f5acc1d1360c5a1267edd39316ee",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-hero_shadow_rose-40a0a75bfbc5-f602a137a689.json",
+        "record_sha256": "f602a137a6896b037e10f76ae381c5a48e561d873ea3c83101e7609bfb401e47"
+      }
+    },
+    "selected_name_shadow_rose": {
+      "file": "recruitment/selected_name_shadow_rose.png",
+      "sha256": "764d506cbb329555ebe0250e3b961708bea60665b6d0b701b11669a5f64d38b9",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-selected_name_shadow_rose-764d506cbb32-731af82541f5.json",
+        "record_sha256": "731af82541f5335f01a127644cd024f3f3edb6b14fad6cba10f036ef0cc8c733"
+      }
+    },
+    "recruited_shadow_rose": {
+      "file": "recruitment/recruited_shadow_rose.png",
+      "sha256": "f4dff9b9286d071d0f7cae8cfdb5f2b350958accabf81c486d101b0f01377884",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_shadow_rose-f4dff9b9286d-fa7990376c86.json",
+        "record_sha256": "fa7990376c86ee8c41f29879becf65a3327bb6082c063ff4c2bbb28d289f3633"
+      }
+    },
+    "event_broken_candlestick": {
+      "file": "events/options/event_broken_candlestick.png",
+      "sha256": "0f34a21d079c19fef87b7e45afaccc1a0e2949e26ef8ae8b4a6f48b099054580",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_broken_candlestick-0f34a21d079c-041e8222f2c6.json",
+        "record_sha256": "041e8222f2c6c93675fa37237846791b3aa0dc77b66b17bd0789d5ffaf2f9eed"
+      }
+    },
+    "event_red_phantom": {
+      "file": "events/options/event_red_phantom.png",
+      "sha256": "01894d01b0ebf87c93ed5ddb1f3126cbbfe518cb18aa9d20e9258c93baa8b1ff",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_red_phantom-01894d01b0eb-d16a5ce9bbeb.json",
+        "record_sha256": "d16a5ce9bbebb36f88ef5c9caa60090a315f3fb429b37a44a09e7320f5b55774"
+      }
+    },
+    "depart_title": {
+      "file": "recruitment/depart_title.png",
+      "sha256": "e5df7a26d40cbc8dbd7b07ab796d5e2f83de5b51dbeceab4e37d10da08b1b01d",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-depart_title-e5df7a26d40c-d83cd9057590.json",
+        "record_sha256": "d83cd90575905524fb1830b42c1bb30f056bb9d2219c231e8056a7d92e69b462"
+      }
+    },
+    "depart_confirm": {
+      "file": "buttons/depart_confirm.png",
+      "sha256": "c769eda6e2b5c1c48246943805fde534f4680cd1fb5f556c61ef7a9989b15f11",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-depart_confirm-c769eda6e2b5-7fa211a13a78.json",
+        "record_sha256": "7fa211a13a780a7cbb2769e760d1338d1cf978f4940e445cb6919a878065c61b"
+      }
+    },
+    "depart_missing": {
+      "file": "recruitment/depart_missing.png",
+      "sha256": "37032c1b802f71f1583d8e411ec1103fb1b9185b830d0c35027d5fa7d90697af",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-depart_missing-37032c1b802f-5b07f9061b5a.json",
+        "record_sha256": "5b07f9061b5a2d9bd30b3515ce5a1b1aec0e153e2cee808485d59f27c0dfa9c3"
+      }
+    },
+    "filter_icon_knight_filter": {
+      "file": "recruitment/filter_icon_knight_filter.png",
+      "sha256": "e46268c3a0bdf8ffa7729c9b8b9a232cf0bafb54600bab24871403303eeda49c",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_icon_knight_filter-e46268c3a0bd-899941862072.json",
+        "record_sha256": "8999418620728aee3237fd98b03d55057aca44ca2b41c27c7ad238fbee9815b2"
+      }
+    },
+    "filter_knight_selected": {
+      "file": "recruitment/filter_knight_selected.png",
+      "sha256": "cbf7a58d7a8367db8292a0bc69f9502916c11c3b3e67f4d70429e99ed7a2b5f4",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-filter_knight_selected-cbf7a58d7a83-29388a254891.json",
+        "record_sha256": "29388a254891afd346319725122e65ea46997a27806ac00e49d2cb9d4b9c15b5"
+      }
+    },
+    "recruited_shadow_rose_all": {
+      "file": "recruitment/recruited_shadow_rose_all.png",
+      "sha256": "8afb0fdabea29273f5850c743cfc8509571d9dd6535fbe6e667bb39b8a9bf3dc",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-recruited_shadow_rose_all-8afb0fdabea2-cc992e50b735.json",
+        "record_sha256": "cc992e50b735d1c4b3880f92e32985b03f17d519e3d98f7a5f8f5f746f67c4ff"
+      }
+    },
+    "event_broken_cage": {
+      "file": "events/options/event_broken_cage.png",
+      "sha256": "acfa597c0dd4c9327307458f0c7952759a428505afd1ded53d11434a33b4f371",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_broken_cage-acfa597c0dd4-f64545d37672.json",
+        "record_sha256": "f64545d3767208424940b778ada9eea276544bda8f4d68d70971e0aa7f5bbdb8"
+      }
+    },
+    "event_sharp_teeth": {
+      "file": "events/options/event_sharp_teeth.png",
+      "sha256": "936ef30eed43bbda3e4db7d7a91b96d7ea4d714d160c5546887e3c2c077de314",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_sharp_teeth-936ef30eed43-e24dae09e8af.json",
+        "record_sha256": "e24dae09e8af0a3a1155549b19ee76c55a5d0973b262fb50dd70c2b5436ec85f"
+      }
+    },
+    "event_collapsed_stairs": {
+      "file": "events/options/event_collapsed_stairs.png",
+      "sha256": "cd5b73de5598dc9c12c93840fcda0babd37073fab355df5b44e59be5f29523ab",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_collapsed_stairs-cd5b73de5598-bfbd67705cc0.json",
+        "record_sha256": "bfbd67705cc06c18d3b0bfa6fd344faa3147fd3fb2f5392a5f9d987c626a6cf0"
+      }
+    },
+    "event_bone_throne": {
+      "file": "events/options/event_bone_throne.png",
+      "sha256": "262a6c69b557da59601759d491402d7ed2bbda2fa34da54e7104423d4b61e805",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_bone_throne-262a6c69b557-d72d2dd77844.json",
+        "record_sha256": "d72d2dd778441cbfcbca6a0020045041a1e44cfe04c5f1d0e6420816c26e9a08"
+      }
+    },
+    "event_clear_pond_low_health": {
+      "file": "events/options/event_clear_pond_low_health.png",
+      "sha256": "e2a9bbf2a0d9b7a7ce0e6a4783dff5f61fab7a703c9ea2dd3994593fa45b1dff",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_clear_pond_low_health-e2a9bbf2a0d9-7230a37cb042.json",
+        "record_sha256": "7230a37cb04221684d9626735d00df805a187ab1afaaea419c6a952cd86d750d"
+      }
+    },
+    "event_warning_sign_low_health": {
+      "file": "events/options/event_warning_sign_low_health.png",
+      "sha256": "bac9baace34b074e70f767fe42353da6a118dcd3f5c275d211402286d8594f65",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_warning_sign_low_health-bac9baace34b-043fbc87b0da.json",
+        "record_sha256": "043fbc87b0da19b128e1514db176428dc51168e32db211dc05f0344d9b80bdde"
+      }
+    },
+    "event_torn_map_path": {
+      "file": "events/options/event_torn_map_path.png",
+      "sha256": "665efdf59372df37ea28efa1713c54900e8af48aeeb276d49b9eb980107d1a51",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-event_torn_map_path-665efdf59372-ef89082d4c69.json",
+        "record_sha256": "ef89082d4c69ee4291f35a6cd00203f46a2b2de12b185693bb632d66672833a3"
+      }
+    }
+  },
+  "retired_templates": {
+    "difficulty_one": {
+      "file": "entry/difficulty_one.png",
+      "sha256": "9c7fe5fa9c6f6776be38373533dc3ec632e070a3d8a8616574b1655a7ae278dc",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-difficulty_one-9c7fe5fa9c6f-5032f5bfdae2.json",
+        "record_sha256": "5032f5bfdae29bedf2137a64f67a048d4b7b7b0ea0a5d01aa82527485d10b9b2"
+      }
+    },
+    "rank_12": {
+      "file": "camp/rank_12.png",
+      "sha256": "7ce8f97284863259dc8ad36d473ac4fd779b0a23684e2b20aea555f4e63ea6ba",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_12-7ce8f9728486-539cc5646dc9.json",
+        "record_sha256": "539cc5646dc97157a88817f1d57713da8d9f1653cc6e803a6c146a14d7a92305"
+      }
+    },
+    "rank_23": {
+      "file": "camp/rank_23.png",
+      "sha256": "a140617ec77a56697af175d1b435ea82f7b262dc15eb9af43c4148308660f602",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_23-a140617ec77a-777381108668.json",
+        "record_sha256": "777381108668e8ade14f5d82359401bca89ac533a3da7a1c22062dd75fc1da17"
+      }
+    },
+    "rank_34": {
+      "file": "camp/rank_34.png",
+      "sha256": "48df94efe80cef2e7ed93dc1cba6220f911ae63665cf357950f790a597267f6e",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_34-48df94efe80c-ca877a7238f6.json",
+        "record_sha256": "ca877a7238f62312437d343fb6e8a30e0f64f999d48e62d77ba599334c1e3fda"
+      }
+    },
+    "rank_45": {
+      "file": "camp/rank_45.png",
+      "sha256": "b13fa430b0dc6ecc619db01cf48c1cdcb9946a786392a0b69950f114ae926ecf",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-rank_45-b13fa430b0dc-e8da5be7bac3.json",
+        "record_sha256": "e8da5be7bac34576fad53f4806b3c367ffebd3e4d1473b2e363314e3674deced"
+      }
+    }
+  }
+}

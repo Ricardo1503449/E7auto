@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_gray_normal",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-d6ad30ea-716b-4788-9182-91eb8e19b3b4.png",
+  "original_sha256": "16448088f76bc24f0d244247a099fadd8b89968378569c7d09532ff47aa56e91",
+  "client_rect": null,
+  "crop": [
+    44,
+    27,
+    90,
+    104
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "normal_entry",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999997,
+      "location": [
+        935,
+        851,
+        90,
+        104
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_entry",
+      "kind": "synthetic_1536x864",
+      "score": 0.997765,
+      "structure": 0.909058,
+      "location": [
+        935,
+        850,
+        90,
+        104
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision4_masks\\node_gray_normal.png",
+  "mask_sha256": "f191cfbe82d2155c17abdc55fba13c94389efb0542adca83e33c9fba189dd226",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "e8e051b0409e7f66d5f285d2b5aae6f42314e7776219b2a5899e32f367c281ca",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_gray_normal.source.json",
+    "sha256": "f981a15d3c56a6374dccbd00e526bc341d6c3462094565f30b5e832db27dfd60"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留原图中央灰态图标；椭圆底图及地图背景透明。仅作灰态参考，不作为可选节点。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "node_gray_normal"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "node_gray_normal.png",
+  "target_filename": "map/node_gray_normal.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_gray_normal-e8e051b0409e-a9942913d2e9.json",
+    "record_sha256": "a9942913d2e9e5d148d45658587479b5c455af4b3d9eaa805aa668fa1fe3c91b"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

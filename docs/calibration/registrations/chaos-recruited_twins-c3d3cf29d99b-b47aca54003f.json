@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_twins",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6b1a4bc0-9dae-4871-8d5a-54de88bb508e.png",
+  "original_sha256": "9fd94ce51bde40566e7faf52feb4b04c5111e19a3526d40dfbe116ee533d9b39",
+  "client_rect": null,
+  "crop": [
+    119,
+    34,
+    300,
+    173
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "twins_recruited",
+      "kind": "source_self",
+      "score": 0.999971,
+      "structure": 0.999932,
+      "location": [
+        1812,
+        789,
+        300,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done",
+      "kind": "real_positive",
+      "score": 0.999957,
+      "structure": 0.999897,
+      "location": [
+        1812,
+        789,
+        300,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done_alt",
+      "kind": "real_positive",
+      "score": 0.99992,
+      "structure": 0.999766,
+      "location": [
+        1812,
+        789,
+        300,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "twins_recruited",
+      "kind": "synthetic_1536x864",
+      "score": 0.96701,
+      "structure": 0.889734,
+      "location": [
+        1811,
+        789,
+        300,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision2_masks\\recruited_twins.png",
+  "mask_sha256": "bac64bc646360f671331106fd5be3b74a93a52d5c60621549aee7600732a50f2",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "c3d3cf29d99bbe52539d1a95309449d1604dcde884726ea4e4b24992ce70ef31",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision2.json",
+      "sha256": "95223e4157d428d47160353d9b97a4ab3f7849844bf249a97bbc0d1a2ca8dda8"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruited_twins.source.json",
+    "sha256": "3bb1702646fca05ad89b6285fd010f5b2d8b5c6636fe0fcfc9ac69b1df760dd1"
+  },
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.952,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第二轮修订：职业图标内部背景透明，不填充孔洞，仅保留原图笔画及抗锯齿边缘；清除名称末端头像残留；裴妮职业图标扩大原图取样范围，保留左侧弧线。待复审。"
+  ],
+  "resource_scenes": [
+    "recruited_twins"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "recruited_twins.png",
+  "target_filename": "recruitment/recruited_twins.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-recruited_twins-c3d3cf29d99b-8f9786aa1573.json",
+    "record_sha256": "8f9786aa15731c18272d40740a4cbd31d9a735fcfa1d443138b4dc1474d61af3"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

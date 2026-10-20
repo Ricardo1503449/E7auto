@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_altar",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 010347.png",
+  "original_sha256": "834c1624658619452c50db992e3ec7df610d1460faab5a09650952944d103440",
+  "client_rect": [
+    37,
+    91,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    184,
+    1069,
+    1748,
+    158
+  ],
+  "editing_basis": "原BGR不变；只保留三选项标题及完整说明文字，含黄色文字，去除卡框/放大镜/底部光点/其他背景。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_altar",
+      "kind": "positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        184,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "existing_identity_conflicts",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_altar",
+      "kind": "positive",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.980053,
+      "structure": 0.947585,
+      "location": [
+        184,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "existing_identity_conflicts",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.228945,
+      "structure": 0.033593,
+      "location": [
+        483,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.160546,
+      "structure": 0.079039,
+      "location": [
+        551,
+        1070,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "trap",
+      "passed": true,
+      "score": 0.170873,
+      "structure": 0.090171,
+      "location": [
+        546,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "tablet",
+      "passed": true,
+      "score": 0.041948,
+      "structure": 0.083565,
+      "location": [
+        533,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "vestment",
+      "passed": true,
+      "score": 0.021406,
+      "structure": 0.110275,
+      "location": [
+        529,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "vestment_subchoice",
+      "passed": true,
+      "score": 0.231289,
+      "structure": 0.144292,
+      "location": [
+        263,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "golem",
+      "passed": true,
+      "score": 0.174579,
+      "structure": 0.096716,
+      "location": [
+        493,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "giant_eye",
+      "passed": true,
+      "score": 0.479158,
+      "structure": 0.176477,
+      "location": [
+        203,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "prison",
+      "passed": true,
+      "score": 0.41493,
+      "structure": 0.196215,
+      "location": [
+        221,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "cage_options",
+      "passed": true,
+      "score": 0.371239,
+      "structure": 0.150567,
+      "location": [
+        185,
+        1069,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "cage_prepare",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.063118,
+      "location": [
+        62,
+        1082,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "cage_reward",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.071333,
+      "location": [
+        48,
+        1148,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "cage_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.060887,
+      "location": [
+        248,
+        1147,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "altar_intro",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.095409,
+      "location": [
+        208,
+        960,
+        1748,
+        158
+      ]
+    },
+    {
+      "key": "event_altar",
+      "kind": "negative",
+      "source": "altar_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.095409,
+      "location": [
+        208,
+        960,
+        1748,
+        158
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

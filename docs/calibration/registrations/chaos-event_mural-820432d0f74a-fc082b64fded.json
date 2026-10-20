@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mural",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 163612.png",
+  "original_sha256": "dc09c334279e67f731934c5f8c630dbc37bd222d9ce24fbe922f82db004ab5c3",
+  "client_rect": [
+    37,
+    84,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    212,
+    1069,
+    1828,
+    166
+  ],
+  "editing_basis": "3个选项的标题和说明文字，另保留指定圆条图标；原始像素，周围背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_mural",
+      "kind": "positive",
+      "source": "mural_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        212,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "positive",
+      "source": "mural_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.980825,
+      "structure": 0.957989,
+      "location": [
+        212,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.344958,
+      "location": [
+        484,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.345306,
+      "location": [
+        467,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "library_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.333782,
+      "location": [
+        485,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "flame_options",
+      "passed": true,
+      "score": 0.385601,
+      "structure": 0.10536,
+      "location": [
+        249,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "torn_map_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.358011,
+      "location": [
+        494,
+        1070,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "blood_shelter_options",
+      "passed": true,
+      "score": 0.511541,
+      "structure": 0.248413,
+      "location": [
+        212,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "passage_options",
+      "passed": true,
+      "score": 0.485059,
+      "structure": 0.15049,
+      "location": [
+        212,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "observatory_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.345977,
+      "location": [
+        484,
+        1069,
+        1828,
+        166
+      ]
+    },
+    {
+      "key": "event_mural",
+      "kind": "negative",
+      "source": "mural_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.008604,
+      "location": [
+        425,
+        1132,
+        1828,
+        166
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

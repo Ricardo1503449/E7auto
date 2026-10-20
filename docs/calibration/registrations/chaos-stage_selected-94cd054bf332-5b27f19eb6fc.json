@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6fb2e60f-9182-4e68-93f5-45e9687d0feb.png",
+  "original_sha256": "61ebe362621420255aa1ed1f42aebd47dfca3e33581c2dc9c09351eda595894f",
+  "client_rect": null,
+  "crop": [
+    18,
+    11,
+    1199,
+    146
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "revision14_stage_full",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.99999,
+      "location": [
+        995,
+        381,
+        1199,
+        146
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "stage_top",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999994,
+      "location": [
+        995,
+        381,
+        1199,
+        146
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "revision14_stage_full",
+      "kind": "synthetic_1536x864",
+      "score": 0.993468,
+      "structure": 0.813015,
+      "location": [
+        995,
+        382,
+        1199,
+        146
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision15_masks\\stage_selected.png",
+  "mask_sha256": "f4d87522da0143ab2f6bcd40750fe75241d3106795cf2c7c1693f569b81d866a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "94cd054bf3326883b596a52a4aaa410342c7f761b4cf3945188a7247a38df33e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision15.json",
+      "sha256": "b83f151b8abae564b133a5e5e7e338ecd373b612556b68ba6e9b66a2c0f5285b"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\stage_selected.source.json",
+    "sha256": "df57927d319c4f74ec6cdc1557e9f3c26de2549324d04bad12b11c36c6ad86bd"
+  },
+  "search_roi": [
+    960,
+    20,
+    1300,
+    1060
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "移除右侧边框内部倍率面板残留，仅在候选坐标[1180,48,12,88]内清除alpha。其余边框、圆角、RGB、裁剪和搜索范围保持。",
+    "沿用用户第03条原始素材；第01条Easy选中与未选中反例另行复核，阶段切换运行仍暂缓。待复审。"
+  ],
+  "resource_scenes": [
+    "stage_selected"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision15_validation.json",
+      "sha256": "2f7868f1c12effe488e1b008330bfa6451478c04e8ba116fb9557e12e7a7dc23"
+    }
+  ]
+}

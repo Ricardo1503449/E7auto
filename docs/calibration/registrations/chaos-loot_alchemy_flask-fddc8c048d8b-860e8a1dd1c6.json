@@ -1,0 +1,1811 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_alchemy_flask",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 124740.png",
+  "sha256": "48c65cc22a2755a237a94503ef906e904b746e31f613482c26531e6faf691e4d",
+  "original_size": [
+    2426,
+    1456
+  ],
+  "display_size": [
+    2048,
+    1229
+  ],
+  "client_rect": [
+    55,
+    81,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_summon_mark",
+    "loot_ancient_key",
+    "loot_alchemy_flask"
+  ],
+  "crop": [
+    1583,
+    267,
+    318,
+    421
+  ],
+  "regions": {
+    "icon": [
+      97,
+      0,
+      121,
+      134
+    ],
+    "name": [
+      54,
+      195,
+      209,
+      54
+    ],
+    "description": [
+      0,
+      286,
+      318,
+      135
+    ]
+  },
+  "editing_basis": "Crop original screenshot client pixels; preserve BGR exactly, alpha only. Icon silhouette, full name and full description; remove desktop, title bar, card border, filler and reroll UI.",
+  "review_status": "approved",
+  "candidate_sha256": "fddc8c048d8b8539e67cbefef2fad6c673e852ae5afff6e46cfa3e4e9803bd97",
+  "validation": {
+    "key": "loot_alchemy_flask",
+    "candidate_sha256": "fddc8c048d8b8539e67cbefef2fad6c673e852ae5afff6e46cfa3e4e9803bd97",
+    "algorithm": "existing match_candidate; separate masked icon and full-name matching",
+    "thresholds": {
+      "color": 0.9,
+      "structure": 0.8
+    },
+    "evidence": [
+      {
+        "source": "124740",
+        "slot": 1,
+        "sample_key": "loot_summon_mark",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.505254,
+            "structure": 0.183049,
+            "location": [
+              501,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.671464,
+            "structure": 0.140256,
+            "location": [
+              477,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 2,
+        "sample_key": "loot_ancient_key",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.206163,
+            "structure": 0.215584,
+            "location": [
+              1127,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.64533,
+            "structure": 0.183258,
+            "location": [
+              1039,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 3,
+        "sample_key": "loot_alchemy_flask",
+        "client_width_before_adaptation": 2322,
+        "kind": "source_self",
+        "scores": {
+          "icon": {
+            "score": 1.0,
+            "structure": 1.0,
+            "location": [
+              1680,
+              267,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 1.0,
+            "structure": 1.0,
+            "location": [
+              1637,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 1,
+        "sample_key": "loot_summon_mark",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.525294,
+            "structure": 0.189885,
+            "location": [
+              501,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.70193,
+            "structure": 0.149718,
+            "location": [
+              477,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 2,
+        "sample_key": "loot_ancient_key",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.204504,
+            "structure": 0.221564,
+            "location": [
+              1127,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.67042,
+            "structure": 0.19183,
+            "location": [
+              1039,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 3,
+        "sample_key": "loot_alchemy_flask",
+        "client_width_before_adaptation": 1920,
+        "kind": "source_self",
+        "scores": {
+          "icon": {
+            "score": 0.99629,
+            "structure": 0.994715,
+            "location": [
+              1680,
+              267,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.99119,
+            "structure": 0.984684,
+            "location": [
+              1637,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 1,
+        "sample_key": "loot_summon_mark",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.532122,
+            "structure": 0.192434,
+            "location": [
+              501,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.711464,
+            "structure": 0.153285,
+            "location": [
+              477,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 2,
+        "sample_key": "loot_ancient_key",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.205153,
+            "structure": 0.224554,
+            "location": [
+              1127,
+              282,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.678644,
+            "structure": 0.194365,
+            "location": [
+              1039,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "124740",
+        "slot": 3,
+        "sample_key": "loot_alchemy_flask",
+        "client_width_before_adaptation": 1536,
+        "kind": "source_self",
+        "scores": {
+          "icon": {
+            "score": 0.993634,
+            "structure": 0.990937,
+            "location": [
+              1680,
+              267,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.984296,
+            "structure": 0.971405,
+            "location": [
+              1637,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 1,
+        "sample_key": "loot_statue_gazer",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.283756,
+            "structure": 0.158837,
+            "location": [
+              525,
+              285,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.695377,
+            "structure": 0.138856,
+            "location": [
+              459,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 2,
+        "sample_key": "loot_star_shard",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.471653,
+            "structure": 0.139139,
+            "location": [
+              1094,
+              268,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.6991,
+            "structure": 0.245441,
+            "location": [
+              1020,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 3,
+        "sample_key": "loot_chalice_dark_communion",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.236642,
+            "structure": 0.182186,
+            "location": [
+              1667,
+              276,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.684745,
+            "structure": 0.192832,
+            "location": [
+              1674,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 1,
+        "sample_key": "loot_statue_gazer",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.287683,
+            "structure": 0.155735,
+            "location": [
+              524,
+              285,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.725944,
+            "structure": 0.149479,
+            "location": [
+              459,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 2,
+        "sample_key": "loot_star_shard",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.477964,
+            "structure": 0.142077,
+            "location": [
+              1095,
+              268,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.724555,
+            "structure": 0.251383,
+            "location": [
+              1020,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 3,
+        "sample_key": "loot_chalice_dark_communion",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.240543,
+            "structure": 0.189793,
+            "location": [
+              1667,
+              276,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.712227,
+            "structure": 0.191105,
+            "location": [
+              1674,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 1,
+        "sample_key": "loot_statue_gazer",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.288233,
+            "structure": 0.156601,
+            "location": [
+              524,
+              285,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.735349,
+            "structure": 0.153815,
+            "location": [
+              458,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 2,
+        "sample_key": "loot_star_shard",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.48064,
+            "structure": 0.147751,
+            "location": [
+              1094,
+              268,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.730777,
+            "structure": 0.251106,
+            "location": [
+              1020,
+              461,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "130105",
+        "slot": 3,
+        "sample_key": "loot_chalice_dark_communion",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.242458,
+            "structure": 0.19154,
+            "location": [
+              1667,
+              276,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.720319,
+            "structure": 0.19429,
+            "location": [
+              1674,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 1,
+        "sample_key": "loot_shrine_fragment",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.186821,
+            "structure": 0.060929,
+            "location": [
+              494,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.680214,
+            "structure": 0.149622,
+            "location": [
+              477,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 2,
+        "sample_key": "loot_beast_scale",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.496131,
+            "structure": 0.016349,
+            "location": [
+              1215,
+              261,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.75491,
+            "structure": 0.223791,
+            "location": [
+              1039,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 3,
+        "sample_key": "loot_dimension_pouch",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.22502,
+            "structure": 0.06078,
+            "location": [
+              1676,
+              261,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.665,
+            "structure": 0.167195,
+            "location": [
+              1637,
+              466,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 1,
+        "sample_key": "loot_shrine_fragment",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.187134,
+            "structure": 0.061602,
+            "location": [
+              494,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.712935,
+            "structure": 0.162264,
+            "location": [
+              478,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 2,
+        "sample_key": "loot_beast_scale",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.495445,
+            "structure": 0.012114,
+            "location": [
+              1216,
+              260,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.776783,
+            "structure": 0.230219,
+            "location": [
+              1039,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 3,
+        "sample_key": "loot_dimension_pouch",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.225936,
+            "structure": 0.060754,
+            "location": [
+              1676,
+              261,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.69064,
+            "structure": 0.171843,
+            "location": [
+              1637,
+              466,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 1,
+        "sample_key": "loot_shrine_fragment",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.188365,
+            "structure": 0.062166,
+            "location": [
+              494,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.722585,
+            "structure": 0.165312,
+            "location": [
+              478,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 2,
+        "sample_key": "loot_beast_scale",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.495369,
+            "structure": 0.014318,
+            "location": [
+              1215,
+              261,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.783259,
+            "structure": 0.233197,
+            "location": [
+              1039,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "152056",
+        "slot": 3,
+        "sample_key": "loot_dimension_pouch",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.226893,
+            "structure": 0.060678,
+            "location": [
+              1676,
+              261,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.698918,
+            "structure": 0.173146,
+            "location": [
+              1637,
+              466,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 1,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.528345,
+            "structure": 0.214856,
+            "location": [
+              495,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.628451,
+            "structure": 0.13995,
+            "location": [
+              460,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 2,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.463515,
+            "structure": 0.19099,
+            "location": [
+              1105,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.655112,
+            "structure": 0.150224,
+            "location": [
+              1074,
+              464,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 3,
+        "sample_key": "loot_star_book",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.27139,
+            "structure": 0.209985,
+            "location": [
+              1678,
+              243,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.651139,
+            "structure": 0.228961,
+            "location": [
+              1620,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 1,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.531629,
+            "structure": 0.216655,
+            "location": [
+              495,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.651871,
+            "structure": 0.144405,
+            "location": [
+              460,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 2,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.468814,
+            "structure": 0.193099,
+            "location": [
+              1105,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.680689,
+            "structure": 0.151826,
+            "location": [
+              1037,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 3,
+        "sample_key": "loot_star_book",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.270159,
+            "structure": 0.215007,
+            "location": [
+              1678,
+              243,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.670823,
+            "structure": 0.226839,
+            "location": [
+              1620,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 1,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.532869,
+            "structure": 0.216964,
+            "location": [
+              495,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.6583,
+            "structure": 0.145419,
+            "location": [
+              460,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 2,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.471075,
+            "structure": 0.193826,
+            "location": [
+              1105,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.687163,
+            "structure": 0.151207,
+            "location": [
+              1037,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "182632",
+        "slot": 3,
+        "sample_key": "loot_star_book",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.269821,
+            "structure": 0.216298,
+            "location": [
+              1678,
+              243,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.675207,
+            "structure": 0.22389,
+            "location": [
+              1620,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 1,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.455121,
+            "structure": 0.186597,
+            "location": [
+              524,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.657348,
+            "structure": 0.15369,
+            "location": [
+              457,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 2,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.532955,
+            "structure": 0.214331,
+            "location": [
+              1075,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.628537,
+            "structure": 0.14103,
+            "location": [
+              1040,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 3,
+        "sample_key": "loot_temple_investigation_badge",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.280142,
+            "structure": 0.135363,
+            "location": [
+              1678,
+              255,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.73857,
+            "structure": 0.217508,
+            "location": [
+              1676,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 1,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.460384,
+            "structure": 0.188842,
+            "location": [
+              524,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.683322,
+            "structure": 0.158503,
+            "location": [
+              457,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 2,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.536381,
+            "structure": 0.217541,
+            "location": [
+              1076,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.651462,
+            "structure": 0.143617,
+            "location": [
+              1040,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 3,
+        "sample_key": "loot_temple_investigation_badge",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.282676,
+            "structure": 0.138455,
+            "location": [
+              1678,
+              255,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.773881,
+            "structure": 0.239222,
+            "location": [
+              1676,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 1,
+        "sample_key": "loot_lightning",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.462344,
+            "structure": 0.189191,
+            "location": [
+              524,
+              264,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.690614,
+            "structure": 0.157441,
+            "location": [
+              457,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 2,
+        "sample_key": "loot_sealed_letter",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.537732,
+            "structure": 0.218093,
+            "location": [
+              1076,
+              275,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.65954,
+            "structure": 0.146856,
+            "location": [
+              1040,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "194903",
+        "slot": 3,
+        "sample_key": "loot_temple_investigation_badge",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.284418,
+            "structure": 0.139188,
+            "location": [
+              1678,
+              255,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.784356,
+            "structure": 0.247958,
+            "location": [
+              1676,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 1,
+        "sample_key": "loot_painting_ruins_below",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.316289,
+            "structure": 0.239833,
+            "location": [
+              520,
+              273,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.754846,
+            "structure": 0.162518,
+            "location": [
+              513,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 2,
+        "sample_key": "loot_painting_forgotten_legend",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.262103,
+            "structure": 0.091099,
+            "location": [
+              1147,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.7529,
+            "structure": 0.207855,
+            "location": [
+              983,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 3,
+        "sample_key": "loot_painting_suppression_night",
+        "client_width_before_adaptation": 2322,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.128606,
+            "structure": 0.070247,
+            "location": [
+              1791,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.754763,
+            "structure": 0.223494,
+            "location": [
+              1599,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 1,
+        "sample_key": "loot_painting_ruins_below",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.317239,
+            "structure": 0.244284,
+            "location": [
+              520,
+              273,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.779388,
+            "structure": 0.175665,
+            "location": [
+              513,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 2,
+        "sample_key": "loot_painting_forgotten_legend",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.263433,
+            "structure": 0.09291,
+            "location": [
+              1147,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.775756,
+            "structure": 0.219623,
+            "location": [
+              983,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 3,
+        "sample_key": "loot_painting_suppression_night",
+        "client_width_before_adaptation": 1920,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.128786,
+            "structure": 0.080832,
+            "location": [
+              1791,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.777178,
+            "structure": 0.233677,
+            "location": [
+              1599,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 1,
+        "sample_key": "loot_painting_ruins_below",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.318966,
+            "structure": 0.246825,
+            "location": [
+              520,
+              273,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.786646,
+            "structure": 0.18117,
+            "location": [
+              513,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 2,
+        "sample_key": "loot_painting_forgotten_legend",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.264299,
+            "structure": 0.093479,
+            "location": [
+              1147,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.782846,
+            "structure": 0.225262,
+            "location": [
+              983,
+              463,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "source": "201730",
+        "slot": 3,
+        "sample_key": "loot_painting_suppression_night",
+        "client_width_before_adaptation": 1536,
+        "kind": "negative",
+        "scores": {
+          "icon": {
+            "score": 0.125215,
+            "structure": 0.076806,
+            "location": [
+              1791,
+              286,
+              121,
+              134
+            ]
+          },
+          "name": {
+            "score": 0.783655,
+            "structure": 0.237937,
+            "location": [
+              1599,
+              462,
+              209,
+              54
+            ]
+          }
+        },
+        "detected": false,
+        "expected": false,
+        "passed": true
+      }
+    ],
+    "limitations": [
+      "Candidate-only offline validation, not runtime integration.",
+      "Downscaled examples are synthetic, not independent captures.",
+      "No independent real positive beyond extraction screenshot."
+    ]
+  },
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203919-loot-screenshot-review-e5c5fff6\\results\\approval.json",
+    "sha256": "5570ab45ad2a0007c5e6a44b33e6e283fa4f58ce7166e2d6e2c29ad6ba9cbccc"
+  },
+  "validation_reused_from": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203919-loot-screenshot-review-e5c5fff6\\results\\validation.json",
+    "sha256": "2df1465c8accf8622e3e64572ec85329349df498e143ff34e7e2eab5d684d5f1"
+  }
+}

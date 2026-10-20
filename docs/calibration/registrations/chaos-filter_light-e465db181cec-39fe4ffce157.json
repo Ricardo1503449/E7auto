@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_light",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2486554f-4c99-42e2-a91b-d4476b482ed3.png",
+  "original_sha256": "f16c3c91c9f27f8fb5779eb9e040060ed9ab7a7ceacc820d7e560942e94ae26e",
+  "client_rect": null,
+  "crop": [
+    10,
+    9,
+    242,
+    73
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "warrior_filter",
+      "kind": "source_self",
+      "score": 0.996522,
+      "structure": 0.979428,
+      "location": [
+        1251,
+        25,
+        242,
+        73
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "real_positive",
+      "score": 0.996522,
+      "structure": 0.979428,
+      "location": [
+        1251,
+        25,
+        242,
+        73
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_thief",
+      "kind": "real_positive",
+      "score": 0.996522,
+      "structure": 0.979427,
+      "location": [
+        1251,
+        25,
+        242,
+        73
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.000937,
+      "location": [
+        1200,
+        1,
+        242,
+        73
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "warrior_filter",
+      "kind": "synthetic_1536x864",
+      "score": 0.991643,
+      "structure": 0.942991,
+      "location": [
+        1251,
+        25,
+        242,
+        73
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_light.png",
+  "mask_sha256": "d74e111c9436234ffc548c98a045556ff4b3ef8b6233b8920d40c74b39a8a7f7",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "e465db181cec1b7a74e7f63e82256b036ff64be3fedb16ea10ce3c9b583626e5",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_light.source.json",
+    "sha256": "3b7b7723b32311ef82035bc6f324b45bd93fa694e14399a688328049c5050a0e"
+  },
+  "search_roi": [
+    1200,
+    0,
+    340,
+    130
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_light"
+  ],
+  "additional_validation_records": []
+}

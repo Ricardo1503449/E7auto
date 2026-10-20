@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "failed",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-804b5197-2c6a-498b-96dd-a62a3193f855.png",
+  "original_sha256": "68929957a612edf8380aeecf4a6eb1785b1e525c34d80c4cee08b8d98264deee",
+  "client_rect": null,
+  "crop": [
+    33,
+    8,
+    499,
+    56
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "failed",
+      "kind": "source_self",
+      "score": 0.999984,
+      "structure": 0.998323,
+      "location": [
+        919,
+        529,
+        499,
+        56
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "victory_normal",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": -0.022011,
+      "location": [
+        1073,
+        480,
+        499,
+        56
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "battle_auto",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.040764,
+      "location": [
+        807,
+        634,
+        499,
+        56
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "failed",
+      "kind": "synthetic_1536x864",
+      "score": 0.998625,
+      "structure": 0.906419,
+      "location": [
+        919,
+        529,
+        499,
+        56
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\failed.png",
+  "mask_sha256": "d9e65b4d070066cfac4a304ceb1c1ed83baeed10471d34b0df4581923069e8f6",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "9508d705aa628909a2d40ea55c6e214df87e787e82e9759c3105d08289ed8c98",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\failed.source.json",
+    "sha256": "40b6294ca08f28d17926785636fcd1780cd7f98024a62b738747bcc7dcdb382f"
+  },
+  "search_roi": [
+    790,
+    480,
+    790,
+    210
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮只保留文字笔画（关闭控件同时保留左侧图标），去除底图；原图RGB像素保持，待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "failed"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "failed.png",
+  "target_filename": "battle/failed.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-failed-9508d705aa62-c06afac02cf7.json",
+    "record_sha256": "c06afac02cf70c6f9440541ca4b275720f5bfa6527cbd4ccf3e28cf0c24d8f5f"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

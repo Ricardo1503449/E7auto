@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "map_hero",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-29655488-1770-4a6e-8823-2935f939d717.png",
+  "original_sha256": "eb471693a72b1ea6ecd007c8df178811c148fecb1ece7c4b544457ec8af3bf4d",
+  "client_rect": null,
+  "crop": [
+    44,
+    62,
+    59,
+    53
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "map_after_normal",
+      "kind": "source_self",
+      "score": 0.999993,
+      "structure": 0.999965,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_start",
+      "kind": "real_positive",
+      "score": 0.999992,
+      "structure": 0.999962,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_floor_two",
+      "kind": "real_positive",
+      "score": 0.999972,
+      "structure": 0.999891,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_floor_three",
+      "kind": "real_positive",
+      "score": 0.999963,
+      "structure": 0.999865,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_boss",
+      "kind": "real_positive",
+      "score": 0.999969,
+      "structure": 0.999889,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_after_normal",
+      "kind": "synthetic_1536x864",
+      "score": 0.979919,
+      "structure": 0.898253,
+      "location": [
+        577,
+        1170,
+        59,
+        53
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision14_masks\\map_hero.png",
+  "mask_sha256": "9ab33cd889d557fe0c89001bf4de9a4f1cb0729da51784d5b007ebae68335dab",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "d6d988b00860f67b7f968f591a1a2b7e169a36194da1fb855c19ce8279d1ee6b",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision14.json",
+      "sha256": "4aceff69412a9c5f03762ade25eafe22dd007474ca8f63dbe4bd3d696def547d"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\map_hero.source.json",
+    "sha256": "bbb3296addc095c2b897c2c366ac23aea98b9939ace9b669f78b44d631a5e641"
+  },
+  "search_roi": [
+    520,
+    1120,
+    170,
+    160
+  ],
+  "threshold": 0.965,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留英雄图标本体，外围和图标内部空隙透明，不含人数或文字。",
+    "原始RGB保持，不缩放、不重绘。待复审。"
+  ],
+  "resource_scenes": [
+    "map_hero"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "map_hero.png",
+  "target_filename": "map/map_hero.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-map_hero-d6d988b00860-90fa6150c6f4.json",
+    "record_sha256": "90fa6150c6f4aa9d6c8aae25999a4e272a011d4ffc29745492bda66c2496d1aa"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

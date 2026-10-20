@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_broken_mask",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_broken_mask.png",
+  "original_sha256": "54bcc51466efada1e4805e3228ae753a456eca0af1401da4c35afa0c698be35c",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_broken_mask-54bcc51466ef-a7cda7598099.json",
+    "record_sha256": "a7cda75980996c1df9a1a01f3f61483bfad64d6a5c593ec28002fa7786cb6d79"
+  },
+  "canvas_size": [
+    1827,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1827,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 14694,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_broken_mask",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-230135-five-events-record-fairy-flame-mask-corridor-2cc944fe\\inputs\\mask_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_broken_mask",
+        "event_broken_mask",
+        "event_broken_mask"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 5,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 1,
+        "event_recognition_ms": 734.186
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1161,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_mask",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-230135-five-events-record-fairy-flame-mask-corridor-2cc944fe\\inputs\\mask_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_mask",
+        "event_broken_mask",
+        "event_broken_mask"
+      ],
+      "scores": [
+        0.98222416639328,
+        0.98222416639328,
+        0.98222416639328
+      ],
+      "anchors": [
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 98.46
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9777624011039734,
+        "anchor": [
+          768,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_mask",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-230135-five-events-record-fairy-flame-mask-corridor-2cc944fe\\inputs\\mask_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_mask",
+        "event_broken_mask",
+        "event_broken_mask"
+      ],
+      "scores": [
+        0.9961205720901489,
+        0.9961205720901489,
+        0.9961205720901489
+      ],
+      "anchors": [
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 148.012
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9928122758865356,
+        "anchor": [
+          960,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_mask",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-230135-five-events-record-fairy-flame-mask-corridor-2cc944fe\\inputs\\mask_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_mask",
+        "event_broken_mask",
+        "event_broken_mask"
+      ],
+      "scores": [
+        0.9934712648391724,
+        0.9934712648391724,
+        0.9934712648391724
+      ],
+      "anchors": [
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 191.755
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9919381737709045,
+        "anchor": [
+          1152,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_mask",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-230135-five-events-record-fairy-flame-mask-corridor-2cc944fe\\inputs\\mask_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_mask",
+        "event_broken_mask",
+        "event_broken_mask"
+      ],
+      "scores": [
+        0.987887442111969,
+        0.987887442111969,
+        0.987887442111969
+      ],
+      "anchors": [
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 189.233
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9851020574569702,
+        "anchor": [
+          1280,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

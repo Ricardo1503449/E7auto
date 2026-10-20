@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_statue_blind_saint",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 212738.png",
+  "sha256": "c3e0088f17ce1f0cb2e1d698947012ecc385b23ff23d0880a5c169d070321cfb",
+  "original_size": [
+    2430,
+    1474
+  ],
+  "display_size": [
+    2048,
+    1242
+  ],
+  "client_rect": [
+    66,
+    113,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_statue_blind_saint",
+    "loot_statue_star_child",
+    "loot_tablet_spirit_king_invitation"
+  ],
+  "anchors": [
+    [
+      548,
+      987,
+      141,
+      40
+    ],
+    [
+      1128,
+      987,
+      141,
+      40
+    ],
+    [
+      1709,
+      987,
+      141,
+      40
+    ]
+  ],
+  "crop": [
+    424,
+    256,
+    316,
+    432
+  ],
+  "regions": {
+    "icon": [
+      114,
+      0,
+      81,
+      146
+    ],
+    "name": [
+      24,
+      212,
+      268,
+      42
+    ],
+    "description": [
+      0,
+      303,
+      316,
+      129
+    ]
+  },
+  "candidate_sha256": "b09b171ade3e90b7db3302eeefd1658360d09d671d1da502a038011fec15866c",
+  "previous_sha256": null,
+  "editing_basis": "Original screenshot client pixels, BGR unchanged; icon silhouette and glyph masks only. No desktop, title bar, card border, filler, N marker or reroll UI.",
+  "review_status": "approved",
+  "index": {
+    "icon": [
+      114,
+      0,
+      81,
+      146
+    ],
+    "name": [
+      24,
+      212,
+      268,
+      42
+    ],
+    "origin": [
+      -124,
+      -731
+    ]
+  },
+  "priority": 0,
+  "validation": {
+    "candidate": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\candidate_validation.json",
+      "sha256": "9a3456b02a00098968921edc561470b39bd2780893b17fdc82a75ad0b4db8ed5"
+    },
+    "index": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\index_validation.json",
+      "sha256": "4ef184489a94c1f4213cc66301fb4b984c61a3a575684b57c564203a9e77a40b"
+    },
+    "limitations": [
+      "Only spirit-king tablet and replacement painting have independent real positives; other four have one extraction source.",
+      "Downscaled images are synthetic; no live gameplay testing."
+    ]
+  },
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\approval.json",
+    "sha256": "3be06df7676e92793932dc22d6621696b9090a5d8760c85523b28a0097be6d0b"
+  }
+}

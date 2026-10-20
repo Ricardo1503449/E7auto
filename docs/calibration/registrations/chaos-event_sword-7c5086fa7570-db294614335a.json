@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_sword",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 140011.png",
+  "original_sha256": "f96d3040a45bac151d6cbe7b4ebc7822712631ffec50999dd66af6e97d88e888",
+  "client_rect": [
+    51,
+    85,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    295,
+    1069,
+    1846,
+    158
+  ],
+  "editing_basis": "原像素文字；石塔另保留右侧完整经验100圆条及exp+图示，其余背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_sword",
+      "kind": "positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        295,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "positive",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.9793,
+      "structure": 0.937153,
+      "location": [
+        295,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.035894,
+      "structure": 0.092465,
+      "location": [
+        5,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.11561,
+      "location": [
+        23,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "prison",
+      "passed": true,
+      "score": 0.480948,
+      "structure": 0.141816,
+      "location": [
+        331,
+        1068,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "altar",
+      "passed": true,
+      "score": 0.266987,
+      "structure": 0.061137,
+      "location": [
+        276,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "cairn_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.142723,
+      "location": [
+        4,
+        1069,
+        1846,
+        158
+      ]
+    },
+    {
+      "key": "event_sword",
+      "kind": "negative",
+      "source": "mushroom_options",
+      "passed": true,
+      "score": 0.554308,
+      "structure": 0.095027,
+      "location": [
+        278,
+        1069,
+        1846,
+        158
+      ]
+    }
+  ],
+  "approval_message": "模板通过；事件升阶须记录英雄阶数变化"
+}

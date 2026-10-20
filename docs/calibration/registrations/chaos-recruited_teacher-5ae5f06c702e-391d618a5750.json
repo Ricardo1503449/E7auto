@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_teacher",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-e92168b0-d28b-4969-b0b5-eefbed1cae4c.png",
+  "original_sha256": "77f93b85280e7b6e5ec6e03e31f7949739fa3d2447a2dcec3de15d49728fa874",
+  "client_rect": null,
+  "crop": [
+    108,
+    29,
+    285,
+    166
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision2_masks\\recruited_teacher.png",
+  "mask_sha256": "814a79567c6ca13719b7cbdef0e3672ad5695a8377a1fa0b4e6f79dc07468393",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "5ae5f06c702e2f2b0044ad7edb6d5372c70e24f20887a53fd2baaafa061cd4d0",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision2.json",
+      "sha256": "95223e4157d428d47160353d9b97a4ab3f7849844bf249a97bbc0d1a2ca8dda8"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruited_teacher.source.json",
+    "sha256": "309341bb25e4c0be6f1dcdd0bca0466b4ce1f8f025076c72f106aac42c491c8a"
+  },
+  "search_roi": [
+    1340,
+    250,
+    650,
+    890
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第二轮修订：职业图标内部背景透明，不填充孔洞，仅保留原图笔画及抗锯齿边缘；清除名称末端头像残留；裴妮职业图标扩大原图取样范围，保留左侧弧线。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "recruited_teacher"
+  ],
+  "additional_validation_records": []
+}

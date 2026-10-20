@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_value_2",
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\camp\\rank_23.png",
+  "original_sha256": "a140617ec77a56697af175d1b435ea82f7b262dc15eb9af43c4148308660f602",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    0,
+    0,
+    112,
+    56
+  ],
+  "candidate_sha256": "74fd981ca8660ca51b17d1d7f0584a51f8f5a56d81a07b0bc7a882b9d8c43ecb",
+  "editing_basis": "Crop original pixels and mask background only; no redraw or resampling. Rank 5 retains full 5(Max); no arrow included.",
+  "review_status": "approved",
+  "source_role": "single_rank_value",
+  "rank": 2,
+  "source_pair": "rank_23",
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation_report": "artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\results\\validation.json",
+  "validation_report_sha256": "87dacad421f399ab379623882a920f320e3abf111766054b8d40b362ace6e928",
+  "validation_passed": true,
+  "limitations": [
+    "Real full-frame pairs:1->2,2->3,4->5,1->3; no full-frame3->4 or multi-rank cap sample.",
+    "Scaled frames are synthetic. Battle rank cards have a different layout and are not covered by these result-panel regions.",
+    "No runtime code/configuration changed; candidate validation only."
+  ],
+  "search_regions": {
+    "before": [
+      1300,
+      335,
+      235,
+      170
+    ],
+    "after": [
+      1570,
+      335,
+      380,
+      170
+    ]
+  },
+  "arrow_included": false,
+  "max_included": false,
+  "approval": "User explicitly approved six grimoire and single-rank templates: 模板通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

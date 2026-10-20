@@ -108,6 +108,54 @@
         "record": "docs/calibration/registrations/common-network_retry-8bd057a57399-e1bda038a8dd.json",
         "record_sha256": "e1bda038a8dd48f7296ee157e8d04566d88ce0eeeb5be9dc84e2469e6654cf2a"
       }
+    },
+    "date_change_title": {
+      "file": "daily_reset/date_change_title.png",
+      "sha256": "190417b6dc1d5fe02fb857e9e3ac37e0fb2d4cf6ff731abd4bdfba60450952c9",
+      "source": {
+        "record": "docs/calibration/registrations/common-date_change_title-190417b6dc1d-f9e7645b7bd3.json",
+        "record_sha256": "f9e7645b7bd3cfc55b69c7081c92e1cc77f7bab16179ed4c97ab26832f1f2a38"
+      }
+    },
+    "date_change_close": {
+      "file": "daily_reset/date_change_close.png",
+      "sha256": "be22da5599b8b42cf3c7db858ff9a16b6d95c22bb858fd3a7d227b3d210253b5",
+      "source": {
+        "record": "docs/calibration/registrations/common-date_change_close-be22da5599b8-641f1d1f2cd2.json",
+        "record_sha256": "641f1d1f2cd228345f37f0e3178e25e4ebb3a3f17eefc0ad8710fc321a9df29f"
+      }
+    },
+    "daily_signin_confirm": {
+      "file": "daily_reset/daily_signin_confirm.png",
+      "sha256": "5fb478687e6b71681f8b28a364b3228aaf5f63f91c02b8b6b6d3c2716432971e",
+      "source": {
+        "record": "docs/calibration/registrations/common-daily_signin_confirm-5fb478687e6b-a276b148b64f.json",
+        "record_sha256": "a276b148b64f99a8599e3884ae19889aabeafc131271e1e5dd740094c3713289"
+      }
+    },
+    "login_reward_title": {
+      "file": "daily_reset/login_reward_title.png",
+      "sha256": "2101708a3477cd2ad0c9b68455edf8972cbde84ed6e28e47b0a66b469a0fd919",
+      "source": {
+        "record": "docs/calibration/registrations/common-login_reward_title-2101708a3477-64ce75db7c3a.json",
+        "record_sha256": "64ce75db7c3a7c60b1a165218820dd72300711b3c0652ce91fc564f9c1b1fef2"
+      }
+    },
+    "login_reward_close": {
+      "file": "daily_reset/login_reward_close.png",
+      "sha256": "d31cedfb37e0d31a5cd82b996bd119046201e108506531b1258c430a8eb94f47",
+      "source": {
+        "record": "docs/calibration/registrations/common-login_reward_close-d31cedfb37e0-6b072158017e.json",
+        "record_sha256": "6b072158017edd00e9f920565741b9e424ca770265b10cce510f61ecb509fdf6"
+      }
+    },
+    "buff_effect_title": {
+      "file": "daily_reset/buff_effect_title.png",
+      "sha256": "c53463d099d644366f40d6d511830490917e7597ed8b01a3e0cbbfcd09d2d5be",
+      "source": {
+        "record": "docs/calibration/registrations/common-buff_effect_title-c53463d099d6-69fa8cc51a1c.json",
+        "record_sha256": "69fa8cc51a1c9595511dd3ebcca012e2e485a25b3eec56b62f508fd5eb71f3bd"
+      }
     }
   }
 }

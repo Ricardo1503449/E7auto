@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_battle_rank_done",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\shelter_rank_success-client.png",
+  "original_sha256": "9bda898c6dbb9b3b76621e729931218c66b21e85a989412fc0f139cc90252335",
+  "crop": [
+    1102,
+    858,
+    117,
+    34
+  ],
+  "old_template_sha256": "cb3a67a0a998347555e9e33b11297e8083a869d500d09a5b9d4e2eca0329be5b",
+  "editing_basis": "沿用来源提取的核心/弱笔画颜色判定，从原图重建连续笔画，保留暗笔画。；仅增加一像素八邻域原始边缘，RGB逐像素不变，无锐化、重绘或缩放。",
+  "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20261001-182857-a60fd5ec\\chaos\\event_battle_rank_done.png",
+  "candidate_sha256": "1faa466d0505c2ac5679dd9c5700f1cac042c15a611b2490af8ba9e107ce9d12",
+  "original_full_image_available": true,
+  "source_limitations": "来源图与离线缩放不是独立实机验证。",
+  "review_status": "authorized_existing_template_update",
+  "validation": [
+    {
+      "report": "D:\\E7auto\\artifacts\\tasks\\common\\20261001-182857-five-text-template-edges-2b0766f3\\results\\validation.json",
+      "sha256": "5b26027d4f55238e8a6ecc00bd2d3576cefe3b23783fe00a280474ff1b32fed1",
+      "summary": {
+        "positive_cases": 16,
+        "old_hits": 16,
+        "new_hits": 16,
+        "positive_regressions": [],
+        "negative_cases": 12,
+        "old_false_positives": 0,
+        "new_false_positives": 0,
+        "baseline_anchor_changes": [],
+        "nonbaseline_score_decreases": [
+          {
+            "size": [
+              1536,
+              864
+            ],
+            "shift": [
+              0,
+              0
+            ],
+            "color_delta": -0.008427739143371582,
+            "structure_delta": 0.0064958930015563965
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              0,
+              0
+            ],
+            "color_delta": -0.010180413722991943,
+            "structure_delta": 0.04421520233154297
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              1,
+              0
+            ],
+            "color_delta": -0.012561917304992676,
+            "structure_delta": -0.024512767791748047
+          },
+          {
+            "size": [
+              1536,
+              864
+            ],
+            "shift": [
+              0,
+              1
+            ],
+            "color_delta": -0.0016666054725646973,
+            "structure_delta": 0.0617145299911499
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              0,
+              1
+            ],
+            "color_delta": -0.006917893886566162,
+            "structure_delta": 0.08099108934402466
+          },
+          {
+            "size": [
+              1536,
+              864
+            ],
+            "shift": [
+              1,
+              1
+            ],
+            "color_delta": -0.009820878505706787,
+            "structure_delta": 0.05265861749649048
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              1,
+              1
+            ],
+            "color_delta": -0.004931926727294922,
+            "structure_delta": 0.04767709970474243
+          },
+          {
+            "size": [
+              3072,
+              1728
+            ],
+            "shift": [
+              1,
+              1
+            ],
+            "color_delta": -0.003750741481781006,
+            "structure_delta": 0.03425103425979614
+          }
+        ]
+      },
+      "aggregate_nonbaseline": {
+        "color": {
+          "old": {
+            "minimum": 0.9888656139373779,
+            "mean": 0.9914009273052216
+          },
+          "new": {
+            "minimum": 0.9790363311767578,
+            "mean": 0.9877686748902003
+          }
+        },
+        "structure": {
+          "old": {
+            "minimum": 0.8023675680160522,
+            "mean": 0.8568802922964096
+          },
+          "new": {
+            "minimum": 0.8550261855125427,
+            "mean": 0.9192378123601278
+          }
+        }
+      }
+    }
+  ],
+  "visual_review": "逐字放大对照原 RGB、旧模板、新模板及白色遮罩；新遮罩保留全部旧有效像素，补入原始边缘，原 RGB 无变化。",
+  "decision": "register",
+  "decision_reason": "非基准最低结构分数提高；部分颜色分数下降但仍高于原门槛，全部原通过样本仍通过。",
+  "baseline_anchor_unchanged": true,
+  "nonbaseline_anchor_delta_max": 1,
+  "approval": "User requested one original-pixel edge on these existing controls and explicitly required before/after comparisons at both baseline and nonbaseline sizes."
+}

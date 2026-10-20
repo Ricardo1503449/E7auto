@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_confirm",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-0f7138fa-6583-4329-aa0a-e4332d274885.png",
+  "original_sha256": "f7fef5ded083d71a2da09cc6bd8e64421a58dce7a0ef367ed3915e009cbbe72e",
+  "client_rect": null,
+  "crop": [
+    31,
+    27,
+    612,
+    133
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "stage_top",
+      "kind": "source_self",
+      "score": 0.99999,
+      "structure": 0.999977,
+      "location": [
+        855,
+        1126,
+        612,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "stage_scrolled",
+      "kind": "real_positive",
+      "score": 0.999984,
+      "structure": 0.999964,
+      "location": [
+        855,
+        1126,
+        612,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "stage_top",
+      "kind": "synthetic_1536x864",
+      "score": 0.986915,
+      "structure": 0.972115,
+      "location": [
+        855,
+        1126,
+        612,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\stage_confirm.png",
+  "mask_sha256": "4d8de943e5da874c35e2d6b4f8fd3cfff0fae7ec3f23c89d74ee056b0689330a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "a8512e622e1f1b41400f9af96cd300fa17a50efe8125792e2ed37288bb80f49e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\stage_confirm.source.json",
+    "sha256": "b93dd5c923edbf5bd1b0bb9765fa9aa95a9abf876116d14f833c098de213f8c5"
+  },
+  "search_roi": [
+    830,
+    1090,
+    720,
+    216
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "stage_confirm"
+  ],
+  "additional_validation_records": []
+}

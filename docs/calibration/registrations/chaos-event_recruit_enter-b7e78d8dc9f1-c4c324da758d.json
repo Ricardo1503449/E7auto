@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_recruit_enter",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 180903.png",
+  "original_sha256": "0ec2d153ceefff86279ad29fc4be91b410fbf74d3ff3d4601f644c38f92b35af",
+  "client_rect": [
+    54,
+    109,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    967,
+    821,
+    388,
+    101
+  ],
+  "editing_basis": "整个蓝色招募英雄按钮（金边与蓝底），外侧背景透明；仅识别，不点击招募。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    850,
+    730,
+    630,
+    330
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_recruit_enter",
+      "kind": "positive",
+      "source": "passage_ticket",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        967,
+        821,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "positive",
+      "source": "passage_ticket",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.985165,
+      "structure": 0.961906,
+      "location": [
+        967,
+        821,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "negative",
+      "source": "shelter_rank_offer",
+      "passed": true,
+      "score": 0.88588,
+      "structure": 0.682977,
+      "location": [
+        967,
+        913,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "negative",
+      "source": "shelter_rank_success",
+      "passed": true,
+      "score": 0.647662,
+      "structure": 0.282519,
+      "location": [
+        1040,
+        781,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "negative",
+      "source": "shelter_rank_selected",
+      "passed": true,
+      "score": 0.560456,
+      "structure": 0.408109,
+      "location": [
+        850,
+        773,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "negative",
+      "source": "passage_confirm",
+      "passed": true,
+      "score": 0.625674,
+      "structure": 0.198013,
+      "location": [
+        1092,
+        836,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_recruit_enter",
+      "kind": "negative",
+      "source": "passage_options",
+      "passed": true,
+      "score": 0.351951,
+      "structure": 0.096411,
+      "location": [
+        1090,
+        823,
+        388,
+        101
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

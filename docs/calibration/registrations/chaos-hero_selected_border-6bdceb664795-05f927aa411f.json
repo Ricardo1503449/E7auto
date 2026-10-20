@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_selected_border",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2b671c7a-d0cc-4e1b-ab1d-4ecdafaf947d.png",
+  "original_sha256": "f68b18b1b775c4016e71a5f7ff18fe2f4476c778eccbe3f296e99db983dedbcb",
+  "client_rect": null,
+  "crop": [
+    20,
+    23,
+    560,
+    173
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "twins_selected",
+      "kind": "real_positive",
+      "score": 0.989861,
+      "structure": 0.973684,
+      "location": [
+        616,
+        904,
+        560,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "peini_selected",
+      "kind": "real_positive",
+      "score": 0.989741,
+      "structure": 0.974223,
+      "location": [
+        1216,
+        524,
+        560,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "xiaochun_selected",
+      "kind": "real_positive",
+      "score": 0.995553,
+      "structure": 0.990029,
+      "location": [
+        1216,
+        143,
+        560,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "arowell_selected",
+      "kind": "real_positive",
+      "score": 0.985719,
+      "structure": 0.962649,
+      "location": [
+        616,
+        333,
+        560,
+        173
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filtered",
+      "kind": "real_negative",
+      "score": 0.395973,
+      "structure": 0.110773,
+      "location": [
+        1039,
+        212,
+        560,
+        173
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "rank_list",
+      "kind": "real_negative",
+      "score": 0.375959,
+      "structure": 0.047307,
+      "location": [
+        580,
+        425,
+        560,
+        173
+      ],
+      "detected": false,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\hero_selected_border.png",
+  "mask_sha256": "fdc5d1b7e8f05da813863587ae115abdfa458b5889252802742a775e2e1dcf76",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "6bdceb664795982386061319de5a58b4903da8e00169ce2fc2bdd5826e753bbd",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_selected_border.source.json",
+    "sha256": "4dacdd6c425e250c03a5d4929b85ddbe3f4603ec8b4fdc5f5ba1a377be4ec128"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。"
+  ],
+  "resource_scenes": [
+    "hero_selected_border"
+  ],
+  "additional_validation_records": []
+}

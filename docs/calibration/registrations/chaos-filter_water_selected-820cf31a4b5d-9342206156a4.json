@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_water_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2f2ecb19-3771-4cbd-b1f2-ce3a57a9a2a2.png",
+  "original_sha256": "f630039da9fd58cbb55cca20a18f1daa84c2ae1dbd25f360fd3c18062d349275",
+  "client_rect": null,
+  "crop": [
+    3,
+    15,
+    115,
+    85
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "soul_water",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1030,
+        214,
+        115,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "soul_filter",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.074138,
+      "location": [
+        1004,
+        240,
+        115,
+        85
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "soul_water",
+      "kind": "synthetic_1536x864",
+      "score": 0.999239,
+      "structure": 0.989782,
+      "location": [
+        1030,
+        214,
+        115,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_water_selected.png",
+  "mask_sha256": "8d9dc4da286e9ee3d2cbebdb7fdab97a26543a41954e915a74e7053b716b727d",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "820cf31a4b5d8609f3a7c9e44dab9da5a723d3a9c2549976c42ceb0acfbc43e1",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_water_selected.source.json",
+    "sha256": "67552768772c2f60544139e59c30135f4e8eec66c68b396b235ffdda8ed3e8d6"
+  },
+  "search_roi": [
+    990,
+    175,
+    230,
+    190
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "filter_water_selected"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "filter_water_selected.png",
+  "target_filename": "recruitment/filter_water_selected.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-filter_water_selected-820cf31a4b5d-fccfbad2c567.json",
+    "record_sha256": "fccfbad2c567a4838b6ce4dec56cbef97b57fd7eed493ca4846d446d8b86b5f2"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

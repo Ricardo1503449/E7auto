@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_painting_road_to_sky_gate",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-20 013625.png",
+  "sha256": "f09a024eb75c762ef4b9c6afdff70282d830e4e2fe19be7a4a425bb2a60a014b",
+  "original_size": [
+    2417,
+    1474
+  ],
+  "display_size": [
+    2046,
+    1248
+  ],
+  "client_rect": [
+    61,
+    110,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_painting_forgotten_legend",
+    "loot_painting_blind_war",
+    "loot_painting_road_to_sky_gate"
+  ],
+  "anchors": [
+    [
+      548,
+      987,
+      141,
+      40
+    ],
+    [
+      1128,
+      987,
+      141,
+      40
+    ],
+    [
+      1709,
+      987,
+      141,
+      40
+    ]
+  ],
+  "crop": [
+    1572,
+    276,
+    340,
+    412
+  ],
+  "regions": {
+    "icon": [
+      99,
+      0,
+      136,
+      108
+    ],
+    "name": [
+      0,
+      192,
+      340,
+      42
+    ],
+    "description": [
+      9,
+      283,
+      323,
+      129
+    ]
+  },
+  "candidate_sha256": "541c0e1ce4e8597cd6761f0e069e088e0337025dbdda0c2793cf4b83585490d3",
+  "previous_sha256": null,
+  "editing_basis": "Original client pixels preserved; alpha silhouettes and glyph masks only; desktop, frame and card background removed.",
+  "review_status": "approved",
+  "index": {
+    "icon": [
+      99,
+      0,
+      136,
+      108
+    ],
+    "name": [
+      0,
+      192,
+      340,
+      42
+    ],
+    "origin": [
+      -137,
+      -711
+    ]
+  },
+  "priority": 0,
+  "validation": {
+    "candidate": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\sky_road_candidate_validation.json",
+      "sha256": "39edfda527e056076a23c56a2f6bc70381f77b5e9d49e472348a85df2894d46c"
+    },
+    "index": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\sky_road_index_validation.json",
+      "sha256": "427e5938e336fc7dc34413fa83f5a45dc307372662100b61aaaca68e38c05367"
+    }
+  },
+  "limitations": [
+    "Only one real positive source; downscaled images are synthetic."
+  ],
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\approval.json",
+    "sha256": "3be06df7676e92793932dc22d6621696b9090a5d8760c85523b28a0097be6d0b"
+  }
+}

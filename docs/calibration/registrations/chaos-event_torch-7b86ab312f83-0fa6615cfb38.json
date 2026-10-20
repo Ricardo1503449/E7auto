@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_torch",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-39238c2c-3221-4845-90ff-d93c40f16877.png",
+  "original_sha256": "bc790eef99aea6d7e15761accf36ab53dddaa3cc8144b650564aa5271c0d8340",
+  "client_rect": null,
+  "crop": [
+    102,
+    94,
+    1143,
+    161
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "torch_options",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        531,
+        1073,
+        1143,
+        161
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "mimic_options",
+      "kind": "real_negative",
+      "score": 0.433734,
+      "structure": 0.24537,
+      "location": [
+        584,
+        1073,
+        1143,
+        161
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "torch_options",
+      "kind": "synthetic_1536x864",
+      "score": 0.981126,
+      "structure": 0.967704,
+      "location": [
+        531,
+        1073,
+        1143,
+        161
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision16_masks\\event_torch.png",
+  "mask_sha256": "f966e0f5cbb32dd8ee07f5f346a136782b1deb9928b8753a77e2cdd95530228d",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "7b86ab312f8358c1542ddb88bb253ce899988d9619089d2c5bb23e4200f9ca1d",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision16.json",
+      "sha256": "d439bb98d31136d0a49314eef0e791cd0d28c9cb067458105e76e3c8da164a9c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\event_torch.source.json",
+    "sha256": "c16acbd28eff1cf4513adda4167c261cbc16302ce7602e29a4bf3cf2be505b67"
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.966,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "保留左右选项标题、左侧效果说明及完整EXP+80条形图标；选项卡边框、底纹、装饰和外围背景透明。",
+    "沿用有完整客户区对应的原始像素，不缩放、不重绘；选项间相对位置及原右侧点击点保持。",
+    "搜索区域扩展为客户区全宽[0,960,2322,346]，上边界从920下移到960；不包含桌面与窗口边框。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "event_torch"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision16_validation.json",
+      "sha256": "f7b282286829c380b39736d8bab022dab8ff4928ea2affa66b40d6e00c53cdbf"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "event_torch.png",
+  "target_filename": "events/options/event_torch.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_torch-7b86ab312f83-76f585a3b56b.json",
+    "record_sha256": "76f585a3b56b7cc0e3c60c5947b128a4c22d1bf7faaa875f498ddae25e9cbde9"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

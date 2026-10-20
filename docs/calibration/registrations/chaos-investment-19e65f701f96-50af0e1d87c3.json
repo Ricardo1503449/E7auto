@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "investment",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\shop\\investment.png",
+  "original_sha256": "b48eecddf7253ee67be380fd5567a258670e95e7836662c8a1997c7cee39dd5e",
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-investment-b48eecddf725-7281f0436095.json",
+    "record_sha256": "7281f0436095658f4de4d072b1045c91b8a5e225110884ea708400cb956f0663"
+  },
+  "crop_within_original": [
+    30,
+    143,
+    95,
+    106
+  ],
+  "editing_basis": "Explicit user revision: icons only for identities; capsule-only buttons; dialog icon and text foreground only. Original BGR pixels unchanged, alpha and bounding crop only.",
+  "validation": [
+    {
+      "key": "investment",
+      "source": 0,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9999995231628418,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 0,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905270338058472,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 0,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.987454891204834,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9999995231628418,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905270338058472,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.987454891204834,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 1.0,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905309081077576,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9874531030654907,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "investment",
+      "source": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    }
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-203102-shop-health-purchase-fd771c7b\\results\\revision2_recognition.json",
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "candidate_sha256": "19e65f701f96072be5abee3535806f39ad3fba811fac9ea1f674d02989af704e",
+  "limitations": [
+    "5 original client frames and artificial resizes; no live-game validation. Investment done cannot match the health completed button at the existing threshold; retain separate cropped health button."
+  ]
+}

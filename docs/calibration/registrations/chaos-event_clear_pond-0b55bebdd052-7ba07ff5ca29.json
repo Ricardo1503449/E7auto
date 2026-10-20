@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_clear_pond",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 182937.png",
+  "original_sha256": "40f7d1a7ef852ce066da6d9f6a07d9c1e658967fae756a45635500fc0532a9fc",
+  "client_rect": [
+    44,
+    101,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    564,
+    1069,
+    1158,
+    158
+  ],
+  "candidate_sha256": "0b55bebdd0521bb1592d42410a89992755533e19ebc287538283b6956a42798c",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      564,
+      1069
+    ],
+    "titles": [
+      [
+        138,
+        5,
+        227,
+        33
+      ],
+      [
+        791,
+        5,
+        300,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "pond_options",
+      "expected": "event_clear_pond",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_clear_pond', confidence=1.0, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=1.0, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=1.0, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 448.892
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_clear_pond",
+        "event_forked_path",
+        "event_trap"
+      ]
+    },
+    {
+      "source": "pond_options",
+      "expected": "event_clear_pond",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_clear_pond', confidence=0.9877086281776428, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=0.9877086281776428, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=0.9877086281776428, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 443.987
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_clear_pond",
+        "event_forked_path",
+        "event_blue_flame_altar"
+      ]
+    },
+    {
+      "source": "pond_options",
+      "expected": "event_clear_pond",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_clear_pond', confidence=0.9791156649589539, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=0.9791156649589539, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_clear_pond', confidence=0.9791156649589539, bounds=Rect(x=564, y=1069, width=1158, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 450.981
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_clear_pond",
+        "event_trap",
+        "event_forked_path"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-190809-four-events-garden-prayer-golden-pond-357f8859\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "User explicitly approved this four-template batch: 模板通过审核",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

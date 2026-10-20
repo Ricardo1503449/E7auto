@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mushroom",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 140940.png",
+  "original_sha256": "4db0115a6a69cb5df75d9c248b7bcdac56fa231eb29e8698e0380c5ec8dadb67",
+  "client_rect": [
+    69,
+    89,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    214,
+    1069,
+    1906,
+    158
+  ],
+  "editing_basis": "原像素文字；石塔另保留右侧完整经验100圆条及exp+图示，其余背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_mushroom",
+      "kind": "positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        214,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "positive",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.980175,
+      "structure": 0.886376,
+      "location": [
+        214,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.001191,
+      "location": [
+        2,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.019227,
+      "location": [
+        0,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "prison",
+      "passed": true,
+      "score": 0.485062,
+      "structure": 0.140884,
+      "location": [
+        232,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "altar",
+      "passed": true,
+      "score": 0.210972,
+      "structure": 0.056341,
+      "location": [
+        213,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "sword_options",
+      "passed": true,
+      "score": 0.442733,
+      "structure": 0.068949,
+      "location": [
+        231,
+        1069,
+        1906,
+        158
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "kind": "negative",
+      "source": "cairn_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.021158,
+      "location": [
+        416,
+        1070,
+        1906,
+        158
+      ]
+    }
+  ],
+  "approval_message": "模板通过；事件升阶须记录英雄阶数变化"
+}

@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_bone_throne",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_bone_throne.png",
+  "original_sha256": "599801f07da8062d9eeed0742af8628116ffc3bc2ef9ee86abe06d45fc006de1",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_bone_throne-599801f07da8-8dbb964a9bc4.json",
+    "record_sha256": "8dbb964a9bc4f2655f5fad831e530b5ce32292b0ef3414a705be61e9786397a8"
+  },
+  "canvas_size": [
+    1837,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1837,
+      80
+    ],
+    [
+      551,
+      80,
+      690,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 9545,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_bone_throne",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\inputs\\throne_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_bone_throne",
+        "event_bone_throne",
+        "event_bone_throne"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 464.745
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1850,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_bone_throne",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\inputs\\throne_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_bone_throne",
+        "event_bone_throne",
+        "event_bone_throne"
+      ],
+      "scores": [
+        0.9761572480201721,
+        0.9761572480201721,
+        0.9761572480201721
+      ],
+      "anchors": [
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 68.371
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.973183810710907,
+        "anchor": [
+          1224,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_bone_throne",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\inputs\\throne_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_bone_throne",
+        "event_bone_throne",
+        "event_bone_throne"
+      ],
+      "scores": [
+        0.9888885617256165,
+        0.9888885617256165,
+        0.9888885617256165
+      ],
+      "anchors": [
+        [
+          1529,
+          901
+        ],
+        [
+          1529,
+          901
+        ],
+        [
+          1529,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 91.144
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9865165948867798,
+        "anchor": [
+          1529,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_bone_throne",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\inputs\\throne_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_bone_throne",
+        "event_bone_throne",
+        "event_bone_throne"
+      ],
+      "scores": [
+        0.9943183660507202,
+        0.9943183660507202,
+        0.9943183660507202
+      ],
+      "anchors": [
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 111.601
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9931807518005371,
+        "anchor": [
+          1836,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_bone_throne",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-105159-bone-throne-event-template-4c70e0b4\\inputs\\throne_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_bone_throne",
+        "event_bone_throne",
+        "event_bone_throne"
+      ],
+      "scores": [
+        0.9909533858299255,
+        0.9909533858299255,
+        0.9909533858299255
+      ],
+      "anchors": [
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 119.858
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.988967776298523,
+        "anchor": [
+          2040,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

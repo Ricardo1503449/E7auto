@@ -1,0 +1,1458 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_reroll_anchor",
+  "base_size": [
+    2322,
+    1306
+  ],
+  "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-010709-client.png",
+  "source_sha256": "b51ef1a43705e922119d9609960f3a6a9e7d6c5d6a5cc25bce579f1f11848acd",
+  "source_catalog": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\sources.json",
+  "crop": [
+    548,
+    987,
+    141,
+    40
+  ],
+  "mask": {
+    "basis": "HSV V>90 and S<105 inside four-character crop, dilated with 3x3 kernel; tight bounds plus 3px margin",
+    "excludes": "cost icon, cost number, button border",
+    "rgb": "Unmodified source pixels, including transparent pixels"
+  },
+  "candidate_sha256": "0525aa4e7b0325cfcd869bc6bc680775db6dd049ea54f253d7ecdf19711e2ee8",
+  "validation": {
+    "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20260923-163408-4c88c795\\chaos\\buttons\\loot_reroll_anchor.png",
+    "candidate_sha256": "0525aa4e7b0325cfcd869bc6bc680775db6dd049ea54f253d7ecdf19711e2ee8",
+    "algorithm": "existing TemplateMatcher.locate_all: masked SQDIFF color + masked CCOEFF structure; limit=6",
+    "matcher_sha256": "90a65f8653fd991d1dbfc4ed4b22b73cba913ade09ee67195427ae839319244f",
+    "roi": [
+      250,
+      940,
+      1820,
+      150
+    ],
+    "color_threshold": 0.45,
+    "structure_threshold": 0.82,
+    "positive_real_screens": 27,
+    "negative_real_screens": 12,
+    "synthetic_scale_cases": 12,
+    "passed": 51,
+    "total": 51,
+    "results": [
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-21-234732-client.png",
+        "sha256": "e54aefa08a1f24af291b8692657a228808aa80bcc2a2476842d28086b3b5e65e",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999862909317017,
+          0.9719564914703369,
+          0.9978663325309753
+        ],
+        "elapsed_ms": 50.654,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-010709-client.png",
+        "sha256": "b51ef1a43705e922119d9609960f3a6a9e7d6c5d6a5cc25bce579f1f11848acd",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          1.0,
+          0.9720039367675781,
+          0.997916042804718
+        ],
+        "elapsed_ms": 44.92,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-010858-client.png",
+        "sha256": "719981e61eccc7f02cf2b5f18dcbc431fb705003768807e278f97e442bd6f484",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999716877937317,
+          0.9717386960983276,
+          0.9979070425033569
+        ],
+        "elapsed_ms": 43.015,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-140302-client.png",
+        "sha256": "77bda252c27004f111e0593ed92febe570c198497fcbdb1c18867ce98a73d849",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999836087226868,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 45.31,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-140426-client.png",
+        "sha256": "a4cc1dad372b689c35d8beddaaed77e7b07e4f164e9482c1a4b9fc8f8d1a3267",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999826550483704,
+          0.9717270731925964,
+          0.9978944063186646
+        ],
+        "elapsed_ms": 44.616,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-140638-client.png",
+        "sha256": "4c260669e4bb2b0a32db7a6abe377f381547935cde12b4f99efca051acf495e9",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999797344207764,
+          0.9719417691230774,
+          0.997866690158844
+        ],
+        "elapsed_ms": 46.37,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-141643-client.png",
+        "sha256": "71ac2e2303f240adf614ae48f0016e90726a4d33f8a0dd57174692c824258af7",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999804496765137,
+          0.97203129529953,
+          0.9979186058044434
+        ],
+        "elapsed_ms": 45.769,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-142511-client.png",
+        "sha256": "8468fc16576b03bf749979b88af63284477d404f49400271718be6230c85bc0c",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999813437461853,
+          0.971956193447113,
+          0.9978663325309753
+        ],
+        "elapsed_ms": 49.555,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-145946-client.png",
+        "sha256": "7eadc2a677b6b01067da4133eddbb8c00ecbf625c79cd3704e97c3a9245e3064",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999831318855286,
+          0.9717387557029724,
+          0.9979070425033569
+        ],
+        "elapsed_ms": 45.056,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-150000-client.png",
+        "sha256": "0ea84a0fee36e1038c217e4e01667b25c1deaa8261526f7293e162deafcaeac3",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999968409538269,
+          0.9720041155815125,
+          0.9979162812232971
+        ],
+        "elapsed_ms": 44.627,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-150347-client.png",
+        "sha256": "168e657efe287deb49b3e46438241d4050e7c32fff56612f4a13e4e701587ef7",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999826550483704,
+          0.9717386960983276,
+          0.9979070425033569
+        ],
+        "elapsed_ms": 42.939,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-173600-client.png",
+        "sha256": "3a4f06614958472274b5c262f7834295844526e74646ad8d04556a176280f4f9",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999829530715942,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 44.788,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-174122-client.png",
+        "sha256": "1732893e77ff8a3742d396d598c244c7b971373f21439bbda715644924fcf57f",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999728202819824,
+          0.9717283844947815,
+          0.9978922009468079
+        ],
+        "elapsed_ms": 44.918,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-174853-client.png",
+        "sha256": "539e1c19868839f46fb87fd6c07c2ef8fd8f04647ed90261585d1e4a645023f5",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999725818634033,
+          0.9717283844947815,
+          0.9978927373886108
+        ],
+        "elapsed_ms": 43.73,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-175737-client.png",
+        "sha256": "ccee0e768a11e044866c4cfc6f73757dcc7c790d2c978f3b726f28d230350e04",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999757409095764,
+          0.9717625975608826,
+          0.9978991746902466
+        ],
+        "elapsed_ms": 45.198,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-175919-client.png",
+        "sha256": "ddffa42e3afa4a465afd341bf5ab6a99da2ccdd61392af39ab453c788aa5b45e",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999752640724182,
+          0.9717590808868408,
+          0.9978989362716675
+        ],
+        "elapsed_ms": 43.692,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-175940-client.png",
+        "sha256": "727ff822b447eda4e5d627ba7eefbffc78aa3de37eb0ad5cd400bbad95260c58",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999809265136719,
+          0.97203129529953,
+          0.9979186058044434
+        ],
+        "elapsed_ms": 49.326,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-181331-client.png",
+        "sha256": "ccf337a17aa33c5f102d305b4456aee62ce53cb9e61f1200d1dbcd19afdfb6a1",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999997615814209,
+          0.9720039963722229,
+          0.997916042804718
+        ],
+        "elapsed_ms": 47.002,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-22-181646-client.png",
+        "sha256": "88878e5d35085bdf32e61409113fdfe9bb3cc362f0492c7192471f0e22ee6cfc",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999746084213257,
+          0.9717386960983276,
+          0.9979070425033569
+        ],
+        "elapsed_ms": 46.428,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_a.png",
+        "sha256": "666ae83a66b212bbca1a0e1ec5bfbc57e798f10d9a9ccf858df187f7c2ac0285",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999829530715942,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 58.307,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_b.png",
+        "sha256": "43a5a0ea412022418f09aed8aacb01559f52587abad7b57eec79d9d91803557d",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.7064690589904785,
+          0.6699428558349609,
+          0.6867008209228516
+        ],
+        "elapsed_ms": 45.447,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_b_selected.png",
+        "sha256": "d921393b8e78dba9aba5866a896e2f24784d49fdba9d3b6561eb59b6b90b0bae",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.7065877914428711,
+          0.6699472069740295,
+          0.6870256662368774
+        ],
+        "elapsed_ms": 45.505,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_c.png",
+        "sha256": "b42a97b99f9fc75a0ffc96833b1782339c028a695072907ba34055c1f4d4a836",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.6957254409790039,
+          0.7005043029785156,
+          0.7063699960708618
+        ],
+        "elapsed_ms": 45.882,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_selected_left.png",
+        "sha256": "fb906d6e4734d04a5fcaa4215b3da8f50577178f9a790d7fc4fa038b45a9b127",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.999982476234436,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 59.534,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_selected_middle.png",
+        "sha256": "3b0d635babfb83b170d3a52f6b07e46249a56778fe08311ad5f84dfe8c43256b",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.999982476234436,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 61.285,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_selected_right.png",
+        "sha256": "14ce059bd2b40bd379900a832fc554ab6f842ea00e1ebb6415bc7dcdb759956d",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999814033508301,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 56.435,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\logs\\run-20260923-144153-260944-f73638eb7c86-stop.png",
+        "sha256": "b90fb17be090f36c10150de65d5025ab374d81f9b91b2acae02c7d46d97554b1",
+        "synthetic_scale": 1.0,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9999827146530151,
+          0.9720064997673035,
+          0.9979073405265808
+        ],
+        "elapsed_ms": 46.148,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\home.png",
+        "sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 73.073,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_start.png",
+        "sha256": "7688e3710be533296c6c6d253c3d578bbb0a0d6bc4cd62772ae9f0ecc5d1a199",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 36.917,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_choices.png",
+        "sha256": "7396d12c4049d15c1731849b47a4f9d629689ba889349e6c8d0a84865c5d0c57",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 57.06,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\normal_prepare.png",
+        "sha256": "b78d2f74aa36440e25bc2b85d4a5d2530460b9cc02c2364f96816f848e92c5ed",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 39.596,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_auto.png",
+        "sha256": "456fd447a4fb510ce3b9f5a8085ca491045163b94e66d4c6431749eac7b0e631",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 79.549,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\levelup.png",
+        "sha256": "ebd704f00af3325e80f86d5a1686050645ae5aac3eb1ba2ce2132c5ab4dfd043",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 37.416,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\boss_victory.png",
+        "sha256": "472fed9e1260c982cd08d38213f114e261552dc6f444a909e7c2ba0db0766e3a",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 77.073,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\elite_victory.png",
+        "sha256": "5da2ddfdd94d058a7d54be5f12deec0c2dae7f39e3016f79b7ac47834dcd17a8",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 79.279,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_node.png",
+        "sha256": "c6a6e2cb5f817fbe81e4cec4692715fc1d48fe8d6232b68a5a9d780f10b263c0",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 72.559,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_node_done.png",
+        "sha256": "182c1e807168cb6999e7ca8251a436ad47ac6345e5f79b40726b9856525e15c2",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 72.481,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\camp.png",
+        "sha256": "a124be000fd3e2c337be794c5cb415796ac23f2c4ab22743de35276288a6edee",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 80.602,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\buy_dialog.png",
+        "sha256": "129a5c7087d3844d8d2ef4f6d8b962da173e5a3760d8a44bd9263629b3102262",
+        "synthetic_scale": 1.0,
+        "expected": 0,
+        "bounds": [],
+        "scores": [],
+        "elapsed_ms": 77.772,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-21-234732-client.png",
+        "sha256": "e54aefa08a1f24af291b8692657a228808aa80bcc2a2476842d28086b3b5e65e",
+        "synthetic_scale": 0.5,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.940515398979187,
+          0.9261656999588013,
+          0.9400153160095215
+        ],
+        "elapsed_ms": 55.611,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-21-234732-client.png",
+        "sha256": "e54aefa08a1f24af291b8692657a228808aa80bcc2a2476842d28086b3b5e65e",
+        "synthetic_scale": 0.75,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1708,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9469435214996338,
+          0.9492733478546143,
+          0.9386457800865173
+        ],
+        "elapsed_ms": 56.644,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-110839-loot-september22-candidates-29a75ef5\\inputs\\2026-09-21-234732-client.png",
+        "sha256": "e54aefa08a1f24af291b8692657a228808aa80bcc2a2476842d28086b3b5e65e",
+        "synthetic_scale": 1.25,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1129,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9805603623390198,
+          0.9646302461624146,
+          0.977375864982605
+        ],
+        "elapsed_ms": 49.018,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_a.png",
+        "sha256": "666ae83a66b212bbca1a0e1ec5bfbc57e798f10d9a9ccf858df187f7c2ac0285",
+        "synthetic_scale": 0.5,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9407687783241272,
+          0.9260644912719727,
+          0.9398807883262634
+        ],
+        "elapsed_ms": 57.643,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_a.png",
+        "sha256": "666ae83a66b212bbca1a0e1ec5bfbc57e798f10d9a9ccf858df187f7c2ac0285",
+        "synthetic_scale": 0.75,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1708,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9472489356994629,
+          0.9495562314987183,
+          0.9386993050575256
+        ],
+        "elapsed_ms": 57.889,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_a.png",
+        "sha256": "666ae83a66b212bbca1a0e1ec5bfbc57e798f10d9a9ccf858df187f7c2ac0285",
+        "synthetic_scale": 1.25,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1129,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9805952310562134,
+          0.9643763303756714,
+          0.9771966934204102
+        ],
+        "elapsed_ms": 49.801,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_b.png",
+        "sha256": "43a5a0ea412022418f09aed8aacb01559f52587abad7b57eec79d9d91803557d",
+        "synthetic_scale": 0.5,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.5369181036949158,
+          0.5099132061004639,
+          0.5121924877166748
+        ],
+        "elapsed_ms": 33.109,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_b.png",
+        "sha256": "43a5a0ea412022418f09aed8aacb01559f52587abad7b57eec79d9d91803557d",
+        "synthetic_scale": 0.75,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1708,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.5843544006347656,
+          0.5755068063735962,
+          0.554417610168457
+        ],
+        "elapsed_ms": 32.554,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\loot_set_b.png",
+        "sha256": "43a5a0ea412022418f09aed8aacb01559f52587abad7b57eec79d9d91803557d",
+        "synthetic_scale": 1.25,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1129,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.650847315788269,
+          0.6235352158546448,
+          0.624218761920929
+        ],
+        "elapsed_ms": 35.792,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\logs\\run-20260923-144153-260944-f73638eb7c86-stop.png",
+        "sha256": "b90fb17be090f36c10150de65d5025ab374d81f9b91b2acae02c7d46d97554b1",
+        "synthetic_scale": 0.5,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9407742023468018,
+          0.9260644912719727,
+          0.9398807883262634
+        ],
+        "elapsed_ms": 54.977,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\logs\\run-20260923-144153-260944-f73638eb7c86-stop.png",
+        "sha256": "b90fb17be090f36c10150de65d5025ab374d81f9b91b2acae02c7d46d97554b1",
+        "synthetic_scale": 0.75,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1128,
+            987,
+            141,
+            40
+          ],
+          [
+            1708,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9472461938858032,
+          0.9495562314987183,
+          0.9386993050575256
+        ],
+        "elapsed_ms": 56.144,
+        "passed": true
+      },
+      {
+        "path": "D:\\E7auto\\logs\\run-20260923-144153-260944-f73638eb7c86-stop.png",
+        "sha256": "b90fb17be090f36c10150de65d5025ab374d81f9b91b2acae02c7d46d97554b1",
+        "synthetic_scale": 1.25,
+        "expected": 3,
+        "bounds": [
+          [
+            548,
+            987,
+            141,
+            40
+          ],
+          [
+            1129,
+            987,
+            141,
+            40
+          ],
+          [
+            1709,
+            987,
+            141,
+            40
+          ]
+        ],
+        "scores": [
+          0.9805876016616821,
+          0.9643763303756714,
+          0.9771966934204102
+        ],
+        "elapsed_ms": 50.029,
+        "passed": true
+      }
+    ],
+    "calibration_note": "Initial color .85 / structure .80 missed three dim zero-currency screens. Intermediate color .60 missed dim synthetic downsampled text. Color .45 / structure .82 covers these cases while retaining structure verification. Candidate pixels and mask unchanged.",
+    "limitations": [
+      "Scale cases are synthetic down/up sampling, not captures from different actual window sizes.",
+      "Offline anchor localization only; no runtime integration, icon index, or three-frame flow changes."
+    ]
+  },
+  "review_status": "awaiting_user_approval"
+}

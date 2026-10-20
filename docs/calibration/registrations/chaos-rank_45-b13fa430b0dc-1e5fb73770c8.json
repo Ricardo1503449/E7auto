@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_45",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-3ff86881-c583-4bbd-b59b-3ea669f7295a.png",
+  "original_sha256": "bed977cc0887f7a5095199eb4aeebc8fc9543fd6f7dea8436f83f2ce6f14d67c",
+  "client_rect": null,
+  "crop": [
+    44,
+    16,
+    495,
+    60
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rank_max",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1358,
+        386,
+        495,
+        60
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_max",
+      "kind": "synthetic_1536x864",
+      "score": 0.981776,
+      "structure": 0.860672,
+      "location": [
+        1357,
+        386,
+        495,
+        60
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision7_masks\\rank_45.png",
+  "mask_sha256": "91b1d0b8cc53ae630f8e0ad09179236580312bb1281d5c3e5f8d7595fb2579fa",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b13fa430b0dc6ecc619db01cf48c1cdcb9946a786392a0b69950f114ae926ecf",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision7.json",
+      "sha256": "504a89f5ba667ce83f70f356adbcecb228885242e5c1265f5ee0540178a1e8bb"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_45.source.json",
+    "sha256": "d0d5d7598a60f364e1ead7d88ec781f3dda5e75e7516d91fb0b0d41a21015dc8"
+  },
+  "search_roi": [
+    1280,
+    335,
+    680,
+    170
+  ],
+  "threshold": 0.967,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "补全两侧等阶图标的青色三角和渐变斜边，保留数字、转换箭头及Max字样；底图透明，原始RGB不变。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "rank_45"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision7_validation.json",
+      "sha256": "ea91344854b976e7f51c6e64d41bb8db0687327f9bd61237d839516f21911c6b"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_xiaochun",
+  "operation": "replace",
+  "original": "logs/run-20261017-120722-167174-70c18c19019d-stop.png",
+  "original_sha256": "e143f96f3200f999efadc4e59e006d44fd0f191769292e9fd4325a5eb1f7d7c0",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    662,
+    560,
+    128,
+    46
+  ],
+  "editing_basis": "Original 2322x1306 client pixels; no color edits, sharpening, redraw or resizing. The white core (>175 in every BGR channel, spread <45) locates strokes; a two-pixel Chebyshev halo retains the original antialiasing and dark outline. Canvas trimmed only to the complete mask support.",
+  "component_layout": {
+    "primary": [
+      55,
+      0,
+      73,
+      46
+    ],
+    "secondary": [
+      0,
+      0,
+      55,
+      46
+    ]
+  },
+  "previous_png_sha256": "7504b7f8314970219f47d689364254fd597b9a64c6a9cbac03d73ecb27dd3a89",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-hero_xiaochun-7504b7f83149-37dec050a7e0.json",
+    "record_sha256": "37dec050a7e0763718778756bc1ae22a92e581c462d050d1db68d1ba0d43122a"
+  },
+  "candidate": "artifacts/template-candidates/20261017-122043-a10c0619/chaos/recruitment/hero_xiaochun.png",
+  "candidate_sha256": "8b6b35ba4f172a82c1a0511ed28b946c62aa0d7a45d865e558f489ea63241d1e",
+  "mask_pixels": 3065,
+  "threshold": 0.94,
+  "structure_threshold": 0.8,
+  "validation": {
+    "report": "artifacts/tasks/chaos/20261017-121936-xiaochun-template-refresh-23a16660/results/recognition-validation.json",
+    "sha256": "7f879b793c41c21e1313ee33a3af2de70cf2fc12ad8b12e146b83adc3a723585",
+    "passed": true,
+    "checks": 49,
+    "thresholds_unchanged": true,
+    "limitations": [
+      "Scaled full-frame cases are synthetic; only original files are real native captures.",
+      "No live game capture or input, full game run or installer build was performed."
+    ]
+  },
+  "visual_review": {
+    "agent": "Source, preview and white mask enlarged: both characters, icon, antialiasing and dark outline retained.",
+    "user": "approved: keep the two-pixel candidate"
+  },
+  "outline_pixels": 2,
+  "approval": {
+    "record": "artifacts/tasks/chaos/20261017-121936-xiaochun-template-refresh-23a16660/results/user-approval.json",
+    "sha256": "eb3e456db8387594a10c62f3efcbf5f69d3b54011d7a14eb7cdfb83c3cdb9072",
+    "user_statement": "那就保留 2 像素候选吧，模板通过"
+  }
+}

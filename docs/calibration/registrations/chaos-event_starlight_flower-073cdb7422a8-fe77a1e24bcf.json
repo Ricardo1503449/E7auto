@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_starlight_flower",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 142511.png",
+  "original_sha256": "31c1e82d0b2670675212010a4a573b0e3fee334fd69d968e17e23d50ca562371",
+  "client_rect": [
+    50,
+    99,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    298,
+    1069,
+    1670,
+    168
+  ],
+  "candidate_sha256": "073cdb7422a81e5a7805c23e03ae365d7b9feb1e04523d2ca90dd36f63a9ab9c",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      298,
+      1069
+    ],
+    "titles": [
+      [
+        5,
+        5,
+        336,
+        33
+      ],
+      [
+        604,
+        5,
+        516,
+        33
+      ],
+      [
+        1439,
+        5,
+        226,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "flower_options",
+      "expected": "event_starlight_flower",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_starlight_flower', confidence=1.0, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=1.0, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=1.0, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 822.779
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_starlight_flower",
+        "event_passage",
+        "event_prison"
+      ]
+    },
+    {
+      "source": "flower_options",
+      "expected": "event_starlight_flower",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_starlight_flower', confidence=0.9889185428619385, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=0.9889185428619385, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=0.9889185428619385, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 839.793
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_starlight_flower",
+        "event_passage",
+        "event_prison"
+      ]
+    },
+    {
+      "source": "flower_options",
+      "expected": "event_starlight_flower",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_starlight_flower', confidence=0.9816110134124756, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=0.9816110134124756, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))",
+        "Detection(key='event_starlight_flower', confidence=0.9816110134124756, bounds=Rect(x=298, y=1069, width=1670, height=168), anchor=Point(x=480, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 834.687
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_starlight_flower",
+        "event_passage",
+        "event_prison"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "User explicitly approved this seven-template batch: 通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

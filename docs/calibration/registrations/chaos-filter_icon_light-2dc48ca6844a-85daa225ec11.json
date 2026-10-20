@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_icon_light",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-a17d224c-72e7-44c7-853d-58f1185446e9.png",
+  "original_sha256": "ecd6d3996c021594fdcb803d8e9855b2ee433cc821956305432784c09eae6442",
+  "client_rect": null,
+  "crop": [
+    4,
+    14,
+    115,
+    83
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "soul_water",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1273,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1273,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1273,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "soul_water",
+      "kind": "synthetic_1536x864",
+      "score": 0.981923,
+      "structure": 0.98631,
+      "location": [
+        1273,
+        216,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_icon_light.png",
+  "mask_sha256": "d449b038e693d32f74c93c9dc49c38f57cb9908d651bed6e580afa6d1135dfe8",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "2dc48ca6844afda6b3536601d22f51302f06b851b430ff44a3b0ed87d0a36a48",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_icon_light.source.json",
+    "sha256": "9a9c6fcbf41d972cf99e4dbc4f8daa90149e2d571bc4f3079aeb0d238c064e1f"
+  },
+  "search_roi": [
+    710,
+    170,
+    1000,
+    350
+  ],
+  "threshold": 0.967,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_icon_light"
+  ],
+  "additional_validation_records": []
+}

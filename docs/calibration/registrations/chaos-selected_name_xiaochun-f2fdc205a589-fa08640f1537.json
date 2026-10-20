@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "selected_name_xiaochun",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-5e9fc45c-309d-418c-af16-2827baaaccae.png",
+  "original_sha256": "68103dd9e082636eeae945fb39703241009f3901ead7ff0e68feb0b40849a1f0",
+  "client_rect": [
+    43,
+    93,
+    2322,
+    1306
+  ],
+  "crop": [
+    110,
+    150,
+    395,
+    45
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "white",
+  "patches": null,
+  "validation": [
+    {
+      "source": "xiaochun_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        110,
+        150,
+        395,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "xiaochun_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.982161,
+      "structure": 0.847989,
+      "location": [
+        111,
+        150,
+        395,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "f2fdc205a589475d9e286bc5f4a24aa68a0cc8f3f8a2d2f003177b26307914c0",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\selected_name_xiaochun.source.json",
+    "sha256": "a900af918b6ed5e2337855fd7996b859e4f5a998acb0f6982ad3000990a7ba72"
+  },
+  "search_roi": [
+    40,
+    125,
+    520,
+    85
+  ],
+  "threshold": 0.967,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "selected_name_xiaochun"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "selected_name_xiaochun.png",
+  "target_filename": "recruitment/selected_name_xiaochun.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-selected_name_xiaochun-f2fdc205a589-49a3ad31266e.json",
+    "record_sha256": "49a3ad31266ee1d54d7c4f4f1dfd1ea83c64498127efe73126c5fb4e74b5f558"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_vestment_no_loot",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 185236.png",
+  "original_sha256": "0d8092f4c8a3a5feaf7cb97f925826190a0f5b29d95bbb9bbfca10d34e32ec87",
+  "client_rect": [
+    61,
+    95,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    308,
+    1069,
+    1715,
+    157
+  ],
+  "review_status": "approved",
+  "editing_basis": "Original BGR preserved, alpha-only extraction; no redraw or resize.",
+  "note": "保留三个选项标题、下方效果/消耗说明和“战利品不足”红字；红叉图标、卡片边框、图案和周围背景透明。右侧暗文字保持原始颜色。",
+  "validation": [
+    {
+      "key": "event_vestment_no_loot",
+      "source": "vestment_no_loot",
+      "kind": "native",
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        308,
+        1069,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "vestment_no_loot",
+      "kind": "synthetic_1536x864",
+      "passed": true,
+      "score": 0.9804,
+      "structure": 0.972315,
+      "location": [
+        308,
+        1069,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "other_stage",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.061166,
+      "structure": 0.509664,
+      "location": [
+        597,
+        1068,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "followup",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.052065,
+      "location": [
+        45,
+        960,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "torch",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.275474,
+      "structure": 0.529216,
+      "location": [
+        527,
+        1069,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "tablet",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.209558,
+      "structure": 0.520262,
+      "location": [
+        598,
+        1069,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "trap",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.272631,
+      "structure": 0.528844,
+      "location": [
+        597,
+        1069,
+        1715,
+        157
+      ]
+    },
+    {
+      "key": "event_vestment_no_loot",
+      "source": "warning_removed",
+      "kind": "synthetic_warning_removed",
+      "passed": true,
+      "score": 0.951919,
+      "structure": 0.921944,
+      "location": [
+        308,
+        1069,
+        1715,
+        157
+      ]
+    }
+  ],
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "approved_candidate_sha256": "7c5fa167f127bbc459d811271c9af7ceb484020df5ab1b7bc33d348016a2b6b3",
+  "approval_statement": "候选模板通过，直接正式登记接入"
+}

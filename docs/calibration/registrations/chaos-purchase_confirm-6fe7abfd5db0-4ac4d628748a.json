@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "purchase_confirm",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-b770016a-2538-4eda-8e82-d64d1ab68c64.png",
+  "original_sha256": "6c68ed1b0b410c166fbe42a3020ef64d890a9bbfeb703fe0c1f229209334fdae",
+  "client_rect": null,
+  "crop": [
+    8,
+    38,
+    610,
+    135
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "buy_dialog",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1077,
+        856,
+        610,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "buy_dialog",
+      "kind": "synthetic_1536x864",
+      "score": 0.988144,
+      "structure": 0.97016,
+      "location": [
+        1077,
+        856,
+        610,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision10_masks\\purchase_confirm.png",
+  "mask_sha256": "82e987ef74f53ddabeb615b2f56deb62d163e9b88d31f65d76fcbd77eae11870",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "6fe7abfd5db04b561b69367b8e72b4bafdac2b94505d38dcb5e95e32bfae2f14",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision10.json",
+      "sha256": "0391d3813195ce6c7210ce14e8a7fdb473f9adce42a3aa536deb3caada9e6c2c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\purchase_confirm.source.json",
+    "sha256": "c599acb81fefb33225d1e29f9ca870097e5b82b074436bba4ea18a4496422ac3"
+  },
+  "search_roi": [
+    1060,
+    815,
+    750,
+    240
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅将金额数字显示区域设为透明，以覆盖不同数字和位数；按钮外形、货币图标、价格框边缘及购买文字保持原像素和原遮罩。该区域外未修改。新版本待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "purchase_confirm"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision10_validation.json",
+      "sha256": "8b8d0445eacf4af1750afa1a2832ad2ac4f3aee01f152bec74ed22304c18132e"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision9_validation.json",
+      "sha256": "d2edba7d598ca610347107a4c54b4375dc85f9bed594447031501d05e23cb679"
+    }
+  ]
+}

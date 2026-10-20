@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_shop",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-8763e698-0232-48e9-baac-73a74295b27e.png",
+  "original_sha256": "a7a31d5958ab3e8c5fdd860937c246d46d1676cb183349ed1fe91a36d7e6e0b9",
+  "client_rect": null,
+  "crop": [
+    28,
+    31,
+    135,
+    142
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "map_shop_choice",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1650,
+        457,
+        135,
+        142
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_shop_choice",
+      "kind": "synthetic_1536x864",
+      "score": 0.996904,
+      "structure": 0.984564,
+      "location": [
+        1650,
+        457,
+        135,
+        142
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision5_masks\\node_shop.png",
+  "mask_sha256": "8b249f4499649834cc0471785f33a8714d2e4309370046e35207ca1edc4469d3",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "0894cd58784918e91f13194677a1b76848415c94ce5c20c2672f515730a78370",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision5.json",
+      "sha256": "c1bf2e073e061aeb84ce23dce50d5cdc790a5af446da332a880fd6fd7f11a180"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_shop.source.json",
+    "sha256": "a66d38f05d27ede2170458798307d48f02e51c4ddef160959c6c6d6dbeb3229d"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "已按原图补回商店图标右下基座缺失的亮色及边缘像素；其余遮罩保持。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "node_shop"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ]
+}

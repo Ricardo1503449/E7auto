@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_one",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-1d679c89-34d1-4a6e-a8ae-eaa6b8929d62.png",
+  "original_sha256": "dec875970c68ec0a574a1b2ce5846c86a729c20c3ed25423253760224116b805",
+  "client_rect": null,
+  "crop": [
+    42,
+    46,
+    188,
+    41
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "lobby_exit",
+      "kind": "source_self",
+      "score": 0.999882,
+      "structure": 0.999869,
+      "location": [
+        1701,
+        1053,
+        188,
+        41
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "lobby_one",
+      "kind": "real_positive",
+      "score": 0.999914,
+      "structure": 0.999913,
+      "location": [
+        1701,
+        1053,
+        188,
+        41
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "lobby_finished",
+      "kind": "real_positive",
+      "score": 0.999829,
+      "structure": 0.999816,
+      "location": [
+        1701,
+        1053,
+        188,
+        41
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "lobby_three",
+      "kind": "real_negative",
+      "score": 0.911136,
+      "structure": 0.895919,
+      "location": [
+        1701,
+        1053,
+        188,
+        41
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "lobby_exit",
+      "kind": "synthetic_1536x864",
+      "score": 0.942093,
+      "structure": 0.940256,
+      "location": [
+        1701,
+        1053,
+        188,
+        41
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\stage_one.png",
+  "mask_sha256": "3af8a4fe38fafccbda17bf7b3878e1867a959204713d01374e91b41c89e1fa58",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "6db74df1ce8ebb53710caeab7f3fa4f7aaae8f7f3730f7053d9c19be24ab3dbf",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\stage_one.source.json",
+    "sha256": "ae56254604d5b0cbbeaebc946433c0bb6818f26a1ef57ca5a4994edba4a2a3a0"
+  },
+  "search_roi": [
+    1630,
+    995,
+    692,
+    160
+  ],
+  "threshold": 0.927,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "stage_one"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision15_validation.json",
+      "sha256": "2f7868f1c12effe488e1b008330bfa6451478c04e8ba116fb9557e12e7a7dc23"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "stage_one.png",
+  "target_filename": "entry/stage_one.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-stage_one-6db74df1ce8e-d63a96011c7a.json",
+    "record_sha256": "d63a96011c7abb40295ec3dc747edf0baa9710286244e82dd31e7fed1bfb2deb"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

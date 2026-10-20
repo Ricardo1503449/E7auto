@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mimic",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-617069bc-450b-4b16-a707-53561960746f.png",
+  "original_sha256": "9cd2930740a77fc6071878e16f1ab75c568824c536153b26634c49c95e839fe6",
+  "client_rect": [
+    34,
+    85,
+    2322,
+    1306
+  ],
+  "crop": [
+    582,
+    1073,
+    1001,
+    160
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "mimic_options",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        582,
+        1073,
+        1001,
+        160
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "torch_options",
+      "kind": "real_negative",
+      "score": 0.503338,
+      "structure": 0.076111,
+      "location": [
+        529,
+        1073,
+        1001,
+        160
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "mimic_options",
+      "kind": "synthetic_1536x864",
+      "score": 0.980535,
+      "structure": 0.902419,
+      "location": [
+        582,
+        1073,
+        1001,
+        160
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision16_masks\\event_mimic.png",
+  "mask_sha256": "ac8ed7f68ed7201d2a18c2a5791a8c4af302264e9724d1ba5fe385d837b98ebf",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "ce2ba7824a45b970e9c28eb209ca2a22c00cc624045b1e4af0bd849a3132fe32",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision16.json",
+      "sha256": "d439bb98d31136d0a49314eef0e791cd0d28c9cb067458105e76e3c8da164a9c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\event_mimic.source.json",
+    "sha256": "c7cad6c6fa6961d5f4d08b9bb7674a3cbd85ae41e54bd086e420c207e80818da"
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.966,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留左右选项标题及左侧效果说明文字，选项卡边框、底纹及其余图案全部透明。",
+    "沿用有完整客户区对应的原始像素，不缩放、不重绘；选项间相对位置及原右侧点击点保持。",
+    "搜索区域扩展为客户区全宽[0,960,2322,346]，上边界从920下移到960；不包含桌面与窗口边框。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "event_mimic"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision16_validation.json",
+      "sha256": "f7b282286829c380b39736d8bab022dab8ff4928ea2affa66b40d6e00c53cdbf"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "event_mimic.png",
+  "target_filename": "events/options/event_mimic.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_mimic-ce2ba7824a45-0a60b6c099c2.json",
+    "record_sha256": "0a60b6c099c26ec14b43d19f206dd8308b89ac16073f9e80df3c2e95deb65255"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

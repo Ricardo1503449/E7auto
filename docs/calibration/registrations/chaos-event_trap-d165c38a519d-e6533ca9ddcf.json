@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_trap",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 174238.png",
+  "original_sha256": "35a8402ad97b5072514d30f68ad45cf683e1fb1e5031eb17281949597d0c30c8",
+  "client_rect": [
+    47,
+    96,
+    2322,
+    1306
+  ],
+  "crop": [
+    632,
+    1069,
+    1046,
+    169
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no redraw or template resizing.",
+  "review_status": "approved",
+  "notes": [
+    "保留左右选项文字、左侧战斗后获得随机战利品说明和右侧EXP+60完整条形图标；其余背景透明。",
+    "选择左侧“正面破解陷阱。”；点击以识别框相对位置计算。"
+  ],
+  "validation": [
+    {
+      "key": "event_trap",
+      "source": "event_trap",
+      "kind": "native",
+      "expected": true,
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        632,
+        1069,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "event_trap",
+      "kind": "synthetic_1536x864",
+      "expected": true,
+      "passed": true,
+      "score": 0.981878,
+      "structure": 0.969644,
+      "location": [
+        632,
+        1069,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "torch_options",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.638681,
+      "structure": 0.503552,
+      "location": [
+        632,
+        1069,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "mimic_options",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.568005,
+      "structure": 0.337045,
+      "location": [
+        684,
+        1069,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "event_followup",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.068907,
+      "location": [
+        333,
+        1116,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "missing_left",
+      "kind": "synthetic_missing_option",
+      "expected": false,
+      "passed": true,
+      "score": 0.311566,
+      "structure": 0.392857,
+      "location": [
+        632,
+        1069,
+        1046,
+        169
+      ]
+    },
+    {
+      "key": "event_trap",
+      "source": "missing_right",
+      "kind": "synthetic_missing_option",
+      "expected": false,
+      "passed": true,
+      "score": 0.273829,
+      "structure": 0.460866,
+      "location": [
+        632,
+        1069,
+        1046,
+        169
+      ]
+    }
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "approved_candidate_sha256": "d165c38a519d9840829341606d1e2d01c2f04098f6201eedec28b45b3aba5b2e",
+  "approval_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-180010-event-trap-templates-b5f70514\\results\\user_approval.json",
+  "operation": "relocate",
+  "previous_filename": "event_trap.png",
+  "target_filename": "events/options/event_trap.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_trap-d165c38a519d-89abc905b092.json",
+    "record_sha256": "89abc905b092988a00f8082c141ffc252968eecc80b91e91a61e21694dfa964b"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruit_enter",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-3f48a756-a024-4813-bdb5-e678e46a32cb.png",
+  "original_sha256": "ab51fe3660a1a8f9e17eb87e43e92d67f380b8c42b492be495f5ecce6347d1f2",
+  "client_rect": [
+    36,
+    86,
+    2322,
+    1306
+  ],
+  "crop": [
+    1665,
+    1133,
+    613,
+    136
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_done",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        136
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done_alt",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        136
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done",
+      "kind": "synthetic_1536x864",
+      "score": 0.985674,
+      "structure": 0.965287,
+      "location": [
+        1665,
+        1133,
+        613,
+        136
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\recruit_enter.png",
+  "mask_sha256": "52d6fe09cb1c33e4ca290d35407a04bd8f9d186978f28ae0d25226892e66ea7f",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b22c25a33bb9f27978eed3b324b06aa3f04548dc400469b99d59c8dee50f56d1",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruit_enter.source.json",
+    "sha256": "0d8b4b15027eed7328bee57be315be4ca005df4d7b5bebe4bc89b62ce00c565c"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "recruit_enter"
+  ],
+  "additional_validation_records": []
+}

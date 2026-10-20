@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_priest_ring",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-5da0d57d-1c86-4a2b-a139-0e965c65183c.png",
+  "original_sha256": "7d413deb37444a277d0bb2f101eb071095c6d0e49b3e5339cbed0d9b438be892",
+  "client_rect": null,
+  "crop": [
+    104,
+    150,
+    307,
+    365
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_priest_ring.png",
+  "mask_sha256": "4bc77b98da56bff943b46fd973ac085ee61687492b68dfbd300d738094339c46",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "a1c140ca72c3116d21a5883bd27a1b1ace8ab5b53557857d729e3063de0a83cf",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_priest_ring.source.json",
+    "sha256": "9e01f2c238cf0ce0bba74ae37f89cd387da7080a2e35dc1975286b782164dbc8"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "loot_priest_ring"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "loot_priest_ring.png",
+  "target_filename": "loot/loot_priest_ring.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_priest_ring-a1c140ca72c3-36bc71c71dc5.json",
+    "record_sha256": "36bc71c71dc5d0324bdb67a389056c38b1a8804e052f1ffc30668e35f946f0a2"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

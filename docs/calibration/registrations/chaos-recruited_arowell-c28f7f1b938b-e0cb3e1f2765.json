@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_arowell",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\recruitment\\recruited_arowell.png",
+  "original_sha256": "b9d7b1db370683bd20e727c79ecd82cb903d3622ea4fa006ad23a3af28e4d15c",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-recruited_arowell-b9d7b1db3706-e9c7864d8552.json",
+    "record_sha256": "e9c7864d8552d9270889cecb6760e36fbc493a8aaa0c8cf44c5dbd22c6ff4a2f"
+  },
+  "crop": [
+    0,
+    0,
+    218,
+    102
+  ],
+  "candidate_sha256": "c28f7f1b938b768140839baada19e2b5bfa3fa1cb3f0b2ec903d388bf73795ac",
+  "editing_basis": "User requested removal of lower-right profession icon and tight cropping to the two original text lines. BGR pixels and text alpha preserved exactly. No redraw, resize or threshold change.",
+  "review_status": "approved",
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\validation-initial.json",
+  "limitations": [
+    "Synthetic scaled screenshots do not establish real-window coverage. No post-change live game run or installer build."
+  ],
+  "approved_candidate_sha256": "c28f7f1b938b768140839baada19e2b5bfa3fa1cb3f0b2ec903d388bf73795ac",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\user-approval.json",
+      "sha256": "a692f99032207669916b4fd66cac416ff65dffe889a4416e918564a4cdc6246a"
+    }
+  ],
+  "validation": [
+    {
+      "key": "recruited_arowell",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9998118281364441,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9671708941459656,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9751138091087341,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9999449253082275,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9673556685447693,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9752151370048523,
+          "bounds": [
+            291,
+            789,
+            218,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "actual_failure_1536",
+      "path": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\run-20260930-130149-005851-33010434be09-stop.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_arowell",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.961,
+      "structure_threshold": 0.8,
+      "hits": []
+    }
+  ],
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.961,
+  "structure_threshold": 0.8,
+  "validation_reuse": "Approved PNG hash, runtime configuration, ROI and matching/normalization code unchanged. Reused candidate-stage checks; no repeated image scans after approval."
+}

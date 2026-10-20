@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "boss_claim_complete",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\boss_claimed_crop.png",
+  "original_sha256": "197dd0fd758c20f07f34df89d5611e321dc8a09a69b7c9e6e513fabc6ba6cf0f",
+  "original_registration": "docs/calibration/registrations/chaos-boss_claim_complete-119543524067-2f9e5b7051a6.json",
+  "old_template_sha256": "11954352406759df5e46e3131ed8867d48ab7f9f574e1722844803bb0b30216e",
+  "crop": [
+    181,
+    679,
+    124,
+    30
+  ],
+  "editing_basis": "对照哈希一致的原始局部截图重新提取文字：原图B-G差<=38的笔画连通分量，旧已核实文字区仅作为分量定位种子；覆盖全部原有效像素，再保留八邻域一像素原始边缘。所有RGB直接取原图，无重绘、锐化、缩放或描黑。",
+  "mask_description": "原图重新提取的笔画支持区+一像素八邻域原暗边；非简单扩大旧遮罩。",
+  "old_retained_pixels": 1220,
+  "new_retained_pixels": 2538,
+  "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20261001-164432-b867d901\\chaos\\boss_claim_complete.png",
+  "candidate_sha256": "6e252022631f82c392b88eac8924c22bb3205064d25245ceba1fd381f4ad7c8a",
+  "task": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261001-164432-boss-claim-one-pixel-edge-candidate-155dd9e5",
+  "review_status": "approved_by_user",
+  "validation": [
+    {
+      "template": "current",
+      "sample": "real_1536_claimed",
+      "kind": "real_positive",
+      "expected": true,
+      "detected": false,
+      "passed": false,
+      "best_structure_above_colour_gate": 0.7701525688171387,
+      "colour_at_best_structure": 0.9981531500816345
+    },
+    {
+      "template": "current",
+      "sample": "same_colour_background_without_text",
+      "kind": "synthetic_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "current",
+      "sample": "unclaimed_2322",
+      "kind": "real_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "current",
+      "sample": "unclaimed_1920",
+      "kind": "synthetic_resize_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "current",
+      "sample": "unclaimed_1536",
+      "kind": "synthetic_resize_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "current",
+      "sample": "source_local_self_match",
+      "kind": "local_source_self_match_not_independent",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "color": 1.0,
+      "structure": 0.9999845623970032,
+      "bounds": [
+        182,
+        680,
+        122,
+        28
+      ],
+      "anchor": [
+        243,
+        694
+      ]
+    },
+    {
+      "template": "candidate",
+      "sample": "real_1536_claimed",
+      "kind": "real_positive",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "color": 0.9968664050102234,
+      "structure": 0.876238226890564,
+      "bounds": [
+        728,
+        627,
+        83,
+        20
+      ],
+      "anchor": [
+        769,
+        637
+      ],
+      "best_structure_above_colour_gate": 0.9682875275611877,
+      "colour_at_best_structure": 0.9988875985145569
+    },
+    {
+      "template": "candidate",
+      "sample": "same_colour_background_without_text",
+      "kind": "synthetic_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "candidate",
+      "sample": "unclaimed_2322",
+      "kind": "real_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "candidate",
+      "sample": "unclaimed_1920",
+      "kind": "synthetic_resize_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "candidate",
+      "sample": "unclaimed_1536",
+      "kind": "synthetic_resize_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "template": "candidate",
+      "sample": "source_local_self_match",
+      "kind": "local_source_self_match_not_independent",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "color": 1.0,
+      "structure": 0.9999978542327881,
+      "bounds": [
+        181,
+        679,
+        124,
+        30
+      ],
+      "anchor": [
+        243,
+        694
+      ]
+    }
+  ],
+  "limitations": [
+    "One independent native baseline positive and one independent native 1536 positive; shifted/resized variants are synthetic, not independent gameplay captures.",
+    "Historical successful runs do not retain every captured frame; this cannot guarantee every unseen scene."
+  ],
+  "source_ink_pixels": 1272,
+  "visual_review": "已将原图、当前模板、候选与白色遮罩按6倍最近邻逐字对照；候选覆盖全部原有效像素并保留原始暗边，RGB与源裁剪完全一致。",
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261001-164432-boss-claim-one-pixel-edge-candidate-155dd9e5\\results\\baseline-regression.json",
+      "sha256": "815909dd57b2f1efc758b04a009b3bd02da8844a4d89a1e45702eb5a39a87b02"
+    }
+  ],
+  "baseline_validation": {
+    "independent_full_frame_positive": "tests\\fixtures\\chaos\\boss_all_ticket.png",
+    "sha256": "27748e33c671314624c38962c90390ee1ebcaebd2fbd61f6c7fb94a593e123ff",
+    "old_and_new_pass": true,
+    "baseline_anchor_unchanged": true,
+    "paired_cases": 12,
+    "regressions": 0
+  },
+  "approval": "User explicitly requested replacing boss_claim_complete with this validated one-pixel-edge candidate."
+}

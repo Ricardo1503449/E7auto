@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_moon_charm",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\loot\\loot_moon_charm.png",
+  "original_sha256": "3c1c7f928cc18cfe1623c939597cdb6a06866860998d68d3d219cfd32a42847a",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_moon_charm-3c1c7f928cc1-be03f312cb34.json",
+    "record_sha256": "be03f312cb345c66c9ee7a4d8c0ebd3d140716688d13a443c397b3c34e7dcd33"
+  },
+  "retained_source_pixels": "The formal PNG retains unmodified original screenshot RGB beneath its alpha. The new paragraph mask is rebuilt from these original crop pixels, not from a preview or zeroed RGB.",
+  "editing_basis": "Rebuild paragraph glyphs directly from retained original RGB, including darker internal strokes, then retain one pixel of original antialias/dark edge. BGR, canvas, icon/name RGBA and paragraph-external pixels unchanged. No sharpening, redraw or resizing.",
+  "repair_roi": [
+    0,
+    293,
+    335,
+    129
+  ],
+  "mask_extraction": {
+    "color_space": "HSV",
+    "min_value_exclusive": 80,
+    "max_saturation_exclusive": 80,
+    "original_edge_pixels": 1
+  },
+  "candidate_sha256": "f812af35d60b5f53e1da4de880f8c8b5ba3294fb7dbe07af208394fd3ac15ef9",
+  "review_status": "approved",
+  "validation": [
+    {
+      "check": "canvas_and_all_RGB_unchanged",
+      "passed": true
+    },
+    {
+      "check": "audit_missing_stroke_regions_restored",
+      "passed": true
+    },
+    {
+      "key": "loot_moon_charm",
+      "check": "actual_runtime_icon_name_origin_canvas_unchanged",
+      "passed": true
+    },
+    {
+      "check": "all_runtime_loot_index_arrays_unchanged",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Only description alpha changes. Runtime icon/name pixels, masks, preprocessed parts, index arrays, canvas and origin are identical; unchanged image-recognition suites are not repeated. No live game test."
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\validation.json",
+  "approved_candidate_sha256": "f812af35d60b5f53e1da4de880f8c8b5ba3294fb7dbe07af208394fd3ac15ef9",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\user-approval.json",
+      "sha256": "488e7a75650bc3195e7eec91c4d8eb7671014a40e890f9a7e9921df531302b11"
+    }
+  ],
+  "validation_reuse": "Reused approved candidate-stage checks. PNG/alpha, configuration, ROI and recognition code unchanged; no image scans repeated after approval."
+}

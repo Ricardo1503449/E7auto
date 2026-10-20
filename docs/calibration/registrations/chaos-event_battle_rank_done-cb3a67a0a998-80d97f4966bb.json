@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_battle_rank_done",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 175606.png",
+  "original_sha256": "5d0d877c7dd2a4ad68e8bd91f939d47ae5812adb6a4ea96f360762dff68e74db",
+  "client_rect": [
+    58,
+    95,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    1102,
+    858,
+    117,
+    34
+  ],
+  "editing_basis": "只保留升阶完毕文字；提交升阶后识别该标识即确认成功，继续探查仅为后续点击目标。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    980,
+    800,
+    380,
+    160
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_battle_rank_done",
+      "kind": "positive",
+      "source": "shelter_rank_success",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1102,
+        858,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "positive",
+      "source": "shelter_rank_success",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.983955,
+      "structure": 0.837561,
+      "location": [
+        1102,
+        858,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "negative",
+      "source": "shelter_rank_offer",
+      "passed": true,
+      "score": 0.783186,
+      "structure": 0.075882,
+      "location": [
+        1104,
+        925,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "negative",
+      "source": "shelter_rank_unselected",
+      "passed": true,
+      "score": 0.864882,
+      "structure": 0.031692,
+      "location": [
+        989,
+        832,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "negative",
+      "source": "shelter_rank_selected",
+      "passed": true,
+      "score": 0.861925,
+      "structure": 0.045466,
+      "location": [
+        989,
+        831,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "negative",
+      "source": "passage_ticket",
+      "passed": true,
+      "score": 0.9095,
+      "structure": 0.081874,
+      "location": [
+        1109,
+        881,
+        117,
+        34
+      ]
+    },
+    {
+      "key": "event_battle_rank_done",
+      "kind": "negative",
+      "source": "shelter_text",
+      "passed": true,
+      "score": 0.670603,
+      "structure": 0.046046,
+      "location": [
+        1050,
+        838,
+        117,
+        34
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

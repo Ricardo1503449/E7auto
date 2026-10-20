@@ -6,12 +6,14 @@ from e7auto.runtime.session import RuntimeSession
 from e7auto.runtime.contracts import RunPolicy
 from e7auto.features.shop.flow import ShopFlow
 from e7auto.features.penguin.flow import PenguinFlow
+from e7auto.features.chaos.flow import ChaosFlow
 from e7auto.resources.templates import TemplateRepository
 from e7auto.runtime.dependencies import AutomationDependencies, SystemClock
 
 NORMAL_COMPLETION = frozenset({
     StopReason.BUDGET_COMPLETE, StopReason.REFRESH_STRATEGY_EXHAUSTED,
     StopReason.PENGUIN_LIMIT_COMPLETE, StopReason.PENGUIN_FUNDS_COMPLETE,
+    StopReason.CHAOS_COMPLETE,
 })
 RUN_POLICY = RunPolicy(
     normal_completion=NORMAL_COMPLETION,
@@ -21,23 +23,33 @@ RUN_POLICY = RunPolicy(
 
 def create_production_session(config, feature_id, overlay, logger, on_snapshot):
     """Called by the worker thread; native capture must never be imported at module scope."""
-    if feature_id not in {"shop", "penguin"}:
+    if feature_id not in {"shop", "penguin", "chaos"}:
         raise ValueError(f"Unknown feature: {feature_id}")
     templates = TemplateRepository(config)
     if feature_id == "shop":
         from e7auto.features.shop.vision import ShopVision
         vision = ShopVision(config, templates)
-    else:
+    elif feature_id == "penguin":
         from e7auto.features.penguin.vision import PenguinVision
         vision = PenguinVision(config, templates)
+    else:
+        from e7auto.features.chaos.vision import ChaosVision
+        vision = ChaosVision(config, templates)
     from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
     from e7auto.platform.input import Win32WindowMessageInputService
     from e7auto.platform.windows import Win32F5HotkeyService, Win32RuntimeEnvironment, Win32WindowService
 
+    capture = WindowsGraphicsCaptureService(
+        logger=logger, frame_timeout_seconds=config.timing.capture_frame_timeout_ms / 1000,
+        recovery_timeout_seconds=config.timing.capture_recovery_timeout_ms / 1000,
+        rebuild_cooldown_seconds=config.timing.capture_rebuild_cooldown_ms / 1000,
+        rebuild_window_seconds=config.timing.capture_rebuild_window_ms / 1000,
+        rebuild_max_attempts=config.timing.capture_rebuild_max_attempts,
+    )
     dependencies = AutomationDependencies(
         windows=Win32WindowService(),
-        capture=WindowsGraphicsCaptureService(logger=logger),
-        inputs=Win32WindowMessageInputService(),
+        capture=capture,
+        inputs=Win32WindowMessageInputService(on_input_complete=capture.mark_input_complete),
         overlay=overlay,
         vision=vision,
         clock=SystemClock(),
@@ -47,7 +59,7 @@ def create_production_session(config, feature_id, overlay, logger, on_snapshot):
     return AutomationSession(config, dependencies, Win32F5HotkeyService(), on_snapshot)
 
 class AutomationSession:
-    """Application facade retaining the two supported start requests."""
+    """Application facade with explicitly selected feature start requests."""
     def __init__(self, config, dependencies, hotkeys, on_snapshot):
         self._config = config
         self._dependencies = dependencies
@@ -112,5 +124,14 @@ class AutomationSession:
         return self._runner.run(
             initial,
             lambda control, publisher: PenguinFlow(self._config, self._dependencies, control, publisher),
+            RUN_POLICY,
+        )
+
+    def run_chaos(self, round_limit: int, run_id: str | None = None) -> RuntimeSnapshot:
+        if type(round_limit) is not int or not 1 <= round_limit <= 2_147_483_647:
+            raise ValueError("round_limit must be a bounded positive integer")
+        initial = RuntimeSnapshot.chaos_run(run_id or uuid.uuid4().hex[:12], round_limit)
+        return self._runner.run(
+            initial, lambda control, publisher: ChaosFlow(self._config, self._dependencies, control, publisher),
             RUN_POLICY,
         )

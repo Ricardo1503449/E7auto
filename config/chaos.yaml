@@ -1,0 +1,5428 @@
+feature: chaos
+baseline:
+- 2322
+- 1306
+rois:
+  depart_result:
+  - 850
+  - 450
+  - 650
+  - 350
+  filter_knight_state:
+  - 990
+  - 350
+  - 220
+  - 180
+  loot_reroll: [250, 940, 1820, 150]
+  event_battle_rank_result: [980, 800, 380, 160]
+  event_rank_entry: [850, 730, 630, 330]
+  # Static lower information panel; exclude animated hero portraits.
+  event_card_change: [1000, 920, 330, 130]
+  title:
+  - 0
+  - 0
+  - 700
+  - 140
+  home_battle:
+  - 2040
+  - 450
+  - 282
+  - 280
+  exploration_card:
+  - 47
+  - 316
+  - 513
+  - 925
+  intro_enter:
+  - 1600
+  - 1100
+  - 722
+  - 206
+  research:
+  - 930
+  - 520
+  - 630
+  - 220
+  lobby_stage_text:
+  - 1720
+  - 1025
+  - 220
+  - 90
+  bottom_right:
+  - 1630
+  - 1100
+  - 692
+  - 206
+  bottom_center:
+  - 830
+  - 1090
+  - 720
+  - 216
+  stage_list:
+  - 960
+  - 20
+  - 1300
+  - 1060
+  supply_cards:
+  - 0
+  - 190
+  - 2322
+  - 870
+  tickets:
+  - 50
+  - 120
+  - 2250
+  - 1040
+  filter_button:
+  - 1200
+  - 0
+  - 340
+  - 130
+  filter_panel:
+  - 710
+  - 170
+  - 1000
+  - 350
+  hero_list:
+  - 580
+  - 120
+  - 1742
+  - 1010
+  hero_detail_name:
+  - 40
+  - 125
+  - 520
+  - 85
+  recruit_results:
+  - 100
+  - 730
+  - 2120
+  - 380
+  map:
+  - 0
+  - 110
+  - 2322
+  - 1020
+  map_hero:
+  - 520
+  - 1120
+  - 170
+  - 160
+  auto:
+  - 1950
+  - 0
+  - 200
+  - 155
+  levelup:
+  - 998
+  - 201
+  - 334
+  - 577
+  levelup_close:
+  - 1060
+  - 1120
+  - 280
+  - 130
+  victory:
+  - 820
+  - 0
+  - 770
+  - 220
+  failed:
+  - 790
+  - 480
+  - 790
+  - 210
+  camp_action:
+  - 1580
+  - 210
+  - 742
+  - 300
+  rank_result:
+  - 1280
+  - 335
+  - 680
+  - 170
+  rank_result_before:
+  - 1300
+  - 335
+  - 235
+  - 170
+  rank_result_after:
+  - 1570
+  - 335
+  - 380
+  - 170
+  result_close:
+  - 1000
+  - 1190
+  - 440
+  - 116
+  bench:
+  - 0
+  - 300
+  - 700
+  - 760
+  formation:
+  - 730
+  - 200
+  - 980
+  - 850
+  text_continue:
+  - 1080
+  - 1190
+  - 190
+  - 116
+  event_options:
+  - 0
+  - 960
+  - 2322
+  - 346
+  loot_cards:
+  - 250
+  - 100
+  - 1820
+  - 970
+  supply_action:
+  - 1580
+  - 650
+  - 742
+  - 310
+  elite_reward:
+  - 1130
+  - 245
+  - 620
+  - 865
+  elite_claim:
+  - 1140
+  - 875
+  - 580
+  - 175
+  boss_reward:
+  - 900
+  - 240
+  - 550
+  - 870
+  boss_claim:
+  - 880
+  - 860
+  - 600
+  - 220
+  shop_cards:
+  - 660
+  - 110
+  - 1480
+  - 1000
+  buy_item:
+  - 900
+  - 550
+  - 570
+  - 180
+  buy_button:
+  - 1060
+  - 815
+  - 750
+  - 240
+  shop_leave_text:
+  - 900
+  - 520
+  - 600
+  - 180
+  confirm:
+  - 1110
+  - 735
+  - 500
+  - 270
+  story_skip:
+  - 2080
+  - 0
+  - 242
+  - 150
+  story_skip_prompt:
+  - 930
+  - 480
+  - 500
+  - 180
+  reward_leave_text:
+  - 850
+  - 480
+  - 780
+  - 240
+  run_title:
+  - 920
+  - 0
+  - 590
+  - 200
+  ticket_reward:
+  - 1340
+  - 250
+  - 650
+  - 890
+  filter_fire_state:
+  - 870
+  - 175
+  - 230
+  - 190
+  filter_water_state:
+  - 990
+  - 175
+  - 230
+  - 190
+  filter_dark_state:
+  - 1350
+  - 175
+  - 230
+  - 190
+  filter_light_state:
+  - 1220
+  - 175
+  - 230
+  - 190
+  filter_thief_state:
+  - 1080
+  - 350
+  - 265
+  - 190
+  network_error:
+  - 900
+  - 545
+  - 540
+  - 105
+  network_retry:
+  - 1060
+  - 760
+  - 300
+  - 120
+  purchase_title_search:
+  - 970
+  - 210
+  - 460
+  - 160
+templates:
+  event_bone_throne:
+    resource:
+      feature: chaos
+      key: event_bone_throne
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8633641807294502
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_sharp_teeth:
+    resource:
+      feature: chaos
+      key: event_sharp_teeth
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8761726078799249
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_collapsed_stairs:
+    resource:
+      feature: chaos
+      key: event_collapsed_stairs
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8818263205013429
+    - 0.1337579617834395
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_broken_cage:
+    resource:
+      feature: chaos
+      key: event_broken_cage
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5121813031161473
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_red_phantom:
+    resource:
+      feature: chaos
+      key: event_red_phantom
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.13793103448275862
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  depart_title:
+    resource:
+      feature: chaos
+      key: depart_title
+    search_roi: title
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  depart_confirm:
+    resource:
+      feature: chaos
+      key: depart_confirm
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.49429037520391517
+    - 0.5111111111111111
+    priority: null
+    deferred: false
+    relative_roi: null
+  depart_missing:
+    resource:
+      feature: chaos
+      key: depart_missing
+    search_roi: depart_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_knight_filter:
+    resource:
+      feature: chaos
+      key: filter_icon_knight_filter
+    search_roi: filter_knight_state
+    threshold: 0.948
+    structure_threshold: 0.8
+    action:
+    - 0.49122807017543857
+    - 0.5060240963855421
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_knight_selected:
+    resource:
+      feature: chaos
+      key: filter_knight_selected
+    search_roi: filter_knight_state
+    threshold: 0.965
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_shadow_rose_all:
+    resource:
+      feature: chaos
+      key: recruited_shadow_rose_all
+    search_roi: ticket_reward
+    threshold: 0.945
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_broken_candlestick:
+    resource:
+      feature: chaos
+      key: event_broken_candlestick
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8870179250407387
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  loot_statue_watcher:
+    resource:
+      feature: chaos
+      key: loot_statue_watcher
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_glowing_stone:
+    resource:
+      feature: chaos
+      key: loot_glowing_stone
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_watcher_breastplate:
+    resource:
+      feature: chaos
+      key: loot_watcher_breastplate
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_painting_road_to_sky_gate:
+    resource:
+      feature: chaos
+      key: loot_painting_road_to_sky_gate
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_statue_blind_saint:
+    resource:
+      feature: chaos
+      key: loot_statue_blind_saint
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_tablet_spirit_king_invitation:
+    resource:
+      feature: chaos
+      key: loot_tablet_spirit_king_invitation
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_flame_hymn:
+    resource:
+      feature: chaos
+      key: loot_painting_flame_hymn
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_summoning_ritual_disk:
+    resource:
+      feature: chaos
+      key: loot_summoning_ritual_disk
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_beacon_ring:
+    resource:
+      feature: chaos
+      key: loot_beacon_ring
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_painting_suppression_night:
+    resource:
+      feature: chaos
+      key: loot_painting_suppression_night
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_temple_investigation_badge:
+    resource:
+      feature: chaos
+      key: loot_temple_investigation_badge
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_sealed_letter:
+    resource:
+      feature: chaos
+      key: loot_sealed_letter
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_alchemy_flask:
+    resource:
+      feature: chaos
+      key: loot_alchemy_flask
+    search_roi: loot_cards
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_reroll_anchor:
+    resource:
+      feature: chaos
+      key: loot_reroll_anchor
+    search_roi: loot_reroll
+    threshold: 0.45
+    structure_threshold: 0.82
+  home_battle:
+    resource:
+      feature: chaos
+      key: home_battle
+    search_roi: home_battle
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  battle_title:
+    resource:
+      feature: chaos
+      key: battle_title
+    search_roi: title
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.12
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  exploration_card:
+    resource:
+      feature: chaos
+      key: exploration_card
+    search_roi: exploration_card
+    threshold: 0.95
+    structure_threshold: 0.8
+    # Preserve the card-centre click after the exact text crop at (68, 7).
+    action:
+    - 0.5
+    - 0.527027027027027
+    action_offset:
+    - 78
+    - 414
+    priority: null
+    deferred: false
+    relative_roi: null
+  exploration_back:
+    resource:
+      feature: chaos
+      key: exploration_back
+    search_roi: title
+    threshold: 0.952
+    structure_threshold: 0.8
+    action:
+    - 0.1
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  intro_enter:
+    resource:
+      feature: chaos
+      key: intro_enter
+    search_roi: intro_enter
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  lobby_research:
+    resource:
+      feature: chaos
+      key: lobby_research
+    search_roi: research
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  start_exploration:
+    resource:
+      feature: chaos
+      key: start_exploration
+    search_roi: bottom_right
+    threshold: 0.966
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_one:
+    resource:
+      feature: chaos
+      key: stage_one
+    search_roi: lobby_stage_text
+    threshold: 0.927
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  contract:
+    resource:
+      feature: chaos
+      key: contract
+    search_roi: supply_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  contract_selected:
+    resource:
+      feature: chaos
+      key: contract_selected
+    search_roi: supply_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  supply_confirm:
+    resource:
+      feature: chaos
+      key: supply_confirm
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  ticket_thief:
+    resource:
+      feature: chaos
+      key: ticket_thief
+    search_roi: tickets
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 1.0
+    action_offset: [0, 350]
+    priority: null
+    deferred: false
+    relative_roi: null
+  title_thief:
+    resource:
+      feature: chaos
+      key: title_thief
+    search_roi: title
+    threshold: 0.964
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  ticket_soul:
+    resource:
+      feature: chaos
+      key: ticket_soul
+    search_roi: tickets
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 1.0
+    action_offset: [0, 350]
+    priority: null
+    deferred: false
+    relative_roi: null
+  title_soul:
+    resource:
+      feature: chaos
+      key: title_soul
+    search_roi: title
+    threshold: 0.964
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  ticket_warrior:
+    resource:
+      feature: chaos
+      key: ticket_warrior
+    search_roi: tickets
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 1.0
+    action_offset: [0, 350]
+    priority: null
+    deferred: false
+    relative_roi: null
+  title_warrior:
+    resource:
+      feature: chaos
+      key: title_warrior
+    search_roi: title
+    threshold: 0.964
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  ticket_knight:
+    resource:
+      feature: chaos
+      key: ticket_knight
+    search_roi: tickets
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 1.0
+    action_offset: [0, 350]
+    priority: null
+    deferred: false
+    relative_roi: null
+  title_knight:
+    resource:
+      feature: chaos
+      key: title_knight
+    search_roi: title
+    threshold: 0.963
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  ticket_all:
+    resource:
+      feature: chaos
+      key: ticket_all
+    search_roi: ticket_reward
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 1.0
+    action_offset: [0, 336]
+    priority: null
+    deferred: false
+    relative_roi: null
+  title_all:
+    resource:
+      feature: chaos
+      key: title_all
+    search_roi: title
+    threshold: 0.965
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_light:
+    resource:
+      feature: chaos
+      key: filter_light
+    search_roi: filter_button
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_dark:
+    resource:
+      feature: chaos
+      key: filter_dark
+    search_roi: filter_button
+    threshold: 0.91
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_dark:
+    resource:
+      feature: chaos
+      key: filter_icon_dark
+    search_roi: filter_panel
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_light:
+    resource:
+      feature: chaos
+      key: filter_icon_light
+    search_roi: filter_panel
+    threshold: 0.967
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_thief_filter:
+    resource:
+      feature: chaos
+      key: filter_icon_thief_filter
+    search_roi: filter_panel
+    threshold: 0.965
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_fire:
+    resource:
+      feature: chaos
+      key: filter_icon_fire
+    search_roi: filter_panel
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_fire_selected:
+    resource:
+      feature: chaos
+      key: filter_fire_selected
+    search_roi: filter_fire_state
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_icon_water:
+    resource:
+      feature: chaos
+      key: filter_icon_water
+    search_roi: filter_panel
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_water_selected:
+    resource:
+      feature: chaos
+      key: filter_water_selected
+    search_roi: filter_water_state
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_dark_selected:
+    resource:
+      feature: chaos
+      key: filter_dark_selected
+    search_roi: filter_dark_state
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_light_selected:
+    resource:
+      feature: chaos
+      key: filter_light_selected
+    search_roi: filter_light_state
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  filter_thief_selected:
+    resource:
+      feature: chaos
+      key: filter_thief_selected
+    search_roi: filter_thief_state
+    threshold: 0.961
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_twins:
+    resource:
+      feature: chaos
+      key: hero_twins
+    search_roi: hero_list
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_twins:
+    resource:
+      feature: chaos
+      key: recruited_twins
+    search_roi: recruit_results
+    threshold: 0.952
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_twins:
+    resource:
+      feature: chaos
+      key: selected_name_twins
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_ivanna:
+    resource:
+      feature: chaos
+      key: hero_ivanna
+    search_roi: hero_list
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_ivanna:
+    resource:
+      feature: chaos
+      key: recruited_ivanna
+    search_roi: recruit_results
+    threshold: 0.959
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_ivanna:
+    resource:
+      feature: chaos
+      key: selected_name_ivanna
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_xiaochun:
+    resource:
+      feature: chaos
+      key: hero_xiaochun
+    search_roi: hero_list
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_xiaochun:
+    resource:
+      feature: chaos
+      key: recruited_xiaochun
+    search_roi: recruit_results
+    threshold: 0.963
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_xiaochun:
+    resource:
+      feature: chaos
+      key: selected_name_xiaochun
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_arowell:
+    resource:
+      feature: chaos
+      key: hero_arowell
+    search_roi: hero_list
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_arowell:
+    resource:
+      feature: chaos
+      key: recruited_arowell
+    search_roi: recruit_results
+    threshold: 0.961
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_arowell:
+    resource:
+      feature: chaos
+      key: selected_name_arowell
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_teacher:
+    resource:
+      feature: chaos
+      key: selected_name_teacher
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_teacher_initial:
+    resource:
+      feature: chaos
+      key: recruited_teacher_initial
+    search_roi: recruit_results
+    threshold: 0.959
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_shadow_rose:
+    resource:
+      feature: chaos
+      key: hero_shadow_rose
+    search_roi: hero_list
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  selected_name_shadow_rose:
+    resource:
+      feature: chaos
+      key: selected_name_shadow_rose
+    search_roi: hero_detail_name
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_shadow_rose:
+    resource:
+      feature: chaos
+      key: recruited_shadow_rose
+    search_roi: recruit_results
+    threshold: 0.959
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_teacher:
+    resource:
+      feature: chaos
+      key: hero_teacher
+    search_roi: hero_list
+    threshold: 0.92
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruited_teacher:
+    resource:
+      feature: chaos
+      key: recruited_teacher
+    search_roi: ticket_reward
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  hero_selected_border:
+    resource:
+      feature: chaos
+      key: hero_selected_border
+    search_roi: hero_list
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruit_confirm:
+    resource:
+      feature: chaos
+      key: recruit_confirm
+    search_roi: bottom_right
+    threshold: 0.967
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  recruit_enter:
+    resource:
+      feature: chaos
+      key: recruit_enter
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  map_hero:
+    resource:
+      feature: chaos
+      key: map_hero
+    search_roi: map_hero
+    threshold: 0.965
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  map_title_outer:
+    resource:
+      feature: chaos
+      key: map_title_outer
+    search_roi: title
+    threshold: 0.964
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  map_title_center:
+    resource:
+      feature: chaos
+      key: map_title_center
+    search_roi: title
+    threshold: 0.963
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  map_title_deep:
+    resource:
+      feature: chaos
+      key: map_title_deep
+    search_roi: title
+    threshold: 0.963
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_normal:
+    resource:
+      feature: chaos
+      key: node_normal
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_event:
+    resource:
+      feature: chaos
+      key: node_event
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_rest:
+    resource:
+      feature: chaos
+      key: node_rest
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_shop:
+    resource:
+      feature: chaos
+      key: node_shop
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_boss:
+    resource:
+      feature: chaos
+      key: node_boss
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_elite:
+    resource:
+      feature: chaos
+      key: node_elite
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_loot:
+    resource:
+      feature: chaos
+      key: node_loot
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_triangle:
+    resource:
+      feature: chaos
+      key: node_triangle
+    search_roi: map
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  node_enter:
+    resource:
+      feature: chaos
+      key: node_enter
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  prepare_normal:
+    resource:
+      feature: chaos
+      key: prepare_normal
+    search_roi: title
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  prepare_elite:
+    resource:
+      feature: chaos
+      key: prepare_elite
+    search_roi: title
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  prepare_boss:
+    resource:
+      feature: chaos
+      key: prepare_boss
+    search_roi: title
+    threshold: 0.969
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  start_battle:
+    resource:
+      feature: chaos
+      key: start_battle
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  auto_static:
+    resource:
+      feature: chaos
+      key: auto_static
+    search_roi: auto
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  levelup:
+    resource:
+      feature: chaos
+      key: levelup
+    search_roi: levelup
+    threshold: 0.958
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  levelup_close:
+    resource:
+      feature: chaos
+      key: levelup_close
+    search_roi: levelup_close
+    threshold: 0.959
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  victory:
+    resource:
+      feature: chaos
+      key: victory
+    search_roi: victory
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  failed:
+    resource:
+      feature: chaos
+      key: failed
+    search_roi: failed
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  continue_exploration:
+    resource:
+      feature: chaos
+      key: continue_exploration
+    search_roi: bottom_center
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  elite_choose_reward:
+    resource:
+      feature: chaos
+      key: elite_choose_reward
+    search_roi: elite_reward
+    threshold: 0.962
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  boss_choose_reward:
+    resource:
+      feature: chaos
+      key: elite_choose_reward
+    search_roi: boss_reward
+    threshold: 0.962
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  elite_claim_complete:
+    resource:
+      feature: chaos
+      key: elite_claim_complete
+    search_roi: elite_claim
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  boss_claim_complete:
+    resource:
+      feature: chaos
+      key: boss_claim_complete
+    search_roi: boss_claim
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  unclaimed_prompt:
+    resource:
+      feature: chaos
+      key: unclaimed_prompt
+    search_roi: reward_leave_text
+    threshold: 0.954
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  unclaimed_confirm:
+    resource:
+      feature: chaos
+      key: unclaimed_confirm
+    search_roi: confirm
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  journey_result:
+    resource:
+      feature: chaos
+      key: journey_result
+    search_roi: run_title
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  journey_close:
+    resource:
+      feature: chaos
+      key: journey_close
+    search_roi: result_close
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  camp_rank:
+    resource:
+      feature: chaos
+      key: camp_rank
+    search_roi: camp_action
+    threshold: 0.957
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  camp_rank_done:
+    resource:
+      feature: chaos
+      key: camp_rank_done
+    search_roi: camp_action
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_title:
+    resource:
+      feature: chaos
+      key: rank_title
+    search_roi: title
+    threshold: 0.967
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_confirm:
+    resource:
+      feature: chaos
+      key: rank_confirm
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_grimoire:
+    resource:
+      feature: chaos
+      key: event_grimoire
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5189944134078213
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_value_1:
+    resource:
+      feature: chaos
+      key: rank_value_1
+    search_roi: rank_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_value_2:
+    resource:
+      feature: chaos
+      key: rank_value_2
+    search_roi: rank_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_value_3:
+    resource:
+      feature: chaos
+      key: rank_value_3
+    search_roi: rank_result
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_value_4:
+    resource:
+      feature: chaos
+      key: rank_value_4
+    search_roi: rank_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_value_5:
+    resource:
+      feature: chaos
+      key: rank_value_5
+    search_roi: rank_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  rank_close:
+    resource:
+      feature: chaos
+      key: rank_close
+    search_roi: result_close
+    threshold: 0.92
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  camp_leave:
+    resource:
+      feature: chaos
+      key: shop_leave
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  bench_teacher:
+    resource:
+      feature: chaos
+      key: bench_teacher
+    search_roi: bench
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  bench_arowell:
+    resource:
+      feature: chaos
+      key: bench_arowell
+    search_roi: bench
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  bench_selected:
+    resource:
+      feature: chaos
+      key: bench_selected
+    search_roi: bench
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  formation_knight:
+    resource:
+      feature: chaos
+      key: formation_knight
+    search_roi: formation
+    threshold: 0.954
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  replace_button:
+    resource:
+      feature: chaos
+      key: replace_button
+    search_roi: formation
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi:
+      anchor: formation_knight
+      offset:
+      - -100
+      - 55
+      - 360
+      - 300
+  event_torch:
+    resource:
+      feature: chaos
+      key: event_torch
+    search_roi: event_options
+    threshold: 0.966
+    structure_threshold: 0.8
+    action:
+    - 0.9166666666666666
+    - 0.12658385093167698
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_mimic:
+    resource:
+      feature: chaos
+      key: event_mimic
+    search_roi: event_options
+    threshold: 0.966
+    structure_threshold: 0.8
+    action:
+    - 0.961038961038961
+    - 0.2387500000000003
+    priority: null
+    deferred: false
+    relative_roi: null
+  text_continue:
+    resource:
+      feature: chaos
+      key: text_continue
+    search_roi: text_continue
+    threshold: 0.89
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  loot_ominous_crystal:
+    resource:
+      feature: chaos
+      key: loot_ominous_crystal
+    search_roi: loot_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_old_sword:
+    resource:
+      feature: chaos
+      key: loot_old_sword
+    search_roi: loot_cards
+    threshold: 0.961
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_lightning:
+    resource:
+      feature: chaos
+      key: loot_lightning
+    search_roi: loot_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_dimension_core:
+    resource:
+      feature: chaos
+      key: loot_dimension_core
+    search_roi: loot_cards
+    threshold: 0.93
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_priest_ring:
+    resource:
+      feature: chaos
+      key: loot_priest_ring
+    search_roi: loot_cards
+    threshold: 0.93
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_star_shard:
+    resource:
+      feature: chaos
+      key: loot_star_shard
+    search_roi: loot_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_confession:
+    resource:
+      feature: chaos
+      key: loot_confession
+    search_roi: loot_cards
+    threshold: 0.963
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_sky_gate:
+    resource:
+      feature: chaos
+      key: loot_sky_gate
+    search_roi: loot_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_guard:
+    resource:
+      feature: chaos
+      key: loot_painting_guard
+    search_roi: loot_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_painting_fire:
+    resource:
+      feature: chaos
+      key: loot_painting_fire
+    search_roi: loot_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_mez:
+    resource:
+      feature: chaos
+      key: loot_painting_mez
+    search_roi: loot_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_automaton_heart:
+    resource:
+      feature: chaos
+      key: loot_automaton_heart
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_sun_shield:
+    resource:
+      feature: chaos
+      key: loot_sun_shield
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_dimension_pouch:
+    resource:
+      feature: chaos
+      key: loot_dimension_pouch
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_painting_panorama:
+    resource:
+      feature: chaos
+      key: loot_painting_panorama
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_sanctuary:
+    resource:
+      feature: chaos
+      key: loot_painting_sanctuary
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_painting_blind_war:
+    resource:
+      feature: chaos
+      key: loot_painting_blind_war
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_two_faces:
+    resource:
+      feature: chaos
+      key: loot_statue_two_faces
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_tablet_persecution:
+    resource:
+      feature: chaos
+      key: loot_tablet_persecution
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_chalice_offering:
+    resource:
+      feature: chaos
+      key: loot_chalice_offering
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_chalice_redemption:
+    resource:
+      feature: chaos
+      key: loot_chalice_redemption
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_ancient_key:
+    resource:
+      feature: chaos
+      key: loot_ancient_key
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_world_tree_leaf:
+    resource:
+      feature: chaos
+      key: loot_world_tree_leaf
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_star_book:
+    resource:
+      feature: chaos
+      key: loot_star_book
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_beast_scale:
+    resource:
+      feature: chaos
+      key: loot_beast_scale
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_gazer:
+    resource:
+      feature: chaos
+      key: loot_statue_gazer
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_tablet_prosperity:
+    resource:
+      feature: chaos
+      key: loot_tablet_prosperity
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_cosmos:
+    resource:
+      feature: chaos
+      key: loot_painting_cosmos
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_painting_apostasy:
+    resource:
+      feature: chaos
+      key: loot_painting_apostasy
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_chalice_silent:
+    resource:
+      feature: chaos
+      key: loot_chalice_silent
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_silent_agreement:
+    resource:
+      feature: chaos
+      key: loot_painting_silent_agreement
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_forgotten_legend:
+    resource:
+      feature: chaos
+      key: loot_painting_forgotten_legend
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_sleeping_priest:
+    resource:
+      feature: chaos
+      key: loot_statue_sleeping_priest
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_tablet_dusk_stars:
+    resource:
+      feature: chaos
+      key: loot_tablet_dusk_stars
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_priest_unfinished_record:
+    resource:
+      feature: chaos
+      key: loot_priest_unfinished_record
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_old_shield:
+    resource:
+      feature: chaos
+      key: loot_old_shield
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_twin_star_ring:
+    resource:
+      feature: chaos
+      key: loot_twin_star_ring
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_summon_mark:
+    resource:
+      feature: chaos
+      key: loot_summon_mark
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_dice_hero:
+    resource:
+      feature: chaos
+      key: loot_dice_hero
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_tablet_sleeping_forest:
+    resource:
+      feature: chaos
+      key: loot_tablet_sleeping_forest
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_selected:
+    resource:
+      feature: chaos
+      key: loot_selected
+    search_roi: loot_cards
+    threshold: 0.966
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  loot_confirm:
+    resource:
+      feature: chaos
+      key: loot_confirm
+    search_roi: bottom_center
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  supply_get_loot:
+    resource:
+      feature: chaos
+      key: supply_get_loot
+    search_roi: supply_action
+    threshold: 0.966
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  supply_loot_done:
+    resource:
+      feature: chaos
+      key: supply_loot_done
+    search_roi: supply_action
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  supply_leave:
+    resource:
+      feature: chaos
+      key: shop_leave
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  investment_insufficient_item:
+    resource:
+      feature: chaos
+      key: investment_insufficient_item
+    search_roi: shop_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  health_restore:
+    resource:
+      feature: chaos
+      key: health_restore
+    search_roi: shop_cards
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  shop_health_entry:
+    resource:
+      feature: chaos
+      key: shop_health_entry
+    search_roi: shop_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  health_restore_unavailable:
+    resource:
+      feature: chaos
+      key: health_restore_unavailable
+    search_roi: shop_cards
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  purchase_health_restore:
+    resource:
+      feature: chaos
+      key: purchase_health_restore
+    search_roi: buy_item
+    threshold: 0.965
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  health_restore_done:
+    resource:
+      feature: chaos
+      key: health_restore_done
+    search_roi: shop_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  investment:
+    resource:
+      feature: chaos
+      key: investment
+    search_roi: shop_cards
+    threshold: 0.968
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  investment_entry:
+    resource:
+      feature: chaos
+      key: shop_health_entry
+    search_roi: shop_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  purchase_title:
+    resource:
+      feature: chaos
+      key: purchase_title
+    search_roi: purchase_title_search
+    threshold: 0.965
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  purchase_item:
+    resource:
+      feature: chaos
+      key: purchase_item
+    search_roi: buy_item
+    threshold: 0.968
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  purchase_confirm:
+    resource:
+      feature: chaos
+      key: purchase_confirm
+    search_roi: buy_button
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  investment_done:
+    resource:
+      feature: chaos
+      key: investment_done
+    search_roi: shop_cards
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  shop_leave:
+    resource:
+      feature: chaos
+      key: shop_leave
+    search_roi: bottom_right
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  shop_leave_prompt:
+    resource:
+      feature: chaos
+      key: shop_leave_prompt
+    search_roi: shop_leave_text
+    threshold: 0.95
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  shop_leave_confirm:
+    resource:
+      feature: chaos
+      key: unclaimed_confirm
+    search_roi: confirm
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  network_connection_abnormal:
+    resource:
+      feature: common
+      key: network_connection_abnormal
+    search_roi: network_error
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  network_retry:
+    resource:
+      feature: common
+      key: network_retry
+    search_roi: network_retry
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_three:
+    resource:
+      feature: chaos
+      key: stage_three
+    search_roi: lobby_stage_text
+    threshold: 0.928
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_01:
+    resource:
+      feature: chaos
+      key: stage_01
+    search_roi: stage_list
+    threshold: 0.985
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_02:
+    resource:
+      feature: chaos
+      key: stage_02
+    search_roi: stage_list
+    threshold: 0.985
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  story_skip:
+    resource:
+      feature: chaos
+      key: story_skip
+    search_roi: story_skip
+    threshold: 0.93
+    structure_threshold: 0.8
+    action: [0.5, 0.5303030303030303]
+    action_offset: [24, 0]
+  story_skip_prompt:
+    resource:
+      feature: chaos
+      key: story_skip_prompt
+    search_roi: story_skip_prompt
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+  story_skip_confirm:
+    resource:
+      feature: chaos
+      key: unclaimed_confirm
+    search_roi: confirm
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+  stage_two:
+    resource:
+      feature: chaos
+      key: stage_two
+    search_roi: lobby_stage_text
+    threshold: 0.928
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_four:
+    resource:
+      feature: chaos
+      key: stage_four
+    search_roi: lobby_stage_text
+    threshold: 0.928
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_five:
+    resource:
+      feature: chaos
+      key: stage_five
+    search_roi: lobby_stage_text
+    threshold: 0.928
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_03:
+    resource:
+      feature: chaos
+      key: stage_03
+    search_roi: stage_list
+    threshold: 0.985
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_04:
+    resource:
+      feature: chaos
+      key: stage_04
+    search_roi: stage_list
+    threshold: 0.985
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_05:
+    resource:
+      feature: chaos
+      key: stage_05
+    search_roi: stage_list
+    threshold: 0.985
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_selected:
+    resource:
+      feature: chaos
+      key: stage_selected
+    search_roi: stage_list
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  stage_confirm:
+    resource:
+      feature: chaos
+      key: stage_confirm
+    search_roi: bottom_center
+    threshold: 0.97
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_trap:
+    resource:
+      feature: chaos
+      key: event_trap
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.17973231357552583
+    - 0.24260355029585798
+    priority: null
+    deferred: false
+    relative_roi: null
+  prepare_event:
+    resource:
+      feature: chaos
+      key: prepare_event
+    search_roi: title
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_reward_close:
+    resource:
+      feature: chaos
+      key: rank_close
+    search_roi: result_close
+    threshold: 0.92
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_tablet:
+    resource:
+      feature: chaos
+      key: event_tablet
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8594249201277955
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_tablet_continue:
+    resource:
+      feature: chaos
+      key: event_tablet_continue
+    search_roi: bottom_center
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.5
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_vestment:
+    resource:
+      feature: chaos
+      key: event_vestment
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.09769484083424808
+    - 0.24404761904761904
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_vestment_with_loot:
+    resource:
+      feature: chaos
+      key: event_vestment_with_loot
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.10035005834305717
+    - 0.1337579617834395
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_vestment_no_loot:
+    resource:
+      feature: chaos
+      key: event_vestment_no_loot
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.10029154518950437
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_golem:
+    resource:
+      feature: chaos
+      key: event_golem
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8867735470941884
+    - 0.24404761904761904
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_giant_eye:
+    resource:
+      feature: chaos
+      key: event_giant_eye
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8602320675105485
+    - 0.25949367088607594
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_prison:
+    resource:
+      feature: chaos
+      key: event_prison
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.13318284424379231
+    - 0.24404761904761904
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_cage:
+    resource:
+      feature: chaos
+      key: event_cage
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.10788149804359978
+    - 0.25949367088607594
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_altar:
+    resource:
+      feature: chaos
+      key: event_altar
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9530892448512586
+    - 0.25949367088607594
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_sword:
+    resource:
+      feature: chaos
+      key: event_sword
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.10021668472372698
+    - 0.25949367088607594
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_cairn:
+    resource:
+      feature: chaos
+      key: event_cairn
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.26737967914438504
+    - 0.24404761904761904
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_mushroom:
+    resource:
+      feature: chaos
+      key: event_mushroom
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.13955928646379853
+    - 0.25949367088607594
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_backpack:
+    resource:
+      feature: chaos
+      key: event_backpack
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.27110694183864914, 0.125]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_spirit_door:
+    resource:
+      feature: chaos
+      key: event_spirit_door
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.7462057335581788, 0.125]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_ghost:
+    resource:
+      feature: chaos
+      key: event_ghost
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.75, 0.125]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_erased_records:
+    resource:
+      feature: chaos
+      key: event_erased_records
+    search_roi: event_options
+    threshold: 0.95
+    structure_threshold: 0.8
+    action: [0.8965724594107035, 0.125]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_fairy_dance:
+    resource:
+      feature: chaos
+      key: event_fairy_dance
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.7719298245614035, 0.13291139240506328]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_blue_flame_altar:
+    resource:
+      feature: chaos
+      key: event_blue_flame_altar
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.7758620689655172, 0.13291139240506328]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_broken_mask:
+    resource:
+      feature: chaos
+      key: event_broken_mask
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.4871373836891078, 0.13291139240506328]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_ancient_corridor:
+    resource:
+      feature: chaos
+      key: event_ancient_corridor
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: [0.20293847566574838, 0.1337579617834395]
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_angry_inscription:
+    resource:
+      feature: chaos
+      key: event_angry_inscription
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8263305322128851
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_ancient_stele:
+    resource:
+      feature: chaos
+      key: event_ancient_stele
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.7429305912596401
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_blood_meteorite:
+    resource:
+      feature: chaos
+      key: event_blood_meteorite
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9533560864618885
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_windy_cliff:
+    resource:
+      feature: chaos
+      key: event_windy_cliff
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8525021949078139
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_forked_path:
+    resource:
+      feature: chaos
+      key: event_forked_path
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.2283464566929134
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_starlight_flower:
+    resource:
+      feature: chaos
+      key: event_starlight_flower
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.1089820359281437
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_grieving_woman:
+    resource:
+      feature: chaos
+      key: event_grieving_woman
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5044713308784851
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_withered_garden:
+    resource:
+      feature: chaos
+      key: event_withered_garden
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9055982436882547
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_prayer_room:
+    resource:
+      feature: chaos
+      key: event_prayer_room
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8694362017804155
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_golden_patterns:
+    resource:
+      feature: chaos
+      key: event_golden_patterns
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5276732939279957
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_clear_pond_low_health:
+    resource:
+      feature: chaos
+      key: event_clear_pond_low_health
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.21243523316062177
+    - 0.1337579617834395
+  event_clear_pond:
+    resource:
+      feature: chaos
+      key: event_clear_pond
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8169257340241797
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_warning_sign_low_health:
+    resource:
+      feature: chaos
+      key: event_warning_sign_low_health
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9069264069264069
+    - 0.1337579617834395
+  event_warning_sign:
+    resource:
+      feature: chaos
+      key: event_warning_sign
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9069264069264069
+    - 0.1337579617834395
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_mysterious_footprints:
+    resource:
+      feature: chaos
+      key: event_mysterious_footprints
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.9192399049881235
+    - 0.125
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_old_armory:
+    resource:
+      feature: chaos
+      key: event_old_armory
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5255562236921226
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_old_armory_left:
+    resource:
+      feature: chaos
+      key: event_old_armory_left
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.1829393627954779
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_blood_circle:
+    resource:
+      feature: chaos
+      key: event_blood_circle
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.48131868131868133
+    - 0.13291139240506328
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_rank_enter:
+    resource:
+      feature: chaos
+      key: event_rank_enter
+    search_roi: event_rank_entry
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43564356435643564
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_library:
+    resource:
+      feature: chaos
+      key: event_library
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.15171755725190839
+    - 0.2469879518072289
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_flame:
+    resource:
+      feature: chaos
+      key: event_flame
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.09347826086956522
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_torn_map:
+    resource:
+      feature: chaos
+      key: event_torn_map
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8174342105263158
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_torn_map_path:
+    resource:
+      feature: chaos
+      key: event_torn_map_path
+    search_roi: event_options
+    threshold: 0.92
+    structure_threshold: 0.8
+    action:
+    - 0.8174342105263158
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_mural:
+    resource:
+      feature: chaos
+      key: event_mural
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8960612691466083
+    - 0.2469879518072289
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_blood_shelter:
+    resource:
+      feature: chaos
+      key: event_blood_shelter
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.10185706246482837
+    - 0.2469879518072289
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_passage:
+    resource:
+      feature: chaos
+      key: event_passage
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.513095238095238
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_observatory:
+    resource:
+      feature: chaos
+      key: event_observatory
+    search_roi: event_options
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.8550474547023296
+    - 0.2611464968152866
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_recruit_enter:
+    resource:
+      feature: chaos
+      key: event_recruit_enter
+    search_roi: event_rank_entry
+    threshold: 0.96
+    structure_threshold: 0.8
+    action:
+    - 0.5
+    - 0.43564356435643564
+    priority: null
+    deferred: false
+    relative_roi: null
+  event_battle_rank_done:
+    resource:
+      feature: chaos
+      key: event_battle_rank_done
+    search_roi: event_battle_rank_result
+    threshold: 0.96
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  loot_moon_charm:
+    resource:
+      feature: chaos
+      key: loot_moon_charm
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_shrine_fragment:
+    resource:
+      feature: chaos
+      key: loot_shrine_fragment
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_star_child:
+    resource:
+      feature: chaos
+      key: loot_statue_star_child
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_tablet_comet_prophecy:
+    resource:
+      feature: chaos
+      key: loot_tablet_comet_prophecy
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_tablet_silver_oath:
+    resource:
+      feature: chaos
+      key: loot_tablet_silver_oath
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_chalice_dark_communion:
+    resource:
+      feature: chaos
+      key: loot_chalice_dark_communion
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_star_mineral:
+    resource:
+      feature: chaos
+      key: loot_painting_star_mineral
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_time_sand:
+    resource:
+      feature: chaos
+      key: loot_time_sand
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_painting_ruins_below:
+    resource:
+      feature: chaos
+      key: loot_painting_ruins_below
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_dice_fate:
+    resource:
+      feature: chaos
+      key: loot_dice_fate
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 0
+    deferred: false
+    relative_roi: null
+  loot_transcendence_crystal:
+    resource:
+      feature: chaos
+      key: loot_transcendence_crystal
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_whisperer:
+    resource:
+      feature: chaos
+      key: loot_statue_whisperer
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_statue_lost_light:
+    resource:
+      feature: chaos
+      key: loot_statue_lost_light
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_statue_guardian_judgment:
+    resource:
+      feature: chaos
+      key: loot_statue_guardian_judgment
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_statue_prayer:
+    resource:
+      feature: chaos
+      key: loot_statue_prayer
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_chalice_seal_hymn:
+    resource:
+      feature: chaos
+      key: loot_chalice_seal_hymn
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_tablet_comet_altar:
+    resource:
+      feature: chaos
+      key: loot_tablet_comet_altar
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_starlight_bottle:
+    resource:
+      feature: chaos
+      key: loot_starlight_bottle
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_dimension_crystal_pillar:
+    resource:
+      feature: chaos
+      key: loot_dimension_crystal_pillar
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_dice_revival:
+    resource:
+      feature: chaos
+      key: loot_dice_revival
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+  loot_dead_compass:
+    resource:
+      feature: chaos
+      key: loot_dead_compass
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_tablet_flame_record:
+    resource:
+      feature: chaos
+      key: loot_tablet_flame_record
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 2
+    deferred: false
+    relative_roi: null
+  loot_guardian_claw:
+    resource:
+      feature: chaos
+      key: loot_guardian_claw
+    search_roi: loot_cards
+    threshold: 0.94
+    structure_threshold: 0.8
+    action: null
+    priority: 1
+    deferred: false
+    relative_roi: null
+schema_version: 1
+timing:
+  poll_ms: 100
+  stable_frames: 3
+  page_timeout_ms: 15000
+  entry_timeout_ms: 15000
+  battle_timeout_ms: 600000
+  settlement_poll_ms: 5000
+  battle_signal_poll_ms: 1000
+  battle_result_settle_ms: 3000
+  story_timeout_ms: 120000
+  story_retry_ms: 2000
+  story_max_attempts: 3
+  network_poll_ms: 1000
+  action_settle_ms: 300
+  loot_entry_settle_ms: 1000
+  supply_loot_entry_settle_ms: 3000
+  event_entry_settle_ms: 4000
+  event_choice_retry_ms: 1500
+  event_choice_max_attempts: 3
+  map_node_retry_ms: 1500
+  map_node_max_attempts: 3
+  event_close_stable_ms: 600
+  event_close_retry_ms: 1500
+  event_close_max_attempts: 3
+geometry:
+  event_card_change_min: 20
+  event_card_stable_max: 3
+  node_triangle_max_dx: 90
+  node_triangle_max_dy: 110
+  hero_selection_offset:
+  - -70
+  - -45
+  - 650
+  - 240
+  loot_selection_half_width: 285
+  shop_entry_max_dx: 180
+  shop_entry_max_dy: 320
+  shop_result_padding: 12
+auto_motion:
+  roi:
+  - 1989
+  - 7
+  - 110
+  - 110
+  template_offset:
+  - 1
+  - 5
+  ring_radii:
+  - 23
+  - 43
+  white_min: 170
+  channel_spread_max: 60
+  angle_step: 5
+  period_degrees: 180
+  visible_score: 0.75
+  core_radius: 17
+  center_search_radius: 3
+  reference_score: 0.75
+  reference_margin: 0.04
+  sample_ms: 100
+  active_min_angle_deg: 10
+  static_confirm_frames: 3
+  static_max_gap_ms: 250
+  static_max_angle_deg: 5
+lineups:
+  dark_twins:
+    heroes:
+    - key: twins
+      ticket: thief
+      attribute: dark
+    - key: ivanna
+      ticket: soul
+      attribute: fire
+    - key: xiaochun
+      ticket: warrior
+      attribute: water
+    - key: arowell
+      ticket: knight
+      attribute: light
+    rank_priority: [xiaochun, twins, ivanna]
+    recruitment_policy: teacher_for_arowell
+    departure_hero: arowell
+  budget:
+    heroes:
+    - key: teacher
+      ticket: thief
+      attribute: dark
+    - key: ivanna
+      ticket: soul
+      attribute: fire
+    - key: xiaochun
+      ticket: warrior
+      attribute: water
+    - key: shadow_rose
+      ticket: knight
+      attribute: dark
+    rank_priority: [xiaochun, shadow_rose, teacher]
+    recruitment_policy: restore_shadow_rose
+    departure_hero: shadow_rose
+pending_loot_templates: []
+text_triangle:
+  edge_distance_px: 2
+  edge_samples: 11
+  edge_margin_fraction: 0.15
+  pixel_contrast_min: 4
+  edge_contrast_min: 6
+  edge_support_min: 0.9
+  interior_brightness_min: 200
+loot_priorities:
+  loot_statue_watcher: 1
+  loot_glowing_stone: 2
+  loot_watcher_breastplate: 1
+  loot_painting_road_to_sky_gate: 0
+  loot_statue_blind_saint: 0
+  loot_tablet_spirit_king_invitation: 2
+  loot_painting_flame_hymn: 1
+  loot_summoning_ritual_disk: 0
+  loot_beacon_ring: 0
+  loot_painting_suppression_night: 1
+  loot_temple_investigation_badge: 2
+  loot_sealed_letter: 1
+  loot_alchemy_flask: 1
+  loot_moon_charm: 1
+  loot_shrine_fragment: 2
+  loot_statue_star_child: 0
+  loot_tablet_comet_prophecy: 2
+  loot_tablet_silver_oath: 2
+  loot_chalice_dark_communion: 2
+  loot_painting_star_mineral: 0
+  loot_time_sand: 2
+  loot_painting_ruins_below: 1
+  loot_dice_fate: 0
+  loot_transcendence_crystal: 2
+  loot_statue_whisperer: 1
+  loot_statue_lost_light: 2
+  loot_statue_guardian_judgment: 1
+  loot_statue_prayer: 2
+  loot_chalice_seal_hymn: 2
+  loot_tablet_comet_altar: 2
+  loot_starlight_bottle: 1
+  loot_dimension_crystal_pillar: 2
+  loot_dice_revival: 1
+  loot_dead_compass: 2
+  loot_tablet_flame_record: 2
+  loot_guardian_claw: 1
+  loot_summon_mark: 2
+  loot_ominous_crystal: 0
+  loot_old_sword: 2
+  loot_lightning: 1
+  loot_dimension_core: 2
+  loot_priest_ring: 1
+  loot_star_shard: 2
+  loot_confession: 2
+  loot_sky_gate: 2
+  loot_painting_guard: 1
+  loot_painting_fire: 2
+  loot_painting_mez: 1
+  loot_automaton_heart: 2
+  loot_sun_shield: 2
+  loot_dimension_pouch: 1
+  loot_painting_panorama: 2
+  loot_painting_sanctuary: 1
+  loot_painting_blind_war: 2
+  loot_statue_two_faces: 1
+  loot_tablet_persecution: 0
+  loot_chalice_offering: 2
+  loot_chalice_redemption: 2
+  loot_ancient_key: 0
+  loot_world_tree_leaf: 0
+  loot_star_book: 1
+  loot_beast_scale: 2
+  loot_statue_gazer: 1
+  loot_tablet_prosperity: 2
+  loot_painting_cosmos: 1
+  loot_painting_apostasy: 0
+  loot_chalice_silent: 2
+  loot_painting_silent_agreement: 2
+  loot_painting_forgotten_legend: 2
+  loot_statue_sleeping_priest: 0
+  loot_tablet_dusk_stars: 1
+  loot_priest_unfinished_record: 2
+  loot_old_shield: 2
+  loot_twin_star_ring: 2
+  loot_dice_hero: 0
+  loot_tablet_sleeping_forest: 0
+stage_selection:
+  # All five lobby identities participate in the same comparison.
+  lobby_scenes:
+    1: stage_one
+    2: stage_two
+    3: stage_three
+    4: stage_four
+    5: stage_five
+  top_entry_max_y: 120
+  lobby_ambiguity_margin: 0.02
+  open_offset:
+  - 250
+  - -125
+  drag_start:
+  - 0.55
+  - 0.3
+  drag_steps: 6
+  step_distance_px: 500
+  step_ms: 10
+  frame_check_ms: 100
+  settle_ms: 500
+  max_drags: 2
+  timeout_ms: 15000
+
+loot_recognition:
+  top_k: 5
+  feature_size: 32
+  feature_shift: 1
+  ambiguity_margin: 0.025
+  card_offset:
+  - -194
+  - -820
+  - 460
+  - 740
+  icon_band:
+  - 60
+  - 65
+  - 340
+  - 215
+  name_band:
+  - 35
+  - 285
+  - 390
+  - 80
+  local_padding: 6
+  anchor_spacing:
+  - 550
+  - 610
+  anchor_y_tolerance: 8
+  layout_tolerance: 6
+  icon_threshold: 0.9
+  icon_structure: 0.8
+  name_threshold: 0.9
+  name_structure: 0.8
+  name_foreground_min: 140
+  name_channel_spread_max: 65
+  name_extra_pixels_max: 12
+  template_regions:
+    loot_statue_watcher:
+      icon: [114, 0, 82, 148]
+      name: [43, 214, 231, 42]
+      origin: [-124, -733]
+    loot_glowing_stone:
+      icon: [99, 0, 111, 74]
+      name: [81, 177, 155, 42]
+      origin: [-124, -696]
+    loot_watcher_breastplate:
+      icon: [81, 0, 122, 114]
+      name: [50, 194, 189, 42]
+      origin: [-110, -713]
+    loot_painting_road_to_sky_gate:
+      icon: [99, 0, 136, 108]
+      name: [0, 192, 340, 42]
+      origin: [-137, -711]
+    loot_statue_blind_saint:
+      icon: [114, 0, 81, 146]
+      name: [24, 212, 268, 42]
+      origin: [-124, -731]
+    loot_tablet_spirit_king_invitation:
+      icon: [97, 0, 116, 119]
+      name: [6, 199, 305, 42]
+      origin: [-125, -718]
+    loot_painting_flame_hymn:
+      icon: [78, 0, 136, 108]
+      name: [16, 192, 268, 42]
+      origin: [-116, -711]
+    loot_summoning_ritual_disk:
+      icon: [105, 0, 115, 104]
+      name: [70, 186, 193, 43]
+      origin: [-132, -706]
+    loot_beacon_ring:
+      icon: [99, 0, 112, 103]
+      name: [82, 187, 154, 42]
+      origin: [-125, -706]
+    loot_painting_suppression_night:
+      icon: [84, 0, 157, 120]
+      name: [23, 184, 293, 56]
+      origin: [-133, -711]
+    loot_temple_investigation_badge:
+      icon: [99, 0, 130, 113]
+      name: [23, 181, 287, 58]
+      origin: [-131, -708]
+    loot_sealed_letter:
+      icon: [76, 0, 156, 105]
+      name: [72, 177, 174, 54]
+      origin: [-125, -704]
+    loot_alchemy_flask:
+      icon: [97, 0, 121, 134]
+      name: [54, 195, 209, 54]
+      origin: [-126, -720]
+    loot_moon_charm:
+      icon: [106, 2, 112, 117]
+      name: [91, 202, 153, 39]
+      origin: [-134, -720]
+    loot_shrine_fragment:
+      icon: [100, 2, 105, 119]
+      name: [67, 197, 188, 39]
+      origin: [-127, -715]
+    loot_statue_star_child:
+      icon: [114, 2, 88, 133]
+      name: [29, 197, 266, 39]
+      origin: [-128, -715]
+    loot_tablet_comet_prophecy:
+      icon: [107, 2, 121, 126]
+      name: [2, 203, 339, 39]
+      origin: [-138, -721]
+    loot_tablet_silver_oath:
+      icon: [97, 2, 120, 126]
+      name: [28, 203, 266, 39]
+      origin: [-127, -721]
+    loot_chalice_dark_communion:
+      icon: [107, 2, 95, 135]
+      name: [26, 204, 265, 39]
+      origin: [-126, -722]
+    loot_painting_star_mineral:
+      icon: [81, 2, 136, 109]
+      name: [20, 196, 266, 40]
+      origin: [-119, -714]
+    loot_time_sand:
+      icon: [118, 2, 84, 121]
+      name: [91, 200, 151, 39]
+      origin: [-132, -718]
+    loot_painting_ruins_below:
+      icon: [100, 2, 136, 108]
+      name: [2, 195, 339, 40]
+      origin: [-138, -713]
+    loot_dice_fate:
+      icon: [91, 2, 135, 141]
+      name: [66, 205, 189, 39]
+      origin: [-127, -723]
+    loot_transcendence_crystal:
+      icon: [99, 2, 125, 104]
+      name: [85, 193, 151, 39]
+      origin: [-126, -711]
+    loot_statue_whisperer:
+      icon: [112, 2, 88, 127]
+      name: [46, 191, 228, 39]
+      origin: [-126, -709]
+    loot_statue_lost_light:
+      icon: [112, 2, 88, 136]
+      name: [46, 201, 228, 39]
+      origin: [-126, -719]
+    loot_statue_guardian_judgment:
+      icon: [104, 2, 98, 149]
+      name: [9, 213, 302, 39]
+      origin: [-126, -731]
+    loot_statue_prayer:
+      icon: [119, 2, 86, 129]
+      name: [53, 194, 227, 39]
+      origin: [-132, -712]
+    loot_chalice_seal_hymn:
+      icon: [91, 2, 94, 135]
+      name: [10, 204, 265, 39]
+      origin: [-109, -722]
+    loot_tablet_comet_altar:
+      icon: [94, 2, 121, 126]
+      name: [26, 203, 266, 39]
+      origin: [-125, -721]
+    loot_starlight_bottle:
+      icon: [113, 2, 80, 125]
+      name: [81, 202, 154, 39]
+      origin: [-124, -720]
+    loot_dimension_crystal_pillar:
+      icon: [109, 2, 103, 136]
+      name: [70, 205, 190, 39]
+      origin: [-132, -723]
+    loot_dice_revival:
+      icon: [98, 2, 134, 142]
+      name: [73, 206, 190, 39]
+      origin: [-134, -724]
+    loot_dead_compass:
+      icon: [96, 2, 129, 103]
+      name: [70, 188, 190, 39]
+      origin: [-131, -706]
+    loot_tablet_flame_record:
+      icon: [89, 2, 121, 126]
+      name: [21, 203, 265, 39]
+      origin: [-120, -721]
+    loot_guardian_claw:
+      icon: [92, 2, 119, 104]
+      name: [83, 196, 152, 39]
+      origin: [-126, -714]
+    loot_summon_mark:
+      icon: [107, 2, 117, 114]
+      name: [73, 194, 190, 39]
+      origin: [-134, -712]
+    loot_ominous_crystal:
+      icon: [100, 0, 105, 106]
+      name: [64, 188, 190, 39]
+      origin: [-125, -706]
+    loot_old_sword:
+      icon: [102, 0, 101, 115]
+      name: [80, 193, 150, 39]
+      origin: [-122, -711]
+    loot_lightning:
+      icon: [108, 0, 110, 96]
+      name: [88, 187, 150, 39]
+      origin: [-129, -705]
+    loot_dimension_core:
+      icon: [92, 0, 112, 111]
+      name: [98, 193, 115, 39]
+      origin: [-123, -711]
+    loot_priest_ring:
+      icon: [92, 0, 112, 92]
+      name: [59, 180, 190, 39]
+      origin: [-120, -698]
+    loot_star_shard:
+      icon: [85, 0, 121, 125]
+      name: [18, 200, 264, 39]
+      origin: [-116, -718]
+    loot_confession:
+      icon: [97, 0, 94, 133]
+      name: [15, 200, 266, 40]
+      origin: [-114, -718]
+    loot_sky_gate:
+      icon: [97, 0, 121, 124]
+      name: [30, 199, 264, 39]
+      origin: [-128, -717]
+    loot_painting_guard:
+      icon: [95, 0, 136, 106]
+      name: [0, 191, 334, 40]
+      origin: [-133, -709]
+    loot_painting_fire:
+      icon: [83, 0, 137, 107]
+      name: [22, 192, 266, 40]
+      origin: [-122, -710]
+    loot_painting_mez:
+      icon: [83, 0, 136, 106]
+      name: [41, 191, 227, 40]
+      origin: [-121, -709]
+    loot_automaton_heart:
+      icon: [96, 2, 127, 115]
+      name: [57, 195, 223, 39]
+      origin: [-132, -713]
+    loot_sun_shield:
+      icon: [104, 2, 110, 122]
+      name: [89, 196, 153, 39]
+      origin: [-132, -714]
+    loot_dimension_pouch:
+      icon: [99, 2, 114, 126]
+      name: [65, 199, 190, 39]
+      origin: [-126, -717]
+    loot_painting_panorama:
+      icon: [99, 2, 136, 108]
+      name: [2, 195, 338, 40]
+      origin: [-137, -713]
+    loot_painting_sanctuary:
+      icon: [87, 2, 137, 109]
+      name: [65, 196, 190, 40]
+      origin: [-126, -714]
+    loot_painting_blind_war:
+      icon: [89, 2, 136, 108]
+      name: [28, 195, 266, 40]
+      origin: [-127, -713]
+    loot_statue_two_faces:
+      icon: [111, 2, 88, 144]
+      name: [64, 209, 190, 39]
+      origin: [-125, -727]
+    loot_tablet_persecution:
+      icon: [98, 2, 121, 126]
+      name: [29, 203, 266, 39]
+      origin: [-129, -721]
+    loot_chalice_offering:
+      icon: [108, 2, 95, 135]
+      name: [27, 204, 266, 39]
+      origin: [-126, -722]
+    loot_chalice_redemption:
+      icon: [108, 2, 95, 135]
+      name: [27, 204, 266, 39]
+      origin: [-126, -722]
+    loot_ancient_key:
+      icon: [96, 2, 119, 118]
+      name: [83, 194, 153, 39]
+      origin: [-126, -712]
+    loot_world_tree_leaf:
+      icon: [100, 2, 112, 131]
+      name: [83, 205, 152, 39]
+      origin: [-126, -723]
+    loot_star_book:
+      icon: [96, 2, 127, 134]
+      name: [86, 204, 152, 39]
+      origin: [-128, -722]
+    loot_beast_scale:
+      icon: [108, 2, 93, 106]
+      name: [47, 192, 227, 39]
+      origin: [-126, -710]
+    loot_statue_gazer:
+      icon: [113, 2, 87, 122]
+      name: [46, 186, 228, 39]
+      origin: [-126, -704]
+    loot_tablet_prosperity:
+      icon: [92, 2, 121, 126]
+      name: [23, 203, 266, 39]
+      origin: [-123, -721]
+    loot_painting_cosmos:
+      icon: [89, 2, 136, 108]
+      name: [28, 195, 266, 40]
+      origin: [-127, -713]
+    loot_painting_apostasy:
+      icon: [90, 2, 135, 108]
+      name: [31, 195, 261, 40]
+      origin: [-128, -713]
+    loot_chalice_silent:
+      icon: [110, 2, 95, 136]
+      name: [29, 204, 266, 39]
+      origin: [-128, -722]
+    loot_painting_silent_agreement:
+      icon: [89, 2, 137, 108]
+      name: [30, 195, 264, 40]
+      origin: [-128, -713]
+    loot_painting_forgotten_legend:
+      icon: [100, 2, 136, 108]
+      name: [2, 195, 340, 40]
+      origin: [-138, -713]
+    loot_statue_sleeping_priest:
+      icon: [112, 2, 88, 146]
+      name: [28, 211, 263, 39]
+      origin: [-126, -729]
+    loot_tablet_dusk_stars:
+      icon: [95, 2, 121, 126]
+      name: [27, 203, 265, 39]
+      origin: [-126, -721]
+    loot_priest_unfinished_record:
+      icon: [101, 2, 126, 103]
+      name: [35, 194, 265, 39]
+      origin: [-134, -712]
+    loot_old_shield:
+      icon: [107, 2, 110, 122]
+      name: [93, 196, 152, 39]
+      origin: [-134, -714]
+    loot_twin_star_ring:
+      icon: [103, 2, 118, 100]
+      name: [92, 188, 152, 39]
+      origin: [-134, -706]
+    loot_dice_hero:
+      icon: [91, 2, 135, 141]
+      name: [66, 205, 190, 39]
+      origin: [-127, -723]
+    loot_tablet_sleeping_forest:
+      icon: [107, 2, 121, 126]
+      name: [2, 203, 338, 39]
+      origin: [-138, -721]
+
+event_recognition:
+  feature_width: 128
+  feature_height: 16
+  feature_shift: 1
+  foreground_min: 150
+  channel_spread_max: 65
+  local_padding: 12
+  top_k: 3
+  readiness:
+    contrast_kernel: 9
+    feature_shift: 3
+    alignment_tolerance: 1
+    similarity_min: 0.55
+    contrast_ratio_min: 0.60
+    feature_change_max: 0.025
+  layouts:
+    2:
+    - - 480
+      - 1048
+      - 670
+      - 80
+    - - 1170
+      - 1048
+      - 670
+      - 80
+    3:
+    - - 136
+      - 1048
+      - 670
+      - 80
+    - - 825
+      - 1048
+      - 670
+      - 80
+    - - 1515
+      - 1048
+      - 670
+      - 80
+  templates:
+    event_bone_throne:
+      layout: 3
+      origin:
+      - 264
+      - 1069
+      titles:
+      - - 129
+        - 5
+        - 155
+        - 32
+      - - 728
+        - 5
+        - 336
+        - 33
+      - - 1401
+        - 5
+        - 370
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_sharp_teeth:
+      layout: 2
+      origin:
+      - 576
+      - 1069
+      titles:
+      - - 162
+        - 5
+        - 155
+        - 33
+      - - 797
+        - 5
+        - 264
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_collapsed_stairs:
+      layout: 2
+      origin:
+      - 525
+      - 1069
+      titles:
+      - - 159
+        - 5
+        - 263
+        - 33
+      - - 848
+        - 5
+        - 264
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_broken_cage:
+      layout: 3
+      origin:
+      - 257
+      - 1069
+      titles:
+      - - 137
+        - 5
+        - 154
+        - 33
+      - - 789
+        - 5
+        - 228
+        - 33
+      - - 1426
+        - 5
+        - 334
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_red_phantom:
+      layout: 3
+      origin:
+      - 220
+      - 1069
+      titles:
+      - - 120
+        - 5
+        - 263
+        - 33
+      - - 844
+        - 5
+        - 192
+        - 32
+      - - 1553
+        - 5
+        - 154
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_broken_candlestick:
+      layout: 3
+      origin:
+      - 217
+      - 1069
+      titles:
+      - - 87
+        - 5
+        - 335
+        - 33
+      - - 776
+        - 5
+        - 335
+        - 33
+      - - 1428
+        - 5
+        - 408
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_grimoire:
+      layout: 3
+      origin:
+      - 232
+      - 1069
+      titles:
+      - - 108
+        - 5
+        - 263
+        - 33
+      - - 742
+        - 5
+        - 372
+        - 33
+      - - 1449
+        - 5
+        - 336
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_warning_sign_low_health:
+      layout: 3
+      origin:
+      - 174
+      - 1069
+      titles:
+      - - 130
+        - 5
+        - 335
+        - 33
+      - - 837
+        - 5
+        - 299
+        - 33
+      - - 1508
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 0.0
+      - 1.0
+    event_warning_sign:
+      layout: 3
+      origin:
+      - 174
+      - 1069
+      titles:
+      - - 130
+        - 5
+        - 335
+        - 33
+      - - 837
+        - 5
+        - 299
+        - 33
+      - - 1508
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_mysterious_footprints:
+      layout: 3
+      origin:
+      - 302
+      - 1069
+      titles:
+      - - 73
+        - 5
+        - 191
+        - 33
+      - - 763
+        - 5
+        - 191
+        - 33
+      - - 1416
+        - 5
+        - 263
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_old_armory:
+      layout: 3
+      origin:
+      - 287
+      - 1069
+      titles:
+      - - 34
+        - 5
+        - 300
+        - 33
+      - - 724
+        - 5
+        - 299
+        - 33
+      - - 1467
+        - 5
+        - 191
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_blood_circle:
+      layout: 3
+      origin:
+      - 285
+      - 1069
+      titles:
+      - - 36
+        - 5
+        - 300
+        - 33
+      - - 690
+        - 5
+        - 371
+        - 33
+      - - 1378
+        - 5
+        - 372
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_withered_garden:
+      layout: 3
+      origin:
+      - 200
+      - 1069
+      titles:
+      - - 121
+        - 5
+        - 300
+        - 33
+      - - 793
+        - 5
+        - 335
+        - 33
+      - - 1481
+        - 5
+        - 336
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_prayer_room:
+      layout: 2
+      origin:
+      - 631
+      - 1069
+      titles:
+      - - 35
+        - 5
+        - 299
+        - 33
+      - - 742
+        - 5
+        - 264
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_golden_patterns:
+      layout: 3
+      origin:
+      - 179
+      - 1069
+      titles:
+      - - 124
+        - 5
+        - 336
+        - 33
+      - - 940
+        - 5
+        - 83
+        - 33
+      - - 1484
+        - 5
+        - 372
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_clear_pond_low_health:
+      layout: 2
+      origin:
+      - 564
+      - 1069
+      titles:
+      - - 138
+        - 5
+        - 227
+        - 33
+      - - 791
+        - 5
+        - 300
+        - 33
+      weights:
+      - 1.0
+      - 0.0
+    event_clear_pond:
+      layout: 2
+      origin:
+      - 564
+      - 1069
+      titles:
+      - - 138
+        - 5
+        - 227
+        - 33
+      - - 791
+        - 5
+        - 300
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_altar:
+      layout: 3
+      origin:
+      - 184
+      - 1069
+      titles:
+      - - 210
+        - 5
+        - 154
+        - 33
+      - - 899
+        - 5
+        - 155
+        - 33
+      - - 1588
+        - 5
+        - 155
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_ancient_corridor:
+      layout: 2
+      origin:
+      - 589
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 444
+        - 33
+      - - 749
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_backpack:
+      layout: 2
+      origin:
+      - 521
+      - 1069
+      titles:
+      - - 200
+        - 5
+        - 190
+        - 33
+      - - 906
+        - 5
+        - 155
+        - 33
+      weights:
+      - 1.0
+      - 0.35
+    event_blood_shelter:
+      layout: 3
+      origin:
+      - 299
+      - 1069
+      titles:
+      - - 59
+        - 5
+        - 227
+        - 33
+      - - 693
+        - 5
+        - 336
+        - 33
+      - - 1328
+        - 5
+        - 444
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_blue_flame_altar:
+      layout: 2
+      origin:
+      - 520
+      - 1069
+      titles:
+      - - 182
+        - 5
+        - 227
+        - 33
+      - - 799
+        - 5
+        - 372
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_broken_mask:
+      layout: 3
+      origin:
+      - 271
+      - 1069
+      titles:
+      - - 33
+        - 5
+        - 335
+        - 33
+      - - 776
+        - 5
+        - 227
+        - 33
+      - - 1411
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_cage:
+      layout: 3
+      origin:
+      - 287
+      - 1069
+      titles:
+      - - 106
+        - 5
+        - 155
+        - 33
+      - - 705
+        - 5
+        - 336
+        - 33
+      - - 1340
+        - 5
+        - 444
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_cairn:
+      layout: 2
+      origin:
+      - 520
+      - 1069
+      titles:
+      - - 164
+        - 5
+        - 263
+        - 33
+      - - 853
+        - 5
+        - 264
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_erased_records:
+      layout: 3
+      origin:
+      - 359
+      - 1069
+      titles:
+      - - 36
+        - 5
+        - 153
+        - 33
+      - - 724
+        - 5
+        - 155
+        - 33
+      - - 1324
+        - 5
+        - 334
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_fairy_dance:
+      layout: 2
+      origin:
+      - 542
+      - 1069
+      titles:
+      - - 88
+        - 5
+        - 371
+        - 33
+      - - 760
+        - 5
+        - 407
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_flame:
+      layout: 3
+      origin:
+      - 308
+      - 1069
+      titles:
+      - - 14
+        - 5
+        - 299
+        - 33
+      - - 721
+        - 5
+        - 263
+        - 33
+      - - 1392
+        - 5
+        - 299
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_ghost:
+      layout: 2
+      origin:
+      - 643
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 335
+        - 33
+      - - 624
+        - 5
+        - 478
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_giant_eye:
+      layout: 3
+      origin:
+      - 219
+      - 1069
+      titles:
+      - - 157
+        - 5
+        - 190
+        - 33
+      - - 810
+        - 5
+        - 263
+        - 33
+      - - 1553
+        - 5
+        - 155
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_golem:
+      layout: 2
+      origin:
+      - 625
+      - 1069
+      titles:
+      - - 6
+        - 5
+        - 370
+        - 33
+      - - 767
+        - 5
+        - 226
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_library:
+      layout: 2
+      origin:
+      - 661
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 299
+        - 33
+      - - 767
+        - 5
+        - 154
+        - 33
+      weights:
+      - 1.0
+      - 0.35
+    event_mimic:
+      layout: 2
+      origin:
+      - 582
+      - 1073
+      titles:
+      - - 103
+        - 1
+        - 262
+        - 33
+      - - 845
+        - 1
+        - 155
+        - 33
+      weights:
+      - 1.0
+      - 0.35
+    event_mural:
+      layout: 3
+      origin:
+      - 212
+      - 1069
+      titles:
+      - - 74
+        - 5
+        - 371
+        - 33
+      - - 746
+        - 5
+        - 406
+        - 33
+      - - 1453
+        - 5
+        - 370
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_mushroom:
+      layout: 3
+      origin:
+      - 214
+      - 1069
+      titles:
+      - - 54
+        - 5
+        - 407
+        - 33
+      - - 869
+        - 5
+        - 155
+        - 33
+      - - 1432
+        - 5
+        - 407
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_observatory:
+      layout: 2
+      origin:
+      - 519
+      - 1069
+      titles:
+      - - 112
+        - 5
+        - 370
+        - 33
+      - - 819
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 0.35
+    event_passage:
+      layout: 3
+      origin:
+      - 299
+      - 1069
+      titles:
+      - - 6
+        - 5
+        - 334
+        - 33
+      - - 659
+        - 5
+        - 406
+        - 33
+      - - 1437
+        - 5
+        - 227
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_prison:
+      layout: 3
+      origin:
+      - 244
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 444
+        - 33
+      - - 676
+        - 5
+        - 480
+        - 33
+      - - 1456
+        - 5
+        - 299
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_spirit_door:
+      layout: 2
+      origin:
+      - 625
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 371
+        - 33
+      - - 749
+        - 5
+        - 263
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_sword:
+      layout: 3
+      origin:
+      - 295
+      - 1069
+      titles:
+      - - 82
+        - 5
+        - 189
+        - 33
+      - - 770
+        - 5
+        - 191
+        - 33
+      - - 1369
+        - 5
+        - 371
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_tablet:
+      layout: 2
+      origin:
+      - 703
+      - 1069
+      titles:
+      - - 36
+        - 5
+        - 154
+        - 33
+      - - 671
+        - 5
+        - 263
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_torch:
+      layout: 2
+      origin:
+      - 531
+      - 1073
+      titles:
+      - - 208
+        - 1
+        - 154
+        - 33
+      - - 807
+        - 1
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_torn_map:
+      layout: 2
+      origin:
+      - 516
+      - 1069
+      titles:
+      - - 103
+        - 5
+        - 393
+        - 33
+      - - 767
+        - 5
+        - 444
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_torn_map_path:
+      layout: 2
+      origin:
+      - 516
+      - 1069
+      titles:
+      - - 95
+        - 5
+        - 410
+        - 35
+      - - 765
+        - 5
+        - 447
+        - 36
+      weights:
+      - 1.0
+      - 1.0
+    event_trap:
+      layout: 2
+      origin:
+      - 632
+      - 1069
+      titles:
+      - - 70
+        - 5
+        - 227
+        - 33
+      - - 706
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_vestment:
+      layout: 2
+      origin:
+      - 731
+      - 1069
+      titles:
+      - - 8
+        - 5
+        - 154
+        - 33
+      - - 642
+        - 5
+        - 264
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_angry_inscription:
+      layout: 2
+      origin:
+      - 625
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 371
+        - 33
+      - - 694
+        - 5
+        - 372
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_ancient_stele:
+      layout: 2
+      origin:
+      - 643
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 335
+        - 33
+      - - 748
+        - 5
+        - 227
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_blood_meteorite:
+      layout: 3
+      origin:
+      - 174
+      - 1069
+      titles:
+      - - 183
+        - 5
+        - 228
+        - 33
+      - - 872
+        - 5
+        - 228
+        - 33
+      - - 1598
+        - 5
+        - 155
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_windy_cliff:
+      layout: 2
+      origin:
+      - 539
+      - 1069
+      titles:
+      - - 145
+        - 5
+        - 263
+        - 33
+      - - 799
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 0.35
+    event_forked_path:
+      layout: 2
+      origin:
+      - 520
+      - 1069
+      titles:
+      - - 182
+        - 5
+        - 227
+        - 33
+      - - 871
+        - 5
+        - 227
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+    event_starlight_flower:
+      layout: 3
+      origin:
+      - 298
+      - 1069
+      titles:
+      - - 5
+        - 5
+        - 336
+        - 33
+      - - 604
+        - 5
+        - 516
+        - 33
+      - - 1439
+        - 5
+        - 226
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+    event_grieving_woman:
+      layout: 3
+      origin:
+      - 202
+      - 1069
+      titles:
+      - - 101
+        - 5
+        - 336
+        - 33
+      - - 790
+        - 5
+        - 336
+        - 33
+      - - 1480
+        - 5
+        - 335
+        - 33
+      weights:
+      - 1.0
+      - 1.0
+      - 1.0
+
+# Shared by reference and non-reference sizes; rectangles use complete-template baseline pixels.
+component_matching:
+  tolerance: [6, 8]
+  templates:
+    hero_xiaochun:
+      primary: [55, 0, 73, 46]
+      secondary: [0, 0, 55, 46]
+    hero_twins:
+      primary: [55, 0, 238, 46]
+      secondary: [0, 0, 55, 46]
+    hero_ivanna:
+      primary: [50, 0, 108, 42]
+      secondary: [0, 0, 50, 42]
+    hero_arowell:
+      primary: [52, 0, 236, 45]
+      secondary: [0, 0, 52, 45]
+    hero_teacher:
+      primary: [53, 0, 240, 46]
+      secondary: [0, 0, 53, 46]
+    hero_shadow_rose:
+      primary: [52, 0, 139, 47]
+      secondary: [0, 0, 52, 47]
+    bench_teacher:
+      primary: [56, 0, 250, 47]
+      secondary: [0, 0, 56, 47]
+    bench_arowell:
+      primary: [54, 0, 247, 47]
+      secondary: [0, 0, 54, 47]
+    contract:
+      primary: [0, 190, 200, 75]
+      secondary: [0, 0, 200, 190]
+    ticket_thief:
+      primary: [0, 165, 196, 79]
+      secondary: [0, 0, 196, 165]
+    ticket_soul:
+      primary: [0, 158, 236, 81]
+      secondary: [0, 0, 236, 158]
+    ticket_warrior:
+      primary: [0, 158, 195, 82]
+      secondary: [0, 0, 195, 158]
+    ticket_knight:
+      primary: [0, 161, 196, 82]
+      secondary: [0, 0, 196, 161]
+    ticket_all:
+      primary: [0, 143, 223, 82]
+      secondary: [0, 0, 223, 143]
+    journey_close:
+      primary: [32, 0, 121, 28]
+      secondary: [0, 0, 32, 28]
+    rank_close:
+      primary: [37, 0, 148, 50]
+      secondary: [0, 0, 37, 50]
+    purchase_item:
+      primary: [176, 0, 206, 125]
+      secondary: [0, 0, 176, 125]
+    purchase_health_restore:
+      primary: [173, 0, 282, 97]
+      secondary: [0, 0, 173, 97]
+    rank_value_1:
+      primary: [0, 0, 63, 56]
+      secondary: [63, 0, 41, 56]
+    rank_value_2:
+      primary: [0, 0, 63, 56]
+      secondary: [63, 0, 49, 56]
+    rank_value_3:
+      primary: [0, 0, 63, 58]
+      secondary: [63, 0, 39, 58]
+    rank_value_4:
+      primary: [0, 0, 61, 60]
+      secondary: [61, 0, 51, 60]
+    rank_value_5:
+      primary: [0, 0, 61, 60]
+      secondary: [61, 0, 39, 60]

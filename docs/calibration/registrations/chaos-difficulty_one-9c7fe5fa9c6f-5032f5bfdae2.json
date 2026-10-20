@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "difficulty_one",
+  "operation": "retire",
+  "previous_filename": "entry/difficulty_one.png",
+  "retirement_reason": "User approved removing the left difficulty-number confirmation. Target row identity/highlight and lobby verification remain; 72 directly related tests passed before retirement.",
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\entry\\difficulty_one.png",
+  "original_sha256": "9c7fe5fa9c6f6776be38373533dc3ec632e070a3d8a8616574b1655a7ae278dc",
+  "editing_basis": "Retirement candidate preserves existing formal PNG bytes exactly.",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-difficulty_one-9c7fe5fa9c6f-f14fa54c3438.json",
+    "record_sha256": "f14fa54c343869f3c726609c392942178bd3a6d76cb9a9d644d5386be46f8097"
+  },
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260925-154026-stage-two-five-candidates-81a64b7b\\results\\flow_validation.json",
+  "validation_sha256": "b454f013fc229f57f216db30d3ec67d69bf588359814e1c494b871bce80b4953"
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "ticket_thief",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-dfd30a5d-31e2-4a0a-8861-2c5ef5824596.png",
+  "original_sha256": "27f61b515ab50a5e23efa663ad91b5b06e53d7c1ddf096938df4176c20214209",
+  "client_rect": null,
+  "crop": [
+    71,
+    55,
+    196,
+    244
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_initial",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1826,
+        335,
+        196,
+        244
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_empty",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1826,
+        335,
+        196,
+        244
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_initial",
+      "kind": "synthetic_1536x864",
+      "score": 0.989273,
+      "structure": 0.960968,
+      "location": [
+        1827,
+        336,
+        196,
+        244
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\ticket_thief.png",
+  "mask_sha256": "0e2f213a4245dfd435b217ff886256a68b51397b6bdeb1ac0734e2491cd6e7f4",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "2f4c2a055a8ea0112d75925ad20ecfb6b4df52ce918d8a7f668931cc32382438",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\ticket_thief.source.json",
+    "sha256": "9f461af8b53ae09289838c7e3f550bb06172332b5c3c27a29c09671ad7423847"
+  },
+  "search_roi": [
+    50,
+    120,
+    2250,
+    1040
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "ticket_thief"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "ticket_thief.png",
+  "target_filename": "recruitment/ticket_thief.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-ticket_thief-2f4c2a055a8e-93290da5e527.json",
+    "record_sha256": "93290da5e5279a2f636e0fed4768226c225415618f51795f7dadea81c2d1056c"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

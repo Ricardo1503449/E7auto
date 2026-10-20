@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_broken_mask",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 220746.png",
+  "original_sha256": "0e41fc265fb464ae9c13dacfbf48f6fbcf21510ab201f3af7ce67c885947f7d2",
+  "client_rect": [
+    43,
+    103,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    271,
+    1069,
+    1827,
+    158
+  ],
+  "candidate_sha256": "54bcc51466efada1e4805e3228ae753a456eca0af1401da4c35afa0c698be35c",
+  "editing_basis": "Keep original RGB and alpha strokes of all 3 option titles/effects. Other backgrounds, borders, magnifiers and stars excluded; ignored RGB cleared to zero.",
+  "review_status": "approved",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_broken_mask",
+      "kind": "positive_runtime",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_broken_mask', confidence=1.0, bounds=Rect(x=271, y=1069, width=1827, height=158), anchor=Point(x=1161, y=1090))"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "existing_event_conflicts",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "positive_runtime",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_broken_mask', confidence=0.980692982673645, bounds=Rect(x=271, y=1069, width=1827, height=158), anchor=Point(x=1161, y=1090))"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "existing_event_conflicts",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "fairy_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "fairy_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_broken_mask",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Each event has one real options positive.",
+    "1536x864 samples are synthetic resizes representing the 2K desktop target client size, not live multi-resolution captures.",
+    "No returned-map screenshots or live input test; only supplied branches are covered."
+  ],
+  "approval": "User explicitly approved this five-template batch: 通过模板",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

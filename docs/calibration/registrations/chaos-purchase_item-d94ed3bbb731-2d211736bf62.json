@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "purchase_item",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-42d3f057-da13-4dba-8f5e-c04d41c46413.png",
+  "original_sha256": "afeab7b604f74e4ab4fa363900c64da916ab8adb3764cde96738f966f57200e7",
+  "client_rect": [
+    47,
+    103,
+    2322,
+    1306
+  ],
+  "crop": [
+    928,
+    572,
+    382,
+    125
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "buy_dialog",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        928,
+        572,
+        382,
+        125
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "buy_dialog",
+      "kind": "synthetic_1536x864",
+      "score": 0.983393,
+      "structure": 0.965189,
+      "location": [
+        929,
+        572,
+        382,
+        125
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision10_masks\\purchase_item.png",
+  "mask_sha256": "005f183b9d99ed49c2e09381052e7908eb1ba4cece8100176a711bfd41b1a0e0",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "d94ed3bbb73123ded7d402be9a7a06634c3ed330c9658ec70d4e8df7fa3643fa",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision10.json",
+      "sha256": "0391d3813195ce6c7210ce14e8a7fdb473f9adce42a3aa536deb3caada9e6c2c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\purchase_item.source.json",
+    "sha256": "7c076c7b5d971723b0f8c8c20849435e9ad004b5c1da0c44152617ff94c0709d"
+  },
+  "search_roi": [
+    900,
+    550,
+    570,
+    180
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留左侧完整晶体及环绕光环、右侧两行未来投资文字；紫色弹窗底图和中间分隔线透明。取自弹窗原始RGB，参考轮廓仅辅助离线遮罩。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "purchase_item"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision10_validation.json",
+      "sha256": "8b8d0445eacf4af1750afa1a2832ad2ac4f3aee01f152bec74ed22304c18132e"
+    }
+  ]
+}

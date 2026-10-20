@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_prayer_room",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 172247.png",
+  "original_sha256": "5e1a38f0fd88f59a6af3575322e2b0492da3c11644c508670d5b29297e1516da",
+  "client_rect": [
+    59,
+    100,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    631,
+    1069,
+    1011,
+    168
+  ],
+  "candidate_sha256": "950d473f8b90a7da3305cb6c9cf81bde3a091d473e9f32d26892cf42f7c10825",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      631,
+      1069
+    ],
+    "titles": [
+      [
+        35,
+        5,
+        299,
+        33
+      ],
+      [
+        742,
+        5,
+        264,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "prayer_options",
+      "expected": "event_prayer_room",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_prayer_room', confidence=1.0, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=1.0, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=1.0, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 406.723
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_prayer_room",
+        "event_spirit_door",
+        "event_golem"
+      ]
+    },
+    {
+      "source": "prayer_options",
+      "expected": "event_prayer_room",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_prayer_room', confidence=0.988700807094574, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=0.988700807094574, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=0.988700807094574, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 416.293
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_prayer_room",
+        "event_spirit_door",
+        "event_golem"
+      ]
+    },
+    {
+      "source": "prayer_options",
+      "expected": "event_prayer_room",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_prayer_room', confidence=0.9819647669792175, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=0.9819647669792175, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_prayer_room', confidence=0.9819647669792175, bounds=Rect(x=631, y=1069, width=1011, height=168), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 395.232
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_prayer_room",
+        "event_spirit_door",
+        "event_golem"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-190809-four-events-garden-prayer-golden-pond-357f8859\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "User explicitly approved this four-template batch: 模板通过审核",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

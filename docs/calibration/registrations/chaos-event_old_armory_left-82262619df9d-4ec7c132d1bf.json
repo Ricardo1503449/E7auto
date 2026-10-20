@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_old_armory_left",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 202514.png",
+  "original_sha256": "1f962eb816d2d20e7fc8556efe11bf2cf5597da5dc6121c6c44eeff0ef1f2fe6",
+  "client_rect": [
+    44,
+    100,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    632,
+    1069,
+    973,
+    158
+  ],
+  "candidate_sha256": "82262619df9d62412017c388962e1e819cc7d091832b79a0f161683798e54d75",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      632,
+      1069
+    ],
+    "titles": [
+      [
+        34,
+        5,
+        299,
+        33
+      ],
+      [
+        778,
+        5,
+        190,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "warning_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "warning_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "warning_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "warning_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_levelup",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_levelup",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "footprints_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_prepare_first",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_prepare_first",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_reward_first",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_reward_first",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_second",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='event_old_armory_left', confidence=1.0, bounds=Rect(x=632, y=1069, width=973, height=158), anchor=Point(x=810, y=1090))"
+    },
+    {
+      "source": "armory_second",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='event_old_armory_left', confidence=0.9812037348747253, bounds=Rect(x=632, y=1069, width=973, height=158), anchor=Point(x=810, y=1090))"
+    },
+    {
+      "source": "armory_prepare_second",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_prepare_second",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_reward_second",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_reward_second",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "armory_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "golem_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "golem_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "golem_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "golem_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "circle_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "circle_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "circle_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "circle_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_intro",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_intro",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_options",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_options",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_reward",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_reward",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_text",
+      "key": "event_old_armory_left",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "records_text",
+      "key": "event_old_armory_left",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "role": "local_subchoice",
+  "operation": "add",
+  "global_index": false,
+  "approval": "User explicitly approved the five new templates, excluding golem replacement: 都通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

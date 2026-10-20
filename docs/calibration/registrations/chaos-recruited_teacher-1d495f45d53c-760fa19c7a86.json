@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_teacher",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\recruitment\\recruited_teacher.png",
+  "original_sha256": "5ae5f06c702e2f2b0044ad7edb6d5372c70e24f20887a53fd2baaafa061cd4d0",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-recruited_teacher-5ae5f06c702e-4169576ec801.json",
+    "record_sha256": "4169576ec801c264c4f433646ae5a5ecfa188159b66055d16e3a9e657e5424de"
+  },
+  "crop": [
+    0,
+    0,
+    210,
+    98
+  ],
+  "candidate_sha256": "1d495f45d53cd6fa49f62ae2c612e5c62c3ed3b9371ae4768925cb4815609d73",
+  "editing_basis": "User requested removal of lower-right profession icon and tight cropping to the two original text lines. BGR pixels and text alpha preserved exactly. No redraw, resize or threshold change.",
+  "review_status": "approved",
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\validation-initial.json",
+  "limitations": [
+    "Synthetic scaled screenshots do not establish real-window coverage. No post-change live game run or installer build.",
+    "Only a preserved real local crop is available for special Teacher completion; no full real runtime result screenshot."
+  ],
+  "approved_candidate_sha256": "1d495f45d53cd6fa49f62ae2c612e5c62c3ed3b9371ae4768925cb4815609d73",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\user-approval.json",
+      "sha256": "a692f99032207669916b4fd66cac416ff65dffe889a4416e918564a4cdc6246a"
+    }
+  ],
+  "validation": [
+    {
+      "key": "recruited_teacher",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.93,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "real_crop_local_only",
+      "scale": 1.0,
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "real_crop_local_only",
+      "scale": 0.8268733850129198,
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9772144556045532
+        }
+      ]
+    },
+    {
+      "key": "recruited_teacher",
+      "source": "real_crop_local_only",
+      "scale": 0.661498708010336,
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9658936262130737
+        }
+      ]
+    }
+  ],
+  "search_roi": [
+    1340,
+    250,
+    650,
+    890
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "validation_reuse": "Approved PNG hash, runtime configuration, ROI and matching/normalization code unchanged. Reused candidate-stage checks; no repeated image scans after approval."
+}

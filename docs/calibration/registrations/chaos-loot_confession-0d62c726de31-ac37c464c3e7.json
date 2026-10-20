@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_confession",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f6620cbb-5168-47d9-a05b-5b59b7e4e65f.png",
+  "original_sha256": "0ec1f656ecfd0dc56613f50980ec61ef544306e9be94f5a0597f3bff877fecb0",
+  "client_rect": [
+    58,
+    113,
+    2322,
+    1306
+  ],
+  "crop": [
+    1014,
+    269,
+    297,
+    353
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_set_b",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1014,
+        269,
+        297,
+        353
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_b_selected",
+      "kind": "real_positive",
+      "score": 0.989973,
+      "structure": 0.98778,
+      "location": [
+        1014,
+        269,
+        297,
+        353
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_b",
+      "kind": "synthetic_1536x864",
+      "score": 0.97832,
+      "structure": 0.962123,
+      "location": [
+        1015,
+        269,
+        297,
+        353
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_confession.png",
+  "mask_sha256": "999079f444a66a9830c246c5a138e7384a633bc3457397734ff64430f338eb93",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "0d62c726de316ae7a85f89f0bfcb4313a8e7f6bbb4999bdec73d48c42da6de16",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_confession.source.json",
+    "sha256": "bb3ccdb28b0b32271b514be1b6e3504854ce4e7017d39b0eab684f6b1959655b"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.963,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。"
+  ],
+  "resource_scenes": [
+    "loot_confession"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "loot_confession.png",
+  "target_filename": "loot/loot_confession.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_confession-0d62c726de31-aae8ea35621c.json",
+    "record_sha256": "aae8ea35621cbc6b11cbcf8b351eb6ada19e771c05d5d87feadaedda3d946c81"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

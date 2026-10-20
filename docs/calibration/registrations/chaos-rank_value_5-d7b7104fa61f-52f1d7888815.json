@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_value_5",
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\camp\\rank_value_5.png",
+  "original_sha256": "c732347195b6725da579d1c5ddc323bfbac170f6b558bfb50d9ce1781a92098d",
+  "original_backup": "artifacts\\tasks\\chaos\\20261013-223504-rank-five-remove-max-893c8a9a\\inputs\\rank_value_5-original.png",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    0,
+    0,
+    100,
+    60
+  ],
+  "candidate_sha256": "d7b7104fa61fb3fb29bb1e3d1ddd3c888901bb890b9f332a85caeb586a7af4a8",
+  "editing_basis": "User authorized removing the right (Max) suffix from the existing baseline template. Retain the original icon and digit 5 RGBA bytes, original top-left origin and height; no redraw, sharpening, resampling or replacement from the smaller user capture. The first 100 columns end in the transparent gap before the parenthesis.",
+  "review_status": "approved",
+  "approval": "用户：我觉得可以这么改，直接在原有模板的基础上去掉部分即可，但是还应该考虑到其他用到这个模板的流程是不是也应该做相应修改",
+  "rank": 5,
+  "max_included": false,
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation_report": "artifacts\\tasks\\chaos\\20261013-223504-rank-five-remove-max-893c8a9a\\results\\image-validation.json",
+  "validation_report_sha256": "1ddc91f69b1aebb7a2741d99c4de6de44e78e886da45ea4b2d199d2d595f41fe",
+  "validation_passed": true,
+  "validation_reuse": "Reuse measured checks from earlier tool outputs in this same conversation. Original PNG hash, retained RGBA pixels, component layout, algorithm, ROI and thresholds match exactly; registration alone does not require repeating those image checks. Source-relative masks and synthetic erasures were explicitly distinguished.",
+  "limitations": [
+    "The real baseline positive is also an original template source, not an independent new render.",
+    "No actual game inputs or continuous fresh-frame run.",
+    "Additional sizes are checked by related synthetic regression, not independent device captures."
+  ]
+}

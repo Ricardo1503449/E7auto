@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_forked_path",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_forked_path.png",
+  "original_sha256": "e75a5a3c876501b24eb4dc292be2cf9f192c618622645c6099bd386b9690e123",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_forked_path-e75a5a3c8765-3197e52167ea.json",
+    "record_sha256": "3197e52167ea8421491049d63da8907c70f93303a72d3f54a9aba01286fdfeb3"
+  },
+  "canvas_size": [
+    1270,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1270,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 13004,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_forked_path",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\fork_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_forked_path",
+        "event_forked_path",
+        "event_forked_path"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          810,
+          1090
+        ],
+        [
+          810,
+          1090
+        ],
+        [
+          810,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 537.226
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          810,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_forked_path",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\fork_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_forked_path",
+        "event_forked_path",
+        "event_forked_path"
+      ],
+      "scores": [
+        0.9914613962173462,
+        0.9914613962173462,
+        0.9914613962173462
+      ],
+      "anchors": [
+        [
+          536,
+          721
+        ],
+        [
+          536,
+          721
+        ],
+        [
+          536,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 77.142
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9855661392211914,
+        "anchor": [
+          536,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_forked_path",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\fork_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_forked_path",
+        "event_forked_path",
+        "event_forked_path"
+      ],
+      "scores": [
+        0.996367335319519,
+        0.996367335319519,
+        0.996367335319519
+      ],
+      "anchors": [
+        [
+          670,
+          901
+        ],
+        [
+          670,
+          901
+        ],
+        [
+          670,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 127.387
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.992050290107727,
+        "anchor": [
+          670,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_forked_path",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\fork_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_forked_path",
+        "event_forked_path",
+        "event_forked_path"
+      ],
+      "scores": [
+        0.9942905902862549,
+        0.9942905902862549,
+        0.9942905902862549
+      ],
+      "anchors": [
+        [
+          804,
+          1082
+        ],
+        [
+          804,
+          1082
+        ],
+        [
+          804,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 125.376
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.992483913898468,
+        "anchor": [
+          804,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_forked_path",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\fork_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_forked_path",
+        "event_forked_path",
+        "event_forked_path"
+      ],
+      "scores": [
+        0.9867035150527954,
+        0.9867035150527954,
+        0.9867035150527954
+      ],
+      "anchors": [
+        [
+          893,
+          1202
+        ],
+        [
+          893,
+          1202
+        ],
+        [
+          893,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 127.0
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9836393594741821,
+        "anchor": [
+          893,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_twins",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-e09ace00-7f76-4eb9-9160-572ad597a22e.png",
+  "original_sha256": "d71239ecbb86f68ae5ed6db88fb6d8a6721b43cf8606118c2403b45c8a5855b9",
+  "client_rect": null,
+  "crop": [
+    6,
+    13,
+    293,
+    46
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "thief_filter",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1863,
+        180,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "twins_selected",
+      "kind": "real_positive",
+      "score": 0.989624,
+      "structure": 0.932304,
+      "location": [
+        662,
+        941,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_list",
+      "kind": "real_positive",
+      "score": 0.98501,
+      "structure": 0.904549,
+      "location": [
+        662,
+        561,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "synthetic_1536x864",
+      "score": 0.973613,
+      "structure": 0.829788,
+      "location": [
+        1863,
+        181,
+        293,
+        46
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision3_masks\\hero_twins.png",
+  "mask_sha256": "c4547b5ceb3d4dba601f0956679b9d4303cdf21ca9253a8f5b477185167a030a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "edd8a444a38275f335f48eb6cee2c5d2c2beb9cedd78725d83d7c47aa7d8a8e2",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision3.json",
+      "sha256": "f2cb614cf612884641f2450764bdb232dd37fa8444b97d41f999c7b5e5263792"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_twins.source.json",
+    "sha256": "35310121ddf04978335d8104ed8fc598588bf78ab11089799f4f22e1934f836e"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.959,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第三轮：以已有游戏截图中无遮挡的同名文字辅助限定末尾字形；仅修改透明遮罩，保留本图RGB像素。已通过的图标及其他模板保持不变。待复审。"
+  ],
+  "resource_scenes": [
+    "hero_twins"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "hero_twins.png",
+  "target_filename": "recruitment/hero_twins.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-hero_twins-edd8a444a382-d861c499e92c.json",
+    "record_sha256": "d861c499e92cc58e63dadee191010c9fbce509830a2dbc10386e91a7cc099c7c"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

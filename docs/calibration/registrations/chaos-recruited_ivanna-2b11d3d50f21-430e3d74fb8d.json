@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_ivanna",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-0df6e39d-289b-440b-bcc5-e3953f5f70ad.png",
+  "original_sha256": "79b72590bf7ad8bb79327704992562b0c6e452c0aed22cddbe4268ff08c82006",
+  "client_rect": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    196,
+    638,
+    245,
+    171
+  ],
+  "candidate_sha256": "2b11d3d50f2181cf64e1ca95e379fa7b080cae46d863b2b66a551a8ca221b002",
+  "editing_basis": "New user-provided crop. Original BGR pixels retained without resizing, sharpening or redraw. Alpha retains completion text, full name and class glyph strokes, including antialiasing. Glyph holes, background, stars, fire icon, rank and artwork excluded.",
+  "review_status": "approved",
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.959,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "new_source_self",
+      "size": [
+        508,
+        962
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            196,
+            638,
+            245,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "source": "filter_real",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "filter_synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "filter_synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "fire_selected_real",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "fire_selected_synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "fire_selected_synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "list_real",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "list_synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "list_synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "selected_real",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "selected_synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "selected_synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "source": "result_real",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9999820590019226,
+          "bounds": [
+            1357,
+            790,
+            245,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "source": "result_synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9721630215644836,
+          "bounds": [
+            1357,
+            790,
+            245,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "source": "result_synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9717475771903992,
+          "bounds": [
+            1357,
+            790,
+            245,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "source": "derived_target_excluded_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    }
+  ],
+  "limitations": [
+    "One new cropped source and one earlier independent full result screenshot. Scaled samples are synthetic, not real window captures. No live recruitment test."
+  ],
+  "supersedes_candidate": "D:\\E7auto\\artifacts\\template-candidates\\20260926-193024-6f1e7f7e\\chaos\\recruitment\\recruited_ivanna.png",
+  "supersedes_sha256": "508785e03a45dfc83a89db5d9ae0d7ba4e19f38830a3fd0e7fb705c630adee76",
+  "approved_candidate_sha256": "2b11d3d50f2181cf64e1ca95e379fa7b080cae46d863b2b66a551a8ca221b002",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\results\\user_approval_all.json",
+      "sha256": "7b03cc2f2154a9e648089e1b932936d8483c7fedbeb8b722aa52e694f451d89d"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_12",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-988fa216-b9f6-4d1d-acdf-f3cbe1ace029.png",
+  "original_sha256": "cc43a5ac4aa7e4fade6934f9f59ed04d7ef1f17735cf67f1c546687aa5db18a9",
+  "client_rect": null,
+  "crop": [
+    24,
+    20,
+    348,
+    56
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rank_result",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.000001,
+      "location": [
+        1363,
+        389,
+        348,
+        56
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_result",
+      "kind": "synthetic_1536x864",
+      "score": 0.984708,
+      "structure": 0.906326,
+      "location": [
+        1363,
+        389,
+        348,
+        56
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision7_masks\\rank_12.png",
+  "mask_sha256": "92c49ec004097f4a58355bcf49174dc90d25f3bf55c54debcb3b067aa01a67cf",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "7ce8f97284863259dc8ad36d473ac4fd779b0a23684e2b20aea555f4e63ea6ba",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision7.json",
+      "sha256": "504a89f5ba667ce83f70f356adbcecb228885242e5c1265f5ee0540178a1e8bb"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_12.source.json",
+    "sha256": "d346a54231da278cb6a350b757f533acd2d86e54e828f063dfed02695efb2a9f"
+  },
+  "search_roi": [
+    1280,
+    335,
+    680,
+    170
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "补全两侧等阶图标的青色三角和渐变斜边，保留数字、转换箭头及Max字样；底图透明，原始RGB不变。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "rank_12"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision7_validation.json",
+      "sha256": "ea91344854b976e7f51c6e64d41bb8db0687327f9bd61237d839516f21911c6b"
+    }
+  ]
+}

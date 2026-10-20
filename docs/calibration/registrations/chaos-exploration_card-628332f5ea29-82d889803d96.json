@@ -1,0 +1,547 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "exploration_card",
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-114320-exploration-card-text-only-95d13d01\\inputs\\exploration_card-with-icon.png",
+  "original_sha256": "18c0f9856489d0c8c108be3cd710764c54996028ba913e5e07b87cc02350815d",
+  "parent_registration": "docs/calibration/registrations/chaos-exploration_card-18c0f9856489-25dfb66a0bde.json",
+  "parent_registration_sha256": "25dfb66a0bdee678a6fbadbab575e89f424b3de4bb465df36cd3e3f6c3b56fe4",
+  "previous_template": "D:\\E7auto\\assets\\templates\\chaos\\entry\\exploration_card.png",
+  "previous_template_sha256": "18c0f9856489d0c8c108be3cd710764c54996028ba913e5e07b87cc02350815d",
+  "crop": [
+    68,
+    7,
+    151,
+    37
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "editing_basis": "User explicitly requested keeping the complete 次元探查 lettering from the existing approved template and excluding the spiral icon. Exact RGBA crop; all 3200 text support pixels and their original edges retained. No redraw, sharpening, resampling or alpha changes.",
+  "mask": {
+    "operation": "unchanged crop of previously approved alpha",
+    "kept_pixels": 3200
+  },
+  "search_roi": [
+    47,
+    316,
+    513,
+    925
+  ],
+  "threshold": 0.95,
+  "structure_threshold": 0.8,
+  "action": [
+    0.5,
+    0.527027027027027
+  ],
+  "action_offset": [
+    78,
+    414
+  ],
+  "reference_click": [
+    304,
+    778
+  ],
+  "anchor_basis": "Horizontal template center moves +34 baseline pixels, offset reduces 112 to 78. Vertical action maps the old center 26.5 to 19.5 within the new y=7 crop, retaining offset 414 and the old card-center click. Existing input scale conversion only.",
+  "candidate_sha256": "628332f5ea295c1f038b48e11a716286e8e333775075f932bf11022c2ab437ba",
+  "user_authorization": {
+    "date": "2026-10-13",
+    "request": "那直接重做识别模板吧，只保留模板里的文字把图标排除"
+  },
+  "verification_status": "passed",
+  "visual_review": "Complete 次元探查 letters, holes, dark strokes and original edges checked at 4x against the RGBA source crop; mask preserves all 3200 text support pixels.",
+  "validation": [
+    {
+      "sample": "battle_menu",
+      "kind": "real_original",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9999969601631165,
+      "bounds": {
+        "x": 151,
+        "y": 345,
+        "width": 151,
+        "height": 37
+      },
+      "anchor": [
+        304,
+        778
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "reference_click": [
+        304,
+        778
+      ],
+      "click_error_px": [
+        0,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "battle_menu",
+      "kind": "synthetic_resize",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9857954382896423,
+      "bounds": {
+        "x": 125,
+        "y": 285,
+        "width": 125,
+        "height": 31
+      },
+      "anchor": [
+        252,
+        643
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "reference_click": [
+        251,
+        643
+      ],
+      "click_error_px": [
+        1,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "battle_menu",
+      "kind": "synthetic_resize",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9863347411155701,
+      "bounds": {
+        "x": 100,
+        "y": 228,
+        "width": 100,
+        "height": 25
+      },
+      "anchor": [
+        202,
+        515
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "reference_click": [
+        201,
+        515
+      ],
+      "click_error_px": [
+        1,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "battle_exit",
+      "kind": "real_original",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9999946355819702,
+      "bounds": {
+        "x": 151,
+        "y": 345,
+        "width": 151,
+        "height": 37
+      },
+      "anchor": [
+        304,
+        778
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_exit.png",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "reference_click": [
+        304,
+        778
+      ],
+      "click_error_px": [
+        0,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "battle_exit",
+      "kind": "synthetic_resize",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9857481122016907,
+      "bounds": {
+        "x": 125,
+        "y": 285,
+        "width": 125,
+        "height": 31
+      },
+      "anchor": [
+        252,
+        643
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_exit.png",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "reference_click": [
+        251,
+        643
+      ],
+      "click_error_px": [
+        1,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "battle_exit",
+      "kind": "synthetic_resize",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9863091111183167,
+      "bounds": {
+        "x": 100,
+        "y": 228,
+        "width": 100,
+        "height": 25
+      },
+      "anchor": [
+        202,
+        515
+      ],
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_exit.png",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "reference_click": [
+        201,
+        515
+      ],
+      "click_error_px": [
+        1,
+        0
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "home",
+      "kind": "real_original",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\home.png",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec"
+    },
+    {
+      "sample": "home",
+      "kind": "synthetic_resize",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\home.png",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec"
+    },
+    {
+      "sample": "home",
+      "kind": "synthetic_resize",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\home.png",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec"
+    },
+    {
+      "sample": "intro",
+      "kind": "real_original",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\intro.png",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24"
+    },
+    {
+      "sample": "intro",
+      "kind": "synthetic_resize",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\intro.png",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24"
+    },
+    {
+      "sample": "intro",
+      "kind": "synthetic_resize",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\intro.png",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24"
+    },
+    {
+      "sample": "lobby_one",
+      "kind": "real_original",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\lobby_one.png",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d"
+    },
+    {
+      "sample": "lobby_one",
+      "kind": "synthetic_resize",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\lobby_one.png",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d"
+    },
+    {
+      "sample": "lobby_one",
+      "kind": "synthetic_resize",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\lobby_one.png",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d"
+    },
+    {
+      "sample": "oct13_failure_real_1536",
+      "kind": "real_capture",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9755592346191406,
+      "bounds": {
+        "x": 100,
+        "y": 229,
+        "width": 100,
+        "height": 25
+      },
+      "anchor": [
+        202,
+        516
+      ],
+      "sample_path": "D:\\E7auto\\tests\\fixtures\\chaos\\resolution\\exploration_card_1536.png",
+      "sample_sha256": "0463114cb4fa4131008ed063b1b1686f016dd507b3fa87758b0f00ab903b6ac2",
+      "reference_click": [
+        201,
+        515
+      ],
+      "click_error_px": [
+        1,
+        1
+      ],
+      "point_already_client_units": true
+    },
+    {
+      "sample": "baseline_neighbor_spirit_altar",
+      "kind": "real_capture",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a"
+    },
+    {
+      "sample": "real_1536_neighbor_spirit_altar",
+      "kind": "real_capture",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\tests\\fixtures\\chaos\\resolution\\exploration_card_1536.png",
+      "sample_sha256": "0463114cb4fa4131008ed063b1b1686f016dd507b3fa87758b0f00ab903b6ac2"
+    },
+    {
+      "sample": "baseline_neighbor_hunt",
+      "kind": "real_capture",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a"
+    },
+    {
+      "sample": "real_1536_neighbor_hunt",
+      "kind": "real_capture",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\tests\\fixtures\\chaos\\resolution\\exploration_card_1536.png",
+      "sample_sha256": "0463114cb4fa4131008ed063b1b1686f016dd507b3fa87758b0f00ab903b6ac2"
+    },
+    {
+      "sample": "baseline_neighbor_labyrinth",
+      "kind": "real_capture",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_menu.png",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a"
+    },
+    {
+      "sample": "real_1536_neighbor_labyrinth",
+      "kind": "real_capture",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\tests\\fixtures\\chaos\\resolution\\exploration_card_1536.png",
+      "sample_sha256": "0463114cb4fa4131008ed063b1b1686f016dd507b3fa87758b0f00ab903b6ac2"
+    },
+    {
+      "sample": "real_1536_icon_without_text",
+      "kind": "synthetic_negative_on_real_capture",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "anchor": null,
+      "sample_path": "D:\\E7auto\\tests\\fixtures\\chaos\\resolution\\exploration_card_1536.png",
+      "sample_sha256": "0463114cb4fa4131008ed063b1b1686f016dd507b3fa87758b0f00ab903b6ac2"
+    }
+  ],
+  "limitations": [
+    "One new independent real capture at 1536x864. Other small-client positives are artificial resizes of historical real baseline screenshots.",
+    "No live game capture or input; installed EXE not rebuilt."
+  ]
+}

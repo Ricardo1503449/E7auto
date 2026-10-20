@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "intro_enter",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-88807e17-05e0-4e28-a5dd-b85d3d4e749b.png",
+  "original_sha256": "348351a603e1bab2228310510ef1029063900115e7d83d00c12603340813e3e7",
+  "client_rect": null,
+  "crop": [
+    20,
+    27,
+    617,
+    131
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "intro",
+      "kind": "source_self",
+      "score": 0.999592,
+      "structure": 0.999042,
+      "location": [
+        1659,
+        1135,
+        617,
+        131
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "intro_exit",
+      "kind": "real_positive",
+      "score": 0.997031,
+      "structure": 0.997444,
+      "location": [
+        1659,
+        1135,
+        617,
+        131
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "intro",
+      "kind": "synthetic_1536x864",
+      "score": 0.983007,
+      "structure": 0.95929,
+      "location": [
+        1659,
+        1135,
+        617,
+        131
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\intro_enter.png",
+  "mask_sha256": "40727758150fc5e9cf82cd9aefa6e2467ad2ef851d542aef923872926136527f",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "1296631964737ff7559c35e8a423dba0f9c3a82beb7678fb8f6c9833f9baa732",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\intro_enter.source.json",
+    "sha256": "10e966cc0bbb0a4c96e012565584e9b423d38477f20f04670aa7f4a518f854ec"
+  },
+  "search_roi": [
+    1600,
+    1100,
+    722,
+    206
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "intro_enter"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "intro_enter.png",
+  "target_filename": "buttons/intro_enter.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-intro_enter-129663196473-8df6841aa3ef.json",
+    "record_sha256": "8df6841aa3ef652a97906b28aec7c209cb58beb754406bf0f2ddbb144565b8cd"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

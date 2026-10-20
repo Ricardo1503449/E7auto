@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_gray_loot",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-c3846d73-d553-4e78-a3f0-142b37a08b14.png",
+  "original_sha256": "733e271cce107e90c50d21f4e83b85ef1ab00132bcd5c3f3372fa2c99bc50a4f",
+  "client_rect": null,
+  "crop": [
+    29,
+    17,
+    105,
+    102
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "revision5_gray_map",
+      "kind": "real_positive",
+      "score": 0.992359,
+      "structure": 0.866464,
+      "location": [
+        240,
+        472,
+        105,
+        102
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "revision5_loot_map",
+      "kind": "real_positive",
+      "score": 0.999316,
+      "structure": 0.944157,
+      "location": [
+        1150,
+        282,
+        105,
+        102
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision4_masks\\node_gray_loot.png",
+  "mask_sha256": "32cd54387504aec6f3158d0ef038c5f973aea08d5f4490372804ed0dba44ba89",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "24b978daad579f7a3b17ec77ade8f881ab7385007b967222fb0cb8ec3c6a5b94",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision5.json",
+      "sha256": "c1bf2e073e061aeb84ce23dce50d5cdc790a5af446da332a880fd6fd7f11a180"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_gray_loot.source.json",
+    "sha256": "28a8f278c345d227a76a3c1a4a547edcdf8b1753baeaab8e1e4702bd88116c79"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "灰态候选像素及遮罩保持不变，新增用户完整地图截图作为真实对照；仍仅作灰态参考。",
+    "原始局部裁剪未确认与完整截图属于同一帧；已在新增完整截图中验证，区域预览中的匹配框为实际识别结果。",
+    "原始局部裁剪未确认与完整截图属于同一帧；已在新增完整截图中验证，区域预览中的匹配框为实际识别结果。"
+  ],
+  "resource_scenes": [
+    "node_gray_loot"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ]
+}

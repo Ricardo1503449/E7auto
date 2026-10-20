@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "title_thief",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f663112d-1cf9-4157-b396-2e4ccdd7fa41.png",
+  "original_sha256": "8830f884b1a8a0365b0b5cb415319e6e5b3f1f1e5a275c6e715629a85409f2e7",
+  "client_rect": [
+    40,
+    110,
+    2322,
+    1306
+  ],
+  "crop": [
+    30,
+    20,
+    345,
+    80
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "thief_list",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "real_positive",
+      "score": 0.999906,
+      "structure": 0.999771,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "soul_list",
+      "kind": "real_negative",
+      "score": 0.673133,
+      "structure": 0.280604,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "warrior_list",
+      "kind": "real_negative",
+      "score": 0.812633,
+      "structure": 0.597751,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "knight_list",
+      "kind": "real_negative",
+      "score": 0.821451,
+      "structure": 0.600415,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "all_list",
+      "kind": "real_negative",
+      "score": 0.647586,
+      "structure": 0.294853,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "thief_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.978961,
+      "structure": 0.943909,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "391e39f8c55ded083ec7dc2c052e0b6f89fbeea711e64c19671daf480e774702",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\title_thief.source.json",
+    "sha256": "fd2e0a0026c1b6cdbb338c6bfaef0252b594d0bae2c86fb7402a8200880db3f5"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.964,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "title_thief"
+  ],
+  "additional_validation_records": []
+}

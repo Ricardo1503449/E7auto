@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_broken_cage",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 225910.png",
+  "original_sha256": "66d47e8f0a9d72078486738ea346151b5701be15f6aeae24f25846a2dcf68606",
+  "client_rect": [
+    39,
+    95,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    257,
+    1069,
+    1765,
+    168
+  ],
+  "candidate_sha256": "08f10564972f48e511b892bf558ae144abc27204e235411102f2632f902c8498",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      257,
+      1069
+    ],
+    "titles": [
+      [
+        137,
+        5,
+        154,
+        33
+      ],
+      [
+        789,
+        5,
+        228,
+        33
+      ],
+      [
+        1426,
+        5,
+        334,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "cage_options",
+      "expected": "event_broken_cage",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_cage', confidence=0.9999998807907104, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9999998807907104, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9999998807907104, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 1003.727
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_cage",
+        "event_erased_records",
+        "event_mysterious_footprints"
+      ]
+    },
+    {
+      "source": "cage_options",
+      "expected": "event_broken_cage",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_cage', confidence=0.9886454939842224, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9886454939842224, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9886454939842224, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 896.473
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_cage",
+        "event_erased_records",
+        "event_mysterious_footprints"
+      ]
+    },
+    {
+      "source": "cage_options",
+      "expected": "event_broken_cage",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_cage', confidence=0.9812920093536377, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9812920093536377, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))",
+        "Detection(key='event_broken_cage', confidence=0.9812920093536377, bounds=Rect(x=257, y=1069, width=1765, height=168), anchor=Point(x=1161, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 734.844
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_cage",
+        "event_erased_records",
+        "event_mysterious_footprints"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test. Two loot cards are shown together on one reward page; only one page close is required.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "validation_passed": true,
+  "validation_report_sha256": "e55b23f6dd41b43f914dbd50722d58c6d87ba8b3174c451fe99c98a86f1bf114",
+  "visible_pixels_unchanged": true,
+  "flow_proposal": [
+    "middle option",
+    "event battle",
+    "close one reward page containing two cards via close_reward_cards(count=1)",
+    "text triangle",
+    "original-floor map"
+  ],
+  "approval": "模板通过",
+  "validation_reuse": "All 67 recorded checks reused; approved pixels, algorithm, ROI and thresholds unchanged."
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "elite_claim_complete",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-90df6c7d-8263-4aeb-a6a4-26d825b3fc3f.png",
+  "original_sha256": "7c5ee387faf32e588ef1d7a6f2927d1287bab5aee09dab17f2dfca4437dd1c8b",
+  "client_rect": null,
+  "crop": [
+    178,
+    78,
+    122,
+    30
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "elite_claimed",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1342,
+        948,
+        122,
+        30
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "elite_victory",
+      "kind": "real_negative",
+      "score": 0.736224,
+      "structure": 0.034874,
+      "location": [
+        1189,
+        928,
+        122,
+        30
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "elite_claimed",
+      "kind": "synthetic_1536x864",
+      "score": 0.97513,
+      "structure": 0.853532,
+      "location": [
+        1342,
+        948,
+        122,
+        30
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision14_masks\\elite_claim_complete.png",
+  "mask_sha256": "1eb52e4fd7666b7fdb154011b7f76b39286bc7ac1593b6e4b1e1acf2fd8c2be5",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "33b44b434112660e856bba4ecf2ffb9f6a575ab9723cca54c39961fa67e96e27",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision14.json",
+      "sha256": "4aceff69412a9c5f03762ade25eafe22dd007474ca8f63dbe4bd3d696def547d"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\elite_claim_complete.source.json",
+    "sha256": "eb2f9de056603676ad24c089900438c791b243932a1409103a96c2ba4516dcf8"
+  },
+  "search_roi": [
+    1140,
+    875,
+    580,
+    175
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留完成领取文字及原有字缘，周围奖励卡片背景透明。",
+    "原始RGB保持，不缩放、不重绘。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "elite_claim_complete"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ]
+}

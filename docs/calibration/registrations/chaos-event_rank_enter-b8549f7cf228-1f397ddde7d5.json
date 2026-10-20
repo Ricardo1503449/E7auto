@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_rank_enter",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 140952.png",
+  "original_sha256": "35e708ed826b4b2165030417d304b7a15465356edd38296ac901ddd7871bb5b5",
+  "client_rect": [
+    30,
+    99,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    967,
+    821,
+    388,
+    101
+  ],
+  "editing_basis": "完整蓝色英雄升阶按钮及金色边框，周围卡片和场景背景透明；不同于篝火文字入口。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    850,
+    730,
+    630,
+    330
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_rank_enter",
+      "kind": "positive",
+      "scaled": false,
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        967,
+        821,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "positive",
+      "scaled": true,
+      "passed": true,
+      "score": 0.988414,
+      "structure": 0.968974,
+      "location": [
+        967,
+        821,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "rank_unselected",
+      "passed": true,
+      "score": 0.549515,
+      "structure": 0.453404,
+      "location": [
+        850,
+        777,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "rank_selected",
+      "passed": true,
+      "score": 0.549195,
+      "structure": 0.441157,
+      "location": [
+        850,
+        773,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "rank_success",
+      "passed": true,
+      "score": 0.693392,
+      "structure": 0.22068,
+      "location": [
+        1092,
+        863,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "cairn_hp",
+      "passed": true,
+      "score": 0.601928,
+      "structure": 0.255652,
+      "location": [
+        1008,
+        765,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "cairn_reward",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.091078,
+      "location": [
+        1088,
+        730,
+        388,
+        101
+      ]
+    },
+    {
+      "key": "event_rank_enter",
+      "kind": "negative",
+      "source": "tablet_ticket",
+      "passed": true,
+      "score": 0.892675,
+      "structure": 0.701139,
+      "location": [
+        967,
+        821,
+        388,
+        101
+      ]
+    }
+  ],
+  "mask_method": "Convex outer silhouette from segmented gold border; native BGR retained.",
+  "approval_message": "模板通过；事件升阶须记录英雄阶数变化"
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_painting_guard",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-571c7af4-f344-461a-afe4-c9f595dbd26a.png",
+  "original_sha256": "50b8a4f523946341e861e496a75341b5a3061be70c438d2cf3ea97c93671c795",
+  "client_rect": [
+    79,
+    127,
+    2322,
+    1306
+  ],
+  "crop": [
+    415,
+    278,
+    334,
+    345
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_set_c",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        415,
+        278,
+        334,
+        345
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_c",
+      "kind": "synthetic_1536x864",
+      "score": 0.988643,
+      "structure": 0.979331,
+      "location": [
+        416,
+        278,
+        334,
+        345
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_painting_guard.png",
+  "mask_sha256": "20aed0a32c55386d8685bb56d96155b7fd34ec2b0b8874834ea3769338d5d585",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "4a6d76d8f7550da3b449a0b1e270f8bcacee65071c0486b9ec67cb9f983b543c",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_painting_guard.source.json",
+    "sha256": "58c8e32de76e1e69412976ef9a0baaca2c8198af3562b660c282627146daf12c"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "loot_painting_guard"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "loot_painting_guard.png",
+  "target_filename": "loot/loot_painting_guard.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_painting_guard-4a6d76d8f755-c2f0d8e2a358.json",
+    "record_sha256": "c2f0d8e2a358ef5b903f18c37730bd3fa759f39d3aecf6e5330f74c963786ed3"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

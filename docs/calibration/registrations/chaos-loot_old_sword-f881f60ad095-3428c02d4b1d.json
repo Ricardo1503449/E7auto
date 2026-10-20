@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_old_sword",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-bc4363f5-0534-4419-bf35-97d0c85aa017.png",
+  "original_sha256": "95c0cd905d3a2aac8b53ff8ed0464a3036a1fd163c3812901624c284e0c12487",
+  "client_rect": [
+    54,
+    106,
+    2322,
+    1306
+  ],
+  "crop": [
+    1007,
+    276,
+    311,
+    346
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_set_a",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1007,
+        276,
+        311,
+        346
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_left",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1007,
+        276,
+        311,
+        346
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_middle",
+      "kind": "real_positive",
+      "score": 0.98495,
+      "structure": 0.981727,
+      "location": [
+        1007,
+        276,
+        311,
+        346
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_right",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1007,
+        276,
+        311,
+        346
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_a",
+      "kind": "synthetic_1536x864",
+      "score": 0.97641,
+      "structure": 0.94822,
+      "location": [
+        1008,
+        276,
+        311,
+        346
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_old_sword.png",
+  "mask_sha256": "4dda3d70b47a895c936456d2961613f72620cf0ed11a46b0d165a5690d831ee1",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "f881f60ad095f6abfc4023ec8f2ef0827dbf8860f2f8e9fe090710173450ff07",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_old_sword.source.json",
+    "sha256": "8fd38dacb99f791b920b9fb369af051fe8e96fa8b4daa4c5d965a05e7ef9005c"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.961,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。"
+  ],
+  "resource_scenes": [
+    "loot_old_sword"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ]
+}

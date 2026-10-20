@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_giant_eye",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_giant_eye.png",
+  "original_sha256": "356c546444109ad43f81a9cc9dd3c4f6d6f2197aa60e755b7271ec487a636e2e",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_giant_eye-356c54644410-a72650224953.json",
+    "record_sha256": "a72650224953f1206a120927f5a78beb55d10a7fbf114963684736e6eabf52dc"
+  },
+  "canvas_size": [
+    1896,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1896,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 15592,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_giant_eye",
+      "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_giant_eye",
+        "event_giant_eye",
+        "event_giant_eye"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1850,
+          1110
+        ],
+        [
+          1850,
+          1110
+        ],
+        [
+          1850,
+          1110
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 388.284
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1850,
+          1110
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_giant_eye",
+      "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_giant_eye",
+        "event_giant_eye",
+        "event_giant_eye"
+      ],
+      "scores": [
+        0.9905381202697754,
+        0.9905381202697754,
+        0.9905381202697754
+      ],
+      "anchors": [
+        [
+          1224,
+          734
+        ],
+        [
+          1224,
+          734
+        ],
+        [
+          1224,
+          734
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 66.628
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9845670461654663,
+        "anchor": [
+          1224,
+          734
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_giant_eye",
+      "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_giant_eye",
+        "event_giant_eye",
+        "event_giant_eye"
+      ],
+      "scores": [
+        0.9963187575340271,
+        0.9963187575340271,
+        0.9963187575340271
+      ],
+      "anchors": [
+        [
+          1530,
+          918
+        ],
+        [
+          1530,
+          918
+        ],
+        [
+          1530,
+          918
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 85.151
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9921671152114868,
+        "anchor": [
+          1530,
+          918
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_giant_eye",
+      "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_giant_eye",
+        "event_giant_eye",
+        "event_giant_eye"
+      ],
+      "scores": [
+        0.9888181090354919,
+        0.9888181090354919,
+        0.9888181090354919
+      ],
+      "anchors": [
+        [
+          1835,
+          1102
+        ],
+        [
+          1835,
+          1102
+        ],
+        [
+          1835,
+          1102
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 102.542
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9861318469047546,
+        "anchor": [
+          1835,
+          1102
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_giant_eye",
+      "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_giant_eye",
+        "event_giant_eye",
+        "event_giant_eye"
+      ],
+      "scores": [
+        0.981351912021637,
+        0.981351912021637,
+        0.981351912021637
+      ],
+      "anchors": [
+        [
+          2039,
+          1224
+        ],
+        [
+          2039,
+          1224
+        ],
+        [
+          2039,
+          1224
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 105.528
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9773694276809692,
+        "anchor": [
+          2039,
+          1224
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

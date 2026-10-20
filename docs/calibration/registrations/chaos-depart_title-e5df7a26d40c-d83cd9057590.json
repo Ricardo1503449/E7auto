@@ -1,0 +1,511 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "depart_title",
+  "label": "选择离队英雄：标题与返回图标",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 013527.png",
+  "original_sha256": "02e92f793a3a5857f6f2d6cfec46bea529b736f8e8ec5e27585094a726e289ec",
+  "client_rect": [
+    41,
+    93,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    38,
+    24,
+    361,
+    72
+  ],
+  "candidate_sha256": "e5df7a26d40cbc8dbd7b07ab796d5e2f83de5b51dbeceab4e37d10da08b1b01d",
+  "editing_basis": "Keep top-left back icon and selection-page title glyphs; background transparent.",
+  "visible_pixels_unchanged": true,
+  "review_status": "approved",
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "action": null,
+  "validation_passed": true,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\results\\validation.json",
+  "validation_report_sha256": "3433eccb7a7fd62059cb1c1c1b791b063790d78bb98d8e16b25a34c88695c8a0",
+  "checks": [
+    {
+      "source": "phantom_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=1.0, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=0.9922871589660645, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=0.9866873621940613, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=1.0, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=0.9922871589660645, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_title', confidence=0.9866873621940613, bounds=Rect(x=38, y=24, width=361, height=72), anchor=Point(x=218, y=60))"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_title",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Single real event/Missing/departure-button/recruit-result positive; synthetic scaled samples.",
+    "Missing sample is Arowell only; glyphs exclude all hero-specific content, other heroes have no real Missing samples.",
+    "Candidate-only validation; no runtime changes or live input."
+  ],
+  "approval": "User approved three originals, then approved all four revised candidates: 通过，继续执行",
+  "validation_reuse": "Approved pixels, ROI, thresholds and algorithm unchanged; reuse recorded candidate checks."
+}

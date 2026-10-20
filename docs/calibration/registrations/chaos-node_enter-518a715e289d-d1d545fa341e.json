@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_enter",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-345e3796-03cb-4743-ab25-b4391453d603.png",
+  "original_sha256": "567a01c9a78ceb6ff1f0111455d6e026f76c59f9de36f9090d629577ee171b7d",
+  "client_rect": [
+    79,
+    116,
+    2322,
+    1306
+  ],
+  "crop": [
+    1668,
+    1136,
+    611,
+    132
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rest_entry",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1668,
+        1136,
+        611,
+        132
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_entry",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1668,
+        1136,
+        611,
+        132
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "event_entry",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1668,
+        1136,
+        611,
+        132
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_entry_alt",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1668,
+        1136,
+        611,
+        132
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rest_entry",
+      "kind": "synthetic_1536x864",
+      "score": 0.993753,
+      "structure": 0.979746,
+      "location": [
+        1668,
+        1136,
+        611,
+        132
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\node_enter.png",
+  "mask_sha256": "167d258f5acad55198d3b36af43ac8a515aea4bbc56ec1a2f7b4c9f810fd25c9",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "518a715e289dff0aaa48dec00f4562061ae5e971cdf1e85253af896b2cdbc007",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_enter.source.json",
+    "sha256": "27c3329084049bd1b178558dc5831d92f8d1fce6e334ee8ad443d34a729c8dd5"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按反馈重做：保留完整按钮外形，按钮外背景透明；原图RGB像素保持，待复审。"
+  ],
+  "resource_scenes": [
+    "node_enter"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "node_enter.png",
+  "target_filename": "buttons/node_enter.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_enter-518a715e289d-4bf69cdd8a90.json",
+    "record_sha256": "4bf69cdd8a909fb85353d605ec07c9bb598f0f1b44b16c523c1579bd803973c6"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

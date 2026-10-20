@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "bench_teacher",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f415e5c3-2eed-42b4-9202-8ce63ce906e6.png",
+  "original_sha256": "49d539523b38938a20e3e79b3747fd1459f207bb271a8a9f854cf3584cbd5a15",
+  "client_rect": null,
+  "crop": [
+    56,
+    57,
+    306,
+    47
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "replace_prepare",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.000001,
+      "location": [
+        89,
+        381,
+        306,
+        47
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_active",
+      "kind": "real_positive",
+      "score": 0.999988,
+      "structure": 0.999862,
+      "location": [
+        89,
+        381,
+        306,
+        47
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_prepare",
+      "kind": "synthetic_1536x864",
+      "score": 0.987231,
+      "structure": 0.867042,
+      "location": [
+        89,
+        382,
+        306,
+        47
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision8_masks\\bench_teacher.png",
+  "mask_sha256": "00d75a520143c5755e67794eb7c7ee6b0c5b765afb2fdca61006db0afef29bc5",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "0c6b32ef79b2622c7a6b5ced3b6f2de899c4f2c136b8a16236be7a53dafb3c55",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision8.json",
+      "sha256": "3e9aab6707e4a75a46c6a67470d21638fdeb4a985ed604d162edf06e2f19e82f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\bench_teacher.source.json",
+    "sha256": "d43993400a6abacc0afbfaf024e0f4ad35f9fea2ad399a759a1fe7ae6e23f4bc"
+  },
+  "search_roi": [
+    0,
+    300,
+    700,
+    760
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "以已通过的职业及名称轮廓辅助定位遮罩；模板保留候补原图的原始像素与字号，右侧头像和底色透明，职业图标内部底色透明。仅离线遮罩参考，不新增运行时缩放。待复审。"
+  ],
+  "resource_scenes": [
+    "bench_teacher"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision8_validation.json",
+      "sha256": "de1ceedd013828dca5d189f46351cdf255b1041c726847ea35ccbd762871949b"
+    }
+  ]
+}

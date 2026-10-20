@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "formation_knight",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6349c760-0a6c-4b9e-bbb7-2fcb1d6c7219.png",
+  "original_sha256": "48061eb5413797b13fecbb0101eb9bf2f341624abd025b458de86646959f17c9",
+  "client_rect": [
+    47,
+    121,
+    2322,
+    1306
+  ],
+  "crop": [
+    1065,
+    246,
+    57,
+    55
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "replace_active",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1065,
+        246,
+        57,
+        55
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_prepare",
+      "kind": "real_positive",
+      "score": 0.999994,
+      "structure": 0.999991,
+      "location": [
+        1065,
+        246,
+        57,
+        55
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "elite_prepare",
+      "kind": "real_positive",
+      "score": 0.99999,
+      "structure": 0.999983,
+      "location": [
+        1065,
+        246,
+        57,
+        55
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_prepare",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1065,
+        246,
+        57,
+        55
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_active",
+      "kind": "synthetic_1536x864",
+      "score": 0.96897,
+      "structure": 0.922582,
+      "location": [
+        1065,
+        246,
+        57,
+        55
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "862b4cd80f1b8b64e6c53fdc61ef605649769bf65b59ba2d5222bb924c71f232",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\formation_knight.source.json",
+    "sha256": "4ddfe63aefdb25c094438bde2ad81e9355c39bc75377203ccb892159cd1085dd"
+  },
+  "search_roi": [
+    730,
+    200,
+    980,
+    850
+  ],
+  "threshold": 0.954,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "formation_knight"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "formation_knight.png",
+  "target_filename": "formation/formation_knight.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-formation_knight-862b4cd80f1b-511f9be6cb6e.json",
+    "record_sha256": "511f9be6cb6edc433cfbfe5d1a28fe7abfba5bf24712787ea8f27e6959be5e68"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

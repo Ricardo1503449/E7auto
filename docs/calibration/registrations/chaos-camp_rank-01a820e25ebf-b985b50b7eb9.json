@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "camp_rank",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-a7ca3b4d-d846-432b-ad11-be05c5d2db46.png",
+  "original_sha256": "2fbb315cc19ccc18f7dcedf600d105ed37fc687c6cac8b8437ed84c12d1c9bee",
+  "client_rect": [
+    55,
+    113,
+    2322,
+    1306
+  ],
+  "crop": [
+    1665,
+    300,
+    360,
+    100
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "camp",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        300,
+        360,
+        100
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "camp_done",
+      "kind": "real_negative",
+      "score": 0.603191,
+      "structure": 0.999745,
+      "location": [
+        1665,
+        300,
+        360,
+        100
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "camp",
+      "kind": "synthetic_1536x864",
+      "score": 0.971866,
+      "structure": 0.923761,
+      "location": [
+        1665,
+        300,
+        360,
+        100
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "01a820e25ebf68c5a9c43b517e36cd63add0da7ec534ecba1f68460109622122",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\camp_rank.source.json",
+    "sha256": "21a66be4dcd0b14ab8c84c0bc29f56964d27828a4ac24afc26677082cff2dde9"
+  },
+  "search_roi": [
+    1580,
+    210,
+    742,
+    300
+  ],
+  "threshold": 0.957,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "camp_rank"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "camp_rank.png",
+  "target_filename": "camp/camp_rank.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-camp_rank-01a820e25ebf-a24c805e6332.json",
+    "record_sha256": "a24c805e63327be924e077441f369f06a9122b7eebcfdb6c3647786b8c1f299e"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

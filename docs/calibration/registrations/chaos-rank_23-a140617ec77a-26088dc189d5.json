@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_23",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2dc3f42c-dee5-4714-93c0-4f05a6e1fbf8.png",
+  "original_sha256": "74b1570bfb6fb2a929e1be3a44fe7a5d8e77bcdee26b119db91f1871d94cf1d6",
+  "client_rect": null,
+  "crop": [
+    45,
+    22,
+    353,
+    56
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision7_masks\\rank_23.png",
+  "mask_sha256": "43f26ff9951c1d43de3e2ebb5ac3e4c507682d2223e27b1755f453f4037ba356",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "a140617ec77a56697af175d1b435ea82f7b262dc15eb9af43c4148308660f602",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision7.json",
+      "sha256": "504a89f5ba667ce83f70f356adbcecb228885242e5c1265f5ee0540178a1e8bb"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_23.source.json",
+    "sha256": "b38aa39753cf94d669bbaf88d9dab8d19a0c7afd723591bd7e4e05296df768bd"
+  },
+  "search_roi": [
+    1280,
+    335,
+    680,
+    170
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "补全两侧等阶图标的青色三角和渐变斜边，保留数字、转换箭头及Max字样；底图透明，原始RGB不变。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "rank_23"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision7_validation.json",
+      "sha256": "ea91344854b976e7f51c6e64d41bb8db0687327f9bd61237d839516f21911c6b"
+    }
+  ]
+}

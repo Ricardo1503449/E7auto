@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_broken_candlestick",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 174625.png",
+  "original_sha256": "ae977aa0cdf77935e3c94433bc0dc37301fd77b9d1b1fde1be2c7c0b523b170e",
+  "client_rect": [
+    39,
+    111,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    217,
+    1069,
+    1841,
+    168
+  ],
+  "candidate_sha256": "b3816383ec911df9179a0fa8db4fcfbda4978f933720d3c6dbd87107b8bbcf47",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      217,
+      1069
+    ],
+    "titles": [
+      [
+        87,
+        5,
+        335,
+        33
+      ],
+      [
+        776,
+        5,
+        335,
+        33
+      ],
+      [
+        1428,
+        5,
+        408,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "candlestick_options",
+      "expected": "event_broken_candlestick",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_candlestick', confidence=1.0, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=1.0, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=1.0, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 765.057
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_candlestick",
+        "event_grieving_woman",
+        "event_withered_garden"
+      ]
+    },
+    {
+      "source": "candlestick_options",
+      "expected": "event_broken_candlestick",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_candlestick', confidence=0.9888191223144531, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=0.9888191223144531, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=0.9888191223144531, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 746.917
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_candlestick",
+        "event_grieving_woman",
+        "event_withered_garden"
+      ]
+    },
+    {
+      "source": "candlestick_options",
+      "expected": "event_broken_candlestick",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_broken_candlestick', confidence=0.981602668762207, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=0.981602668762207, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_broken_candlestick', confidence=0.981602668762207, bounds=Rect(x=217, y=1069, width=1841, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 725.299
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_broken_candlestick",
+        "event_grieving_woman",
+        "event_withered_garden"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-231452-broken-candlestick-event-3524d039\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No candlestick levelup screenshot, returned-map screenshot or live input test; supplied candlestick branch is no-levelup.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "模板通过，继续执行吧",
+  "validation_reuse": "PNG/ROI/threshold/algorithm unchanged; reuse 31 passed candidate checks."
+}

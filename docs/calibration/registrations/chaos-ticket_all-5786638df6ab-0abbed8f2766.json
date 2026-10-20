@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "ticket_all",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-1d5d19f2-e1db-4046-bd37-b7e33b9a1d4f.png",
+  "original_sha256": "77f13a68f334a66b48f0a143e6ea3855b52a5f6e62fb7e6d793ac59053369db3",
+  "client_rect": null,
+  "crop": [
+    131,
+    128,
+    223,
+    225
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "boss_all",
+      "kind": "source_self",
+      "score": 0.999998,
+      "structure": 0.999993,
+      "location": [
+        1533,
+        403,
+        223,
+        225
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "boss_all",
+      "kind": "synthetic_1536x864",
+      "score": 0.987824,
+      "structure": 0.940096,
+      "location": [
+        1534,
+        403,
+        223,
+        225
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\ticket_all.png",
+  "mask_sha256": "36ec3e60a6e1c92440b6732e9aa22ecb1430337a938ebfca41cf395157c47be5",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "5786638df6ababdeb3e3c65b12d76863bdd1ca626454c57ef91454445175b7d6",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\ticket_all.source.json",
+    "sha256": "fc14959342271013f8ebdfb172fefadfeba8f5bbf4135b6c94a65b6bfce1c039"
+  },
+  "search_roi": [
+    1340,
+    250,
+    650,
+    890
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "ticket_all"
+  ],
+  "additional_validation_records": []
+}

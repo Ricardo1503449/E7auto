@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "boss_claim_complete",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-94d56972-bc1a-466b-9552-b86501ff0f36.png",
+  "original_sha256": "197dd0fd758c20f07f34df89d5611e321dc8a09a69b7c9e6e513fabc6ba6cf0f",
+  "client_rect": null,
+  "crop": [
+    182,
+    680,
+    122,
+    28
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "boss_victory",
+      "kind": "real_negative",
+      "score": 0.871124,
+      "structure": -0.068513,
+      "location": [
+        1104,
+        920,
+        122,
+        28
+      ],
+      "detected": false,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision14_masks\\boss_claim_complete.png",
+  "mask_sha256": "764db5ab5ce5d8b58be6bbdd5543607a8fe5fa24331305f4b294cc4d15c0dae6",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "11954352406759df5e46e3131ed8867d48ab7f9f574e1722844803bb0b30216e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision14.json",
+      "sha256": "4aceff69412a9c5f03762ade25eafe22dd007474ca8f63dbe4bd3d696def547d"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\boss_claim_complete.source.json",
+    "sha256": "0957205b622dd3fa51594be8883d19cae8bee931e1e4a0ea90272be0cc3c6993"
+  },
+  "search_roi": [
+    880,
+    860,
+    600,
+    220
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留完成领取文字，借用精英同文字轮廓辅助排除紫色底纹，实际RGB仍全部来自首领原图。仍缺可确认的完整画面正例。",
+    "原始RGB保持，不缩放、不重绘。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "boss_claim_complete"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ]
+}

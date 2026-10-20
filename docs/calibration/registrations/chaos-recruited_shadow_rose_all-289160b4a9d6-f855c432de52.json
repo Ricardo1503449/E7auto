@@ -1,0 +1,515 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_shadow_rose_all",
+  "label": "暗影萝季：全职业券招募完成",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 142701.png",
+  "original_sha256": "c74e921346c40131b01b705b4a9e553d353cb0616ad4a01389258bf357de5d8f",
+  "client_rect": [
+    45,
+    103,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    1579,
+    857,
+    248,
+    175
+  ],
+  "candidate_sha256": "289160b4a9d6e6aed81cc3b45b0e9ba8d832306a072b7377f1f56886709f0ccb",
+  "editing_basis": "Match existing recruited_teacher composition: recruitment-complete heading, hero name and profession glyph. Exclude rank, stars, attribute, portrait and all other background. Preserve original glyphs with one-pixel antialias edges and open shield interior.",
+  "visible_pixels_unchanged": true,
+  "review_status": "approved",
+  "search_roi": [
+    1340,
+    250,
+    650,
+    890
+  ],
+  "threshold": 0.945,
+  "structure_threshold": 0.8,
+  "action": null,
+  "validation_passed": true,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\results\\validation_revision2.json",
+  "validation_report_sha256": "7eefc1550fb79d7fa86889525936dff92116daa153280c9e32988d1c48c6d25c",
+  "checks": [
+    {
+      "source": "phantom_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='recruited_shadow_rose_all', confidence=1.0, bounds=Rect(x=1579, y=857, width=248, height=175), anchor=Point(x=1703, y=944))"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='recruited_shadow_rose_all', confidence=0.9635133743286133, bounds=Rect(x=1579, y=857, width=248, height=175), anchor=Point(x=1703, y=944))"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "recruited_shadow_rose_all",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='recruited_shadow_rose_all', confidence=0.9489337801933289, bounds=Rect(x=1580, y=857, width=248, height=175), anchor=Point(x=1704, y=944))"
+    }
+  ],
+  "limitations": [
+    "Single real event/Missing/departure-button/recruit-result positive; synthetic scaled samples.",
+    "Missing sample is Arowell only; glyphs exclude all hero-specific content, other heroes have no real Missing samples.",
+    "Candidate-only validation; no runtime changes or live input."
+  ],
+  "revision": 2,
+  "reference_key": "recruited_teacher",
+  "reference_file": "D:\\E7auto\\assets\\templates\\chaos\\recruitment\\recruited_teacher.png",
+  "reference_sha256": "5ae5f06c702e2f2b0044ad7edb6d5372c70e24f20887a53fd2baaafa061cd4d0",
+  "approval": "User approved three originals, then approved all four revised candidates: 通过，继续执行",
+  "validation_reuse": "Approved pixels, ROI, thresholds and algorithm unchanged; reuse recorded candidate checks."
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_close",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-ff25d6a6-0477-4fca-9981-705bc0374b4e.png",
+  "original_sha256": "cb733d8088abc0cf3bf863d342e1720567eb23eb878ab9bfe7571b98d4fe6bce",
+  "client_rect": [
+    62,
+    120,
+    2322,
+    1306
+  ],
+  "crop": [
+    1080,
+    1230,
+    185,
+    50
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rank_result",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1080,
+        1230,
+        185,
+        50
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_max",
+      "kind": "real_positive",
+      "score": 0.999959,
+      "structure": 0.999883,
+      "location": [
+        1080,
+        1230,
+        185,
+        50
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_result",
+      "kind": "synthetic_1536x864",
+      "score": 0.961513,
+      "structure": 0.900714,
+      "location": [
+        1080,
+        1230,
+        185,
+        50
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "7fe09bebda5a96c71d7e6e36d80a2986ee8ebe394c74ce091aa7cb99d01e3db9",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_close.source.json",
+    "sha256": "ba9d9b620d02bc89b7179cc8241c1846569f53c557864005c6ef3d21e7a89703"
+  },
+  "search_roi": [
+    1000,
+    1190,
+    440,
+    116
+  ],
+  "threshold": 0.947,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "rank_close"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "rank_close.png",
+  "target_filename": "buttons/rank_close.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-rank_close-7fe09bebda5a-f8672b968518.json",
+    "record_sha256": "f8672b968518d5aaf4fac653db86a2fb5e5f45b90286dd4a9f9e1d61e4d7c6eb"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

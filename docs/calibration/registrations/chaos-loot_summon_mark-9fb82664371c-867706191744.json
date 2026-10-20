@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_summon_mark",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 174347.png",
+  "original_sha256": "449c3ee95f9c7d4dfeed41a240b5c592661b1c1beda013ef2cafd5c58c3c700d",
+  "client_rect": [
+    47,
+    102,
+    2322,
+    1306
+  ],
+  "crop": [
+    969,
+    312,
+    388,
+    442
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no redraw or template resizing.",
+  "review_status": "approved",
+  "notes": [
+    "保留完整战利品图标、名称和效果说明；卡片边框、底纹、光效和周围地图透明。",
+    "这是已直接获得的战利品身份，暂不赋予三选一优先级；关闭操作使用独立场景。"
+  ],
+  "validation": [
+    {
+      "key": "loot_summon_mark",
+      "source": "event_reward",
+      "kind": "native",
+      "expected": true,
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        969,
+        312,
+        388,
+        442
+      ]
+    },
+    {
+      "key": "loot_summon_mark",
+      "source": "event_reward",
+      "kind": "synthetic_1536x864",
+      "expected": true,
+      "passed": true,
+      "score": 0.993416,
+      "structure": 0.979102,
+      "location": [
+        969,
+        312,
+        388,
+        442
+      ]
+    },
+    {
+      "key": "loot_summon_mark",
+      "source": "loot_set_a",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.304679,
+      "structure": 0.221996,
+      "location": [
+        396,
+        243,
+        388,
+        442
+      ]
+    },
+    {
+      "key": "loot_summon_mark",
+      "source": "loot_set_b",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.331508,
+      "structure": 0.245849,
+      "location": [
+        1548,
+        244,
+        388,
+        442
+      ]
+    },
+    {
+      "key": "loot_summon_mark",
+      "source": "loot_set_c",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.704501,
+      "structure": -0.094592,
+      "location": [
+        1577,
+        464,
+        388,
+        442
+      ]
+    },
+    {
+      "key": "loot_summon_mark",
+      "source": "map_return",
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "score": 0.515416,
+      "structure": 0.302902,
+      "location": [
+        1319,
+        476,
+        388,
+        442
+      ]
+    }
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "approved_candidate_sha256": "9fb82664371ceabb9df0eafbe3a6105e6ddbf8481871bbce8d460593cc3bc33e",
+  "approval_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260921-180010-event-trap-templates-b5f70514\\results\\user_approval.json"
+}

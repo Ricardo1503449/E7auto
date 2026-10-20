@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_tablet",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 180146.png",
+  "original_sha256": "531cd9ea1c78d61937b0d6ffda4ee06a42b9b7bab938d126550d7d5c6ed9f13f",
+  "client_rect": [
+    41,
+    93,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    703,
+    1069,
+    939,
+    157
+  ],
+  "review_status": "approved",
+  "editing_basis": "Original BGR unchanged; alpha-only crop; no redraw or resizing.",
+  "note": "仅保留左右选项标题和下方招募说明文字，去除卡片边框、图案及背景；选择右侧“让他们放下武器。”。",
+  "validation": [
+    {
+      "key": "event_tablet",
+      "kind": "native",
+      "source": "tablet_options",
+      "passed": true,
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        703,
+        1069,
+        939,
+        157
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "kind": "synthetic_1536x864",
+      "source": "tablet_options",
+      "passed": true,
+      "score": 0.981862,
+      "structure": 0.898816,
+      "location": [
+        703,
+        1069,
+        939,
+        157
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "kind": "real_negative",
+      "source": "torch_options",
+      "passed": true,
+      "score": 0.527512,
+      "structure": 0.132352,
+      "location": [
+        702,
+        1069,
+        939,
+        157
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "kind": "real_negative",
+      "source": "mimic_options",
+      "passed": true,
+      "score": 0.482248,
+      "structure": 0.172638,
+      "location": [
+        649,
+        1069,
+        939,
+        157
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "kind": "real_negative",
+      "source": "event_trap",
+      "passed": true,
+      "score": 0.57679,
+      "structure": 0.148201,
+      "location": [
+        740,
+        1069,
+        939,
+        157
+      ]
+    },
+    {
+      "key": "event_tablet",
+      "kind": "real_negative",
+      "source": "tablet_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.031742,
+      "location": [
+        276,
+        1130,
+        939,
+        157
+      ]
+    }
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "approved_candidate_sha256": "93e42ee29d6760976ee5a1515257dd9bce8e85191c8829423b991fc366a85151",
+  "approval_statement": "通过审核，还有一个问题是，像这这种有自己独特流程的事件，你是怎么分文件组织的",
+  "operation": "relocate",
+  "previous_filename": "event_tablet.png",
+  "target_filename": "events/options/event_tablet.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_tablet-93e42ee29d67-e9620a3976ab.json",
+    "record_sha256": "e9620a3976ab8e2f06c756f533540dc353dc60a1218cc9fb935c0d16b88c6f21"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_icon_water",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-d239ab3b-24bd-47b6-83ed-d62f5742e4a0.png",
+  "original_sha256": "4d61685b1a6350bdec5bf5f54ef8418a42ca0e871ce48daa366daacb83e0bd3b",
+  "client_rect": null,
+  "crop": [
+    3,
+    16,
+    115,
+    83
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "warrior_filter",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1030,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1030,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1030,
+        215,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "warrior_filter",
+      "kind": "synthetic_1536x864",
+      "score": 0.990379,
+      "structure": 0.992527,
+      "location": [
+        1030,
+        216,
+        115,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_icon_water.png",
+  "mask_sha256": "f4ac8a282c8c211004cfe71721f5e1e9c2666c068ccd95091e7ef0779434ed81",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "191cb98db2b6dff479b90c6fe622c5ec81d01fb49829994e45a1315702d1f3cf",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_icon_water.source.json",
+    "sha256": "79e3181b5ffb54b86e71f7acf6dfc8d857b35cd9159a5276f15890170ecde5b4"
+  },
+  "search_roi": [
+    710,
+    170,
+    1000,
+    350
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_icon_water"
+  ],
+  "additional_validation_records": []
+}

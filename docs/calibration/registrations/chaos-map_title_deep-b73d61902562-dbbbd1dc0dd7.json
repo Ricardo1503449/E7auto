@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "map_title_deep",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-18 171103.png",
+  "original_sha256": "e2bec1f223ec2f07e6fe1b1330037ddc4efbf9792ae424b8cbf1df247264a2f5",
+  "client_rect": [
+    43,
+    107,
+    2322,
+    1306
+  ],
+  "crop": [
+    36,
+    25,
+    530,
+    75
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "map_floor_three",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_start",
+      "kind": "real_negative",
+      "score": 0.917692,
+      "structure": 0.776066,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "map_floor_two",
+      "kind": "real_negative",
+      "score": 0.884428,
+      "structure": 0.733428,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "map_floor_three",
+      "kind": "synthetic_1536x864",
+      "score": 0.978156,
+      "structure": 0.944275,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b73d61902562faab1bf607a89964ca768044d535dcf59966c291359cd17a6dc4",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\map_title_deep.source.json",
+    "sha256": "897e42d12fa6419a4e80d02dabfb4252733328c46242b9e2d8933068e3f55f6f"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.963,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "map_title_deep"
+  ],
+  "additional_validation_records": []
+}

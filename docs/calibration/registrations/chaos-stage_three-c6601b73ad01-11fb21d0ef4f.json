@@ -1,0 +1,781 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_three",
+  "reference_template": "D:\\E7auto\\assets\\templates\\chaos\\entry\\stage_three.png",
+  "reference_sha256": "22a96e560e94eca1f4a67af564cc2e839d1391058b1d9aa5a2ca6117f7378cdb",
+  "reference_source_record": "D:\\E7auto\\docs\\calibration\\registrations\\chaos-stage_three-22a96e560e94-914a47ab9287.json",
+  "reference_source_sha256": "914a47ab92871430a760f72e270ee1ef64aaf67e1d8ab2cb9351e262221824da",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2b767be7-2827-4e9b-8ab5-6c2c75a968d0.png",
+  "original_sha256": "ba84e182f6e5af65251dbb926e82496382934895ec88855d90c8e2fedb1e24fd",
+  "original_client_rect": [
+    51,
+    109,
+    2322,
+    1306
+  ],
+  "reference_crop": [
+    66,
+    4,
+    119,
+    32
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "editing_basis": "Keep original white character pixels plus their one-pixel neighborhood from each preceding template. Remove the green icon. A single 3x3 mask dilation exposes original antialiasing/dark-edge pixels; no outline is painted and no RGB value is changed. No recoloring, redraw or resampling.",
+  "mask": {
+    "method": "original alpha > 0 AND min(BGR) > 175 AND channel range < 55; exclude reference x < 60, then one 3x3 dilation intersected with original alpha",
+    "retained_pixels": 2111
+  },
+  "threshold": 0.928,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    1630,
+    995,
+    692,
+    160
+  ],
+  "candidate_sha256": "c6601b73ad01a3e82114f001c7e1e31c449012029807747a14026c2adaa6d479",
+  "review_status": "approved",
+  "validation": [
+    {
+      "case": "lobby_one",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.9104039072990417,
+      "max_local_structure": 0.7814726829528809,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "lobby_one",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8851818442344666,
+      "max_local_structure": 0.6910513043403625,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "lobby_one",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8650991916656494,
+      "max_local_structure": 0.6388164162635803,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "lobby_three",
+      "source_stage": 3,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "max_local_color": 1.0,
+      "max_local_structure": 0.9999998211860657,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "lobby_three",
+      "source_stage": 3,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "max_local_color": 0.9719457030296326,
+      "max_local_structure": 0.9469135403633118,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.9719457030296326,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "lobby_three",
+      "source_stage": 3,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "max_local_color": 0.9463216662406921,
+      "max_local_structure": 0.8660362362861633,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.9463216662406921,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "lobby_finished",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.9104529023170471,
+      "max_local_structure": 0.7813726663589478,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "lobby_finished",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8852720260620117,
+      "max_local_structure": 0.6909928321838379,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "lobby_finished",
+      "source_stage": 1,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8651987314224243,
+      "max_local_structure": 0.6386590600013733,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "163927",
+      "source_stage": 2,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": false,
+      "max_local_color": 0.9623277187347412,
+      "max_local_structure": 0.8981064558029175,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.9623277187347412,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "163927",
+      "source_stage": 2,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": false,
+      "max_local_color": 0.9392386674880981,
+      "max_local_structure": 0.8358476758003235,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.9392386674880981,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "163927",
+      "source_stage": 2,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.9090468883514404,
+      "max_local_structure": 0.7447157502174377,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "163935",
+      "source_stage": 4,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.9173806309700012,
+      "max_local_structure": 0.7974129319190979,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "163935",
+      "source_stage": 4,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8928942680358887,
+      "max_local_structure": 0.7115790843963623,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "163935",
+      "source_stage": 4,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.8689428567886353,
+      "max_local_structure": 0.6466993689537048,
+      "local_accepted": false,
+      "hits": []
+    },
+    {
+      "case": "163941",
+      "source_stage": 5,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": false,
+      "max_local_color": 0.968988299369812,
+      "max_local_structure": 0.9143449664115906,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.968988299369812,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "163941",
+      "source_stage": 5,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": false,
+      "max_local_color": 0.9456396102905273,
+      "max_local_structure": 0.854377269744873,
+      "local_accepted": true,
+      "hits": [
+        {
+          "score": 0.9456396102905273,
+          "bounds": [
+            1767,
+            1057,
+            119,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "case": "163941",
+      "source_stage": 5,
+      "target": 3,
+      "key": "stage_three",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "max_local_color": 0.9219080209732056,
+      "max_local_structure": 0.7814115285873413,
+      "local_accepted": false,
+      "hits": []
+    }
+  ],
+  "stage_decisions": [
+    {
+      "case": "lobby_one",
+      "expected_stage": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9999794363975525
+        }
+      ]
+    },
+    {
+      "case": "lobby_one",
+      "expected_stage": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9707915782928467
+        }
+      ]
+    },
+    {
+      "case": "lobby_one",
+      "expected_stage": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9465391039848328
+        }
+      ]
+    },
+    {
+      "case": "lobby_three",
+      "expected_stage": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 3,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9464284181594849
+        },
+        {
+          "stage": 2,
+          "score": 0.9670306444168091
+        },
+        {
+          "stage": 3,
+          "score": 1.0
+        },
+        {
+          "stage": 5,
+          "score": 0.964267909526825
+        }
+      ]
+    },
+    {
+      "case": "lobby_three",
+      "expected_stage": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 3,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 2,
+          "score": 0.9397932291030884
+        },
+        {
+          "stage": 3,
+          "score": 0.9719457030296326
+        },
+        {
+          "stage": 5,
+          "score": 0.9388887286186218
+        }
+      ]
+    },
+    {
+      "case": "lobby_three",
+      "expected_stage": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 3,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 3,
+          "score": 0.9463216662406921
+        }
+      ]
+    },
+    {
+      "case": "lobby_finished",
+      "expected_stage": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9999610781669617
+        }
+      ]
+    },
+    {
+      "case": "lobby_finished",
+      "expected_stage": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.970807671546936
+        }
+      ]
+    },
+    {
+      "case": "lobby_finished",
+      "expected_stage": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 1,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9465787410736084
+        }
+      ]
+    },
+    {
+      "case": "163927",
+      "expected_stage": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 2,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9448966383934021
+        },
+        {
+          "stage": 2,
+          "score": 1.0
+        },
+        {
+          "stage": 3,
+          "score": 0.9623277187347412
+        },
+        {
+          "stage": 5,
+          "score": 0.937039315700531
+        }
+      ]
+    },
+    {
+      "case": "163927",
+      "expected_stage": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 2,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 2,
+          "score": 0.9725637435913086
+        },
+        {
+          "stage": 3,
+          "score": 0.9392386674880981
+        }
+      ]
+    },
+    {
+      "case": "163927",
+      "expected_stage": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 2,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 2,
+          "score": 0.9466380476951599
+        }
+      ]
+    },
+    {
+      "case": "163935",
+      "expected_stage": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 4,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9411182403564453
+        },
+        {
+          "stage": 4,
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "case": "163935",
+      "expected_stage": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 4,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 4,
+          "score": 0.972099244594574
+        }
+      ]
+    },
+    {
+      "case": "163935",
+      "expected_stage": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 4,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 4,
+          "score": 0.9460077285766602
+        }
+      ]
+    },
+    {
+      "case": "163941",
+      "expected_stage": 5,
+      "size": [
+        2322,
+        1306
+      ],
+      "actual_stage": 5,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 1,
+          "score": 0.9487418532371521
+        },
+        {
+          "stage": 2,
+          "score": 0.9474263191223145
+        },
+        {
+          "stage": 3,
+          "score": 0.968988299369812
+        },
+        {
+          "stage": 4,
+          "score": 0.9312266111373901
+        },
+        {
+          "stage": 5,
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "case": "163941",
+      "expected_stage": 5,
+      "size": [
+        1920,
+        1080
+      ],
+      "actual_stage": 5,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 3,
+          "score": 0.9456396102905273
+        },
+        {
+          "stage": 5,
+          "score": 0.9731550216674805
+        }
+      ]
+    },
+    {
+      "case": "163941",
+      "expected_stage": 5,
+      "size": [
+        1536,
+        864
+      ],
+      "actual_stage": 5,
+      "passed": true,
+      "candidates": [
+        {
+          "stage": 5,
+          "score": 0.9479301571846008
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "One-pixel original edge retained, no painted outline or recoloring.",
+    "Small-window evidence uses artificial resizing; no real game input was performed.",
+    "Single-template threshold acceptance alone is not sufficient; all five candidates and the 0.02 margin are required."
+  ],
+  "approval": {
+    "date": "2026-09-25",
+    "instruction": "增加少量工作量换取稳定性，按照最低阈值加五阶段最高分及分差判断方案执行",
+    "approved_candidate_sha256": "c6601b73ad01a3e82114f001c7e1e31c449012029807747a14026c2adaa6d479"
+  },
+  "recognition_policy": {
+    "lobby_ambiguity_margin": 0.02,
+    "policy": "Compare all five lobby stage candidates that pass color/structure floors; accept only highest confidence with >=0.02 lead; close competitors fail closed."
+  },
+  "validation_summary": {
+    "positive_passed": 18,
+    "positive_total": 18,
+    "individual_negative_passed": 57,
+    "individual_negative_total": 72,
+    "resolved_passed": 18,
+    "resolved_total": 18,
+    "note": "Individual false matches are expected; acceptance requires the approved five-candidate resolver."
+  },
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260925-154026-stage-two-five-candidates-81a64b7b\\results\\lobby_one_pixel_validation.json",
+      "sha256": "dbf8242fcd7fea3cda53b4509a5e565cd19f35c2f2de76fd4e4e399dc55b3f50"
+    }
+  ]
+}

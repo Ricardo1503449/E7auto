@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_ancient_key",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\loot\\loot_ancient_key.png",
+  "original_sha256": "05050931e03b680bbc217005cf61b03f7c31f0d0f537bcc980ee893898173c86",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_ancient_key-05050931e03b-65bbb1866a39.json",
+    "record_sha256": "65bbb1866a393f025b7beb76a03116783bc750eae657e8a62025699654a46546"
+  },
+  "retained_source_pixels": "The formal PNG retains unmodified original screenshot RGB beneath its alpha. The new paragraph mask is rebuilt from these original crop pixels, not from a preview or zeroed RGB.",
+  "editing_basis": "Rebuild paragraph glyphs directly from retained original RGB, including darker internal strokes, then retain one pixel of original antialias/dark edge. BGR, canvas, icon/name RGBA and paragraph-external pixels unchanged. No sharpening, redraw or resizing.",
+  "repair_roi": [
+    0,
+    285,
+    319,
+    66
+  ],
+  "mask_extraction": {
+    "color_space": "HSV",
+    "min_value_exclusive": 80,
+    "max_saturation_exclusive": 80,
+    "original_edge_pixels": 1
+  },
+  "candidate_sha256": "be47fc64f3d3857320065af6f1714a09bda30c6f8a02ca273f5008c9261a1219",
+  "review_status": "approved",
+  "validation": [
+    {
+      "check": "canvas_and_all_RGB_unchanged",
+      "passed": true
+    },
+    {
+      "check": "audit_missing_stroke_regions_restored",
+      "passed": true
+    },
+    {
+      "key": "loot_ancient_key",
+      "check": "actual_runtime_icon_name_origin_canvas_unchanged",
+      "passed": true
+    },
+    {
+      "check": "all_runtime_loot_index_arrays_unchanged",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Only description alpha changes. Runtime icon/name pixels, masks, preprocessed parts, index arrays, canvas and origin are identical; unchanged image-recognition suites are not repeated. No live game test."
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\validation.json",
+  "approved_candidate_sha256": "be47fc64f3d3857320065af6f1714a09bda30c6f8a02ca273f5008c9261a1219",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\user-approval.json",
+      "sha256": "488e7a75650bc3195e7eec91c4d8eb7671014a40e890f9a7e9921df531302b11"
+    }
+  ],
+  "validation_reuse": "Reused approved candidate-stage checks. PNG/alpha, configuration, ROI and recognition code unchanged; no image scans repeated after approval."
+}

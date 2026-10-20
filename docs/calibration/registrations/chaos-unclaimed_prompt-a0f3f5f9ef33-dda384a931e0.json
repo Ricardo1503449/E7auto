@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "unclaimed_prompt",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6ddb7858-084a-4d91-a3d6-f3625c48ba7a.png",
+  "original_sha256": "d7afd06b800bda39fc98f6dde742a3e6d42c4bfd02752899ded30b110262aae8",
+  "client_rect": [
+    30,
+    81,
+    2322,
+    1306
+  ],
+  "crop": [
+    940,
+    540,
+    470,
+    85
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "reward_leave",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        940,
+        540,
+        470,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "reward_leave",
+      "kind": "synthetic_1536x864",
+      "score": 0.968717,
+      "structure": 0.894321,
+      "location": [
+        940,
+        540,
+        470,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "a0f3f5f9ef3346073bd4fc0d115cc34d8620cafff35d58763b46ec540574634a",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\unclaimed_prompt.source.json",
+    "sha256": "08bd4fa0d1f25588bfb5e4b4cbe5bd196046268cac830848923b5685a65b44b7"
+  },
+  "search_roi": [
+    850,
+    480,
+    780,
+    240
+  ],
+  "threshold": 0.954,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "unclaimed_prompt"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "unclaimed_prompt.png",
+  "target_filename": "battle/unclaimed_prompt.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-unclaimed_prompt-a0f3f5f9ef33-d425ef70fabc.json",
+    "record_sha256": "d425ef70fabcb3b4defc70d258dba232f1739fc6cb818c505441cfaa1c1f71d3"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

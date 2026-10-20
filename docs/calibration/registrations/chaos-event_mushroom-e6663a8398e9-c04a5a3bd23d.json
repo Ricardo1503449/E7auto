@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mushroom",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_mushroom.png",
+  "original_sha256": "af3dbc3238d3c9c20a0d5c0612ae2ddb82b9c379b16c1e87fa413a4151b52b1e",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_mushroom-af3dbc3238d3-e637d3043d2b.json",
+    "record_sha256": "e637d3043d2b1556016e314fa41e5389b0e590cc74188f91c3af8833d93d2722"
+  },
+  "canvas_size": [
+    1906,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1906,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 16951,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_mushroom",
+      "source": "artifacts\\tasks\\chaos\\20260922-142348-events-sword-cairn-mushroom-candidates-b35357ec\\inputs\\mushroom_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_mushroom",
+        "event_mushroom",
+        "event_mushroom"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          480,
+          1110
+        ],
+        [
+          480,
+          1110
+        ],
+        [
+          480,
+          1110
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 693.81
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          480,
+          1110
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "source": "artifacts\\tasks\\chaos\\20260922-142348-events-sword-cairn-mushroom-candidates-b35357ec\\inputs\\mushroom_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_mushroom",
+        "event_mushroom",
+        "event_mushroom"
+      ],
+      "scores": [
+        0.9805207252502441,
+        0.9805207252502441,
+        0.9805207252502441
+      ],
+      "anchors": [
+        [
+          317,
+          735
+        ],
+        [
+          317,
+          735
+        ],
+        [
+          317,
+          735
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 145.933
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9789138436317444,
+        "anchor": [
+          317,
+          735
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "source": "artifacts\\tasks\\chaos\\20260922-142348-events-sword-cairn-mushroom-candidates-b35357ec\\inputs\\mushroom_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_mushroom",
+        "event_mushroom",
+        "event_mushroom"
+      ],
+      "scores": [
+        0.9963177442550659,
+        0.9963177442550659,
+        0.9963177442550659
+      ],
+      "anchors": [
+        [
+          397,
+          918
+        ],
+        [
+          397,
+          918
+        ],
+        [
+          397,
+          918
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 145.181
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9930340051651001,
+        "anchor": [
+          397,
+          918
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "source": "artifacts\\tasks\\chaos\\20260922-142348-events-sword-cairn-mushroom-candidates-b35357ec\\inputs\\mushroom_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_mushroom",
+        "event_mushroom",
+        "event_mushroom"
+      ],
+      "scores": [
+        0.9870631694793701,
+        0.9870631694793701,
+        0.9870631694793701
+      ],
+      "anchors": [
+        [
+          476,
+          1102
+        ],
+        [
+          476,
+          1102
+        ],
+        [
+          476,
+          1102
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 194.185
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9850035905838013,
+        "anchor": [
+          476,
+          1102
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mushroom",
+      "source": "artifacts\\tasks\\chaos\\20260922-142348-events-sword-cairn-mushroom-candidates-b35357ec\\inputs\\mushroom_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_mushroom",
+        "event_mushroom",
+        "event_mushroom"
+      ],
+      "scores": [
+        0.9904664754867554,
+        0.9904664754867554,
+        0.9904664754867554
+      ],
+      "anchors": [
+        [
+          529,
+          1224
+        ],
+        [
+          529,
+          1224
+        ],
+        [
+          529,
+          1224
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 194.383
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9881808161735535,
+        "anchor": [
+          529,
+          1224
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

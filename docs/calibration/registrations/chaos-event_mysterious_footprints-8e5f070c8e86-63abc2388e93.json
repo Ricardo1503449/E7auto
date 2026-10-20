@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mysterious_footprints",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_mysterious_footprints.png",
+  "original_sha256": "3ba48824b7afc58d27cffa3d03691ed8f6af5780d3280601b1ff3e0412f2c544",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_mysterious_footprints-3ba48824b7af-1e25e232a390.json",
+    "record_sha256": "1e25e232a390da5ab33b6f0a1a6f00b0254898484400badae0d805f98007b7b5"
+  },
+  "canvas_size": [
+    1684,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1684,
+      80
+    ],
+    [
+      1203,
+      80,
+      481,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 7361,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_mysterious_footprints",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\inputs\\footprints_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_mysterious_footprints",
+        "event_mysterious_footprints",
+        "event_mysterious_footprints"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ],
+        [
+          1850,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 352.173
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1850,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mysterious_footprints",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\inputs\\footprints_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_mysterious_footprints",
+        "event_mysterious_footprints",
+        "event_mysterious_footprints"
+      ],
+      "scores": [
+        0.9864816069602966,
+        0.9864816069602966,
+        0.9864816069602966
+      ],
+      "anchors": [
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ],
+        [
+          1224,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 66.758
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9834339022636414,
+        "anchor": [
+          1224,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mysterious_footprints",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\inputs\\footprints_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_mysterious_footprints",
+        "event_mysterious_footprints",
+        "event_mysterious_footprints"
+      ],
+      "scores": [
+        0.9898900985717773,
+        0.9898900985717773,
+        0.9898900985717773
+      ],
+      "anchors": [
+        [
+          1530,
+          901
+        ],
+        [
+          1530,
+          901
+        ],
+        [
+          1530,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 87.064
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9877160787582397,
+        "anchor": [
+          1530,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mysterious_footprints",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\inputs\\footprints_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_mysterious_footprints",
+        "event_mysterious_footprints",
+        "event_mysterious_footprints"
+      ],
+      "scores": [
+        0.9871271252632141,
+        0.9871271252632141,
+        0.9871271252632141
+      ],
+      "anchors": [
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ],
+        [
+          1836,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 101.227
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.985844612121582,
+        "anchor": [
+          1836,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mysterious_footprints",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\inputs\\footprints_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_mysterious_footprints",
+        "event_mysterious_footprints",
+        "event_mysterious_footprints"
+      ],
+      "scores": [
+        0.9921932220458984,
+        0.9921932220458984,
+        0.9921932220458984
+      ],
+      "anchors": [
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ],
+        [
+          2040,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 106.887
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9899713397026062,
+        "anchor": [
+          2040,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

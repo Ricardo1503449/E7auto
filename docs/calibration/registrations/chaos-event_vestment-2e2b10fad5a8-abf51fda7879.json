@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_vestment",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 185119.png",
+  "original_sha256": "d261c9dab7aa17646e0a1bb11919abd4192014242240466a93c1c6904046636d",
+  "client_rect": [
+    62,
+    106,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    731,
+    1069,
+    911,
+    168
+  ],
+  "review_status": "approved",
+  "editing_basis": "Original BGR preserved, alpha-only extraction; no redraw or resize.",
+  "note": "仅保留左侧“拿走祭服。”、下方完整圆条图标及右侧“将祭服留在原地。”；其余背景和装饰透明。",
+  "validation": [
+    {
+      "key": "event_vestment",
+      "source": "vestment_first",
+      "kind": "native",
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        731,
+        1069,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "vestment_first",
+      "kind": "synthetic_1536x864",
+      "passed": true,
+      "score": 0.981938,
+      "structure": 0.978464,
+      "location": [
+        731,
+        1069,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "other_stage",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.499926,
+      "structure": 0.226946,
+      "location": [
+        370,
+        1070,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "followup",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.075879,
+      "location": [
+        1117,
+        1135,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "torch",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.563064,
+      "structure": 0.323825,
+      "location": [
+        731,
+        1069,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "tablet",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.56078,
+      "structure": 0.306602,
+      "location": [
+        731,
+        1069,
+        911,
+        168
+      ]
+    },
+    {
+      "key": "event_vestment",
+      "source": "trap",
+      "kind": "real_negative",
+      "passed": true,
+      "score": 0.621968,
+      "structure": 0.392561,
+      "location": [
+        730,
+        1070,
+        911,
+        168
+      ]
+    }
+  ],
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "approved_candidate_sha256": "2e2b10fad5a834d3f6a58efa3289b24d8052d0ab9fbfd9925782d19818fae32e",
+  "approval_statement": "候选模板通过，直接正式登记接入"
+}

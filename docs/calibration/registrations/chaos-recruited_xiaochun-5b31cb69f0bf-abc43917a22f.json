@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_xiaochun",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-c46d7b25-d32c-4249-a11d-a9cf4c485c0c.png",
+  "original_sha256": "9aded6261bfccce24d1d27a30bd55821447f1cbc0aa0eba78b5784da82812084",
+  "client_rect": null,
+  "crop": [
+    177,
+    35,
+    248,
+    174
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_done",
+      "kind": "source_self",
+      "score": 0.999997,
+      "structure": 0.999988,
+      "location": [
+        848,
+        789,
+        248,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done_alt",
+      "kind": "real_positive",
+      "score": 0.999981,
+      "structure": 0.999926,
+      "location": [
+        848,
+        789,
+        248,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done",
+      "kind": "synthetic_1536x864",
+      "score": 0.978267,
+      "structure": 0.929839,
+      "location": [
+        848,
+        789,
+        248,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision2_masks\\recruited_xiaochun.png",
+  "mask_sha256": "0c31b45cc7fa683611edd5131b65c140d74e11c528faa0661169d3c165153b10",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "5b31cb69f0bf192305ca823379c0a14a32bf21d818b82c09cf6bc77e93e03e50",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision2.json",
+      "sha256": "95223e4157d428d47160353d9b97a4ab3f7849844bf249a97bbc0d1a2ca8dda8"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruited_xiaochun.source.json",
+    "sha256": "87ab9e1d3bb2f78fcb4223d47135e2fab98adce31200a6554ee0317d3383dbb7"
+  },
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.963,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第二轮修订：职业图标内部背景透明，不填充孔洞，仅保留原图笔画及抗锯齿边缘；清除名称末端头像残留；裴妮职业图标扩大原图取样范围，保留左侧弧线。待复审。"
+  ],
+  "resource_scenes": [
+    "recruited_xiaochun"
+  ],
+  "additional_validation_records": []
+}

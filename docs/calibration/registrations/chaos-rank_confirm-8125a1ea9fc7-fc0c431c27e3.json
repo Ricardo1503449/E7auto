@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_confirm",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-e401bf2f-6c33-4d03-aed5-eda4684c53f0.png",
+  "original_sha256": "e252921abb0c37d416d2719c6ba4ae540b0a2f95fb7dbfe148f80b53c410ae2f",
+  "client_rect": [
+    47,
+    116,
+    2322,
+    1306
+  ],
+  "crop": [
+    1665,
+    1134,
+    614,
+    133
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rank_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.985057,
+      "structure": 0.964207,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\rank_confirm.png",
+  "mask_sha256": "2fb88a5b277a6d0d9f33483a8403ba77c0be8c335ca913d8c3deb47b14326a15",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "8125a1ea9fc7f2ed815f3c62e0db33b264d0deaff8f8e203cc42bdc3038d6bf7",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\rank_confirm.source.json",
+    "sha256": "f6fd21404603079153b9c031cd8ea0fbeaabd09f6e4297baed63de496724dcc3"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按反馈重做：保留完整按钮外形，按钮外背景透明；原图RGB像素保持，待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "rank_confirm"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ]
+}

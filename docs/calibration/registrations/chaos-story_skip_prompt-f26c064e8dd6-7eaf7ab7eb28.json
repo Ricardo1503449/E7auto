@@ -1,0 +1,186 @@
+{
+  "key": "story_skip_prompt",
+  "feature": "chaos",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "source": {
+    "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 163534.png",
+    "sha256": "7ddd07c9571ffae2121ea0af3713e1cc57bb01aea1e6dc476338752f147ade86",
+    "client_rect": [
+      46,
+      108,
+      2322,
+      1306
+    ]
+  },
+  "crop_screen": [
+    1050,
+    674,
+    316,
+    38
+  ],
+  "crop_client": [
+    1004,
+    566,
+    316,
+    38
+  ],
+  "editing_basis": "User requested original text/arrow pixels only, transparent background; RGB bytes preserved without redraw or resampling.",
+  "mask": {
+    "method": "minimum BGR and channel spread, binary alpha; no dilation",
+    "minimum_exclusive": 55,
+    "spread_exclusive": 50
+  },
+  "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20260925-190000-ecd25ddd\\chaos\\battle\\story_skip_prompt.png",
+  "candidate_sha256": "f26c064e8dd6af0f77bc29d22ea50d5971e415a569f482d45d26b7435f96ba5a",
+  "roi": [
+    930,
+    480,
+    500,
+    180
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "review_status": "approved",
+  "original_rgb_unchanged": true,
+  "validation": [
+    {
+      "sample": "163534-2322x1306 source",
+      "key": "story_skip_prompt",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "best_color": 1.0,
+      "structure_at_best_color": 0.9999997615814209,
+      "position": [
+        1004,
+        566
+      ],
+      "accepted_confidence": 1.0
+    },
+    {
+      "sample": "163534-1920x1080 synthetic-downscale",
+      "key": "story_skip_prompt",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "best_color": 0.9862693548202515,
+      "structure_at_best_color": 0.9178142547607422,
+      "position": [
+        1004,
+        566
+      ],
+      "accepted_confidence": 0.9862693548202515
+    },
+    {
+      "sample": "163534-1536x864 synthetic-downscale",
+      "key": "story_skip_prompt",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "best_color": 0.9722002744674683,
+      "structure_at_best_color": 0.8245956897735596,
+      "position": [
+        1004,
+        565
+      ],
+      "accepted_confidence": 0.9722002744674683
+    },
+    {
+      "sample": "163528 opposite-screen",
+      "key": "story_skip_prompt",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "best_color": 0.8032466769218445,
+      "structure_at_best_color": 0.0031751643400639296,
+      "position": [
+        1011,
+        622
+      ],
+      "accepted_confidence": null
+    },
+    {
+      "sample": "battle_auto real-negative",
+      "key": "story_skip_prompt",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "best_color": 0.3559892773628235,
+      "structure_at_best_color": 0.03489142283797264,
+      "position": [
+        930,
+        622
+      ],
+      "accepted_confidence": null
+    },
+    {
+      "sample": "battle_exit real-negative",
+      "key": "story_skip_prompt",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "best_color": 0.7831869721412659,
+      "structure_at_best_color": 0.03802555426955223,
+      "position": [
+        1083,
+        480
+      ],
+      "accepted_confidence": null
+    },
+    {
+      "sample": "boss_prepare real-negative",
+      "key": "story_skip_prompt",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "best_color": 0.5922365188598633,
+      "structure_at_best_color": 0.026816105470061302,
+      "position": [
+        930,
+        491
+      ],
+      "accepted_confidence": null
+    },
+    {
+      "sample": "boss_victory real-negative",
+      "key": "story_skip_prompt",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "best_color": 0.6311662793159485,
+      "structure_at_best_color": 0.05238867551088333,
+      "position": [
+        1020,
+        595
+      ],
+      "accepted_confidence": null
+    }
+  ],
+  "negative_sources": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_auto.png",
+      "sha256": "456fd447a4fb510ce3b9f5a8085ca491045163b94e66d4c6431749eac7b0e631"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\battle_exit.png",
+      "sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\boss_prepare.png",
+      "sha256": "db4dde42bc631efc95dc0643c78026c9e3fb58ae61826c23d41ab29b27f15150"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\boss_victory.png",
+      "sha256": "472fed9e1260c982cd08d38213f114e261552dc6f444a909e7c2ba0db0766e3a"
+    }
+  ],
+  "limitations": [
+    "Only one real positive frame per new template; source match is not an independent positive.",
+    "1920/1536 samples are synthetic resizes, not native-resolution captures.",
+    "No alternate story backgrounds or live animation sequence verified."
+  ],
+  "approval_basis": "User explicitly approved both displayed candidates and authorized remaining implementation on 2026-09-25."
+}

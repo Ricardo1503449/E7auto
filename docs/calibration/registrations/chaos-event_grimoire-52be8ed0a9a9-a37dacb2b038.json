@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_grimoire",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_grimoire.png",
+  "original_sha256": "8a7626c61971d51fdd9edd0aa0e2d29087745450b6f277c0c1ece1d2ff9bc775",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_grimoire-8a7626c61971-2396456f185a.json",
+    "record_sha256": "2396456f185aa6a11a67c0b4c6c7bee257c4e4f93bcbe061845e7239d5dd9799"
+  },
+  "canvas_size": [
+    1790,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1790,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 13131,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_grimoire",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_grimoire",
+        "event_grimoire",
+        "event_grimoire"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 421.012
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1161,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grimoire",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_grimoire",
+        "event_grimoire",
+        "event_grimoire"
+      ],
+      "scores": [
+        0.9819679856300354,
+        0.9819679856300354,
+        0.9819679856300354
+      ],
+      "anchors": [
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 103.19
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9808940291404724,
+        "anchor": [
+          768,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grimoire",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_grimoire",
+        "event_grimoire",
+        "event_grimoire"
+      ],
+      "scores": [
+        0.9942241907119751,
+        0.9942241907119751,
+        0.9942241907119751
+      ],
+      "anchors": [
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 79.419
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9915974140167236,
+        "anchor": [
+          960,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grimoire",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_grimoire",
+        "event_grimoire",
+        "event_grimoire"
+      ],
+      "scores": [
+        0.9918164014816284,
+        0.9918164014816284,
+        0.9918164014816284
+      ],
+      "anchors": [
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 102.446
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9906736016273499,
+        "anchor": [
+          1152,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grimoire",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\inputs\\options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_grimoire",
+        "event_grimoire",
+        "event_grimoire"
+      ],
+      "scores": [
+        0.9881595373153687,
+        0.9881595373153687,
+        0.9881595373153687
+      ],
+      "anchors": [
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 111.377
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9863343238830566,
+        "anchor": [
+          1280,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

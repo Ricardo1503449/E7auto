@@ -19,6 +19,7 @@ refresh_strategy:
   recovery_wait_seconds: [5, 180, 5]
 
 template_manifests:
+  chaos: ../assets/templates/chaos/manifest.json
   common: ../assets/templates/common/manifest.json
   shop: ../assets/templates/shop/manifest.json
   penguin: ../assets/templates/penguin/manifest.json
@@ -174,6 +175,66 @@ logging:
   max_total_mb: 500
 
 # Shared date-change workflow; loaded only by features that explicitly opt in.
+daily_reset:
+  observe_ms: 2000
+  poll_ms: 100
+  stable_frames: 3
+  page_timeout_ms: 15000
+  close_retry_ms: 1500
+  close_max_attempts: 3
+  templates:
+    date_change_title:
+      roi:
+      - 850
+      - 280
+      - 620
+      - 230
+      threshold: 0.96
+      structure_threshold: 0.8
+    date_change_close:
+      roi:
+      - 970
+      - 760
+      - 390
+      - 230
+      threshold: 0.96
+      structure_threshold: 0.8
+    daily_signin_confirm:
+      roi:
+      - 1600
+      - 1080
+      - 650
+      - 220
+      threshold: 0.96
+      structure_threshold: 0.8
+    login_reward_title:
+      roi:
+      - 800
+      - 140
+      - 720
+      - 240
+      threshold: 0.96
+      structure_threshold: 0.8
+    login_reward_close:
+      roi:
+      - 970
+      - 1180
+      - 410
+      - 126
+      threshold: 0.93
+      structure_threshold: 0.8
+    buff_effect_title:
+      roi: [280, 170, 450, 170]
+      threshold: 0.96
+      structure_threshold: 0.8
+
+  component_matching:
+    tolerance: [6, 8]
+    templates:
+      login_reward_close:
+        primary: [39, 0, 127, 34]
+        secondary: [0, 0, 39, 34]
+
 penguin_component_matching:
   tolerance: [6, 8]
   templates:

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_painting_suppression_night",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 201730.png",
+  "sha256": "97cdf469e3d792be16e4e367c72fab72321c31fa154921b3b60b6de61b834d59",
+  "original_size": [
+    2435,
+    1501
+  ],
+  "display_size": [
+    2016,
+    1242
+  ],
+  "client_rect": [
+    68,
+    102,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_painting_ruins_below",
+    "loot_painting_forgotten_legend",
+    "loot_painting_suppression_night"
+  ],
+  "crop": [
+    1576,
+    276,
+    334,
+    380
+  ],
+  "regions": {
+    "icon": [
+      84,
+      0,
+      157,
+      120
+    ],
+    "name": [
+      23,
+      184,
+      293,
+      56
+    ],
+    "description": [
+      0,
+      276,
+      334,
+      104
+    ]
+  },
+  "editing_basis": "Crop original screenshot client pixels; preserve BGR exactly, alpha only. Icon silhouette, full name and full description; remove desktop, title bar, card border, filler and reroll UI.",
+  "review_status": "approved",
+  "candidate_sha256": "1d15f8fcf30d7cd322a254ae88c3d3a544bf09f3f34760d56987bd9ebb874544",
+  "revision": {
+    "reason": "Remove isolated purple card-pattern pixels around text",
+    "previous_candidate_sha256": "80b89fb6c1705f523619c2b2010f128d70d37fa83ef6532d3eccec7a4f3682be",
+    "rgb_unchanged": true,
+    "mask_removed_pixels": 245,
+    "method": "Intersect text masks with existing glyph_mask contrast and connected-component filter; icon untouched."
+  },
+  "validation": {
+    "record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203919-loot-screenshot-review-e5c5fff6\\results\\painting_revision2_validation.json",
+    "sha256": "6fdc40ddd5ed459cec99fe1b4be332d273ab3ea85dedb4ee05f086a5aec092db",
+    "passed": 54,
+    "total": 54,
+    "thresholds": {
+      "color": 0.9,
+      "structure": 0.8
+    }
+  },
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203919-loot-screenshot-review-e5c5fff6\\results\\painting_approval.json",
+    "sha256": "f08c30541ce2f3f1e9bbc23a69e5f731e40e377f7ce97c3692d785219b1b2c33"
+  },
+  "index_validation_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203919-loot-screenshot-review-e5c5fff6\\results\\index_validation.json",
+    "sha256": "29a13a0303e746e6cd1be09934d032af2f4fe2f0b6d2438298f193b74ae06e07"
+  }
+}

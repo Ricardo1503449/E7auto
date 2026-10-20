@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "exploration_card",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-99307b47-e74e-4394-8fb4-7cbe34747a93.png",
+  "original_sha256": "33e575fceb73a77b60f0f6cddde065d63f816bf8920ec75416533e8c76826a5b",
+  "previous_template": "D:\\E7auto\\assets\\templates\\chaos\\entry\\exploration_card.png",
+  "previous_template_sha256": "64ef2fd744c9ef5e4e97af37ae56067551b17e86b33dfa2740d8d7c094cf4061",
+  "crop": [
+    64,
+    50,
+    219,
+    53
+  ],
+  "editing_basis": "User requested original pixels of upper-left spiral icon and complete 次元探查 lettering only; no redraw or resize; BGR pixels unchanged, surrounding background removed by binary alpha.",
+  "mask": {
+    "white_min_exclusive": 160,
+    "channel_spread_max_exclusive": 50,
+    "dilation": [
+      3,
+      3
+    ],
+    "kept_pixels": 4941
+  },
+  "baseline": [
+    2322,
+    1306
+  ],
+  "search_roi": [
+    47,
+    316,
+    513,
+    925
+  ],
+  "threshold": 0.95,
+  "structure_threshold": 0.8,
+  "action": [
+    0.5,
+    0.5
+  ],
+  "action_offset": [
+    112,
+    414
+  ],
+  "reference_click": [
+    304,
+    778
+  ],
+  "candidate_sha256": "18c0f9856489d0c8c108be3cd710764c54996028ba913e5e07b87cc02350815d",
+  "review_status": "approved",
+  "validation": [
+    {
+      "sample": "battle_menu",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_original",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9999860525131226,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "battle_menu",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_resize",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9679742455482483,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "battle_menu",
+      "sample_sha256": "d3895335b8d5b897aec0f483a0db2189e8c362ba14570da4efe5e5eb1d72c90a",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_resize",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9622560143470764,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "battle_exit",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_original",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.999991774559021,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "battle_exit",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_resize",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.9680338501930237,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "battle_exit",
+      "sample_sha256": "e2d60ab8fe381f569ddeab3c3f6877eba3a1090d72d3558be14a335f0700251a",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_resize",
+      "expected": true,
+      "detected": true,
+      "passed": true,
+      "confidence": 0.962335467338562,
+      "bounds": [
+        83,
+        338,
+        219,
+        53
+      ],
+      "click": [
+        304,
+        778
+      ]
+    },
+    {
+      "sample": "home",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_original",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "home",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "home",
+      "sample_sha256": "fa959bab23e2fe050ecfd7227cc80c576a7c0f4177b5a6d9cd39ff11b0c761ec",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "intro",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_original",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "intro",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "intro",
+      "sample_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "lobby_one",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_original",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "lobby_one",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "lobby_one",
+      "sample_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_resize",
+      "expected": false,
+      "detected": false,
+      "passed": true,
+      "confidence": null,
+      "bounds": null,
+      "click": null
+    },
+    {
+      "sample": "spirit_altar",
+      "kind": "real_neighbor_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "sample": "hunt",
+      "kind": "real_neighbor_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    },
+    {
+      "sample": "labyrinth",
+      "kind": "real_neighbor_negative",
+      "expected": false,
+      "detected": false,
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Scaled cases are resized original screenshots, not independent captures at those display sizes.",
+    "No live game clicks were performed."
+  ],
+  "runtime_changes_required": [
+    "Replace exploration_card template via registration after approval",
+    "Replace battle_cards ROI with exploration_card ROI and update its scene search_roi",
+    "Add explicit action_offset to preserve card-center click based on detected header",
+    "Existing flow and matcher consume unchanged template key and configured anchor; no algorithm changes required"
+  ],
+  "approved_candidate_sha256": "18c0f9856489d0c8c108be3cd710764c54996028ba913e5e07b87cc02350815d",
+  "approval": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-120819-exploration-card-header-review-f6940d98\\results\\user-approval.json",
+    "sha256": "7dfb442458103617a07ae7aea0b83f2bac50be356be56f668ef6ffe698950a64",
+    "user_message": "通过"
+  }
+}

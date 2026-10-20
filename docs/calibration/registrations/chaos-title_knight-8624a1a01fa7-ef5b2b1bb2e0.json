@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "title_knight",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-e4702bfe-a3c0-49fa-a0de-efc2b74864b6.png",
+  "original_sha256": "79bf82ab432c5d287afba2be0be5e1b316768b50abba3c07fd73c79d46d70109",
+  "client_rect": [
+    47,
+    93,
+    2322,
+    1306
+  ],
+  "crop": [
+    30,
+    20,
+    345,
+    80
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "knight_list",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "knight_light",
+      "kind": "real_positive",
+      "score": 0.99991,
+      "structure": 0.999774,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_list",
+      "kind": "real_negative",
+      "score": 0.895197,
+      "structure": 0.714578,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "soul_list",
+      "kind": "real_negative",
+      "score": 0.727683,
+      "structure": 0.351008,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "warrior_list",
+      "kind": "real_negative",
+      "score": 0.916079,
+      "structure": 0.77467,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "all_list",
+      "kind": "real_negative",
+      "score": 0.646407,
+      "structure": 0.412926,
+      "location": [
+        75,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "knight_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.977951,
+      "structure": 0.939012,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "8624a1a01fa71313fc120ae7f04f58983aa49dae3eb1cbfb6e0e25100f0d9782",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\title_knight.source.json",
+    "sha256": "7caa10796678794b2c8b200b0a7e4c71ea19e385f752c05a4dc32de7cd439f5f"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.963,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "title_knight"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "title_knight.png",
+  "target_filename": "recruitment/title_knight.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-title_knight-8624a1a01fa7-e22f79e4b9de.json",
+    "record_sha256": "e22f79e4b9de1d1613fe4dafdb7e1678742a789e8de42156e41392baa4ec02c2"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

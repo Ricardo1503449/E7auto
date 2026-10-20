@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "victory",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-29e4d4b6-fdfd-45ca-8340-116be6cb4662.png",
+  "original_sha256": "254696480568bfc07ce6813b071ba8d7fb4274651653c4a4dc1dc4d3a4112a17",
+  "client_rect": null,
+  "crop": [
+    44,
+    22,
+    511,
+    99
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "victory_normal",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999997,
+      "location": [
+        931,
+        52,
+        511,
+        99
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "elite_victory",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.000006,
+      "location": [
+        931,
+        52,
+        511,
+        99
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "boss_victory",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999997,
+      "location": [
+        931,
+        52,
+        511,
+        99
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_prepare",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": -0.038359,
+      "location": [
+        1053,
+        21,
+        511,
+        99
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "failed",
+      "kind": "real_negative",
+      "score": 0.53747,
+      "structure": 0.066382,
+      "location": [
+        946,
+        121,
+        511,
+        99
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "victory_normal",
+      "kind": "synthetic_1536x864",
+      "score": 0.998537,
+      "structure": 0.861916,
+      "location": [
+        931,
+        52,
+        511,
+        99
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\victory.png",
+  "mask_sha256": "65387eb0dd46fa9a2ebc594f7386b6fae4b8bd1402ea4ccc84f138f23b4e4496",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "37b8543039583072f0691d558d5e9b82e72dd168d467eb44eb387bc66ceba983",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\victory.source.json",
+    "sha256": "6dd681a3f64a45ad514f04c9cb01cc041f2a33e23ef8ac2ca60e84b97000c541"
+  },
+  "search_roi": [
+    820,
+    0,
+    770,
+    220
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮只保留文字笔画（关闭控件同时保留左侧图标），去除底图；原图RGB像素保持，待复审。"
+  ],
+  "resource_scenes": [
+    "victory"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "victory.png",
+  "target_filename": "battle/victory.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-victory-37b854303958-824ab6bf8f68.json",
+    "record_sha256": "824ab6bf8f683a1884917bf8cb888f129f1c70c0a7ed7cf3956c162f20e3f0db"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

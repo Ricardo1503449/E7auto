@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_dark",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-953e51de-89f2-497b-bbd2-3028feba4420.png",
+  "original_sha256": "229a9df39c7e2c0b4afccf33bbae453760a49127565176e2500d077276c08098",
+  "client_rect": null,
+  "crop": [
+    15,
+    14,
+    244,
+    77
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "all_list",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1249,
+        23,
+        244,
+        77
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.96339,
+      "structure": 0.974933,
+      "location": [
+        1249,
+        23,
+        244,
+        77
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_dark.png",
+  "mask_sha256": "320089eb17b9d46683379e3c2f4f2b97864feb6dd12c19d0a469a023aadbe8ea",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "d415efd9b8852e0921ecb547dbdc9bb3292073c60313d0db576d43acb2f7b60a",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_dark.source.json",
+    "sha256": "d0caec6915903188dbd974e56ca09b05437744272e1c093785e31c4c26860406"
+  },
+  "search_roi": [
+    1200,
+    0,
+    340,
+    130
+  ],
+  "threshold": 0.948,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "filter_dark"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "filter_dark.png",
+  "target_filename": "recruitment/filter_dark.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-filter_dark-d415efd9b885-7610e908efed.json",
+    "record_sha256": "7610e908efed063c4b2d532f845f8660846015ebac9c08e4dcaab3010a0f667a"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

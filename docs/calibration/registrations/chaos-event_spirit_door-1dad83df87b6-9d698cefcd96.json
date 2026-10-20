@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_spirit_door",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_spirit_door.png",
+  "original_sha256": "87877f108832956acccd2ba1e019f1347472133e01bc33269737c746b5fa0e81",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_spirit_door-87877f108832-3f13fdf53da2.json",
+    "record_sha256": "3f13fdf53da2bc7d26231d4a0866a28e5dc7ba2a622b6a1e2fd2f43451d19131"
+  },
+  "canvas_size": [
+    1186,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1186,
+      80
+    ],
+    [
+      0,
+      80,
+      536,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 6930,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_spirit_door",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203649-backpack-spirit-door-ghost-events-cff5e834\\inputs\\spirit_door_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_spirit_door",
+        "event_spirit_door",
+        "event_spirit_door"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1510,
+          1090
+        ],
+        [
+          1510,
+          1090
+        ],
+        [
+          1510,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 502.592
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1510,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_spirit_door",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203649-backpack-spirit-door-ghost-events-cff5e834\\inputs\\spirit_door_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_spirit_door",
+        "event_spirit_door",
+        "event_spirit_door"
+      ],
+      "scores": [
+        0.9695444703102112,
+        0.9695444703102112,
+        0.9695444703102112
+      ],
+      "anchors": [
+        [
+          998,
+          721
+        ],
+        [
+          998,
+          721
+        ],
+        [
+          998,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 71.952
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9657996892929077,
+        "anchor": [
+          998,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_spirit_door",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203649-backpack-spirit-door-ghost-events-cff5e834\\inputs\\spirit_door_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_spirit_door",
+        "event_spirit_door",
+        "event_spirit_door"
+      ],
+      "scores": [
+        0.993523120880127,
+        0.993523120880127,
+        0.993523120880127
+      ],
+      "anchors": [
+        [
+          1249,
+          901
+        ],
+        [
+          1249,
+          901
+        ],
+        [
+          1249,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 97.357
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9911118745803833,
+        "anchor": [
+          1249,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_spirit_door",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203649-backpack-spirit-door-ghost-events-cff5e834\\inputs\\spirit_door_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_spirit_door",
+        "event_spirit_door",
+        "event_spirit_door"
+      ],
+      "scores": [
+        0.9933675527572632,
+        0.9933675527572632,
+        0.9933675527572632
+      ],
+      "anchors": [
+        [
+          1498,
+          1082
+        ],
+        [
+          1498,
+          1082
+        ],
+        [
+          1498,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 109.477
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9922192692756653,
+        "anchor": [
+          1498,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_spirit_door",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-203649-backpack-spirit-door-ghost-events-cff5e834\\inputs\\spirit_door_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_spirit_door",
+        "event_spirit_door",
+        "event_spirit_door"
+      ],
+      "scores": [
+        0.9911144971847534,
+        0.9911144971847534,
+        0.9911144971847534
+      ],
+      "anchors": [
+        [
+          1665,
+          1202
+        ],
+        [
+          1665,
+          1202
+        ],
+        [
+          1665,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 137.041
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.989020049571991,
+        "anchor": [
+          1665,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

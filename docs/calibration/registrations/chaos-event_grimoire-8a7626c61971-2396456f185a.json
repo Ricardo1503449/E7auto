@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_grimoire",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 134939.png",
+  "original_sha256": "29ff0a71b499d127c5ef657d57f6c23fc1d5cf7d11091454d2d17b16aa280077",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    232,
+    1069,
+    1790,
+    158
+  ],
+  "candidate_sha256": "8a7626c61971d51fdd9edd0aa0e2d29087745450b6f277c0c1ece1d2ff9bc775",
+  "editing_basis": "Crop original pixels and mask background only; no redraw or resampling. Rank 5 retains full 5(Max); no arrow included.",
+  "review_status": "approved",
+  "client_rect": [
+    46,
+    104,
+    2322,
+    1306
+  ],
+  "source_role": "event_options",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "action": [
+    0.5189944134078213,
+    0.13291139240506328
+  ],
+  "validation_report": "artifacts\\tasks\\chaos\\20260926-173413-grimoire-single-rank-candidates-2ca187da\\results\\validation.json",
+  "validation_report_sha256": "87dacad421f399ab379623882a920f320e3abf111766054b8d40b362ace6e928",
+  "validation_passed": true,
+  "limitations": [
+    "Real full-frame pairs:1->2,2->3,4->5,1->3; no full-frame3->4 or multi-rank cap sample.",
+    "Scaled frames are synthetic. Battle rank cards have a different layout and are not covered by these result-panel regions.",
+    "No runtime code/configuration changed; candidate validation only."
+  ],
+  "index": {
+    "layout": 3,
+    "origin": [
+      232,
+      1069
+    ],
+    "titles": [
+      [
+        108,
+        5,
+        263,
+        33
+      ],
+      [
+        742,
+        5,
+        372,
+        33
+      ],
+      [
+        1449,
+        5,
+        336,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "approval": "User explicitly approved six grimoire and single-rank templates: 模板通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

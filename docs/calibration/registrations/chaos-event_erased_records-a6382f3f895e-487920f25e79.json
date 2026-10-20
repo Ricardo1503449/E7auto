@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_erased_records",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 211202.png",
+  "original_sha256": "0eb3c365581f170252ba6c73cd643b361c3c485035bec6c1464dee5f82a90515",
+  "client_rect": [
+    56,
+    99,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    359,
+    1069,
+    1663,
+    168
+  ],
+  "candidate_sha256": "a6382f3f895e503c488d81977ef92e70cbfde42c2f759de85a7814d10abcd561",
+  "editing_basis": "Keep original RGB and alpha strokes of all 3 option titles/effects and the middle fragment-100 capsule. Other backgrounds, borders, magnifiers and stars excluded; ignored RGB cleared to zero.",
+  "review_status": "approved",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_erased_records",
+      "kind": "positive_runtime",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_erased_records', confidence=1.0, bounds=Rect(x=359, y=1069, width=1663, height=168), anchor=Point(x=1850, y=1090))"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "existing_event_conflicts",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "positive_runtime",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_erased_records', confidence=0.9817216396331787, bounds=Rect(x=359, y=1069, width=1663, height=168), anchor=Point(x=1850, y=1090))"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "existing_event_conflicts",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "fairy_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "fairy_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_erased_records",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Each event has one real options positive.",
+    "1536x864 samples are synthetic resizes representing the 2K desktop target client size, not live multi-resolution captures.",
+    "No returned-map screenshots or live input test; only supplied branches are covered."
+  ],
+  "approval": "User explicitly approved this five-template batch: 通过模板",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

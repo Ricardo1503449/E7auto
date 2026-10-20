@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_dark_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-54bc5a34-56f0-405a-9cc1-ee55b4b7be50.png",
+  "original_sha256": "e8a10ab07456c4b381b80175f98c3a79de35a18c6c534e39efcb5f18b0cf2584",
+  "client_rect": null,
+  "crop": [
+    4,
+    18,
+    116,
+    85
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "all_thief",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1394,
+        214,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_dark",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1394,
+        214,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.106929,
+      "location": [
+        1435,
+        239,
+        116,
+        85
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "all_thief",
+      "kind": "synthetic_1536x864",
+      "score": 0.999231,
+      "structure": 0.989843,
+      "location": [
+        1394,
+        214,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_dark_selected.png",
+  "mask_sha256": "2f61c13cb132d5bec8ea6f247ec06c767300244d7bc370bcf79d6e96ea205d06",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "10bf5945f8f0157bf901547f67f733b6ca337de04ae4c7150edfa15d8a0c5a5b",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_dark_selected.source.json",
+    "sha256": "c68fff296e60d33217ddad9e941e89532dd8f9fb3cbd5d96f69f07abc6a7a393"
+  },
+  "search_roi": [
+    1350,
+    175,
+    230,
+    190
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_dark_selected"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "filter_dark_selected.png",
+  "target_filename": "recruitment/filter_dark_selected.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-filter_dark_selected-10bf5945f8f0-25e0735df836.json",
+    "record_sha256": "25e0735df836a25eee2f818082491b401e93587b6262303d3b1d34b88d297f59"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

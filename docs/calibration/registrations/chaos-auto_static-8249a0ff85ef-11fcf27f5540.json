@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "auto_static",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-140363f7-835e-4c35-9b20-b32e37c27920.png",
+  "original_sha256": "fe201758850b6cf2cb00896f690105df104b6a1f1214f5f7789468efafb102cb",
+  "client_rect": null,
+  "crop": [
+    0,
+    0,
+    111,
+    105
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "battle_auto",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1990,
+        12,
+        111,
+        105
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "battle_auto",
+      "kind": "synthetic_1536x864",
+      "score": 0.988481,
+      "structure": 0.965085,
+      "location": [
+        1990,
+        12,
+        111,
+        105
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "8249a0ff85eff6ad2e0697bec06feee95fd037deb04d47913331a421d8d2550a",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\auto_static.source.json",
+    "sha256": "8046bdaee2a74787aa7c3fc11feff0e2df716f9586cbeb57a2ad8e76d4a8b6ba"
+  },
+  "search_roi": [
+    1950,
+    0,
+    200,
+    155
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "auto_static"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "auto_static.png",
+  "target_filename": "battle/auto_static.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-auto_static-8249a0ff85ef-c6ebf405cfc1.json",
+    "record_sha256": "c6ebf405cfc10360d0ecabfb6311c41c99971277ed9a6292faaf941f51ea3a22"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

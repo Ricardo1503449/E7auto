@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_blood_shelter",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 175407.png",
+  "original_sha256": "20cd186d7a5d324aec98408160072ac2b4bd56e123a080c723a0e5ae25ecae18",
+  "client_rect": [
+    47,
+    103,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    299,
+    1069,
+    1777,
+    166
+  ],
+  "editing_basis": "3个选项的标题和说明文字，另保留指定圆条图标；原始像素，周围背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_blood_shelter",
+      "kind": "positive",
+      "source": "blood_shelter_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        299,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "positive",
+      "source": "blood_shelter_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.981956,
+      "structure": 0.963678,
+      "location": [
+        299,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.011476,
+      "structure": 0.060408,
+      "location": [
+        8,
+        1068,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.072031,
+      "location": [
+        27,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "library_options",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.037229,
+      "location": [
+        9,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "flame_options",
+      "passed": true,
+      "score": 0.431658,
+      "structure": 0.159794,
+      "location": [
+        336,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "torn_map_options",
+      "passed": true,
+      "score": 0.070508,
+      "structure": 0.101268,
+      "location": [
+        0,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "mural_options",
+      "passed": true,
+      "score": 0.570639,
+      "structure": 0.342675,
+      "location": [
+        299,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "passage_options",
+      "passed": true,
+      "score": 0.48764,
+      "structure": 0.1687,
+      "location": [
+        335,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "observatory_options",
+      "passed": true,
+      "score": 0.041312,
+      "structure": 0.087293,
+      "location": [
+        9,
+        1069,
+        1777,
+        166
+      ]
+    },
+    {
+      "key": "event_blood_shelter",
+      "kind": "negative",
+      "source": "shelter_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.030312,
+      "location": [
+        76,
+        1121,
+        1777,
+        166
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

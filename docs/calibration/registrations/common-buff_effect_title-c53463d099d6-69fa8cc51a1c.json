@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "key": "buff_effect_title",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "target_filename": "daily_reset/buff_effect_title.png",
+  "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-b78e4eb7-809d-418f-9771-8da8ad5e8c87.png",
+  "source_sha256": "702c20cf9bc5c82b58cfa2e0ea6e9220d7bdea57387089a6400b6e5eb5cdaf28",
+  "client_crop": [
+    54,
+    105,
+    2322,
+    1306
+  ],
+  "crop": [
+    344,
+    214,
+    198,
+    53
+  ],
+  "mask": "Original white title strokes plus one pixel outline; other pixels transparent.",
+  "editing_basis": "User-provided screenshot and explicit request to integrate the optional buff branch; original BGR retained exactly.",
+  "candidate_sha256": "c53463d099d644366f40d6d511830490917e7597ed8b01a3e0cbbfcd09d2d5be",
+  "recognition": {
+    "roi": [
+      280,
+      170,
+      450,
+      170
+    ],
+    "threshold": 0.96,
+    "structure_threshold": 0.8
+  },
+  "validation": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\common\\20260928-210706-daily-reset-buff-c4d4b5cc\\results\\candidate-validation.json",
+    "sha256": "a9d95e589b0c8c5ae5ff69b68fedc843600a183ce635d119dc61ef8a9deba5b6",
+    "checks": [
+      {
+        "source": "buff",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 1.0
+      },
+      {
+        "source": "buff",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "login_reward_close",
+        "roi": [
+          970,
+          1180,
+          410,
+          126
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9945946931838989
+      },
+      {
+        "source": "buff",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          100,
+          90,
+          600,
+          95
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "buff",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9764261245727539
+      },
+      {
+        "source": "buff",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "login_reward_close",
+        "roi": [
+          970,
+          1180,
+          410,
+          126
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9701331853866577
+      },
+      {
+        "source": "buff",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          100,
+          90,
+          600,
+          95
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "buff",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9717907309532166
+      },
+      {
+        "source": "buff",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "login_reward_close",
+        "roi": [
+          970,
+          1180,
+          410,
+          126
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9393585920333862
+      },
+      {
+        "source": "buff",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          100,
+          90,
+          600,
+          95
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020205",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020205",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020205",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020224",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020224",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020224",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          2322,
+          1306
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          1920,
+          1080
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          1536,
+          864
+        ],
+        "key": "buff_effect_title",
+        "roi": [
+          280,
+          170,
+          450,
+          170
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_peini",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-cd42c359-873e-4508-a364-b567ef8e6631.png",
+  "original_sha256": "06d0edc4381e3a9e1d945f26dd324b27fb1aeb541b7f3f433ac5076566e110c9",
+  "client_rect": null,
+  "crop": [
+    7,
+    17,
+    125,
+    42
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "peini_selected",
+      "kind": "source_self",
+      "score": 0.999995,
+      "structure": 0.999982,
+      "location": [
+        1265,
+        562,
+        125,
+        42
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_list",
+      "kind": "real_positive",
+      "score": 0.968123,
+      "structure": 0.875293,
+      "location": [
+        665,
+        372,
+        125,
+        42
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "peini_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.975598,
+      "structure": 0.90974,
+      "location": [
+        1265,
+        562,
+        125,
+        42
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\hero_peini.png",
+  "mask_sha256": "eb1493f3dc4be3030cb5ce1409bb84c974641b25a5d91523bf09f11468ecd4ae",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "09e4bb3971bb324db996122709b6e0d529b1dfa4f78a7daedf6ba7fb9488e693",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_peini.source.json",
+    "sha256": "69c67d056530585eee83b3c68364e2fa8e34ccd03cc6435743867204dbc527b5"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.953,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "hero_peini"
+  ],
+  "additional_validation_records": []
+}

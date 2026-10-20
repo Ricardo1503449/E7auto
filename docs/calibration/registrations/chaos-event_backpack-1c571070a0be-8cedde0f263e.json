@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_backpack",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 183541.png",
+  "original_sha256": "b053b0c13c26ff80f8df3f655b62c739c52c1f26ef310cf745415a2ff0ba3f8e",
+  "client_rect": [
+    61,
+    103,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    521,
+    1069,
+    1066,
+    168
+  ],
+  "candidate_sha256": "1c571070a0be1f7c5c5d4c5d8c95853203cec0d3a26cffb26d1539ffb62875a7",
+  "editing_basis": "Preserve original BGR pixels. Keep both option titles and effect text plus right reward capsule for backpack, left reward capsule for spirit door and ghost. Remove all other backgrounds and decorative stars with alpha.",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_backpack",
+      "kind": "positive_runtime",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_backpack', confidence=1.0, bounds=Rect(x=521, y=1069, width=1066, height=168), anchor=Point(x=810, y=1090))",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        521,
+        1069,
+        1066,
+        168
+      ]
+    },
+    {
+      "key": "event_backpack",
+      "kind": "positive_runtime",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_backpack', confidence=0.9814229011535645, bounds=Rect(x=521, y=1069, width=1066, height=168), anchor=Point(x=810, y=1090))",
+      "score": 0.981188,
+      "structure": 0.973714,
+      "location": [
+        521,
+        1069,
+        1066,
+        168
+      ]
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "torch",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "mimic",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "cairn_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "mushroom_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "sword_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "blood_shelter_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "flame_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "library_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "mural_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "observatory_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "passage_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "torn_map_options-client",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "backpack_reward",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "backpack_text",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "spirit_door_options",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "spirit_door_hp",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "spirit_door_reward",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "spirit_door_text",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_options",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_offer",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_rank",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_selected",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_result",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "real_negative",
+      "source": "ghost_text",
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_backpack",
+      "kind": "old_event_conflicts",
+      "passed": true,
+      "conflicts": []
+    }
+  ],
+  "limitations": [
+    "Each event has one real options positive; 1536x864 samples are synthetic resizes.",
+    "No returned-map screenshot supplied; no live game automation performed."
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "key": "date_change_close",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "target_filename": "daily_reset/date_change_close.png",
+  "source": {
+    "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 020205.png",
+    "sha256": "6f01f610a25b432ae2802a191d0a0ba6e9a189e9de5b5269cd246f9fd89f3809",
+    "client_crop": [
+      35,
+      96,
+      2322,
+      1306
+    ]
+  },
+  "crop": [
+    1089,
+    847,
+    147,
+    41
+  ],
+  "mask": "Existing text alpha retained; arrow removed by cropping",
+  "candidate_sha256": "be22da5599b8b42cf3c7db858ff9a16b6d95c22bb858fd3a7d227b3d210253b5",
+  "editing_basis": "User requested text-only date-close candidate. Retained original screenshot BGR and existing text alpha exactly.",
+  "proposed_recognition": {
+    "roi": [
+      970,
+      760,
+      390,
+      230
+    ],
+    "threshold": 0.96,
+    "structure_threshold": 0.8
+  },
+  "validation": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-131549-daily-reset-candidate-review-548937a1\\results\\date-close-text-validation.json",
+    "sha256": "29fc12247fd0bfeafd9d74719ac3bb852e125bbe7280ba807a4a2c4c407294cd",
+    "results": [
+      {
+        "source": "020205",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "source_native",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 1.0,
+        "bounds": [
+          1089,
+          847,
+          147,
+          41
+        ]
+      },
+      {
+        "source": "020205",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9849197864532471,
+        "bounds": [
+          1089,
+          847,
+          147,
+          41
+        ]
+      },
+      {
+        "source": "020205",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9702554941177368,
+        "bounds": [
+          1088,
+          847,
+          147,
+          41
+        ]
+      },
+      {
+        "source": "020224",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "source_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020224",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020224",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "source_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020236",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "source_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "source": "020246",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      }
+    ]
+  },
+  "approval_status": "approved",
+  "previous_candidate": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260927-132050-b5b4ba11\\chaos\\buttons\\date_change_close.png",
+    "sha256": "223e4d9f60796070ec4f18a8fe4ccc44fc3e6bbe2ae2b76504b543d634dfd003"
+  },
+  "approval_basis": "User approved the text-only revision and all other templates; explicitly requested shared resources immediately.",
+  "original_candidate_source": "D:\\E7auto\\artifacts\\template-candidates\\20260927-133453-824fd987\\sources\\date_change_close.json"
+}

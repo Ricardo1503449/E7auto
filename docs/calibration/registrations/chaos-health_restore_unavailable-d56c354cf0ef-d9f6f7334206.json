@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "health_restore_unavailable",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\shop\\health_restore_unavailable.png",
+  "original_sha256": "1d0563649b4969eba1654edf3d1c568fee4a5e76ac5545d85ff9e396d81fd8d8",
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-health_restore_unavailable-1d0563649b49-8958c8b5588d.json",
+    "record_sha256": "8958c8b5588d16f99e2e27051772c09c72460980d200c8645628b59b30e252b1"
+  },
+  "crop_within_original": [
+    78,
+    160,
+    91,
+    83
+  ],
+  "editing_basis": "Explicit user revision: icons only for identities; capsule-only buttons; dialog icon and text foreground only. Original BGR pixels unchanged, alpha and bounding crop only.",
+  "validation": [
+    {
+      "key": "health_restore_unavailable",
+      "source": 0,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 0,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 0,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9999998807907104,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905034899711609,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9890710711479187,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9999998807907104,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905034899711609,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9890710711479187,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9999998807907104,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9905034899711609,
+      "passed": true
+    },
+    {
+      "key": "health_restore_unavailable",
+      "source": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9890710711479187,
+      "passed": true
+    }
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-203102-shop-health-purchase-fd771c7b\\results\\revision2_recognition.json",
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "candidate_sha256": "d56c354cf0ef1d0e9cd562f6934c00f38575617bf2bf34a7cbaf7f7cc0a85bca",
+  "limitations": [
+    "5 original client frames and artificial resizes; no live-game validation. Investment done cannot match the health completed button at the existing threshold; retain separate cropped health button."
+  ]
+}

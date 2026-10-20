@@ -1,0 +1,13 @@
+{
+  "operation": "retire",
+  "feature": "chaos",
+  "key": "rank_12",
+  "previous_filename": "camp/rank_12.png",
+  "retirement_reason": "用户明确要求删除已退出运行识别的旧组合模板；已由rank_value_1至rank_value_5替代。",
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-rank_12-7ce8f9728486-2184e23143f5.json",
+    "record_sha256": "2184e23143f54e20c8d653c06186ceb9e2ee3c689fb60e7a2acb3bed164c7be3"
+  },
+  "sha256": "7ce8f97284863259dc8ad36d473ac4fd779b0a23684e2b20aea555f4e63ea6ba",
+  "validation": "No runtime references in src/config; unchanged single-rank recognition retains prior validated results."
+}

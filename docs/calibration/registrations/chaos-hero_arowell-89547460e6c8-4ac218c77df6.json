@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_arowell",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-b396ee91-5402-4468-a511-44f9cffa7e80.png",
+  "original_sha256": "c2a578bfbb07c2f23b8a604e4f4a23ff0fc351ccca90a3ee069f169e391d36ef",
+  "client_rect": null,
+  "crop": [
+    12,
+    13,
+    288,
+    45
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "revision1_knight_full",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1867,
+        181,
+        288,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "arowell_selected",
+      "kind": "real_positive",
+      "score": 0.985675,
+      "structure": 0.901672,
+      "location": [
+        666,
+        371,
+        288,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_list",
+      "kind": "real_positive",
+      "score": 0.995522,
+      "structure": 0.966675,
+      "location": [
+        666,
+        181,
+        288,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "revision1_knight_full",
+      "kind": "synthetic_1536x864",
+      "score": 0.974663,
+      "structure": 0.832444,
+      "location": [
+        1867,
+        181,
+        288,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision3_masks\\hero_arowell.png",
+  "mask_sha256": "c19bbb046b6b484c79c4d81b6fcbdaa0cb874cdc668367572cb08f2ce4cdf35a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "89547460e6c8e29e2179d43e3ea3bfdca74d10ffa94c8397fd62ed9e08af02a7",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision3.json",
+      "sha256": "f2cb614cf612884641f2450764bdb232dd37fa8444b97d41f999c7b5e5263792"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_arowell.source.json",
+    "sha256": "1fd5d605ca6394144f1b9e1cbaa1a51f548fd7478740f86888315ec09ac9d13e"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第三轮：以已有游戏截图中无遮挡的同名文字辅助限定末尾字形；仅修改透明遮罩，保留本图RGB像素。已通过的图标及其他模板保持不变。待复审。"
+  ],
+  "resource_scenes": [
+    "hero_arowell"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "hero_arowell.png",
+  "target_filename": "recruitment/hero_arowell.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-hero_arowell-89547460e6c8-0205e5cd65c1.json",
+    "record_sha256": "0205e5cd65c1a64d8b7209d1e3600858d440461a632f60147e96cb65cf50d01a"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

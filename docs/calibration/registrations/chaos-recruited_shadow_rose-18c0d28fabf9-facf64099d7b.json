@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_shadow_rose",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 205006.png",
+  "original_sha256": "6e3511621a159ece7109176002dceb703a75f5239c40725a0982093000885111",
+  "client_rect": [
+    60,
+    128,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    337,
+    790,
+    250,
+    173
+  ],
+  "candidate_sha256": "18c0d28fabf922cacfcc51940fe3d9d4184c9f61440875a69ba41c8e0eb3b364",
+  "editing_basis": "Follow approved hero/recruitment templates: retain original RGB and antialiased text/class strokes; background and glyph holes transparent. Completion templates retain only completion text, full hero name and class icon; no rank, attribute, stars or portrait. No resizing/sharpening/redraw.",
+  "review_status": "approved",
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.959,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "recruited_shadow_rose",
+      "source": "teacher_filter",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "teacher_dark",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "teacher_list",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "teacher_selected",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "teacher_done",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "ivanna_filter",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "ivanna_list",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "ivanna_selected",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "ivanna_done",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "xiaochun_filter",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "xiaochun_selected",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "rose_filter",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "rose_dark",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "rose_list",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "rose_selected",
+      "kind": "real_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "team_done",
+      "kind": "source_self",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "team_done",
+      "kind": "synthetic_scale",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9723457098007202,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "team_done",
+      "kind": "synthetic_scale",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9773247838020325,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "team_done",
+      "kind": "derived_target_excluded_negative",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "earlier_real_result_192726",
+      "kind": "independent_earlier_result",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9999803900718689,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "earlier_real_result_192726",
+      "kind": "synthetic_scale_earlier_result",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9722793698310852,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose",
+      "source": "earlier_real_result_192726",
+      "kind": "synthetic_scale_earlier_result",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9772466421127319,
+          "bounds": [
+            337,
+            790,
+            250,
+            173
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Selected left names each have one real positive source. Shadow Rose completion additionally checked against earlier 19:27:26 real full screenshot.",
+    "1920x1080 and 1536x864 positives are synthetic downscales, not independent real window-size captures.",
+    "No rank-up screen for Shadow Rose, Teacher or Ivanna was supplied. Rank-up-list identity and left-name reuse remain unverified on real rank-up screenshots. No live gameplay or UI/lineup implementation performed."
+  ],
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\results\\user_approval.json",
+      "sha256": "6b098c5f1a0345f85c4fe95a933ca492d871b92a6d0e2b81117dba1568f71e60"
+    }
+  ]
+}

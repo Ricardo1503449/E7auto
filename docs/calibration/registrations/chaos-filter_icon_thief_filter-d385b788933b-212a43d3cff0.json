@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_icon_thief_filter",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-5791258d-faad-465d-ac64-a6253ff85e20.png",
+  "original_sha256": "484991758a4a8503aacb48b79b543e38df824714909279f411594aa2131c1e48",
+  "client_rect": null,
+  "crop": [
+    6,
+    18,
+    114,
+    83
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "all_dark",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1152,
+        387,
+        114,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1152,
+        387,
+        114,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_dark",
+      "kind": "synthetic_1536x864",
+      "score": 0.98032,
+      "structure": 0.986453,
+      "location": [
+        1152,
+        387,
+        114,
+        83
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_icon_thief_filter.png",
+  "mask_sha256": "b05215b9b11f015519c0c3bd26e7f1c2f4d2f73fccccc6b9a06ec307b79283cc",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "d385b788933b8a0e4f80d108821e41aeaa01cf6dd7c2b1991017e5bc3b1e62de",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_icon_thief_filter.source.json",
+    "sha256": "ef43e9637b0ff950e0bf2106f2b9fe45184047a78a2dd635213cc8d8d90adb93"
+  },
+  "search_roi": [
+    710,
+    170,
+    1000,
+    350
+  ],
+  "threshold": 0.965,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_icon_thief_filter"
+  ],
+  "additional_validation_records": []
+}

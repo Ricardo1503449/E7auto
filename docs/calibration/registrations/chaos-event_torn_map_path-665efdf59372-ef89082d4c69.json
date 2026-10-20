@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_torn_map_path",
+  "original": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\run-20261013-191813-451847-accb5365f094-stop.png",
+  "original_sha256": "e36a1343f1c5165961090914fd5a084e1c8091cf5ee132ec7fc9da5cd814fc6e",
+  "retained_source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-195254-torn-map-title-variant-f5506314\\inputs\\torn_map_path_1536.png",
+  "source_client_size": [
+    1536,
+    864
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    516,
+    1069,
+    1216,
+    157
+  ],
+  "candidate_sha256": "665efdf59372df37ea28efa1713c54900e8af48aeeb276d49b9eb980107d1a51",
+  "editing_basis": "Resize the complete original 1536x864 BGR screenshot once to 2322x1306 using bilinear interpolation. Crop at the existing event canvas; preserve complete two-option titles and one-pixel original-derived edges using alpha only; exclude descriptions, borders and decoration. RGB equals the explicitly interpolated source crop, not an unscaled baseline capture.",
+  "resampling_authorization": "User explicitly selected using the existing smaller screenshot to produce a candidate after being told it requires upsampling to baseline and validation.",
+  "resampling": {
+    "algorithm": "cv2.INTER_LINEAR",
+    "scale_x": 1.51171875,
+    "scale_y": 1.5115740740740742,
+    "source_size": [
+      1536,
+      864
+    ],
+    "target_size": [
+      2322,
+      1306
+    ]
+  },
+  "mask": {
+    "method": "HSV V>130, S<105 seed within two title windows, dilate 3x3 once; existing RGB preserved after resampling",
+    "title_boxes": [
+      [
+        95,
+        5,
+        410,
+        35
+      ],
+      [
+        765,
+        5,
+        447,
+        36
+      ]
+    ],
+    "description_alpha": 0
+  },
+  "review_status": "approved_by_user",
+  "agent_visual_review": "Both complete titles compared at source 3x and candidate 2x; punctuation, dark strokes, internal holes and edges inspected.",
+  "index": {
+    "layout": 2,
+    "origin": [
+      516,
+      1069
+    ],
+    "titles": [
+      [
+        95,
+        5,
+        410,
+        35
+      ],
+      [
+        765,
+        5,
+        447,
+        36
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.92,
+  "structure_threshold": 0.8,
+  "action": [
+    0.8174342105263158,
+    0.2611464968152866
+  ],
+  "handler": "torn_map.run",
+  "selected_route": "right: 收起撕裂的地图，离开这里。; text then original-floor map; no exploration experience on chosen route",
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-195254-torn-map-title-variant-f5506314\\results\\threshold-092-validation.json",
+  "validation_report_sha256": "1627dd10c858c661478efa55543f83324ce71961e4fa7d9936975262af49e55f",
+  "validation_counts": {
+    "image": 146,
+    "index_schema": 4,
+    "failures": 0
+  },
+  "limitations": [
+    "Only one real 1536x864 capture exists for the new initial-title variant; it is also the candidate extraction source.",
+    "2322x1306, 1920x1080, 2304x1296 and 2560x1440 positives for the new variant are synthetic resizes of that same capture, not independent game renders.",
+    "The independent historical baseline capture validates the old variant and the shared right title only; it does not establish a real baseline positive for the new left title.",
+    "Offline linear enlargement is explicitly user-authorized and introduces interpolated RGB; no sharpening or AI redrawing was applied.",
+    "Repeated offline observations use copies of a saved image, not three newly captured game frames.",
+    "No live game input/capture. Candidate pixels unchanged after user image approval; tested 0.92/0.80 configuration is enabled by the subsequent registration/binding step."
+  ],
+  "approval_message": "可以通过审核，但是颜色门槛应该下降至0.92，你觉得可以吗",
+  "implementation_request": "继续执行后续",
+  "validation_script_sha256": "582a79595584b64a72ad4802e03210c399776e9bfe28a81e3ae0f9e891792970"
+}

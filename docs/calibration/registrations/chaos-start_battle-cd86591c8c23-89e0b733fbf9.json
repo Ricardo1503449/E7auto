@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "start_battle",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-8d8a416a-72e3-4935-8c4f-d8b3c6f2a78a.png",
+  "original_sha256": "63cd232f65a1b938194b3adfb85a49a3e0cad6e3246c9ada7d714b6ce52623e5",
+  "client_rect": [
+    40,
+    106,
+    2322,
+    1306
+  ],
+  "crop": [
+    1665,
+    1134,
+    614,
+    133
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "normal_prepare",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "elite_prepare",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "boss_prepare",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_prepare",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 0.999999,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_prepare",
+      "kind": "synthetic_1536x864",
+      "score": 0.98823,
+      "structure": 0.970978,
+      "location": [
+        1665,
+        1134,
+        614,
+        133
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\start_battle.png",
+  "mask_sha256": "446cd03942e2163051b0793a21dc2c77d094c0981828ecccdaf44263031a7c0f",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "cd86591c8c2310c4de464daecaebc2d7d4cc0749b479f82dfe8217d1dbc43690",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\start_battle.source.json",
+    "sha256": "313478464ca65b90a973985e764445fe9edd9df6d42d721b4cce246e71067203"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按反馈重做：保留完整按钮外形，按钮外背景透明；原图RGB像素保持，待复审。"
+  ],
+  "resource_scenes": [
+    "start_battle"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "start_battle.png",
+  "target_filename": "buttons/start_battle.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-start_battle-cd86591c8c23-5d994dfef185.json",
+    "record_sha256": "5d994dfef1858eb626154b6d8b983c72d96a3f0244f50cae04277633700e3106"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

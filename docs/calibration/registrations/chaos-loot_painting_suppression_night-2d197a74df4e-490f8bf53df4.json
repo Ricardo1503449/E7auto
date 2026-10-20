@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_painting_suppression_night",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 222356.png",
+  "sha256": "a809e965c7745f0c372bd5be29e99c2b75fcecd3435280a8f332c293fed7c3a5",
+  "original_size": [
+    2438,
+    1494
+  ],
+  "display_size": [
+    2016,
+    1235
+  ],
+  "client_rect": [
+    64,
+    104,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_painting_blind_war",
+    "loot_painting_suppression_night",
+    "loot_painting_star_mineral"
+  ],
+  "anchors": [
+    [
+      548,
+      987,
+      141,
+      40
+    ],
+    [
+      1128,
+      987,
+      141,
+      40
+    ],
+    [
+      1709,
+      987,
+      141,
+      40
+    ]
+  ],
+  "crop": [
+    995,
+    276,
+    334,
+    380
+  ],
+  "regions": {
+    "icon": [
+      84,
+      0,
+      157,
+      120
+    ],
+    "name": [
+      23,
+      184,
+      293,
+      56
+    ],
+    "description": [
+      0,
+      276,
+      334,
+      104
+    ]
+  },
+  "candidate_sha256": "2d197a74df4e107ef109e36314a339e01da437bf4704732b396ec7b72fe3dad5",
+  "previous_sha256": "1d15f8fcf30d7cd322a254ae88c3d3a544bf09f3f34760d56987bd9ebb874544",
+  "editing_basis": "Original screenshot client pixels, BGR unchanged; icon silhouette and glyph masks only. No desktop, title bar, card border, filler, N marker or reroll UI.",
+  "review_status": "approved",
+  "index": {
+    "icon": [
+      84,
+      0,
+      157,
+      120
+    ],
+    "name": [
+      23,
+      184,
+      293,
+      56
+    ],
+    "origin": [
+      -133,
+      -711
+    ]
+  },
+  "priority": 1,
+  "validation": {
+    "candidate": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\candidate_validation.json",
+      "sha256": "9a3456b02a00098968921edc561470b39bd2780893b17fdc82a75ad0b4db8ed5"
+    },
+    "index": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\index_validation.json",
+      "sha256": "4ef184489a94c1f4213cc66301fb4b984c61a3a575684b57c564203a9e77a40b"
+    },
+    "limitations": [
+      "Only spirit-king tablet and replacement painting have independent real positives; other four have one extraction source.",
+      "Downscaled images are synthetic; no live gameplay testing."
+    ]
+  },
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-222957-loot-late-screenshots-review-896138d8\\results\\approval.json",
+    "sha256": "3be06df7676e92793932dc22d6621696b9090a5d8760c85523b28a0097be6d0b"
+  }
+}

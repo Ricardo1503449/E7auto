@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mimic",
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\mimic_options.png",
+  "original_sha256": "9cd2930740a77fc6071878e16f1ab75c568824c536153b26634c49c95e839fe6",
+  "client_rect": [
+    34,
+    85,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    582,
+    1073,
+    1001,
+    160
+  ],
+  "editing_basis": "Rebuilt glyph alpha for two option titles and left effect text. Visible original RGB retained exactly; hidden transparent RGB cleared to zero. No resize/redraw.",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.966,
+  "structure_threshold": 0.8,
+  "action": [
+    0.961038961038961,
+    0.2387500000000003
+  ],
+  "validation": [
+    {
+      "kind": "positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        582,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "positive",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.980269,
+      "structure": 0.882486,
+      "location": [
+        582,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\torch_options.png",
+      "passed": true,
+      "score": 0.490998,
+      "structure": 0.075535,
+      "location": [
+        529,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\torch_text.png",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.03709,
+      "location": [
+        927,
+        1126,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\library_options-client.png",
+      "passed": true,
+      "score": 0.384512,
+      "structure": 0.159567,
+      "location": [
+        583,
+        1071,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\flame_options-client.png",
+      "passed": true,
+      "score": 0.552497,
+      "structure": 0.105375,
+      "location": [
+        255,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\torn_map_options-client.png",
+      "passed": true,
+      "score": 0.512685,
+      "structure": 0.177942,
+      "location": [
+        516,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\mural_options-client.png",
+      "passed": true,
+      "score": 0.656202,
+      "structure": 0.135739,
+      "location": [
+        257,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\blood_shelter_options-client.png",
+      "passed": true,
+      "score": 0.626448,
+      "structure": 0.125583,
+      "location": [
+        854,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\passage_options-client.png",
+      "passed": true,
+      "score": 0.595883,
+      "structure": 0.190872,
+      "location": [
+        890,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\observatory_options-client.png",
+      "passed": true,
+      "score": 0.551866,
+      "structure": 0.244996,
+      "location": [
+        528,
+        1073,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\passage_ticket-client.png",
+      "passed": true,
+      "score": 0.0,
+      "structure": 0.037522,
+      "location": [
+        936,
+        1112,
+        1001,
+        160
+      ]
+    },
+    {
+      "kind": "real_negative",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260923-103204-seven-events-candidates-88c3d740\\inputs\\shelter_rank_success-client.png",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.056486,
+      "location": [
+        1004,
+        1010,
+        1001,
+        160
+      ]
+    }
+  ],
+  "previous_sha256": "ce2ba7824a45b970e9c28eb209ca2a22c00cc624045b1e4af0bd849a3132fe32",
+  "approval_message": "通过"
+}

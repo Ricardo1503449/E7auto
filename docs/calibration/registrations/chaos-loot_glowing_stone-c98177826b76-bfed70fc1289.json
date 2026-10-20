@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_glowing_stone",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 142955.png",
+  "sha256": "95879afad384eb43a9e70cdd34adeb0fd1f9f1fd176d62eda812e0df0a6d0bc4",
+  "original_size": [
+    2408,
+    1480
+  ],
+  "display_size": [
+    2016,
+    1239
+  ],
+  "client_rect": [
+    39,
+    102,
+    2322,
+    1306
+  ],
+  "keys": [
+    "loot_shrine_fragment",
+    "loot_glowing_stone",
+    "loot_transcendence_crystal"
+  ],
+  "anchors": [
+    [
+      548,
+      987,
+      141,
+      40
+    ],
+    [
+      1128,
+      987,
+      141,
+      40
+    ],
+    [
+      1709,
+      987,
+      141,
+      40
+    ]
+  ],
+  "crop": [
+    1004,
+    291,
+    316,
+    365
+  ],
+  "regions": {
+    "icon": [
+      99,
+      0,
+      111,
+      74
+    ],
+    "name": [
+      81,
+      177,
+      155,
+      42
+    ],
+    "description": [
+      0,
+      268,
+      316,
+      97
+    ]
+  },
+  "candidate_sha256": "c98177826b766380d2c1112194a665c82478be53dcf074a5a0920aad9cf5288b",
+  "previous_sha256": null,
+  "editing_basis": "Original screenshot client pixels, BGR unchanged; icon silhouette and glyph masks only. No desktop, title bar, card border, filler, N marker or reroll UI.",
+  "review_status": "approved",
+  "index": {
+    "icon": [
+      99,
+      0,
+      111,
+      74
+    ],
+    "name": [
+      81,
+      177,
+      155,
+      42
+    ],
+    "origin": [
+      -124,
+      -696
+    ]
+  },
+  "priority": 2,
+  "validation": {
+    "candidate": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-190445-loot-september24-review-20c79c99\\results\\candidate_validation.json",
+      "sha256": "29e0047fb1985a7556a2776acaae6f56b763003b923feb5a51dbd662f264375b"
+    },
+    "index": {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-190445-loot-september24-review-20c79c99\\results\\index_validation.json",
+      "sha256": "91e6d2b69ae506aae21d2f5170ece53de214ff17562502b1bcda27fd149eb875"
+    },
+    "limitations": [
+      "All three have only one real extraction source each; independent real positives are unavailable.",
+      "Downscaled images are synthetic; no live gameplay testing."
+    ]
+  },
+  "approval_record": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-190445-loot-september24-review-20c79c99\\results\\approval.json",
+    "sha256": "57f8eee3f4668bb9fbc230fec115312fb6fe8a888d7fa7594bcbdff24963cac4"
+  }
+}

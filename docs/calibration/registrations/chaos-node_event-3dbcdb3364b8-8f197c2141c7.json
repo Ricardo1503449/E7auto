@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_event",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-c1321c8d-8444-4f01-8534-73015271b68d.png",
+  "original_sha256": "70f69c3292011d34fb64f36c374930c45f5c8fd09f9299ad29128e23f5af4fb7",
+  "client_rect": null,
+  "crop": [
+    11,
+    52,
+    111,
+    135
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rest_entry",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        909,
+        653,
+        111,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_after_rest",
+      "kind": "real_positive",
+      "score": 0.998601,
+      "structure": 0.995246,
+      "location": [
+        1453,
+        463,
+        111,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_after_event",
+      "kind": "real_positive",
+      "score": 0.989412,
+      "structure": 0.974887,
+      "location": [
+        560,
+        463,
+        111,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rest_entry",
+      "kind": "synthetic_1536x864",
+      "score": 0.998298,
+      "structure": 0.99172,
+      "location": [
+        909,
+        653,
+        111,
+        135
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision4_masks\\node_event.png",
+  "mask_sha256": "c4790f64bb4b84e034149f3f34a19a4ced009733a3961885fed6b88b69832269",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "3dbcdb3364b8e79a1c09fb46f8f94ea27902193c2bbd12c27f5a6a7d18e65f1c",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_event.source.json",
+    "sha256": "7dbfa4ff92e615e347495240ad47cf4da36733092b6f818e27662e12db6104d7"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "保留完整亮色椭圆本体及突出其外的节点图标；上方三角与地图背景透明。原始像素保持。"
+  ],
+  "resource_scenes": [
+    "node_event"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "node_event.png",
+  "target_filename": "map/node_event.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_event-3dbcdb3364b8-4e643ac08b78.json",
+    "record_sha256": "4e643ac08b78d12ce91ee2a63fb00e7bbcedd600958c7ea21816147ef7a743a8"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

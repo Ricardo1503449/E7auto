@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mimic",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_mimic.png",
+  "original_sha256": "3f6ff27d245fffe5bb5299c66895b47b83c00ff4fd64e8bd726d4313f7d51d6d",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_mimic-3f6ff27d245f-0fe891c71e16.json",
+    "record_sha256": "0fe891c71e165d4f22fbe80f28db32168af2f28feed7f96719cf73a1ed188932"
+  },
+  "canvas_size": [
+    1001,
+    160
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1001,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 4529,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_mimic",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\mimic_options.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_mimic",
+        "event_mimic",
+        "event_mimic"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1544,
+          1111
+        ],
+        [
+          1544,
+          1111
+        ],
+        [
+          1544,
+          1111
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 269.878
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1544,
+          1111
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mimic",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\mimic_options.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_mimic",
+        "event_mimic",
+        "event_mimic"
+      ],
+      "scores": [
+        0.9899973273277283,
+        0.9899973273277283,
+        0.9899973273277283
+      ],
+      "anchors": [
+        [
+          1021,
+          735
+        ],
+        [
+          1021,
+          735
+        ],
+        [
+          1021,
+          735
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 46.498
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9867463111877441,
+        "anchor": [
+          1021,
+          735
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mimic",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\mimic_options.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_mimic",
+        "event_mimic",
+        "event_mimic"
+      ],
+      "scores": [
+        0.980591893196106,
+        0.980591893196106,
+        0.980591893196106
+      ],
+      "anchors": [
+        [
+          1276,
+          919
+        ],
+        [
+          1276,
+          919
+        ],
+        [
+          1276,
+          919
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 53.952
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9788653254508972,
+        "anchor": [
+          1276,
+          919
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mimic",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\mimic_options.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_mimic",
+        "event_mimic",
+        "event_mimic"
+      ],
+      "scores": [
+        0.9812736511230469,
+        0.9812736511230469,
+        0.9812736511230469
+      ],
+      "anchors": [
+        [
+          1532,
+          1103
+        ],
+        [
+          1532,
+          1103
+        ],
+        [
+          1532,
+          1103
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 65.92
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9780799150466919,
+        "anchor": [
+          1532,
+          1103
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_mimic",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\mimic_options.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_mimic",
+        "event_mimic",
+        "event_mimic"
+      ],
+      "scores": [
+        0.9910524487495422,
+        0.9910524487495422,
+        0.9910524487495422
+      ],
+      "anchors": [
+        [
+          1703,
+          1225
+        ],
+        [
+          1703,
+          1225
+        ],
+        [
+          1703,
+          1225
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 80.897
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9881491661071777,
+        "anchor": [
+          1703,
+          1225
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

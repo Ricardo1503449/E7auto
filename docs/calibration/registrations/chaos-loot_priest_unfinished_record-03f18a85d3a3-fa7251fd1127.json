@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_priest_unfinished_record",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\loot\\loot_priest_unfinished_record.png",
+  "original_sha256": "72103b7d3b32e66a47a0d972aa7283d555453fe7b292c780082acbdc2cc210ae",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_priest_unfinished_record-72103b7d3b32-5cb8275c233e.json",
+    "record_sha256": "5cb8275c233eee797d8a4bb09ccbd8d5721c7b6e464badfd2a5bd78f3b10144f"
+  },
+  "retained_source_pixels": "The formal PNG retains unmodified original screenshot RGB beneath its alpha. The new paragraph mask is rebuilt from these original crop pixels, not from a preview or zeroed RGB.",
+  "editing_basis": "Rebuild paragraph glyphs directly from retained original RGB, including darker internal strokes, then retain one pixel of original antialias/dark edge. BGR, canvas, icon/name RGBA and paragraph-external pixels unchanged. No sharpening, redraw or resizing.",
+  "repair_roi": [
+    0,
+    285,
+    334,
+    98
+  ],
+  "mask_extraction": {
+    "color_space": "HSV",
+    "min_value_exclusive": 80,
+    "max_saturation_exclusive": 80,
+    "original_edge_pixels": 1
+  },
+  "candidate_sha256": "03f18a85d3a31d04105e58d8de7fb13ce4f0d40483ff3001c9534d4a7cf3a1ae",
+  "review_status": "approved",
+  "validation": [
+    {
+      "check": "canvas_and_all_RGB_unchanged",
+      "passed": true
+    },
+    {
+      "check": "audit_missing_stroke_regions_restored",
+      "passed": true
+    },
+    {
+      "key": "loot_priest_unfinished_record",
+      "check": "actual_runtime_icon_name_origin_canvas_unchanged",
+      "passed": true
+    },
+    {
+      "check": "all_runtime_loot_index_arrays_unchanged",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Only description alpha changes. Runtime icon/name pixels, masks, preprocessed parts, index arrays, canvas and origin are identical; unchanged image-recognition suites are not repeated. No live game test."
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\validation.json",
+  "approved_candidate_sha256": "03f18a85d3a31d04105e58d8de7fb13ce4f0d40483ff3001c9534d4a7cf3a1ae",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\user-approval.json",
+      "sha256": "488e7a75650bc3195e7eec91c4d8eb7671014a40e890f9a7e9921df531302b11"
+    }
+  ],
+  "validation_reuse": "Reused approved candidate-stage checks. PNG/alpha, configuration, ROI and recognition code unchanged; no image scans repeated after approval."
+}

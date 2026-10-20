@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "exploration_back",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-43ecd76f-cee8-4ab5-aac3-f69e3902631c.png",
+  "original_sha256": "54642d781b12b7bc6547b932de93b2987642044d0647b4becb157fdbd17e4c3f",
+  "client_rect": null,
+  "crop": [
+    12,
+    9,
+    320,
+    75
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "lobby_one",
+      "kind": "source_self",
+      "score": 0.999998,
+      "structure": 0.999995,
+      "location": [
+        23,
+        22,
+        320,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "intro",
+      "kind": "real_positive",
+      "score": 0.966816,
+      "structure": 0.910615,
+      "location": [
+        23,
+        22,
+        320,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "lobby_three",
+      "kind": "real_positive",
+      "score": 0.999995,
+      "structure": 0.999988,
+      "location": [
+        23,
+        22,
+        320,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "intro_exit",
+      "kind": "real_positive",
+      "score": 0.966902,
+      "structure": 0.910849,
+      "location": [
+        23,
+        22,
+        320,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "lobby_one",
+      "kind": "synthetic_1536x864",
+      "score": 0.986427,
+      "structure": 0.951489,
+      "location": [
+        23,
+        22,
+        320,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "63ea93ffa9a2e24ea95164a080f5728aa44caea0065c4565ca9eb563d204b35c",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\exploration_back.source.json",
+    "sha256": "d39b2579d56c7afbab95af342f8328a1a2cefd072951709d3608ecc86eae62fa"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.952,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "exploration_back"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "exploration_back.png",
+  "target_filename": "entry/exploration_back.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-exploration_back-63ea93ffa9a2-40215389f8fd.json",
+    "record_sha256": "40215389f8fda957ad482580a5d1a7e325e8bfbbb0eaf11ec7c509e66a7e064b"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

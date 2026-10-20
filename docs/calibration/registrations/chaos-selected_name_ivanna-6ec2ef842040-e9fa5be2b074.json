@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "selected_name_ivanna",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 192718.png",
+  "original_sha256": "784791c5bc6cfc6a9a1abcd8ca33ce9fc9768ce18862edf3948290562f78ea05",
+  "client_rect": [
+    49,
+    121,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    279,
+    155,
+    105,
+    33
+  ],
+  "candidate_sha256": "6ec2ef842040de258fc62f450f4b94980b6561303043abfa9f9d64cd3b8c746d",
+  "editing_basis": "Original BGR pixels retained; crop and alpha mask only. Hero and result class-icon holes remain transparent. Result contains only completion text, name and class icon; no stars, attribute or artwork. Filter button includes its state background as in existing water templates.",
+  "review_status": "approved",
+  "search_roi": [
+    40,
+    125,
+    520,
+    85
+  ],
+  "threshold": 0.969,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "selected_name_ivanna",
+      "source": "filter",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "filter",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "filter",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "fire_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "fire_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "fire_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "list",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "list",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "list",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            279,
+            155,
+            105,
+            33
+          ]
+        }
+      ]
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9946572184562683,
+          "bounds": [
+            279,
+            155,
+            105,
+            33
+          ]
+        }
+      ]
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "selected",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9861077070236206,
+          "bounds": [
+            280,
+            155,
+            105,
+            33
+          ]
+        }
+      ]
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "result",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "result",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "selected_name_ivanna",
+      "source": "result",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    }
+  ],
+  "limitations": [
+    "Only the list identity has an independent selected/unselected real positive pair. Fire buttons, left selected name and completion card each have one real positive source; self matching and synthetic scaling do not establish independent real-scale coverage.",
+    "Screenshots show a manually assembled team different from the configured first/third/fourth heroes; this task changes only the soul-weaver slot to Ivanna. No game inputs, live flow or runtime changes performed.",
+    "Candidate-only preparation. User review is required before registration and integration."
+  ],
+  "approved_candidate_sha256": "6ec2ef842040de258fc62f450f4b94980b6561303043abfa9f9d64cd3b8c746d",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\results\\user_approval_all.json",
+      "sha256": "7b03cc2f2154a9e648089e1b932936d8483c7fedbeb8b722aa52e694f451d89d"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_thief_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-d8206e52-acb9-41b4-b846-d1c8e64c2d0f.png",
+  "original_sha256": "36818a8fb52ecf46cad926c6710e4f8622e3e284410185bc55d49b7b1b386abb",
+  "client_rect": [
+    45,
+    92,
+    2322,
+    1306
+  ],
+  "crop": [
+    1151,
+    386,
+    116,
+    85
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "all_thief",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1151,
+        386,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_filter",
+      "kind": "real_positive",
+      "score": 0.975675,
+      "structure": 0.955159,
+      "location": [
+        1151,
+        386,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "all_filter",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.130384,
+      "location": [
+        1115,
+        405,
+        116,
+        85
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "all_thief",
+      "kind": "synthetic_1536x864",
+      "score": 0.996034,
+      "structure": 0.979702,
+      "location": [
+        1151,
+        386,
+        116,
+        85
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\filter_thief_selected.png",
+  "mask_sha256": "fa5ad13d5b0f21c5abac400316c3da5a1421c37edaccb2eb8d0e9d81d7e3d8f7",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b6060a5ee9f692a1b93f3db00155d003bade7b6ed91630ca4db667156b332682",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\filter_thief_selected.source.json",
+    "sha256": "071974dddc194b4f368d2dfc9b338ebfcf106264873e3bda03dde83045abc8c7"
+  },
+  "search_roi": [
+    1080,
+    350,
+    265,
+    190
+  ],
+  "threshold": 0.961,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "filter_thief_selected"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "filter_thief_selected.png",
+  "target_filename": "recruitment/filter_thief_selected.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-filter_thief_selected-b6060a5ee9f6-f376aa8dbff4.json",
+    "record_sha256": "f376aa8dbff40f3a240ba7fa1aa123814fb2b8d724882640cfb3c94f64c996f4"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

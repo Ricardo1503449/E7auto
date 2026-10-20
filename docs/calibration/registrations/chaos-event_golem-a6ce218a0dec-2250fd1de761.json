@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_golem",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-a051b959-62bd-40eb-b8e9-faf599e276e0.png",
+  "original_sha256": "570ad2cc07f01164af1edf1f17775def315a244d814cde11b95a559e242aba89",
+  "client_rect": [
+    59,
+    96,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    625,
+    1069,
+    998,
+    168
+  ],
+  "editing_basis": "原图BGR保持，仅提取文字和右侧完整圆条图标透明遮罩；不重绘、不缩放。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": {
+    "checks": [
+      {
+        "kind": "positive_native",
+        "passed": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          625,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "positive_synthetic_scale",
+        "passed": true,
+        "score": 0.980708,
+        "structure": 0.970787,
+        "location": [
+          625,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "followup_text",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.046834,
+        "location": [
+          327,
+          1124,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "torch",
+        "passed": true,
+        "score": 0.431514,
+        "structure": 0.21407,
+        "location": [
+          571,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "mimic",
+        "passed": true,
+        "score": 0.51344,
+        "structure": 0.315566,
+        "location": [
+          663,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "trap",
+        "passed": true,
+        "score": 0.498392,
+        "structure": 0.294025,
+        "location": [
+          625,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "tablet",
+        "passed": true,
+        "score": 0.421933,
+        "structure": 0.121206,
+        "location": [
+          567,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment",
+        "passed": true,
+        "score": 0.396712,
+        "structure": 0.263447,
+        "location": [
+          643,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment_subchoice",
+        "passed": true,
+        "score": 0.429107,
+        "structure": 0.145112,
+        "location": [
+          243,
+          1069,
+          998,
+          168
+        ]
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "golem_options",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "golem_options",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "golem_text",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.9975007176399231, bounds=Rect(x=1149, y=1259, width=23, height=16), anchor=Point(x=1160, y=1267))"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "golem_text",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "golem_options",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "golem_options",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "golem_text",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.9605004191398621, bounds=Rect(x=1149, y=1259, width=23, height=16), anchor=Point(x=1160, y=1267))"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "golem_text",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "found": []
+      }
+    ],
+    "failures": [],
+    "protected_changes": [],
+    "limitations": [
+      "选项只有一张真实正例，1536×864为人工缩放样本。",
+      "已提供后续文本页但未提供返回地图截图；尚未进行实机自动化验证。"
+    ]
+  },
+  "approval_message": "通过，新事件"
+}

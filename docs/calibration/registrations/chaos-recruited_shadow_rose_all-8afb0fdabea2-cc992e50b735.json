@@ -1,0 +1,468 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_shadow_rose_all",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\recruitment\\recruited_shadow_rose_all.png",
+  "original_sha256": "289160b4a9d6e6aed81cc3b45b0e9ba8d832306a072b7377f1f56886709f0ccb",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-recruited_shadow_rose_all-289160b4a9d6-f855c432de52.json",
+    "record_sha256": "f855c432de52db947f41168181c83e67bcdde06af9a6ded74c0c2bb1dee71215"
+  },
+  "crop": [
+    4,
+    4,
+    120,
+    98
+  ],
+  "candidate_sha256": "8afb0fdabea29273f5850c743cfc8509571d9dd6535fbe6e667bb39b8a9bf3dc",
+  "editing_basis": "User requested removal of lower-right profession icon and tight cropping to the two original text lines. BGR pixels and text alpha preserved exactly. No redraw, resize or threshold change.",
+  "review_status": "approved",
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\validation-initial.json",
+  "limitations": [
+    "Synthetic scaled screenshots do not establish real-window coverage. No post-change live game run or installer build."
+  ],
+  "approved_candidate_sha256": "8afb0fdabea29273f5850c743cfc8509571d9dd6535fbe6e667bb39b8a9bf3dc",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\user-approval.json",
+      "sha256": "a692f99032207669916b4fd66cac416ff65dffe889a4416e918564a4cdc6246a"
+    }
+  ],
+  "validation": [
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            1583,
+            861,
+            120,
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9669063091278076,
+          "bounds": [
+            1583,
+            861,
+            120,
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9506069421768188,
+          "bounds": [
+            1584,
+            861,
+            120,
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "actual_failure_1536",
+      "path": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\run-20260930-130149-005851-33010434be09-stop.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_shadow_rose_all",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.945,
+      "structure_threshold": 0.8,
+      "hits": []
+    }
+  ],
+  "search_roi": [
+    1340,
+    250,
+    650,
+    890
+  ],
+  "threshold": 0.945,
+  "structure_threshold": 0.8,
+  "validation_reuse": "Approved PNG hash, runtime configuration, ROI and matching/normalization code unchanged. Reused candidate-stage checks; no repeated image scans after approval."
+}

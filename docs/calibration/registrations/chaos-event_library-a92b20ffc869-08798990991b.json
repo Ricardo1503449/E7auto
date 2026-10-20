@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_library",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 141558.png",
+  "original_sha256": "089b5b5397ff198f00428120ff4ba6d7d80c5c6f8e07f54182886c60d733f802",
+  "client_rect": [
+    55,
+    92,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    661,
+    1069,
+    1048,
+    166
+  ],
+  "editing_basis": "2个选项的标题和说明文字，另保留指定圆条图标；原始像素，周围背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_library",
+      "kind": "positive",
+      "source": "library_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        661,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "positive",
+      "source": "library_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.980905,
+      "structure": 0.976404,
+      "location": [
+        661,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.337152,
+      "structure": 0.1026,
+      "location": [
+        714,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.4454,
+      "structure": 0.193917,
+      "location": [
+        660,
+        1071,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "flame_options",
+      "passed": true,
+      "score": 0.468281,
+      "structure": 0.27095,
+      "location": [
+        1006,
+        1070,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "torn_map_options",
+      "passed": true,
+      "score": 0.46937,
+      "structure": 0.23023,
+      "location": [
+        614,
+        1070,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "mural_options",
+      "passed": true,
+      "score": 0.589966,
+      "structure": 0.292737,
+      "location": [
+        316,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "blood_shelter_options",
+      "passed": true,
+      "score": 0.546246,
+      "structure": 0.255895,
+      "location": [
+        281,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "passage_options",
+      "passed": true,
+      "score": 0.587161,
+      "structure": 0.310129,
+      "location": [
+        298,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "observatory_options",
+      "passed": true,
+      "score": 0.420819,
+      "structure": 0.215719,
+      "location": [
+        698,
+        1069,
+        1048,
+        166
+      ]
+    },
+    {
+      "key": "event_library",
+      "kind": "negative",
+      "source": "library_text",
+      "passed": true,
+      "score": 0.0,
+      "structure": -0.030378,
+      "location": [
+        979,
+        1122,
+        1048,
+        166
+      ]
+    }
+  ],
+  "approval_message": "通过"
+}

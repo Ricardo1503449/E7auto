@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "supply_get_loot",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-8ba7b842-3af1-4cfa-814b-1748bd5e8daa.png",
+  "original_sha256": "57c3e8fbcefae9fd9921b09d27771dd4da6272b25704357ffc61bf34b62574a0",
+  "client_rect": null,
+  "crop": [
+    79,
+    86,
+    193,
+    34
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_node",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1691,
+        736,
+        193,
+        34
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_node_done",
+      "kind": "real_negative",
+      "score": 0.595903,
+      "structure": 0.999842,
+      "location": [
+        1691,
+        736,
+        193,
+        34
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "loot_node",
+      "kind": "synthetic_1536x864",
+      "score": 0.980914,
+      "structure": 0.858212,
+      "location": [
+        1691,
+        736,
+        193,
+        34
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision9_masks\\supply_get_loot.png",
+  "mask_sha256": "14fb8b47644996f2f817a973a3e1dc769277327c5570d66c1d6f998014727a7d",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "fa88db7386a21f51f92fdb81f5e57ccaa3748495432d2de72a9d66b5a1766248",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision9.json",
+      "sha256": "a3065da2dee4a5b7378d661ddfe35f9c28b211d937a560c6115da0bad5ae713c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\supply_get_loot.source.json",
+    "sha256": "141ab4648ec79de62d499b8e73636c079858175eb358f93c6e5d078832687ebe"
+  },
+  "search_roi": [
+    1580,
+    650,
+    742,
+    310
+  ],
+  "threshold": 0.966,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留获得战利品文字及句号；紫色选项卡、边框和背景透明。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "supply_get_loot"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision9_validation.json",
+      "sha256": "d2edba7d598ca610347107a4c54b4375dc85f9bed594447031501d05e23cb679"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "supply_get_loot.png",
+  "target_filename": "loot/supply_get_loot.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-supply_get_loot-fa88db7386a2-58e573935ec2.json",
+    "record_sha256": "58e573935ec22e0b2850fbf1db4d25f31188e46384af69774de8f5b6e89391fd"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

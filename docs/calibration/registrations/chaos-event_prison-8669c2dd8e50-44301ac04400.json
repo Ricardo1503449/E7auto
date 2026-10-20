@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_prison",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-21 232655.png",
+  "original_sha256": "87dcd4c679e1d77526f984c2b9e5f7525d175566eb8fa1bc551a18feeff2dfa0",
+  "client_rect": [
+    48,
+    98,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    244,
+    1069,
+    1772,
+    168
+  ],
+  "editing_basis": "原图BGR保持，仅提取三项标题、左右下方说明和中间完整圆条图标透明遮罩；不重绘、不缩放。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": {
+    "checks": [
+      {
+        "kind": "positive_native",
+        "passed": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          244,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "positive_synthetic_scale",
+        "passed": true,
+        "score": 0.980809,
+        "structure": 0.960392,
+        "location": [
+          244,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "prepare",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.09907,
+        "location": [
+          218,
+          1065,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "reward",
+        "passed": true,
+        "score": 0.0,
+        "structure": -0.33278,
+        "location": [
+          246,
+          1117,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "followup_text",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.294366,
+        "location": [
+          419,
+          973,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "torch",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.047379,
+        "location": [
+          516,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "mimic",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.040071,
+        "location": [
+          535,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "trap",
+        "passed": true,
+        "score": 0.073197,
+        "structure": 0.088344,
+        "location": [
+          516,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "tablet",
+        "passed": true,
+        "score": 0.0,
+        "structure": -0.051698,
+        "location": [
+          517,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.047058,
+        "location": [
+          480,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "vestment_subchoice",
+        "passed": true,
+        "score": 0.163424,
+        "structure": 0.000357,
+        "location": [
+          226,
+          1068,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "golem",
+        "passed": true,
+        "score": 0.024707,
+        "structure": 0.134216,
+        "location": [
+          535,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "real_negative",
+        "name": "giant_eye",
+        "passed": true,
+        "score": 0.401297,
+        "structure": 0.071604,
+        "location": [
+          170,
+          1069,
+          1772,
+          168
+        ]
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "prison_options",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "prison_options",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "prison_text",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.996496319770813, bounds=Rect(x=1149, y=1264, width=23, height=16), anchor=Point(x=1160, y=1272))"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "prison_text",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "prison_options",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "prison_options",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "triangle_reuse",
+        "source": "prison_text",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "Detection(key='text_continue', confidence=0.972239077091217, bounds=Rect(x=1149, y=1264, width=23, height=16), anchor=Point(x=1160, y=1272))"
+      },
+      {
+        "kind": "existing_event_conflicts",
+        "source": "prison_text",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "found": []
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "prepare_event",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "Detection(key='prepare_event', confidence=0.999999463558197, bounds=Rect(x=38, y=24, width=270, height=72), anchor=Point(x=173, y=60))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "start_battle",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "Detection(key='start_battle', confidence=0.9999992847442627, bounds=Rect(x=1665, y=1134, width=614, height=133), anchor=Point(x=1972, y=1200))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_reward",
+        "key": "event_reward_close",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "Detection(key='event_reward_close', confidence=0.9976166486740112, bounds=Rect(x=1080, y=1230, width=185, height=50), anchor=Point(x=1172, y=1255))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "event_reward_close",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_reward",
+        "key": "text_continue",
+        "size": [
+          2322,
+          1306
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "prepare_event",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "Detection(key='prepare_event', confidence=0.9923285245895386, bounds=Rect(x=38, y=24, width=270, height=72), anchor=Point(x=173, y=60))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "start_battle",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "Detection(key='start_battle', confidence=0.9882297515869141, bounds=Rect(x=1665, y=1134, width=614, height=133), anchor=Point(x=1972, y=1200))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_reward",
+        "key": "event_reward_close",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "Detection(key='event_reward_close', confidence=0.9576135873794556, bounds=Rect(x=1080, y=1230, width=185, height=50), anchor=Point(x=1172, y=1255))"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_prepare",
+        "key": "event_reward_close",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "None"
+      },
+      {
+        "kind": "event_battle_reuse",
+        "source": "prison_reward",
+        "key": "text_continue",
+        "size": [
+          1536,
+          864
+        ],
+        "passed": true,
+        "hit": "None"
+      }
+    ],
+    "failures": [],
+    "protected_changes": [],
+    "limitations": [
+      "选项只有一张真实正例，1536×864为人工缩放样本。",
+      "已提供后续文本页但未提供返回地图截图；尚未进行实机自动化验证。"
+    ]
+  },
+  "approval_message": "通过，新事件"
+}

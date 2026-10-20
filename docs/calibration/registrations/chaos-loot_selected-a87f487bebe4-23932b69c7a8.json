@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2697e07e-40a9-4ad9-abaf-03a9ceab7aed.png",
+  "original_sha256": "458922c4490d44440297f31b9dc0984032ab964ef5b9aa6fe0d9fbef7cf47d2f",
+  "client_rect": [
+    51,
+    103,
+    2322,
+    1306
+  ],
+  "crop": [
+    1515,
+    196,
+    460,
+    710
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_selected_right",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1515,
+        196,
+        460,
+        710
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_middle",
+      "kind": "real_positive",
+      "score": 0.982476,
+      "structure": 0.88125,
+      "location": [
+        935,
+        196,
+        460,
+        710
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_left",
+      "kind": "real_positive",
+      "score": 0.998778,
+      "structure": 0.990359,
+      "location": [
+        354,
+        196,
+        460,
+        710
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_b_selected",
+      "kind": "real_positive",
+      "score": 0.982407,
+      "structure": 0.881287,
+      "location": [
+        935,
+        196,
+        460,
+        710
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_a",
+      "kind": "real_negative",
+      "score": 0.201991,
+      "structure": 0.890481,
+      "location": [
+        1515,
+        196,
+        460,
+        710
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "loot_set_b",
+      "kind": "real_negative",
+      "score": 0.179632,
+      "structure": 0.886285,
+      "location": [
+        354,
+        196,
+        460,
+        710
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "loot_set_c",
+      "kind": "real_negative",
+      "score": 0.744403,
+      "structure": 0.859138,
+      "location": [
+        354,
+        196,
+        460,
+        710
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_right",
+      "kind": "synthetic_1536x864",
+      "score": 0.981425,
+      "structure": 0.856176,
+      "location": [
+        1515,
+        196,
+        460,
+        710
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision13_masks\\loot_selected.png",
+  "mask_sha256": "240c4406a15afc2655b0127aa05e799d563f8aac631094c520ef8af2450cb30f",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "a87f487bebe44b9a58f536ea7f97a18b76f108fb1a096706b7ab7d40df6050df",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision13.json",
+      "sha256": "dd415668e7931fa802653840cd92dc9611cf31127cd094947189f9449e24c352"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_selected.source.json",
+    "sha256": "3657c35529ec5f27e61fadf70749800650cf35591d866d2a39a0d99672405b5b"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.966,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "普通与紫色战利品统一使用左右两侧高亮边框，包括折角和圆点装饰；内部卡片内容透明。原始RGB不变，不重绘、不缩放。",
+    "选中确认限定在已定位目标卡片范围，左右边框共同匹配；不能以邻卡命中确认目标，无点击动作。绿色框为卡片可能出现的整体搜索范围。",
+    "紫色选中仅有真实局部素材，缺完整画面选中正例；详见revision13-validation.html。",
+    "本轮补充右侧边框，contract_selected及其他候选保持原样。待审核。"
+  ],
+  "resource_scenes": [
+    "loot_selected"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision12_validation.json",
+      "sha256": "ccf05c615568d2c137c65bef95d6e84a49f24e7a40121ba638262fa81480ff5f"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision13_validation.json",
+      "sha256": "dea2a336e1e39f0cdce305928765d0ee8698e288f57dfd560d307ec71d9628ef"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "loot_selected.png",
+  "target_filename": "loot/loot_selected.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_selected-a87f487bebe4-285feefa5dce.json",
+    "record_sha256": "285feefa5dcee79032bfb841ff34fc1e49dab1229f14805667b58a1f29ae0cd6"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

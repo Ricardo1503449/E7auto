@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_ivanna",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 192712.png",
+  "original_sha256": "006bff3bc253f85110298f392c9d131b68dcac1e055a7ae668302d540fbfc8e4",
+  "client_rect": [
+    53,
+    104,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    665,
+    562,
+    158,
+    42
+  ],
+  "candidate_sha256": "08dba1c1421c6a2c520b09cc7d43cad2bafd494f7b03cbb5bfbc6a843649db32",
+  "editing_basis": "Original BGR pixels retained; crop and alpha mask only. Hero and result class-icon holes remain transparent. Result contains only completion text, name and class icon; no stars, attribute or artwork. Filter button includes its state background as in existing water templates.",
+  "review_status": "approved",
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.953,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "hero_ivanna",
+      "source": "filter",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "filter",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "filter",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "fire_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "fire_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "fire_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "list",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 1.0,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "list",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9729969501495361,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "list",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_source_self",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9707040786743164,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_positive",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9999974370002747,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_positive",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9730257987976074,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "selected",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_positive",
+      "expected": true,
+      "passed": true,
+      "hits": [
+        {
+          "score": 0.9707064628601074,
+          "bounds": [
+            665,
+            562,
+            158,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "result",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "result",
+      "size": [
+        1920,
+        1080
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "result",
+      "size": [
+        1536,
+        864
+      ],
+      "kind": "synthetic_scaled_real_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    },
+    {
+      "key": "hero_ivanna",
+      "source": "list",
+      "size": [
+        2322,
+        1306
+      ],
+      "kind": "derived_target_excluded_negative",
+      "expected": false,
+      "passed": true,
+      "hits": []
+    }
+  ],
+  "limitations": [
+    "Only the list identity has an independent selected/unselected real positive pair. Fire buttons, left selected name and completion card each have one real positive source; self matching and synthetic scaling do not establish independent real-scale coverage.",
+    "Screenshots show a manually assembled team different from the configured first/third/fourth heroes; this task changes only the soul-weaver slot to Ivanna. No game inputs, live flow or runtime changes performed.",
+    "Candidate-only preparation. User review is required before registration and integration."
+  ],
+  "approved_candidate_sha256": "08dba1c1421c6a2c520b09cc7d43cad2bafd494f7b03cbb5bfbc6a843649db32",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\results\\user_approval_all.json",
+      "sha256": "7b03cc2f2154a9e648089e1b932936d8483c7fedbeb8b722aa52e694f451d89d"
+    }
+  ]
+}

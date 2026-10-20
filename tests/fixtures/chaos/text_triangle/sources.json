@@ -1,0 +1,67 @@
+[
+  {
+    "file": "bright.png",
+    "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_intro-client.png",
+    "source_sha256": "9517c348f4a4fbf1e0f6212aef02cd733055f8067f8a4bfbd6c7598b7103d16e",
+    "crop": [
+      1080,
+      1190,
+      190,
+      116
+    ],
+    "contains_text_triangle": true,
+    "sha256": "d5b1e0fdf045136a6226b883cd694aac72e58d9742b153c84cabe2b7b3f5faa2"
+  },
+  {
+    "file": "dark.png",
+    "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_text-client.png",
+    "source_sha256": "f532cfd2753fd5f8ea95124e5bc34b70e5def64e011f27d4c607b010daa1ae9a",
+    "crop": [
+      1080,
+      1190,
+      190,
+      116
+    ],
+    "contains_text_triangle": true,
+    "sha256": "b00fe14482cb0633bd4ff1027fc752c18a3aaf8bf9d7cd2e0fc3a5f1c52bf3bf"
+  },
+  {
+    "file": "options.png",
+    "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_options-client.png",
+    "source_sha256": "7d023014d6800f8c899c45143bcd46dad0c576ab22b538e3f9422141dc227a2c",
+    "crop": [
+      1080,
+      1190,
+      190,
+      116
+    ],
+    "contains_text_triangle": false,
+    "sha256": "9cc89afd0debdfdd9a8d71efc8ddabbd61c56633daf0017166085db65e4bc83e"
+  },
+  {
+    "file": "reward.png",
+    "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_reward-client.png",
+    "source_sha256": "96df8faf0eb4d3e81adee5ee4d5d4d79c2a0037cc8d47bdb375e7169f9969581",
+    "crop": [
+      1080,
+      1190,
+      190,
+      116
+    ],
+    "contains_text_triangle": false,
+    "sha256": "eb93431fbc731f0af9d28ab041cd5dc1ffc51a12566da59931037d9d3223dccb"
+  },
+  {
+    "file": "feathers.png",
+    "source": "artifacts\\tasks\\chaos\\20260921-232331-event-giant-eye-candidate-d8fbaae4\\inputs\\eye_intro-client.png",
+    "source_sha256": "9517c348f4a4fbf1e0f6212aef02cd733055f8067f8a4bfbd6c7598b7103d16e",
+    "crop": [
+      1080,
+      1110,
+      190,
+      116
+    ],
+    "contains_text_triangle": false,
+    "sha256": "4a0e17c4b0b6f5af396322bd36996478472b64fd21e4605c2f3ea31a990be496"
+  }
+]

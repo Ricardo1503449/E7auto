@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_prison",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_prison.png",
+  "original_sha256": "8669c2dd8e50b76fd61fdd2bc971aee9420b9f4ae4c4a7b76181c2ebfe6fa216",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_prison-8669c2dd8e50-44301ac04400.json",
+    "record_sha256": "44301ac04400f28bd208b087e22a065bf3180c4ab8e6df16a89a3d65b4838ec4"
+  },
+  "canvas_size": [
+    1772,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1772,
+      80
+    ],
+    [
+      572,
+      80,
+      689,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 7389,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_prison",
+      "source": "artifacts\\tasks\\chaos\\20260922-002052-event-prison-candidate-3b492184\\inputs\\prison_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_prison",
+        "event_prison",
+        "event_prison"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          480,
+          1110
+        ],
+        [
+          480,
+          1110
+        ],
+        [
+          480,
+          1110
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 405.139
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          480,
+          1110
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_prison",
+      "source": "artifacts\\tasks\\chaos\\20260922-002052-event-prison-candidate-3b492184\\inputs\\prison_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_prison",
+        "event_prison",
+        "event_prison"
+      ],
+      "scores": [
+        0.9728349447250366,
+        0.9728349447250366,
+        0.9728349447250366
+      ],
+      "anchors": [
+        [
+          317,
+          734
+        ],
+        [
+          317,
+          734
+        ],
+        [
+          317,
+          734
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 59.892
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9701929092407227,
+        "anchor": [
+          317,
+          734
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_prison",
+      "source": "artifacts\\tasks\\chaos\\20260922-002052-event-prison-candidate-3b492184\\inputs\\prison_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_prison",
+        "event_prison",
+        "event_prison"
+      ],
+      "scores": [
+        0.9914091229438782,
+        0.9914091229438782,
+        0.9914091229438782
+      ],
+      "anchors": [
+        [
+          397,
+          918
+        ],
+        [
+          397,
+          918
+        ],
+        [
+          397,
+          918
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 78.692
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9897325038909912,
+        "anchor": [
+          397,
+          918
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_prison",
+      "source": "artifacts\\tasks\\chaos\\20260922-002052-event-prison-candidate-3b492184\\inputs\\prison_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_prison",
+        "event_prison",
+        "event_prison"
+      ],
+      "scores": [
+        0.9940809607505798,
+        0.9940809607505798,
+        0.9940809607505798
+      ],
+      "anchors": [
+        [
+          476,
+          1102
+        ],
+        [
+          476,
+          1102
+        ],
+        [
+          476,
+          1102
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 98.972
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9931336641311646,
+        "anchor": [
+          476,
+          1102
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_prison",
+      "source": "artifacts\\tasks\\chaos\\20260922-002052-event-prison-candidate-3b492184\\inputs\\prison_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_prison",
+        "event_prison",
+        "event_prison"
+      ],
+      "scores": [
+        0.9913877248764038,
+        0.9913877248764038,
+        0.9913877248764038
+      ],
+      "anchors": [
+        [
+          529,
+          1224
+        ],
+        [
+          529,
+          1224
+        ],
+        [
+          529,
+          1224
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 109.871
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.990036129951477,
+        "anchor": [
+          529,
+          1224
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

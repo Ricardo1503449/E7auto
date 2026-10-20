@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "health_restore_done",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "source": {
+    "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 183328.png",
+    "sha256": "78b43bbdfc0974787b78770c0a54d2b838c92bbae033a538d5ba60da5fea6b06",
+    "client_rect": [
+      54,
+      111,
+      2322,
+      1306
+    ]
+  },
+  "crop": [
+    1080,
+    970,
+    277,
+    83
+  ],
+  "editing_basis": "Original BGR crop of completed health purchase button, no redraw.",
+  "validation": [
+    {
+      "source": 0,
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 0,
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 0,
+      "size": [
+        1536,
+        864
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "health_restore_done",
+      "detected": true,
+      "expected": true,
+      "score": 1.0,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "health_restore_done",
+      "detected": true,
+      "expected": true,
+      "score": 0.994819164276123,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "key": "health_restore_done",
+      "detected": true,
+      "expected": true,
+      "score": 0.9939815402030945,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    },
+    {
+      "source": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "key": "health_restore_done",
+      "detected": false,
+      "expected": false,
+      "score": null,
+      "state": null,
+      "passed": true
+    }
+  ],
+  "candidate_sha256": "840ecb70415ec72f24b5523076cb291086f841de49e1f1fbc7e6de317bb47e47",
+  "search_roi": [
+    1068,
+    953,
+    304,
+    108
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-203102-shop-health-purchase-fd771c7b\\results\\recognition.json",
+  "limitations": [
+    "Five supplied real screenshots and synthetic 1920x1080/1536x864 resizes; no live-game verification. Health purchase dialog, disabled, red and completed states each have one source. Health availability determined by bright/dim icon; numeric prices are not read."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_gray_shop",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2915de0e-8d8c-4465-8067-9ece807ab2f6.png",
+  "original_sha256": "991fa051625ecfcd6ee04b18f273186a1b35ff1b62e7eaa4664e44c379ecee6d",
+  "client_rect": null,
+  "crop": [
+    30,
+    20,
+    126,
+    123
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "revision5_gray_map",
+      "kind": "real_positive",
+      "score": 0.991893,
+      "structure": 0.841801,
+      "location": [
+        1318,
+        649,
+        126,
+        123
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision4_masks\\node_gray_shop.png",
+  "mask_sha256": "3ae398e8481c18775f59ec4afbe9f1b739fce755b746cc58d0a168098662618a",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "8154b19e16bd46e2d306aee2ac9889d2488eb56f624cd38de39e0bae5f844486",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision5.json",
+      "sha256": "c1bf2e073e061aeb84ce23dce50d5cdc790a5af446da332a880fd6fd7f11a180"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_gray_shop.source.json",
+    "sha256": "682ecc569e9dd7f3bff4aa65de99e5532b818ed8077d8779bc2815ffb3557028"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "灰态候选像素及遮罩保持不变，新增用户完整地图截图作为真实对照；仍仅作灰态参考。",
+    "原始局部裁剪未确认与完整截图属于同一帧；已在新增完整截图中验证，区域预览中的匹配框为实际识别结果。",
+    "原始局部裁剪未确认与完整截图属于同一帧；已在新增完整截图中验证，区域预览中的匹配框为实际识别结果。"
+  ],
+  "resource_scenes": [
+    "node_gray_shop"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "node_gray_shop.png",
+  "target_filename": "map/node_gray_shop.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_gray_shop-8154b19e16bd-a7b0104333f4.json",
+    "record_sha256": "a7b0104333f4655d3d20bcac094c4b2fa11e2f4de499e64117b82422ff82b83a"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

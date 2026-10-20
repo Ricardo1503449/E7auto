@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "prepare_boss",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-ac05b984-4863-4cb3-8df6-407f428f821d.png",
+  "original_sha256": "28ced10d89258fa7e3859c976ef4853f297162899edd2dc8aa95881178028f85",
+  "client_rect": [
+    73,
+    113,
+    2322,
+    1306
+  ],
+  "crop": [
+    30,
+    20,
+    425,
+    78
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "boss_prepare",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        30,
+        20,
+        425,
+        78
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "normal_prepare",
+      "kind": "real_negative",
+      "score": 0.878562,
+      "structure": 0.661109,
+      "location": [
+        30,
+        20,
+        425,
+        78
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "elite_prepare",
+      "kind": "real_negative",
+      "score": 0.911005,
+      "structure": 0.699868,
+      "location": [
+        30,
+        20,
+        425,
+        78
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "boss_prepare",
+      "kind": "synthetic_1536x864",
+      "score": 0.98385,
+      "structure": 0.94943,
+      "location": [
+        30,
+        20,
+        425,
+        78
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "570666b84e5da9b92fe1fc03e16a91381908fa996d70ab21a57b645e8a08134b",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\prepare_boss.source.json",
+    "sha256": "1366201eaf86df3f609f14f08d11ed68b5090381be753511101198c7be16fba8"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.969,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "prepare_boss"
+  ],
+  "additional_validation_records": []
+}

@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "health_restore",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\shop\\health_restore.png",
+  "original_sha256": "ebb39271d66720fb2960bb064c2e789971cac7952dc54f90fe3778dcd7020d7b",
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-health_restore-ebb39271d667-aa977bd17377.json",
+    "record_sha256": "aa977bd17377fac7ce618a94d2996f5ee0a66ab00b09bb48b2f14abe9cadf59f"
+  },
+  "crop_within_original": [
+    78,
+    160,
+    91,
+    83
+  ],
+  "editing_basis": "Explicit user revision: icons only for identities; capsule-only buttons; dialog icon and text foreground only. Original BGR pixels unchanged, alpha and bounding crop only.",
+  "validation": [
+    {
+      "key": "health_restore",
+      "source": 0,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 1.0,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 0,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.9828492403030396,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 0,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "detected": true,
+      "score": 0.980289101600647,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    },
+    {
+      "key": "health_restore",
+      "source": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "detected": false,
+      "score": null,
+      "passed": true
+    }
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-203102-shop-health-purchase-fd771c7b\\results\\revision2_recognition.json",
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "candidate_sha256": "17322dafc64dcb04c20a4fb708008218278f9703cf522f3cf404de6c8c60ccf0",
+  "limitations": [
+    "5 original client frames and artificial resizes; no live-game validation. Investment done cannot match the health completed button at the existing threshold; retain separate cropped health button."
+  ]
+}

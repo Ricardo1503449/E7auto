@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "hero_xiaochun",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-16f0ef56-9e42-4423-a00b-1d4bf314de8f.png",
+  "original_sha256": "f745219fa0a4b76b2396e6eff0b60149c86362ee8d32448261cd5bdfbab801d2",
+  "client_rect": null,
+  "crop": [
+    10,
+    11,
+    125,
+    44
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "rank_list",
+      "kind": "source_self",
+      "score": 0.979748,
+      "structure": 0.926949,
+      "location": [
+        664,
+        752,
+        125,
+        44
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "xiaochun_selected",
+      "kind": "real_positive",
+      "score": 0.999997,
+      "structure": 0.999991,
+      "location": [
+        1264,
+        181,
+        125,
+        44
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "rank_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.972796,
+      "structure": 0.910616,
+      "location": [
+        663,
+        752,
+        125,
+        44
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\hero_xiaochun.png",
+  "mask_sha256": "67f0eb305b1f2325a9367f37aa645bb5eac04f0ce2c7a14b0d4cbddeb4894a11",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "7504b7f8314970219f47d689364254fd597b9a64c6a9cbac03d73ecb27dd3a89",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\hero_xiaochun.source.json",
+    "sha256": "68936f713f7a32f0c07866aaa2b440e257d917dde13511fc028cef27bd74e2ca"
+  },
+  "search_roi": [
+    580,
+    120,
+    1742,
+    1010
+  ],
+  "threshold": 0.958,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "hero_xiaochun"
+  ],
+  "additional_validation_records": []
+}

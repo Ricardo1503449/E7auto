@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "supply_confirm",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2aea8387-efc3-446c-927d-d2ea45489a4e.png",
+  "original_sha256": "1371103b344f7f85ececd78dbde95a15a759f2a4a60e240aa83af156a1fc2040",
+  "client_rect": null,
+  "crop": [
+    19,
+    27,
+    613,
+    134
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "supply_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1665,
+        1133,
+        613,
+        134
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "supply_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.98988,
+      "structure": 0.971053,
+      "location": [
+        1665,
+        1133,
+        613,
+        134
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\supply_confirm.png",
+  "mask_sha256": "700b2c5b2bc09f8bb8963505a1bc1121701a0b01f179d6fd9c032c7a0a597672",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "c9415fa9a78ac84a23ec4db07fc6e08c2826ebdfb86a45dcb1527b3f27674660",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\supply_confirm.source.json",
+    "sha256": "8e4c4dc58b693519b1bd3fba46b4fefc74dc3bc6dc7fa6b1405e47200a60619b"
+  },
+  "search_roi": [
+    1630,
+    1100,
+    692,
+    206
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "supply_confirm"
+  ],
+  "additional_validation_records": []
+}

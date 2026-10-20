@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_grieving_woman",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_grieving_woman.png",
+  "original_sha256": "f3a55824f85bd8c15dc63a042c652f2865c424541509807c234230585e84ecf8",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_grieving_woman-f3a55824f85b-a8818ad31622.json",
+    "record_sha256": "a8818ad3162248d32741e72398ce3b2ee8a72b4a72beb79ab83d5747e8f7ee56"
+  },
+  "canvas_size": [
+    1901,
+    158
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1901,
+      80
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 17422,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_grieving_woman",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\woman_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_grieving_woman",
+        "event_grieving_woman",
+        "event_grieving_woman"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 422.383
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1161,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grieving_woman",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\woman_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_grieving_woman",
+        "event_grieving_woman",
+        "event_grieving_woman"
+      ],
+      "scores": [
+        0.9767107963562012,
+        0.9767107963562012,
+        0.9767107963562012
+      ],
+      "anchors": [
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 66.272
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9780704975128174,
+        "anchor": [
+          768,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grieving_woman",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\woman_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_grieving_woman",
+        "event_grieving_woman",
+        "event_grieving_woman"
+      ],
+      "scores": [
+        0.9963736534118652,
+        0.9963736534118652,
+        0.9963736534118652
+      ],
+      "anchors": [
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 63.887
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9927563071250916,
+        "anchor": [
+          960,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grieving_woman",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\woman_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_grieving_woman",
+        "event_grieving_woman",
+        "event_grieving_woman"
+      ],
+      "scores": [
+        0.9829673767089844,
+        0.9829673767089844,
+        0.9829673767089844
+      ],
+      "anchors": [
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 108.628
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9806301593780518,
+        "anchor": [
+          1152,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_grieving_woman",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\woman_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_grieving_woman",
+        "event_grieving_woman",
+        "event_grieving_woman"
+      ],
+      "scores": [
+        0.9859282970428467,
+        0.9859282970428467,
+        0.9859282970428467
+      ],
+      "anchors": [
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 104.667
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9831136465072632,
+        "anchor": [
+          1280,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

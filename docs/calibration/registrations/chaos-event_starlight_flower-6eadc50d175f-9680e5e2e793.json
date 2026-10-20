@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_starlight_flower",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_starlight_flower.png",
+  "original_sha256": "073cdb7422a81e5a7805c23e03ae365d7b9feb1e04523d2ca90dd36f63a9ab9c",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_starlight_flower-073cdb7422a8-fe77a1e24bcf.json",
+    "record_sha256": "fe77a1e24bcfe81380992111b2009b78cfa7d10d66d2f0a95225592a611d0ba4"
+  },
+  "canvas_size": [
+    1670,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1670,
+      80
+    ],
+    [
+      518,
+      80,
+      689,
+      88
+    ],
+    [
+      1207,
+      80,
+      463,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 2570,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_starlight_flower",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\flower_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_starlight_flower",
+        "event_starlight_flower",
+        "event_starlight_flower"
+      ],
+      "scores": [
+        0.9999998807907104,
+        0.9999998807907104,
+        0.9999998807907104
+      ],
+      "anchors": [
+        [
+          480,
+          1090
+        ],
+        [
+          480,
+          1090
+        ],
+        [
+          480,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 699.682
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          480,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_starlight_flower",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\flower_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_starlight_flower",
+        "event_starlight_flower",
+        "event_starlight_flower"
+      ],
+      "scores": [
+        0.9893283843994141,
+        0.9893283843994141,
+        0.9893283843994141
+      ],
+      "anchors": [
+        [
+          317,
+          721
+        ],
+        [
+          317,
+          721
+        ],
+        [
+          317,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 107.631
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9885630011558533,
+        "anchor": [
+          317,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_starlight_flower",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\flower_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_starlight_flower",
+        "event_starlight_flower",
+        "event_starlight_flower"
+      ],
+      "scores": [
+        0.9822715520858765,
+        0.9822715520858765,
+        0.9822715520858765
+      ],
+      "anchors": [
+        [
+          396,
+          901
+        ],
+        [
+          396,
+          901
+        ],
+        [
+          396,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 101.011
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9815197587013245,
+        "anchor": [
+          396,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_starlight_flower",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\flower_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_starlight_flower",
+        "event_starlight_flower",
+        "event_starlight_flower"
+      ],
+      "scores": [
+        0.9874042868614197,
+        0.9874042868614197,
+        0.9874042868614197
+      ],
+      "anchors": [
+        [
+          477,
+          1082
+        ],
+        [
+          477,
+          1082
+        ],
+        [
+          477,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 111.363
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9872103333473206,
+        "anchor": [
+          477,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_starlight_flower",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\flower_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_starlight_flower",
+        "event_starlight_flower",
+        "event_starlight_flower"
+      ],
+      "scores": [
+        0.9786622524261475,
+        0.9786622524261475,
+        0.9786622524261475
+      ],
+      "anchors": [
+        [
+          530,
+          1202
+        ],
+        [
+          530,
+          1202
+        ],
+        [
+          530,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 126.074
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9782481789588928,
+        "anchor": [
+          530,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

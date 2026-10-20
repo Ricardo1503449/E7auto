@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_vestment_with_loot",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-26 133142.png",
+  "original_sha256": "4e4ca88fd72c04317d2a865c333942d69bc665939bfd7894be2f0dfe17fb7590",
+  "client_rect": [
+    52,
+    124,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    308,
+    1069,
+    1714,
+    157
+  ],
+  "candidate_sha256": "3ede53d81af9e94721703942d4616afabda4fa59ab651b972c3c284635059357",
+  "editing_basis": "Keep only the three option titles and effect text; original visible BGR unchanged, background RGB/alpha zero.",
+  "review_status": "approved",
+  "validation": [
+    {
+      "source": "options",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='event_vestment_with_loot', confidence=1.0, bounds=Rect(x=308, y=1069, width=1714, height=157), anchor=Point(x=480, y=1090))"
+    },
+    {
+      "source": "options",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='event_vestment_with_loot', confidence=0.9887893199920654, bounds=Rect(x=308, y=1069, width=1714, height=157), anchor=Point(x=480, y=1090))"
+    },
+    {
+      "source": "options",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='event_vestment_with_loot', confidence=0.981252908706665, bounds=Rect(x=308, y=1069, width=1714, height=157), anchor=Point(x=480, y=1090))"
+    },
+    {
+      "source": "text",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "text",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "text",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_first",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_first",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_first",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_disabled",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_disabled",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_disabled",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_text",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "old_text",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "other_three_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "other_three_options",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "other_three_options",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "text",
+      "control": "text_continue",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "Detection(key='text_continue', confidence=0.999230682849884, bounds=Rect(x=1149, y=1269, width=23, height=16), anchor=Point(x=1160, y=1277))"
+    },
+    {
+      "source": "text",
+      "control": "text_continue",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "Detection(key='text_continue', confidence=0.9399967789649963, bounds=Rect(x=1149, y=1270, width=23, height=16), anchor=Point(x=1160, y=1278))"
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-155246-vestment-with-loot-candidate-bcf0d132\\results\\validation.json",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅一张真实可选状态正例；1920×1080和1536×864为人工缩放。",
+    "新模板仅供祭服第二阶段内部识别，不加入全局入口索引。",
+    "当前只制作候选，尚未登记、修改代码或运行配置，未实机验证。"
+  ],
+  "approval": "User explicitly approved the vestment available subchoice template: 模板通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

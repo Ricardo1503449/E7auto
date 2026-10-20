@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_blood_meteorite",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 130801.png",
+  "original_sha256": "5b5af4e8deadec1b00c2e45f1a44b78c2485a6d0f0c12697ff605faf93ca9bb3",
+  "client_rect": [
+    37,
+    93,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    174,
+    1069,
+    1758,
+    168
+  ],
+  "candidate_sha256": "81be7bf512e65b941c64a2940bbb7e60cfb90b536c21fb9823e72d57036edc74",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      174,
+      1069
+    ],
+    "titles": [
+      [
+        183,
+        5,
+        228,
+        33
+      ],
+      [
+        872,
+        5,
+        228,
+        33
+      ],
+      [
+        1598,
+        5,
+        155,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "meteorite_options",
+      "expected": "event_blood_meteorite",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_blood_meteorite', confidence=1.0, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=1.0, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=1.0, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 695.935
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_blood_meteorite",
+        "event_giant_eye",
+        "event_altar"
+      ]
+    },
+    {
+      "source": "meteorite_options",
+      "expected": "event_blood_meteorite",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_blood_meteorite', confidence=0.9871605634689331, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=0.9871605634689331, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=0.9871605634689331, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 696.268
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_blood_meteorite",
+        "event_giant_eye",
+        "event_altar"
+      ]
+    },
+    {
+      "source": "meteorite_options",
+      "expected": "event_blood_meteorite",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_blood_meteorite', confidence=0.9795429706573486, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=0.9795429706573486, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_blood_meteorite', confidence=0.9795429706573486, bounds=Rect(x=174, y=1069, width=1758, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 800.027
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_blood_meteorite",
+        "event_giant_eye",
+        "event_altar"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "User explicitly approved this seven-template batch: 通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

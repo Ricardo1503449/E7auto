@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "key": "date_change_title",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "target_filename": "daily_reset/date_change_title.png",
+  "source": {
+    "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 020205.png",
+    "sha256": "6f01f610a25b432ae2802a191d0a0ba6e9a189e9de5b5269cd246f9fd89f3809",
+    "client_crop": [
+      35,
+      96,
+      2322,
+      1306
+    ]
+  },
+  "crop": [
+    1047,
+    363,
+    231,
+    62
+  ],
+  "mask": "white",
+  "candidate_sha256": "190417b6dc1d5fe02fb857e9e3ac37e0fb2d4cf6ff731abd4bdfba60450952c9",
+  "editing_basis": "User-provided screenshot; lossless client and template cropping, unchanged BGR, alpha-only mask.",
+  "proposed_recognition": {
+    "roi": [
+      850,
+      280,
+      620,
+      230
+    ],
+    "threshold": 0.96,
+    "structure_threshold": 0.8
+  },
+  "validation": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-131549-daily-reset-candidate-review-548937a1\\results\\validation.json",
+    "sha256": "7acc8c9af034c4184fe1c0f539e2c15717b084aceb83e267a8d38dd1f488c16f",
+    "results": [
+      {
+        "key": "date_change_title",
+        "source": "020205",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 1.0,
+        "bounds": [
+          1047,
+          363,
+          231,
+          62
+        ]
+      },
+      {
+        "key": "date_change_title",
+        "source": "020205",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9782393574714661,
+        "bounds": [
+          1047,
+          363,
+          231,
+          62
+        ]
+      },
+      {
+        "key": "date_change_title",
+        "source": "020205",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "confidence": 0.9721710681915283,
+        "bounds": [
+          1048,
+          364,
+          231,
+          62
+        ]
+      },
+      {
+        "key": "date_change_title",
+        "source": "020224",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020224",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020224",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020236",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020236",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020236",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020246",
+        "size": [
+          2322,
+          1306
+        ],
+        "sample_kind": "provided_native",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020246",
+        "size": [
+          1920,
+          1080
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      },
+      {
+        "key": "date_change_title",
+        "source": "020246",
+        "size": [
+          1536,
+          864
+        ],
+        "sample_kind": "synthetic_resize",
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "confidence": null
+      }
+    ]
+  },
+  "approval_status": "approved",
+  "approval_basis": "User approved the text-only revision and all other templates; explicitly requested shared resources immediately.",
+  "original_candidate_source": "D:\\E7auto\\artifacts\\template-candidates\\20260927-132050-b5b4ba11\\sources\\date_change_title.json"
+}

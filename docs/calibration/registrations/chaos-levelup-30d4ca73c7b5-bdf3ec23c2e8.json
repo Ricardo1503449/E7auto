@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "levelup",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-13ef17c1-24c3-4256-8882-3cab4e4d25f5.png",
+  "original_sha256": "a9863b7ed59f318a71c692c3694f1d95da91c13b0e110c40857f117422647e6d",
+  "client_rect": null,
+  "crop": [
+    0,
+    0,
+    161,
+    111
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "levelup",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1087,
+        205,
+        161,
+        111
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "victory_normal",
+      "kind": "real_negative",
+      "score": 0.43137,
+      "structure": 0.144603,
+      "location": [
+        1154,
+        194,
+        161,
+        111
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "elite_victory",
+      "kind": "real_negative",
+      "score": 0.453733,
+      "structure": 0.134011,
+      "location": [
+        1145,
+        176,
+        161,
+        111
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "levelup",
+      "kind": "synthetic_1536x864",
+      "score": 0.97313,
+      "structure": 0.891482,
+      "location": [
+        1087,
+        205,
+        161,
+        111
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "30d4ca73c7b59c30626fbfec9fdf3424df0c284c98f4dc3d3f0dcd78fad055ff",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\levelup.source.json",
+    "sha256": "c9c45fe53cd515c2aa42b2da13eab25f3db0d7d97f426d39741ca160b80d30ca"
+  },
+  "search_roi": [
+    1000,
+    160,
+    400,
+    180
+  ],
+  "threshold": 0.958,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "levelup"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "levelup.png",
+  "target_filename": "battle/levelup.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-levelup-30d4ca73c7b5-2e90b3bfcadc.json",
+    "record_sha256": "2e90b3bfcadc90e20f25b194d75bd0b938b9dc8e7e84ec755bde3bfc030b1943"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

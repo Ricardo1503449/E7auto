@@ -1,0 +1,872 @@
+{
+  "key": "loot_painting_cosmos",
+  "name": "绘画：宇宙彼端",
+  "lines": 2,
+  "occurrences": [
+    {
+      "source": "2026-09-18-175921",
+      "column": 0
+    }
+  ],
+  "primary": {
+    "source": "2026-09-18-175921",
+    "column": 0
+  },
+  "restore_retired": false,
+  "feature": "chaos",
+  "baseline_size": [
+    2322,
+    1306
+  ],
+  "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20260921-221809-12d702c0\\chaos\\loot\\loot_painting_cosmos.png",
+  "source": {
+    "id": "2026-09-18-175921",
+    "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-18 175921.png",
+    "local": "artifacts\\tasks\\chaos\\20260921-221223-loot-batch-candidates-a1be3bc7\\inputs\\2026-09-18-175921.png",
+    "client": "artifacts\\tasks\\chaos\\20260921-221223-loot-batch-candidates-a1be3bc7\\inputs\\2026-09-18-175921-client.png",
+    "source_sha256": "846848ef79008148be8c210d66b7e340fbbe6235fd2259f1ef47f18492745878",
+    "source_size": [
+      2418,
+      1508
+    ],
+    "client_rect": [
+      39,
+      124,
+      2322,
+      1306
+    ]
+  },
+  "client_crop": [
+    421,
+    274,
+    320,
+    352
+  ],
+  "work_crop": [
+    384,
+    247,
+    392,
+    590
+  ],
+  "mask_method": "Native RGB; object silhouette plus name and full effect glyph mask. Excludes card, N badge, desktop and window chrome.",
+  "approval": "approved_by_user",
+  "sha256": "ba1763d8da94a475f5db22339caa96a89a16e9574c7978fd735797fce682d989",
+  "validation": {
+    "key": "loot_painting_cosmos",
+    "minimum_positive": 0.993822,
+    "maximum_qualified_negative": 0,
+    "proposed_threshold": 0.94,
+    "structure_threshold": 0.8,
+    "checks": [
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170358",
+        "column": 0,
+        "truth": "loot_automaton_heart",
+        "positive": false,
+        "score": 0.543207,
+        "structure": 0.411998,
+        "location": [
+          429,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170358",
+        "column": 1,
+        "truth": "loot_sun_shield",
+        "positive": false,
+        "score": 0.462938,
+        "structure": 0.27705,
+        "location": [
+          947,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170358",
+        "column": 2,
+        "truth": "loot_dimension_pouch",
+        "positive": false,
+        "score": 0.547233,
+        "structure": 0.355234,
+        "location": [
+          1582,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170746",
+        "column": 0,
+        "truth": "loot_painting_panorama",
+        "positive": false,
+        "score": 0.806207,
+        "structure": 0.69256,
+        "location": [
+          384,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170746",
+        "column": 1,
+        "truth": "loot_painting_sanctuary",
+        "positive": false,
+        "score": 0.774467,
+        "structure": 0.589124,
+        "location": [
+          1002,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-170746",
+        "column": 2,
+        "truth": "loot_painting_blind_war",
+        "positive": false,
+        "score": 0.85329,
+        "structure": 0.797035,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171500",
+        "column": 0,
+        "truth": "loot_statue_two_faces",
+        "positive": false,
+        "score": 0.526723,
+        "structure": 0.365555,
+        "location": [
+          462,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171500",
+        "column": 1,
+        "truth": "loot_confession",
+        "positive": false,
+        "score": 0.556724,
+        "structure": 0.354416,
+        "location": [
+          999,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171500",
+        "column": 2,
+        "truth": "loot_tablet_persecution",
+        "positive": false,
+        "score": 0.590949,
+        "structure": 0.347183,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171512",
+        "column": 0,
+        "truth": "loot_statue_two_faces",
+        "positive": false,
+        "score": 0.527198,
+        "structure": 0.365756,
+        "location": [
+          462,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171512",
+        "column": 1,
+        "truth": "loot_chalice_offering",
+        "positive": false,
+        "score": 0.564467,
+        "structure": 0.332071,
+        "location": [
+          1000,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171512",
+        "column": 2,
+        "truth": "loot_tablet_persecution",
+        "positive": false,
+        "score": 0.590891,
+        "structure": 0.347112,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171524",
+        "column": 0,
+        "truth": "loot_statue_two_faces",
+        "positive": false,
+        "score": 0.526031,
+        "structure": 0.364735,
+        "location": [
+          462,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171524",
+        "column": 1,
+        "truth": "loot_chalice_redemption",
+        "positive": false,
+        "score": 0.557701,
+        "structure": 0.345831,
+        "location": [
+          1001,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171524",
+        "column": 2,
+        "truth": "loot_tablet_persecution",
+        "positive": false,
+        "score": 0.590894,
+        "structure": 0.347116,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171557",
+        "column": 0,
+        "truth": "loot_ancient_key",
+        "positive": false,
+        "score": 0.44736,
+        "structure": 0.347927,
+        "location": [
+          391,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171557",
+        "column": 1,
+        "truth": "loot_world_tree_leaf",
+        "positive": false,
+        "score": 0.396192,
+        "structure": 0.151114,
+        "location": [
+          944,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-171557",
+        "column": 2,
+        "truth": "loot_dimension_core",
+        "positive": false,
+        "score": 0.446694,
+        "structure": 0.224154,
+        "location": [
+          1546,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175040",
+        "column": 0,
+        "truth": "loot_star_book",
+        "positive": false,
+        "score": 0.465806,
+        "structure": 0.334133,
+        "location": [
+          360,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175040",
+        "column": 1,
+        "truth": "loot_beast_scale",
+        "positive": false,
+        "score": 0.504042,
+        "structure": 0.416225,
+        "location": [
+          983,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175040",
+        "column": 2,
+        "truth": "loot_priest_ring",
+        "positive": false,
+        "score": 0.518991,
+        "structure": 0.329154,
+        "location": [
+          1584,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175610",
+        "column": 0,
+        "truth": "loot_statue_gazer",
+        "positive": false,
+        "score": 0.564548,
+        "structure": 0.403977,
+        "location": [
+          441,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175610",
+        "column": 1,
+        "truth": "loot_confession",
+        "positive": false,
+        "score": 0.557595,
+        "structure": 0.354212,
+        "location": [
+          999,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175610",
+        "column": 2,
+        "truth": "loot_tablet_prosperity",
+        "positive": false,
+        "score": 0.62924,
+        "structure": 0.337228,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175921",
+        "column": 0,
+        "truth": "loot_painting_cosmos",
+        "positive": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          421,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175921",
+        "column": 1,
+        "truth": "loot_painting_apostasy",
+        "positive": false,
+        "score": 0.822509,
+        "structure": 0.717529,
+        "location": [
+          1003,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-175921",
+        "column": 2,
+        "truth": "loot_painting_mez",
+        "positive": false,
+        "score": 0.72823,
+        "structure": 0.580669,
+        "location": [
+          1601,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180506",
+        "column": 0,
+        "truth": "loot_statue_two_faces",
+        "positive": false,
+        "score": 0.525485,
+        "structure": 0.366248,
+        "location": [
+          462,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180506",
+        "column": 1,
+        "truth": "loot_sky_gate",
+        "positive": false,
+        "score": 0.579071,
+        "structure": 0.241295,
+        "location": [
+          1002,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180506",
+        "column": 2,
+        "truth": "loot_chalice_silent",
+        "positive": false,
+        "score": 0.562267,
+        "structure": 0.349178,
+        "location": [
+          1582,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180637",
+        "column": 0,
+        "truth": "loot_painting_blind_war",
+        "positive": false,
+        "score": 0.851795,
+        "structure": 0.794991,
+        "location": [
+          420,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180637",
+        "column": 1,
+        "truth": "loot_painting_silent_agreement",
+        "positive": false,
+        "score": 0.84866,
+        "structure": 0.772002,
+        "location": [
+          1002,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-180637",
+        "column": 2,
+        "truth": "loot_painting_forgotten_legend",
+        "positive": false,
+        "score": 0.828888,
+        "structure": 0.74182,
+        "location": [
+          1545,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181426",
+        "column": 0,
+        "truth": "loot_statue_sleeping_priest",
+        "positive": false,
+        "score": 0.62145,
+        "structure": 0.468683,
+        "location": [
+          422,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181426",
+        "column": 1,
+        "truth": "loot_tablet_dusk_stars",
+        "positive": false,
+        "score": 0.647694,
+        "structure": 0.39551,
+        "location": [
+          1002,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181426",
+        "column": 2,
+        "truth": "loot_chalice_redemption",
+        "positive": false,
+        "score": 0.552985,
+        "structure": 0.344802,
+        "location": [
+          1581,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181504",
+        "column": 0,
+        "truth": "loot_automaton_heart",
+        "positive": false,
+        "score": 0.543436,
+        "structure": 0.411335,
+        "location": [
+          429,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181504",
+        "column": 1,
+        "truth": "loot_dimension_core",
+        "positive": false,
+        "score": 0.451032,
+        "structure": 0.224969,
+        "location": [
+          965,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181504",
+        "column": 2,
+        "truth": "loot_priest_unfinished_record",
+        "positive": false,
+        "score": 0.562644,
+        "structure": 0.273077,
+        "location": [
+          1582,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181514",
+        "column": 0,
+        "truth": "loot_automaton_heart",
+        "positive": false,
+        "score": 0.542806,
+        "structure": 0.410789,
+        "location": [
+          429,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181514",
+        "column": 1,
+        "truth": "loot_old_shield",
+        "positive": false,
+        "score": 0.490828,
+        "structure": 0.237334,
+        "location": [
+          995,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-18-181514",
+        "column": 2,
+        "truth": "loot_twin_star_ring",
+        "positive": false,
+        "score": 0.465736,
+        "structure": 0.199916,
+        "location": [
+          1574,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-185303",
+        "column": 0,
+        "truth": "loot_summon_mark",
+        "positive": false,
+        "score": 0.450523,
+        "structure": 0.006045,
+        "location": [
+          382,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-185303",
+        "column": 1,
+        "truth": "loot_automaton_heart",
+        "positive": false,
+        "score": 0.550534,
+        "structure": 0.409428,
+        "location": [
+          1009,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-185303",
+        "column": 2,
+        "truth": "loot_ancient_key",
+        "positive": false,
+        "score": 0.448437,
+        "structure": 0.346145,
+        "location": [
+          1552,
+          275,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-190706",
+        "column": 0,
+        "truth": "loot_dice_hero",
+        "positive": false,
+        "score": 0.468789,
+        "structure": 0.075917,
+        "location": [
+          420,
+          273,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-190706",
+        "column": 1,
+        "truth": "loot_chalice_silent",
+        "positive": false,
+        "score": 0.564837,
+        "structure": 0.348779,
+        "location": [
+          1001,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "real_card",
+        "source": "2026-09-21-190706",
+        "column": 2,
+        "truth": "loot_tablet_sleeping_forest",
+        "positive": false,
+        "score": 0.58011,
+        "structure": 0.221489,
+        "location": [
+          1544,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "native_full_roi",
+        "source": "2026-09-18-175921",
+        "positive": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          421,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      },
+      {
+        "kind": "synthetic_1536x864_full_roi",
+        "source": "2026-09-18-175921",
+        "positive": true,
+        "score": 0.993822,
+        "structure": 0.991087,
+        "location": [
+          421,
+          274,
+          320,
+          352
+        ],
+        "passed": true
+      }
+    ],
+    "failures": []
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.94,
+  "structure_threshold": 0.8,
+  "review_number": 17,
+  "priority": 1,
+  "priority_confirmed_by_user": true,
+  "approval_message": "图片审核都通过"
+}

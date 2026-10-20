@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_warning_sign_low_health",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-02 093708.png",
+  "original_sha256": "00c651abaa33df4353436d8d180d1de2c067c5409a6e6fab304da18b8be38e44",
+  "client_rect": [
+    38,
+    102,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    174,
+    1069,
+    1848,
+    157
+  ],
+  "candidate_sha256": "53f00f8f23e1299734813b11ff392633e510c0a73031f1f4e4e87d45405b7c59",
+  "editing_basis": "Keep option titles, effect text and disabled health notice; no capsule is present. Preserve original dark strokes and one-pixel original edges; omit borders, decoration and cross icon. Original retained BGR unchanged.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      174,
+      1069
+    ],
+    "titles": [
+      [
+        130,
+        5,
+        335,
+        33
+      ],
+      [
+        837,
+        5,
+        299,
+        33
+      ],
+      [
+        1508,
+        5,
+        335,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      0.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261002-141335-warning-sign-low-health-template-0a3c095e\\results\\validation.json",
+  "validation_report_sha256": "a20a32e2e11f017860c0709ad08d28e90e38660a432ad7580764b11a9c96f34f",
+  "limitations": [
+    "One real new options and one text frame; 1920x1080 and 1536x864 samples are synthetic downsizes, not additional device captures.",
+    "No live input or returned-map screenshot.",
+    "Candidate config exists only in this validation process and task artifact; runtime source/config/manifest unchanged."
+  ]
+}

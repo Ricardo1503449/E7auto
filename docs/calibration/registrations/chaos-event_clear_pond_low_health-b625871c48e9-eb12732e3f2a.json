@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_clear_pond_low_health",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-30 022328.png",
+  "original_sha256": "d192d2e60baa645818d0ad8b8ee0e7e8f6ac1981320ffa93215df00e31d5cd17",
+  "client_rect": [
+    31,
+    108,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    564,
+    1069,
+    1158,
+    157
+  ],
+  "candidate_sha256": "b625871c48e9e2c35131910d1ba8eee8b8c027421a791087162f0187579d0961",
+  "editing_basis": "Original BGR only. Keep both option titles/effect text and disabled health notice, preserving dark strokes and a one-pixel original edge. No border, rays, or cross icon.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      564,
+      1069
+    ],
+    "titles": [
+      [
+        138,
+        5,
+        227,
+        33
+      ],
+      [
+        791,
+        5,
+        300,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      0.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-161447-clear-pond-low-health-branch-761b41cc\\results\\validation.json",
+  "limitations": [
+    "One real disabled-right options positive; smaller sizes are synthetic.",
+    "No returned map sample or live gameplay test.",
+    "Index tests use an in-memory prototype allowing zero weight on disabled titles; runtime code/config/templates are unchanged pending review."
+  ]
+}

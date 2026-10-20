@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "bench_selected",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-6349c760-0a6c-4b9e-bbb7-2fcb1d6c7219.png",
+  "original_sha256": "48061eb5413797b13fecbb0101eb9bf2f341624abd025b458de86646959f17c9",
+  "client_rect": [
+    47,
+    121,
+    2322,
+    1306
+  ],
+  "crop": [
+    538,
+    373,
+    115,
+    115
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "replace_active",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        538,
+        373,
+        115,
+        115
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "replace_prepare",
+      "kind": "real_negative",
+      "score": 0.295937,
+      "structure": 0.254002,
+      "location": [
+        324,
+        441,
+        115,
+        115
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "replace_active",
+      "kind": "synthetic_1536x864",
+      "score": 0.995025,
+      "structure": 0.992092,
+      "location": [
+        538,
+        374,
+        115,
+        115
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision8_masks\\bench_selected.png",
+  "mask_sha256": "50a6b5cf1be93482aa1ee5325356a80fb6205dae461a15be2854cb879dd1dcbe",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "c68ce5ed8314ecd7db6951586aed5d4276a6aa1548a120190b909570da68a611",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision8.json",
+      "sha256": "3e9aab6707e4a75a46c6a67470d21638fdeb4a985ed604d162edf06e2f19e82f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\bench_selected.source.json",
+    "sha256": "2b554f4155b2f582dfc458c773ee0b1055605b5a3800efd4ad2b6f6ef512f3a6"
+  },
+  "search_roi": [
+    0,
+    300,
+    700,
+    760
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留完整红色圆形减号按钮及其边缘，白框和周围候补卡片透明。只用于确认更换状态，不点击减号。候补搜索区向右扩至700像素以覆盖完整图标。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "bench_selected"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision8_validation.json",
+      "sha256": "de1ceedd013828dca5d189f46351cdf255b1041c726847ea35ccbd762871949b"
+    }
+  ]
+}

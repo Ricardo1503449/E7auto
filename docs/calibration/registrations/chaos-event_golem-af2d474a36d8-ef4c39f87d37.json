@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_golem",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_golem.png",
+  "original_sha256": "a6ce218a0dec843979bb544c586d4383c60ee8faae3281a6d3889df70ab96923",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_golem-a6ce218a0dec-2250fd1de761.json",
+    "record_sha256": "2250fd1de761bd633fe262263584b16617d7bae87aa8084f1c5926f79a11d3c5"
+  },
+  "canvas_size": [
+    998,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      998,
+      80
+    ],
+    [
+      536,
+      80,
+      462,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 3491,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_golem",
+      "source": "artifacts\\tasks\\chaos\\20260921-231555-event-golem-candidate-07f140ed\\inputs\\golem_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_golem",
+        "event_golem",
+        "event_golem"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1510,
+          1110
+        ],
+        [
+          1510,
+          1110
+        ],
+        [
+          1510,
+          1110
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 295.798
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1510,
+          1110
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_golem",
+      "source": "artifacts\\tasks\\chaos\\20260921-231555-event-golem-candidate-07f140ed\\inputs\\golem_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_golem",
+        "event_golem",
+        "event_golem"
+      ],
+      "scores": [
+        0.9692994952201843,
+        0.9692994952201843,
+        0.9692994952201843
+      ],
+      "anchors": [
+        [
+          998,
+          734
+        ],
+        [
+          998,
+          734
+        ],
+        [
+          998,
+          734
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 54.267
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.967464029788971,
+        "anchor": [
+          998,
+          734
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_golem",
+      "source": "artifacts\\tasks\\chaos\\20260921-231555-event-golem-candidate-07f140ed\\inputs\\golem_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_golem",
+        "event_golem",
+        "event_golem"
+      ],
+      "scores": [
+        0.9930974245071411,
+        0.9930974245071411,
+        0.9930974245071411
+      ],
+      "anchors": [
+        [
+          1249,
+          918
+        ],
+        [
+          1249,
+          918
+        ],
+        [
+          1249,
+          918
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 62.842
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9916333556175232,
+        "anchor": [
+          1249,
+          918
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_golem",
+      "source": "artifacts\\tasks\\chaos\\20260921-231555-event-golem-candidate-07f140ed\\inputs\\golem_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_golem",
+        "event_golem",
+        "event_golem"
+      ],
+      "scores": [
+        0.9928064942359924,
+        0.9928064942359924,
+        0.9928064942359924
+      ],
+      "anchors": [
+        [
+          1498,
+          1102
+        ],
+        [
+          1498,
+          1102
+        ],
+        [
+          1498,
+          1102
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 77.761
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9922091364860535,
+        "anchor": [
+          1498,
+          1102
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_golem",
+      "source": "artifacts\\tasks\\chaos\\20260921-231555-event-golem-candidate-07f140ed\\inputs\\golem_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_golem",
+        "event_golem",
+        "event_golem"
+      ],
+      "scores": [
+        0.9908728003501892,
+        0.9908728003501892,
+        0.9908728003501892
+      ],
+      "anchors": [
+        [
+          1665,
+          1224
+        ],
+        [
+          1665,
+          1224
+        ],
+        [
+          1665,
+          1224
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 78.924
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9897427558898926,
+        "anchor": [
+          1665,
+          1224
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

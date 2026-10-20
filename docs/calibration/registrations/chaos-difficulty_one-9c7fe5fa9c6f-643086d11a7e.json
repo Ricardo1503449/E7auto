@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "difficulty_one",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-b1a9e16f-d961-4fc6-bb88-1965c5b31c35.png",
+  "original_sha256": "9922fc35781063e1f3c4e81b2ff43613e5305c9ec1f7dc42902a85eb5169fc34",
+  "client_rect": [
+    51,
+    106,
+    2322,
+    1306
+  ],
+  "crop": [
+    482,
+    323,
+    118,
+    58
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "stage_one_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        482,
+        323,
+        118,
+        58
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "stage_top",
+      "kind": "real_negative",
+      "score": 0.684217,
+      "structure": 0.236511,
+      "location": [
+        482,
+        323,
+        118,
+        58
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "revision14_stage_full",
+      "kind": "real_negative",
+      "score": 0.684217,
+      "structure": 0.236511,
+      "location": [
+        482,
+        323,
+        118,
+        58
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "stage_one_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.97027,
+      "structure": 0.845192,
+      "location": [
+        483,
+        323,
+        118,
+        58
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision14_masks\\difficulty_one.png",
+  "mask_sha256": "0f3f6dbbe10eb388147ec821d3bcfb011058b6c0be0b999a8620f009196149dd",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "9c7fe5fa9c6f6776be38373533dc3ec632e070a3d8a8616574b1655a7ae278dc",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision14.json",
+      "sha256": "4aceff69412a9c5f03762ade25eafe22dd007474ca8f63dbe4bd3d696def547d"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\difficulty_one.source.json",
+    "sha256": "0091bf0772d2763f881faf9ce117266dc8c84b8306905ad89875d7ac5a538e1c"
+  },
+  "search_roi": [
+    430,
+    260,
+    260,
+    160
+  ],
+  "threshold": 0.955,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留绿色盾牌图标和绿色数字1，盾牌内部底色及周围背景透明。",
+    "原始RGB保持，不缩放、不重绘。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "difficulty_one"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ]
+}

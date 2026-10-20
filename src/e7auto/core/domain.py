@@ -15,6 +15,7 @@ class RunState(str, Enum):
     ENTERING_SANCTUARY = "entering_sanctuary"
     GROWING_PENGUINS = "growing_penguins"
     RETURNING_MAIN = "returning_main"
+    EXPLORING_CHAOS = "exploring_chaos"
     STOPPED = "stopped"
 
 
@@ -26,6 +27,8 @@ class OverlayActivityStatus(str, Enum):
     NAVIGATING = "进入成长祭坛中"
     BUYING_PENGUINS = "购买企鹅中"
     RETURNING = "返回主界面中"
+    RUNNING = "运行中"
+    COMPLETED = "已完成"
     STOPPED = "已停止"
 
 
@@ -33,6 +36,7 @@ class StopReason(str, Enum):
     BUDGET_COMPLETE = "budget_complete"
     REFRESH_STRATEGY_EXHAUSTED = "refresh_strategy_exhausted"
     MANUAL_F5 = "manual_f5"
+    MANUAL_STOP = "manual_stop"
     PURCHASE_FUNDS_INSUFFICIENT = "purchase_funds_insufficient"
     WINDOW_ABNORMAL = "window_abnormal"
     INVALID_DISPLAY_GEOMETRY = "invalid_display_geometry"
@@ -52,6 +56,12 @@ class StopReason(str, Enum):
     INTERNAL_ERROR = "internal_error"
     PENGUIN_LIMIT_COMPLETE = "penguin_limit_complete"
     PENGUIN_FUNDS_COMPLETE = "penguin_funds_complete"
+    CHAOS_COMPLETE = "chaos_complete"
+    CHAOS_FAILED = "chaos_failed"
+    CHAOS_UNSUPPORTED_STAGE = "chaos_unsupported_stage"
+    CHAOS_STAGE_SWITCH_FAILED = "chaos_stage_switch_failed"
+    CHAOS_UNKNOWN_CONTENT = "chaos_unknown_content"
+    CHAOS_BATTLE_TIMEOUT = "chaos_battle_timeout"
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,6 +88,29 @@ class RuntimeSnapshot:
     feature_id: str = "shop_refresh"
     purchases_completed: int = 0
     purchase_limit: int = 0
+    rounds_completed: int = 0
+    round_limit: int = 0
+    defeats: int = 0
+
+    @classmethod
+    def chaos_run(cls, run_id: str, round_limit: int) -> "RuntimeSnapshot":
+        return cls(run_id=run_id, state=RunState.PREPARING, targets=(),
+                   refresh_spent=0, refresh_limit=0, feature_id="chaos", round_limit=round_limit,
+                   overlay_status=OverlayActivityStatus.RUNNING)
+
+    def with_chaos_round(self) -> "RuntimeSnapshot":
+        if self.is_final:
+            return self
+        if self.feature_id != "chaos" or self.rounds_completed >= self.round_limit:
+            raise ValueError("chaos round would exceed the configured limit")
+        return replace(self, rounds_completed=self.rounds_completed + 1)
+
+    def with_chaos_defeat(self) -> "RuntimeSnapshot":
+        if self.is_final:
+            return self
+        if self.feature_id != "chaos":
+            raise ValueError("defeat count is only available for chaos")
+        return replace(self, defeats=self.defeats + 1)
 
     @classmethod
     def penguins(cls, run_id: str, purchase_limit: int) -> "RuntimeSnapshot":
@@ -158,7 +191,8 @@ class RuntimeSnapshot:
         return replace(
             self,
             state=RunState.STOPPED,
-            overlay_status=OverlayActivityStatus.STOPPED,
+            overlay_status=(OverlayActivityStatus.COMPLETED if reason == StopReason.CHAOS_COMPLETE
+                            else OverlayActivityStatus.STOPPED),
             is_final=True,
             stop_reason=reason,
         )

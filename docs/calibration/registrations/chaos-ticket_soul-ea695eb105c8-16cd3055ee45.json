@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "ticket_soul",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f70de6e2-94b5-4f78-af30-045ffdf61c01.png",
+  "original_sha256": "a976bbe226c213be837eacef4364b820ed340f70a8ac04ce78075c3f9c52ba6c",
+  "client_rect": null,
+  "crop": [
+    57,
+    43,
+    236,
+    239
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_initial",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.000001,
+      "location": [
+        1298,
+        340,
+        236,
+        239
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_empty",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1298,
+        340,
+        236,
+        239
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_initial",
+      "kind": "synthetic_1536x864",
+      "score": 0.987948,
+      "structure": 0.914659,
+      "location": [
+        1298,
+        341,
+        236,
+        239
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\ticket_soul.png",
+  "mask_sha256": "823115dd816795d78b0e79a4119b137103e8b0c9b55297e1b3f21417d149a4fa",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "ea695eb105c87850e35ecb7e199c79199e051637806ede073a43f7e8c97e48d8",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\ticket_soul.source.json",
+    "sha256": "a2f491f82b76219e705a9d39da148a0dbe89a521c7478b08db3f2d26c78bc656"
+  },
+  "search_roi": [
+    50,
+    120,
+    2250,
+    1040
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "ticket_soul"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "ticket_soul.png",
+  "target_filename": "recruitment/ticket_soul.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-ticket_soul-ea695eb105c8-aa53284a51bf.json",
+    "record_sha256": "aa53284a51bfe24b4c0731d74c33db02e8687582324ae5d9d2071c3abe4dfd83"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

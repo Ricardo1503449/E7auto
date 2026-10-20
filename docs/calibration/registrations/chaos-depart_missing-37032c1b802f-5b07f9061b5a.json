@@ -1,0 +1,511 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "depart_missing",
+  "label": "通用离队结果：Missing",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 013553.png",
+  "original_sha256": "b7890b99d7244be89339936cbd6e62d90df3bf91b7850091aa5380e7e68724ca",
+  "client_rect": [
+    42,
+    96,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    1025,
+    618,
+    271,
+    87
+  ],
+  "candidate_sha256": "37032c1b802f71f1583d8e411ec1103fb1b9185b830d0c35027d5fa7d90697af",
+  "editing_basis": "Keep only Missing glyphs; omit portrait, hero identity, icon and all surrounding background.",
+  "visible_pixels_unchanged": true,
+  "review_status": "approved",
+  "search_roi": [
+    850,
+    450,
+    650,
+    350
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "action": null,
+  "validation_passed": true,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\results\\validation.json",
+  "validation_report_sha256": "3433eccb7a7fd62059cb1c1c1b791b063790d78bb98d8e16b25a34c88695c8a0",
+  "checks": [
+    {
+      "source": "phantom_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_missing', confidence=1.0, bounds=Rect(x=1025, y=618, width=271, height=87), anchor=Point(x=1160, y=662))"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_missing', confidence=0.9967859983444214, bounds=Rect(x=1025, y=618, width=271, height=87), anchor=Point(x=1160, y=662))"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='depart_missing', confidence=0.994055986404419, bounds=Rect(x=1025, y=618, width=271, height=87), anchor=Point(x=1160, y=662))"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "depart_missing",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Single real event/Missing/departure-button/recruit-result positive; synthetic scaled samples.",
+    "Missing sample is Arowell only; glyphs exclude all hero-specific content, other heroes have no real Missing samples.",
+    "Candidate-only validation; no runtime changes or live input."
+  ],
+  "approval": "User approved three originals, then approved all four revised candidates: 通过，继续执行",
+  "validation_reuse": "Approved pixels, ROI, thresholds and algorithm unchanged; reuse recorded candidate checks."
+}

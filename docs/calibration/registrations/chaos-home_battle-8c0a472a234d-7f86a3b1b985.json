@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "home_battle",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-c88991bb-39d9-45e6-87ac-8e53521db052.png",
+  "original_sha256": "006c6add352ab120c164cebe67aa1d7a080bb305d13ce53059553dd3e6f3bba5",
+  "client_rect": [
+    30,
+    102,
+    2322,
+    1306
+  ],
+  "crop": [
+    2105,
+    568,
+    160,
+    60
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "home",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        2105,
+        568,
+        160,
+        60
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "home_exit",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        2105,
+        568,
+        160,
+        60
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "battle_menu",
+      "kind": "real_negative",
+      "score": 0.879708,
+      "structure": 0.139537,
+      "location": [
+        2091,
+        604,
+        160,
+        60
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "home",
+      "kind": "synthetic_1536x864",
+      "score": 0.98333,
+      "structure": 0.933493,
+      "location": [
+        2105,
+        568,
+        160,
+        60
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "8c0a472a234d52e4bcab6f2e7431843650a048aafb8e4f5b1b9c8c777976c9dd",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\home_battle.source.json",
+    "sha256": "52a8779b97298ee4202ccecc3eda0607098e5b15b69b76161ab06ee394782cf9"
+  },
+  "search_roi": [
+    2040,
+    450,
+    282,
+    280
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "home_battle"
+  ],
+  "additional_validation_records": []
+}

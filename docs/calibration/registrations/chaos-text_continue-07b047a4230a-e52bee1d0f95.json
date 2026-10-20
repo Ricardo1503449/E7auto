@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "text_continue",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-55af9f4c-c3cd-47fd-b338-4b7bfe389b05.png",
+  "original_sha256": "0256113c67daea1d6765a153b31c01e1df758235c4826f93e9a68c116397fe9a",
+  "client_rect": null,
+  "crop": [
+    45,
+    45,
+    23,
+    16
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "torch_text",
+      "kind": "source_self",
+      "score": 0.998917,
+      "structure": 0.996784,
+      "location": [
+        1149,
+        1260,
+        23,
+        16
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "torch_options",
+      "kind": "real_negative",
+      "score": 0.676355,
+      "structure": 0.282974,
+      "location": [
+        1085,
+        1197,
+        23,
+        16
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "mimic_options",
+      "kind": "real_negative",
+      "score": 0.170365,
+      "structure": 0.11216,
+      "location": [
+        1177,
+        1230,
+        23,
+        16
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "torch_text",
+      "kind": "synthetic_1536x864",
+      "score": 0.962001,
+      "structure": 0.892911,
+      "location": [
+        1149,
+        1261,
+        23,
+        16
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\text_continue.png",
+  "mask_sha256": "c7671222ee9ed2a2646ca92f9748f709169ea9b7e9c77e9e9ba99990cc9b36f3",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "07b047a4230aa07740474b0ba635144ef7a35518aa2ff66e44dd73c7ed8705f6",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\text_continue.source.json",
+    "sha256": "d23df8c459f729c7d11ff837f28f0c76b5cfb4b51aaa5d30b3b6de6bb59f53ca"
+  },
+  "search_roi": [
+    1080,
+    1190,
+    190,
+    116
+  ],
+  "threshold": 0.947,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留文本推进三角本体和原有边缘，三角外背景透明。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "text_continue"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ]
+}

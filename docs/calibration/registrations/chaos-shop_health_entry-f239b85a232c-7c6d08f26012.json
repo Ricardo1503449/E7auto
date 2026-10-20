@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "shop_health_entry",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\shop\\shop_health_entry.png",
+  "original_sha256": "de2d7ea63339c9a20137f88722c6d4bbdf35c1b94bb31722da3bb1ebfbde34ca",
+  "previous_source": {
+    "record": "docs/calibration/registrations/chaos-shop_health_entry-de2d7ea63339-a092a5cb51a7.json",
+    "record_sha256": "a092a5cb51a7986c825da9227f71a24563864292869bdd00ffe13fc4d8d3a2f5"
+  },
+  "crop_within_original": [
+    2,
+    2,
+    276,
+    81
+  ],
+  "editing_basis": "Explicit user revision: icons only for identities; capsule-only buttons; dialog icon and text foreground only. Original BGR pixels unchanged, alpha and bounding crop only.",
+  "validation": [
+    {
+      "key": "offer_investment",
+      "source": 0,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 0,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 0,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 1,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": null,
+      "actual": null,
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 1,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": null,
+      "actual": null,
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 1,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": null,
+      "actual": null,
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 2,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 2,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 2,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 3,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 3,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 3,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": "investment_entry",
+      "actual": "investment_entry",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 4,
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": "unavailable",
+      "actual": "unavailable",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 4,
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": "unavailable",
+      "actual": "unavailable",
+      "passed": true
+    },
+    {
+      "key": "offer_investment",
+      "source": 4,
+      "size": [
+        1536,
+        864
+      ],
+      "expected": "unavailable",
+      "actual": "unavailable",
+      "passed": true
+    }
+  ],
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-203102-shop-health-purchase-fd771c7b\\results\\revision2_recognition.json",
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "candidate_sha256": "f239b85a232c2f78323e037799a87389e61dd27d5711adb0376286fc7d746a3e",
+  "limitations": [
+    "5 original client frames and artificial resizes; no live-game validation. Investment done cannot match the health completed button at the existing threshold; retain separate cropped health button."
+  ]
+}

@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_fairy_dance",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-23 212322.png",
+  "original_sha256": "ffecca476175f99a92d1c8436d39aba240763d43259056c806db78c576ec1233",
+  "client_rect": [
+    52,
+    106,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    542,
+    1069,
+    1254,
+    158
+  ],
+  "candidate_sha256": "bc74dc98db6ae7d3fbeaf3daddb050658136607dc7cfcd366e883fc5f6aa89d0",
+  "editing_basis": "Keep original RGB and alpha strokes of all 2 option titles/effects. Other backgrounds, borders, magnifiers and stars excluded; ignored RGB cleared to zero.",
+  "review_status": "approved",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_fairy_dance",
+      "kind": "positive_runtime",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_fairy_dance', confidence=1.0, bounds=Rect(x=542, y=1069, width=1254, height=158), anchor=Point(x=1510, y=1090))"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "existing_event_conflicts",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "positive_runtime",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "Detection(key='event_fairy_dance', confidence=0.9807314276695251, bounds=Rect(x=542, y=1069, width=1254, height=158), anchor=Point(x=1510, y=1090))"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "existing_event_conflicts",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "found": []
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "torch",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mimic",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "backpack_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "ghost_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "spirit_door_options-client",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "library",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_intro",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "records_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "fairy_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_hp",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "blue_flame_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_text1",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "mask_text2",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "corridor_options",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "key": "event_fairy_dance",
+      "kind": "real_negative",
+      "source": "corridor_text",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Each event has one real options positive.",
+    "1536x864 samples are synthetic resizes representing the 2K desktop target client size, not live multi-resolution captures.",
+    "No returned-map screenshots or live input test; only supplied branches are covered."
+  ],
+  "approval": "User explicitly approved this five-template batch: 通过模板",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

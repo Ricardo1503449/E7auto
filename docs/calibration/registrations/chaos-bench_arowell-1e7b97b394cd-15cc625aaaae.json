@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "bench_arowell",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-5d4fee97-9f24-448b-84cf-b0e61b228ef7.png",
+  "original_sha256": "66cba38113ee8b82f5d49edbc0b9d16fac2653a53508db6437b6309bfed1c02b",
+  "client_rect": null,
+  "crop": [
+    74,
+    188,
+    301,
+    47
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "replace_prepare",
+      "kind": "real_negative",
+      "score": 0.780424,
+      "structure": 0.045523,
+      "location": [
+        306,
+        421,
+        301,
+        47
+      ],
+      "detected": false,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision8_masks\\bench_arowell.png",
+  "mask_sha256": "8a2249667d1b444b9ac0dd7964bba9184a2e81a4598b6e73f3b9a0dd3aec337c",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "1e7b97b394cd2ca4950f33b22b73abc0dc361b4b1b2659a66b463bd7c5cefc46",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision8.json",
+      "sha256": "3e9aab6707e4a75a46c6a67470d21638fdeb4a985ed604d162edf06e2f19e82f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\bench_arowell.source.json",
+    "sha256": "dbd84ff7b9bf5a31c5e12619bc3acb469f1434883639b2a0f332200fe2202ed5"
+  },
+  "search_roi": [
+    0,
+    300,
+    700,
+    760
+  ],
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "以已通过的职业及名称轮廓辅助定位遮罩；模板保留候补原图的原始像素与字号，右侧头像和底色透明，职业图标内部底色透明。仅离线遮罩参考，不新增运行时缩放。待复审。",
+    "局部素材缺少可确认的完整原图对应；区域图为搜索范围示意，不代表真实匹配成功。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "bench_arowell"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision8_validation.json",
+      "sha256": "de1ceedd013828dca5d189f46351cdf255b1041c726847ea35ccbd762871949b"
+    }
+  ]
+}

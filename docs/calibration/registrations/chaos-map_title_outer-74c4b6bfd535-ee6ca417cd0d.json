@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "map_title_outer",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-89634ee1-b100-4bea-92b2-ea2f105ab18d.png",
+  "original_sha256": "e44abac3a3f2e866a4e1c854b1e485abf1912030f466070795190af02110bf13",
+  "client_rect": [
+    47,
+    100,
+    2322,
+    1306
+  ],
+  "crop": [
+    36,
+    25,
+    530,
+    75
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "map_start",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_after_normal",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_floor_two",
+      "kind": "real_negative",
+      "score": 0.885961,
+      "structure": 0.737192,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "map_floor_three",
+      "kind": "real_negative",
+      "score": 0.933576,
+      "structure": 0.818119,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "map_start",
+      "kind": "synthetic_1536x864",
+      "score": 0.978648,
+      "structure": 0.942957,
+      "location": [
+        36,
+        25,
+        530,
+        75
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "74c4b6bfd535fb197803ee65f78559e8f0bde61fa706eca467c34da3cbac4877",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\map_title_outer.source.json",
+    "sha256": "f1de0ff868653d96c41bd795aabae4b25c02cf4b2ebed5d2f8d301888099a14f"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.964,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "map_title_outer"
+  ],
+  "additional_validation_records": []
+}

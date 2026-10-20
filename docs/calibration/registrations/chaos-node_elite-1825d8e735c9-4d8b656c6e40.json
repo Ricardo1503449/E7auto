@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_elite",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-5b7129d6-d091-408d-9bd6-45f38496d47a.png",
+  "original_sha256": "3856e821b0dbcd2bb4b03a3dbb84fa057c5b5a67e5c0da16cef1bde73eb5253d",
+  "client_rect": [
+    43,
+    103,
+    2322,
+    1306
+  ],
+  "crop": [
+    1649,
+    269,
+    132,
+    139
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "map_elite",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1649,
+        269,
+        132,
+        139
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_shop_choice",
+      "kind": "real_positive",
+      "score": 0.992969,
+      "structure": 0.971657,
+      "location": [
+        1105,
+        269,
+        132,
+        139
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "map_elite",
+      "kind": "synthetic_1536x864",
+      "score": 0.998464,
+      "structure": 0.990194,
+      "location": [
+        1649,
+        269,
+        132,
+        139
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision4_masks\\node_elite.png",
+  "mask_sha256": "dfaedcef106d1ee0da4f75fdc7647cf62a2c8b83ce51d47c92e1077d4bfb2048",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "1825d8e735c954fd50bb0bbcb2b4eaa0c6acca13020878fc57ef0875893b1b2f",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_elite.source.json",
+    "sha256": "32e42d46361683207900f6a381bf9fbd90d735d73381dde9409ed6ab144c7f88"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "保留完整亮色椭圆本体及突出其外的节点图标；上方三角与地图背景透明。原始像素保持。"
+  ],
+  "resource_scenes": [
+    "node_elite"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ]
+}

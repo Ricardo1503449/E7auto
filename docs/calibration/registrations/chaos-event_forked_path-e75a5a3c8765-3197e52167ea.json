@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_forked_path",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-24 134018.png",
+  "original_sha256": "5b7214977b5ab3a5fb1a8df0e89ac121f7b10a957d3ce40d2f10813b3312b29d",
+  "client_rect": [
+    50,
+    92,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    520,
+    1069,
+    1270,
+    158
+  ],
+  "candidate_sha256": "e75a5a3c876501b24eb4dc292be2cf9f192c618622645c6099bd386b9690e123",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      520,
+      1069
+    ],
+    "titles": [
+      [
+        182,
+        5,
+        227,
+        33
+      ],
+      [
+        871,
+        5,
+        227,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "fork_options",
+      "expected": "event_forked_path",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_forked_path', confidence=1.0, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=1.0, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=1.0, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 741.278
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_forked_path",
+        "event_golem",
+        "event_blue_flame_altar"
+      ]
+    },
+    {
+      "source": "fork_options",
+      "expected": "event_forked_path",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_forked_path', confidence=0.9875456094741821, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=0.9875456094741821, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=0.9875456094741821, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 527.163
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_forked_path",
+        "event_golem",
+        "event_blue_flame_altar"
+      ]
+    },
+    {
+      "source": "fork_options",
+      "expected": "event_forked_path",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_forked_path', confidence=0.9799160361289978, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=0.9799160361289978, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))",
+        "Detection(key='event_forked_path', confidence=0.9799160361289978, bounds=Rect(x=520, y=1069, width=1270, height=158), anchor=Point(x=810, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 473.412
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_forked_path",
+        "event_golem",
+        "event_blue_flame_altar"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "approval": "User explicitly approved this seven-template batch: 通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

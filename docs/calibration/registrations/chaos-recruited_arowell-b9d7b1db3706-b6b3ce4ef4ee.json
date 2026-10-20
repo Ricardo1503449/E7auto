@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_arowell",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-9c440ff4-935b-4750-8f35-4c212dd4f3b3.png",
+  "original_sha256": "48576bdf142ebb4bd5f9928c2787ab5bb66c2f3b46f0a5a0eeaea66732b0636e",
+  "client_rect": null,
+  "crop": [
+    138,
+    35,
+    296,
+    174
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_done_alt",
+      "kind": "source_self",
+      "score": 0.999956,
+      "structure": 0.999835,
+      "location": [
+        291,
+        789,
+        296,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done",
+      "kind": "real_positive",
+      "score": 0.999848,
+      "structure": 0.999441,
+      "location": [
+        291,
+        789,
+        296,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done_alt",
+      "kind": "synthetic_1536x864",
+      "score": 0.976465,
+      "structure": 0.930243,
+      "location": [
+        291,
+        789,
+        296,
+        174
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision2_masks\\recruited_arowell.png",
+  "mask_sha256": "5a389d29114d6a19bc9593787b00054f7fdbdb765bbfff3ad6c8264e7f19587e",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b9d7b1db370683bd20e727c79ecd82cb903d3622ea4fa006ad23a3af28e4d15c",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision2.json",
+      "sha256": "95223e4157d428d47160353d9b97a4ab3f7849844bf249a97bbc0d1a2ca8dda8"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruited_arowell.source.json",
+    "sha256": "d5a83709f0841ea327e354dbaa651a5c4f21a62880a47291714a0866a66d7d18"
+  },
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.961,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第二轮修订：职业图标内部背景透明，不填充孔洞，仅保留原图笔画及抗锯齿边缘；清除名称末端头像残留；裴妮职业图标扩大原图取样范围，保留左侧弧线。待复审。"
+  ],
+  "resource_scenes": [
+    "recruited_arowell"
+  ],
+  "additional_validation_records": []
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "investment",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f4a44b5d-7cea-4d76-b144-96887d27ca5e.png",
+  "original_sha256": "c71bcc7c78812a3d5ec10a94e8589dfd16a8a6a724d86311fb4250003ec294ba",
+  "client_rect": null,
+  "crop": [
+    96,
+    55,
+    155,
+    249
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "shop",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        798,
+        211,
+        155,
+        249
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "shop",
+      "kind": "synthetic_1536x864",
+      "score": 0.98267,
+      "structure": 0.967354,
+      "location": [
+        797,
+        211,
+        155,
+        249
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision9_masks\\investment.png",
+  "mask_sha256": "920e6163e6ba50b30b4fa276fd9566f92e77ef7eb611da458da02d5b4c4575a9",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b48eecddf7253ee67be380fd5567a258670e95e7836662c8a1997c7cee39dd5e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision9.json",
+      "sha256": "a3065da2dee4a5b7378d661ddfe35f9c28b211d937a560c6115da0bad5ae713c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\investment.source.json",
+    "sha256": "2cca266d07c2fc1467a2b75ebc1a26d28762e6f0e15b42d7c60b1641e88713bf"
+  },
+  "search_roi": [
+    660,
+    110,
+    1480,
+    1000
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "只保留上方未来投资名称、下方晶体及金色/青色环绕光环；卡片、分隔线、说明图标和外部灰色装饰环透明。原图RGB不变。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "investment"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision9_validation.json",
+      "sha256": "d2edba7d598ca610347107a4c54b4375dc85f9bed594447031501d05e23cb679"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "investment.png",
+  "target_filename": "shop/investment.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-investment-b48eecddf725-853877e7b379.json",
+    "record_sha256": "853877e7b379d1bc118cf6768934f6faf0fe2690aa2a51cf603e2680d94cdba9"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

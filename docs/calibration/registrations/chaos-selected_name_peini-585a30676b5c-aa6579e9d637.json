@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "selected_name_peini",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-3a696d76-cdea-4ab0-9044-735145735288.png",
+  "original_sha256": "9c115a1aa8cf8493ddf7ccc3cc629f0061ffb9d3e791c779c6c28bd37d04a097",
+  "client_rect": [
+    34,
+    114,
+    2322,
+    1306
+  ],
+  "crop": [
+    110,
+    150,
+    395,
+    45
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "white",
+  "patches": null,
+  "validation": [
+    {
+      "source": "peini_selected",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.000001,
+      "location": [
+        110,
+        150,
+        395,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "peini_selected",
+      "kind": "synthetic_1536x864",
+      "score": 0.983805,
+      "structure": 0.850401,
+      "location": [
+        111,
+        150,
+        395,
+        45
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "585a30676b5c0e5b6b16c2d565455363aaa21f47067f9eaf9993e4683b7381a9",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\selected_name_peini.source.json",
+    "sha256": "a435fc12eec8b0914c76f83c1cac65efb5ede5429770c46d3214c7b76f4fbed2"
+  },
+  "search_roi": [
+    40,
+    125,
+    520,
+    85
+  ],
+  "threshold": 0.969,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "selected_name_peini"
+  ],
+  "additional_validation_records": []
+}

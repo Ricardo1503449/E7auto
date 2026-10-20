@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "contract",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-4a86bb95-b72c-4983-95b8-7f572613e89b.png",
+  "original_sha256": "524dee429c51d231747ecab3cde75d75bd1fcb91d3af3c59275701e0f63336b1",
+  "client_rect": [
+    32,
+    88,
+    2322,
+    1306
+  ],
+  "crop": [
+    180,
+    260,
+    200,
+    265
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "supply_start",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        180,
+        260,
+        200,
+        265
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "supply_selected",
+      "kind": "real_positive",
+      "score": 0.989907,
+      "structure": 0.985346,
+      "location": [
+        180,
+        260,
+        200,
+        265
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "supply_start",
+      "kind": "synthetic_1536x864",
+      "score": 0.990321,
+      "structure": 0.967598,
+      "location": [
+        180,
+        260,
+        200,
+        265
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "0026855bb65452e08248d9086d6ea1b6178195215b194373e7982fe4934ea122",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\contract.source.json",
+    "sha256": "fc88ce1a7ce4a0e26f4f7349d54b438afc6c02876cd1c742fc3501fc2cdc8235"
+  },
+  "search_roi": [
+    0,
+    190,
+    2322,
+    870
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "contract"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision12_validation.json",
+      "sha256": "ccf05c615568d2c137c65bef95d6e84a49f24e7a40121ba638262fa81480ff5f"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision13_validation.json",
+      "sha256": "dea2a336e1e39f0cdce305928765d0ee8698e288f57dfd560d307ec71d9628ef"
+    }
+  ]
+}

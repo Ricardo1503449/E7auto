@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "rank_value_3",
+  "operation": "replace",
+  "original": "logs/run-20261017-125638-516223-af39412efba9-stop.png",
+  "original_sha256": "c7c616ba583cf1ea66fd914428066e759395a96680f3514c3872421f402f5c8c",
+  "preserved_source": "artifacts/tasks/chaos/20261017-131147-rank-three-template-refresh-52630a62/inputs/current_2_to_3_2322.png",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    1610,
+    388,
+    102,
+    58
+  ],
+  "editing_basis": "Original 2322x1306 client BGR pixels. V>150 connected components (at least 12 pixels) identify the complete lavender digit and cyan rank icon, including the saturated lower triangle. Retain a two-pixel Chebyshev halo of original antialiasing, dark outline and background pixels; trim only transparent outer canvas. No color edits, redraw, sharpening or resize.",
+  "component_layout": {
+    "primary": [
+      0,
+      0,
+      63,
+      58
+    ],
+    "secondary": [
+      63,
+      0,
+      39,
+      58
+    ]
+  },
+  "previous_png_sha256": "db1f0d8e8ac15a90cb83f21f8251520ea770baa1fde59f35e61821276bca30e6",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-rank_value_3-db1f0d8e8ac1-eff2c27a2f0b.json",
+    "record_sha256": "eff2c27a2f0b04c2a014dbb59ad7123f6bbf18b0c01af19cfa9d171b43a36519"
+  },
+  "candidate": "artifacts/template-candidates/20261017-131310-37dabd63/chaos/camp/rank_value_3.png",
+  "candidate_sha256": "e431d69920acb2c440a0192440608b7cc1a77f45fe2181b222ab4316d9b5313a",
+  "mask_pixels": 3164,
+  "outline_pixels": 2,
+  "rank": 3,
+  "arrow_included": false,
+  "threshold": 0.94,
+  "structure_threshold": 0.8,
+  "validation": {
+    "report": "artifacts/tasks/chaos/20261017-131147-rank-three-template-refresh-52630a62/results/recognition-validation-094.json",
+    "sha256": "1be27f56fd43c607cd1e8099bc0941a831e47760154a153f5104380d5e98f930",
+    "checks": 57,
+    "passed": true,
+    "limitations": [
+      "Rank-3 nonreference positives are synthetic full-client scales, not independent native small-client captures.",
+      "Historical full-frame positives cover rank 3 in the right result column; left rank 3 is original-pixel relocation, not an independent full-frame 3->4 capture.",
+      "The source self-match is not independent validation.",
+      "No production files, live game input, installer build or Git state was changed."
+    ]
+  },
+  "visual_review": {
+    "agent": "Enlarged comparison against original crop: complete digit 3, holes, edges, cyan rank triangle and antialiasing retained.",
+    "user": "approved by user; apply this candidate with color threshold 0.94"
+  },
+  "previous_validation_096": {
+    "report": "artifacts/tasks/chaos/20261017-131147-rank-three-template-refresh-52630a62/results/recognition-validation.json",
+    "sha256": "b44473a280367e48235f3c5979a307a56ea7a777309ff7e5635feb41c80fe5fb",
+    "checks": 57,
+    "passed": true,
+    "limitations": [
+      "Rank-3 nonreference positives are synthetic full-client scales, not independent native small-client captures.",
+      "Historical full-frame positives cover rank 3 in the right result column; left rank 3 is original-pixel relocation, not an independent full-frame 3->4 capture.",
+      "The source self-match is not independent validation.",
+      "No production files, live game input, installer build or Git state was changed."
+    ]
+  },
+  "approval": {
+    "record": "artifacts/tasks/chaos/20261017-131147-rank-three-template-refresh-52630a62/results/user-approval.json",
+    "sha256": "5c8584ab3042824546acb7417b91e822598652d4eb87d1a769361bd185c40665",
+    "user_statement": "模板通过，并且把颜色门槛改为0.94，再检查下使用这个模板的所有环节能不能通过"
+  }
+}

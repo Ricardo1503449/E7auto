@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_mysterious_footprints",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 184948.png",
+  "original_sha256": "44e6b75e43c718cbdfee021ad0e1a8e271fa493af998c1bacb512954813de57d",
+  "client_rect": [
+    41,
+    97,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    302,
+    1069,
+    1684,
+    168
+  ],
+  "candidate_sha256": "3ba48824b7afc58d27cffa3d03691ed8f6af5780d3280601b1ff3e0412f2c544",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 3,
+    "origin": [
+      302,
+      1069
+    ],
+    "titles": [
+      [
+        73,
+        5,
+        191,
+        33
+      ],
+      [
+        763,
+        5,
+        191,
+        33
+      ],
+      [
+        1416,
+        5,
+        263,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "footprints_options",
+      "expected": "event_mysterious_footprints",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_mysterious_footprints', confidence=1.0, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=1.0, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=1.0, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 555.975
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_mysterious_footprints",
+        "event_sword",
+        "event_erased_records"
+      ]
+    },
+    {
+      "source": "footprints_options",
+      "expected": "event_mysterious_footprints",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_mysterious_footprints', confidence=0.9891003966331482, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=0.9891003966331482, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=0.9891003966331482, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 553.087
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_mysterious_footprints",
+        "event_sword",
+        "event_erased_records"
+      ]
+    },
+    {
+      "source": "footprints_options",
+      "expected": "event_mysterious_footprints",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_mysterious_footprints', confidence=0.9817617535591125, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=0.9817617535591125, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))",
+        "Detection(key='event_mysterious_footprints', confidence=0.9817617535591125, bounds=Rect(x=302, y=1069, width=1684, height=168), anchor=Point(x=1850, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 561.764
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_mysterious_footprints",
+        "event_sword",
+        "event_erased_records"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-162425-warning-footprints-armory-circle-events-7643e746\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test; only supplied branches are covered.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "role": "entry",
+  "operation": "add",
+  "global_index": true,
+  "approval": "User explicitly approved the five new templates, excluding golem replacement: 都通过",
+  "validation_reuse": "Approved PNG hash unchanged; reuse existing candidate and control checks."
+}

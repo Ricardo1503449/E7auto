@@ -1,0 +1,522 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "elite_choose_reward",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-78da37a0-19bb-4498-ba91-27483cd17e8f.png",
+  "original_sha256": "d51db044e9a417375f40891c0c263ab1d663f8c845d7e6dfcca1207ba99d3bf1",
+  "client_rect": [
+    44,
+    103,
+    2322,
+    1306
+  ],
+  "crop": [
+    1212,
+    917,
+    383,
+    94
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "elite_victory",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1212,
+        917,
+        383,
+        94
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "elite_victory",
+      "kind": "synthetic_1536x864",
+      "score": 0.97724,
+      "structure": 0.942863,
+      "location": [
+        1212,
+        917,
+        383,
+        94
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision6_masks\\elite_choose_reward.png",
+  "mask_sha256": "6386372f074b778dc9ccbe88c2f86d500e2a44a19f99d67d9aca9ea0f342c8ae",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "49c4d9ed3db8b8a193e85dbb555c149d7e8ff794f1774a31133a26044511b2ee",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision6.json",
+      "sha256": "8a492e5cc7cb3886b121da02102c61a93b4f789dc6bc1bb0ef31b0f09e5db06f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\elite_choose_reward.source.json",
+    "sha256": "c161fb32acce514a334c7ec1c16e902a42660252afc825ab33b86ed2689684b4"
+  },
+  "search_roi": [
+    1130,
+    245,
+    620,
+    865
+  ],
+  "threshold": 0.962,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按反馈重做：保留完整按钮外形，按钮外背景透明；原图RGB像素保持，待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "elite_choose_reward",
+    "boss_choose_reward"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision6_validation.json",
+      "sha256": "8fa3b92819367d880cb420e3425a9a3a928dbf8f7f691e0ff3ee4f581f8fb684"
+    }
+  ],
+  "shared_button_validation": {
+    "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\button_reuse_validation.json",
+    "sha256": "617df0af16c246ef4d7c49da8b857e90c738d0e0af4f16c5b62b51497a59eba5",
+    "checks": [
+      {
+        "resource": "elite_choose_reward",
+        "scene": "elite_choose_reward",
+        "source": "elite_victory",
+        "kind": "real_full_scene",
+        "passed": true,
+        "score": 1.0,
+        "structure": 1.0,
+        "location": [
+          1212,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "elite_choose_reward",
+        "source": "elite_victory",
+        "kind": "synthetic_1536x864",
+        "passed": true,
+        "score": 0.97724,
+        "structure": 0.942863,
+        "location": [
+          1212,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "boss_choose_reward",
+        "source": "boss_victory",
+        "kind": "real_full_scene",
+        "passed": true,
+        "score": 0.996612,
+        "structure": 0.991346,
+        "location": [
+          971,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "boss_choose_reward",
+        "source": "boss_victory",
+        "kind": "synthetic_1536x864",
+        "passed": true,
+        "score": 0.980446,
+        "structure": 0.951864,
+        "location": [
+          971,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "boss_choose_reward",
+        "source": "boss_all",
+        "kind": "real_full_scene",
+        "passed": true,
+        "score": 0.996616,
+        "structure": 0.991355,
+        "location": [
+          971,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "boss_choose_reward",
+        "source": "boss_all",
+        "kind": "synthetic_1536x864",
+        "passed": true,
+        "score": 0.980399,
+        "structure": 0.951735,
+        "location": [
+          971,
+          917,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "intro_enter",
+        "source": "intro_enter",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.714117,
+        "structure": 0.371037,
+        "location": [
+          140,
+          39,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "start_exploration",
+        "source": "start_exploration",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.686078,
+        "structure": 0.376699,
+        "location": [
+          152,
+          39,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "stage_confirm",
+        "source": "stage_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.650686,
+        "structure": 0.370975,
+        "location": [
+          153,
+          39,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "supply_confirm",
+        "source": "supply_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.77044,
+        "structure": 0.446001,
+        "location": [
+          170,
+          72,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "filter_light",
+        "source": "filter_light",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "filter_dark",
+        "source": "filter_dark",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "recruit_confirm",
+        "source": "recruit_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.744956,
+        "structure": 0.406844,
+        "location": [
+          155,
+          72,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "recruit_enter",
+        "source": "recruit_enter",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.756706,
+        "structure": 0.414371,
+        "location": [
+          170,
+          60,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "node_enter",
+        "source": "node_enter",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.774821,
+        "structure": 0.445267,
+        "location": [
+          169,
+          70,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "start_battle",
+        "source": "start_battle",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.759204,
+        "structure": 0.420816,
+        "location": [
+          173,
+          59,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "continue_exploration",
+        "source": "continue_exploration",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.738782,
+        "structure": 0.374617,
+        "location": [
+          152,
+          58,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "unclaimed_confirm",
+        "source": "unclaimed_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.610888,
+        "structure": 0.326384,
+        "location": [
+          24,
+          58,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "rank_confirm",
+        "source": "rank_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.751716,
+        "structure": 0.416827,
+        "location": [
+          131,
+          71,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "camp_leave",
+        "source": "camp_leave",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.770914,
+        "structure": 0.449241,
+        "location": [
+          174,
+          71,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "supply_leave",
+        "source": "supply_leave",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.771939,
+        "structure": 0.444239,
+        "location": [
+          173,
+          71,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "investment_entry",
+        "source": "investment_entry",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "purchase_confirm",
+        "source": "purchase_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.705428,
+        "structure": 0.359914,
+        "location": [
+          203,
+          71,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "investment_done",
+        "source": "investment_done",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "shop_leave",
+        "source": "shop_leave",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.771551,
+        "structure": 0.448804,
+        "location": [
+          174,
+          71,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "shop_leave_confirm",
+        "source": "shop_leave_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.610892,
+        "structure": 0.349037,
+        "location": [
+          44,
+          58,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "loot_confirm",
+        "source": "loot_confirm",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.780966,
+        "structure": 0.497551,
+        "location": [
+          156,
+          56,
+          383,
+          94
+        ]
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "levelup_close",
+        "source": "levelup_close",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "journey_close",
+        "source": "journey_close",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      },
+      {
+        "resource": "elite_choose_reward",
+        "scene": "rank_close",
+        "source": "rank_close",
+        "kind": "real_crop_negative_padded",
+        "passed": true,
+        "score": 0.0,
+        "structure": 0.0,
+        "location": null
+      }
+    ]
+  },
+  "operation": "relocate",
+  "previous_filename": "elite_choose_reward.png",
+  "target_filename": "buttons/elite_choose_reward.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-elite_choose_reward-49c4d9ed3db8-e557e86a0f7e.json",
+    "record_sha256": "e557e86a0f7ec88bacd07ce18aa6e7020c544396890af3e8315a599a1d837336"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_collapsed_stairs",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-28 075046.png",
+  "original_sha256": "5a3a8dd8024063d5a37f54819a0bd588dcd9dc307d2e558712e765c3fad0a5e5",
+  "client_rect": [
+    37,
+    97,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    525,
+    1069,
+    1117,
+    157
+  ],
+  "candidate_sha256": "680d218f19d5e5d8c3cdcdbc0ecb2f64510742792f46586534e2a69fa6b1dc16",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      525,
+      1069
+    ],
+    "titles": [
+      [
+        159,
+        5,
+        263,
+        33
+      ],
+      [
+        848,
+        5,
+        264,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "stairs_options",
+      "expected": "event_collapsed_stairs",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_collapsed_stairs', confidence=1.0, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=1.0, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=1.0, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 303.021
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_collapsed_stairs",
+        "event_cairn",
+        "event_prayer_room"
+      ]
+    },
+    {
+      "source": "stairs_options",
+      "expected": "event_collapsed_stairs",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_collapsed_stairs', confidence=0.9882486462593079, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=0.9882486462593079, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=0.9882486462593079, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 302.614
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_collapsed_stairs",
+        "event_cairn",
+        "event_prayer_room"
+      ]
+    },
+    {
+      "source": "stairs_options",
+      "expected": "event_collapsed_stairs",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_collapsed_stairs', confidence=0.9806048274040222, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=0.9806048274040222, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_collapsed_stairs', confidence=0.9806048274040222, bounds=Rect(x=525, y=1069, width=1117, height=157), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 303.24
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_collapsed_stairs",
+        "event_cairn",
+        "event_windy_cliff"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-101138-teeth-stairs-event-templates-c6789ef2\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test. Both right-side choices lead directly to text; no reward or experience branch.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "validation_passed": true,
+  "validation_report_sha256": "f0033af478f2243188e514d59aa224f95a3305d5735f8143b0c3d672efb1c50f",
+  "visible_pixels_unchanged": true,
+  "flow_proposal": [
+    "right option",
+    "text triangle",
+    "original-floor map"
+  ],
+  "approval": "通过模板",
+  "validation_reuse": "Reuse 45 recorded checks; PNG, ROI, thresholds and algorithm unchanged."
+}

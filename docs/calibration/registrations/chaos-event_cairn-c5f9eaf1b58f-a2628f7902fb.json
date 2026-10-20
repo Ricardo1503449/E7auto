@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_cairn",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-22 140716.png",
+  "original_sha256": "f52d20dc4e51e6ee60e81f4be34483d02d3f4a359607dda585cda7e37e6a5f1c",
+  "client_rect": [
+    38,
+    92,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    520,
+    1069,
+    1122,
+    168
+  ],
+  "editing_basis": "原像素文字；石塔另保留右侧完整经验100圆条及exp+图示，其余背景透明。",
+  "review_status": "approved_by_user",
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "key": "event_cairn",
+      "kind": "positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        520,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "positive",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "score": 0.981437,
+      "structure": 0.966269,
+      "location": [
+        520,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "torch",
+      "passed": true,
+      "score": 0.412899,
+      "structure": 0.349297,
+      "location": [
+        520,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "mimic",
+      "passed": true,
+      "score": 0.324536,
+      "structure": 0.218027,
+      "location": [
+        535,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "prison",
+      "passed": true,
+      "score": 0.439202,
+      "structure": 0.31841,
+      "location": [
+        249,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "altar",
+      "passed": true,
+      "score": 0.516593,
+      "structure": 0.249325,
+      "location": [
+        859,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "sword_options",
+      "passed": true,
+      "score": 0.379015,
+      "structure": 0.111061,
+      "location": [
+        846,
+        1069,
+        1122,
+        168
+      ]
+    },
+    {
+      "key": "event_cairn",
+      "kind": "negative",
+      "source": "mushroom_options",
+      "passed": true,
+      "score": 0.383646,
+      "structure": 0.157512,
+      "location": [
+        792,
+        1069,
+        1122,
+        168
+      ]
+    }
+  ],
+  "approval_message": "模板通过；事件升阶须记录英雄阶数变化"
+}

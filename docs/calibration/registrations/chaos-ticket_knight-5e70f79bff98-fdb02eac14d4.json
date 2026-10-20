@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "ticket_knight",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-190380eb-142c-4ba2-9df9-9ae419fbb2aa.png",
+  "original_sha256": "a75482fb46681d4551a0b6031d4ff4deee033d0a267662df5a8cffd24b653194",
+  "client_rect": null,
+  "crop": [
+    66,
+    35,
+    196,
+    243
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "twins_recruited",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        302,
+        336,
+        196,
+        243
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_empty",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        302,
+        336,
+        196,
+        243
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_initial",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        302,
+        336,
+        196,
+        243
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "twins_recruited",
+      "kind": "synthetic_1536x864",
+      "score": 0.991159,
+      "structure": 0.977593,
+      "location": [
+        302,
+        337,
+        196,
+        243
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision1_masks\\ticket_knight.png",
+  "mask_sha256": "0611d50ce8bca3621afd2dd2b70541e0a144c7d67622469431fb6180765822cb",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "5e70f79bff98f9fa6104917f4e6789ece1723585fe9d037a59c352547e2f9c40",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision1.json",
+      "sha256": "37551f0bc9883116ed3e809ca0533851cb0e92095f1d8166eb459a7db94fb29c"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\ticket_knight.source.json",
+    "sha256": "3c14ce51d45b593f8a9f8b5a684ee190701c01684f15a1e3971f647de0213875"
+  },
+  "search_roi": [
+    50,
+    120,
+    2250,
+    1040
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "本轮按审核反馈重做：原图像素保留，仅裁剪及透明遮罩；待重新审核。"
+  ],
+  "resource_scenes": [
+    "ticket_knight"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "ticket_knight.png",
+  "target_filename": "recruitment/ticket_knight.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-ticket_knight-5e70f79bff98-a23bf911f212.json",
+    "record_sha256": "a23bf911f21220682042b6f88b77cb95aabe7176f7e6a12209570a4111054cc4"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

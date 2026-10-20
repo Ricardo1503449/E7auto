@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_sharp_teeth",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-28 005300.png",
+  "original_sha256": "ff84f446dd1dd7dfc607eacf47ccd97ba5be891376c007802530832bd9db4db8",
+  "client_rect": [
+    34,
+    114,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    576,
+    1069,
+    1066,
+    158
+  ],
+  "candidate_sha256": "e726c6fd499a01afad523434c6905a99c699f69201cf203b4fd5db323122b80d",
+  "editing_basis": "Keep all option titles/effect text and only the user-specified reward capsules; preserved pixels retain original BGR, other alpha/RGB is zero.",
+  "review_status": "approved",
+  "index": {
+    "layout": 2,
+    "origin": [
+      576,
+      1069
+    ],
+    "titles": [
+      [
+        162,
+        5,
+        155,
+        33
+      ],
+      [
+        797,
+        5,
+        264,
+        33
+      ]
+    ],
+    "weights": [
+      1.0,
+      1.0
+    ]
+  },
+  "search_roi": [
+    0,
+    960,
+    2322,
+    346
+  ],
+  "threshold": 0.96,
+  "structure_threshold": 0.8,
+  "validation": [
+    {
+      "source": "teeth_options",
+      "expected": "event_sharp_teeth",
+      "size": [
+        2322,
+        1306
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_sharp_teeth', confidence=1.0, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=1.0, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=1.0, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 381.186
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_sharp_teeth",
+        "event_vestment",
+        "event_tablet"
+      ]
+    },
+    {
+      "source": "teeth_options",
+      "expected": "event_sharp_teeth",
+      "size": [
+        1920,
+        1080
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_sharp_teeth', confidence=0.9883610010147095, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=0.9883610010147095, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=0.9883610010147095, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 332.972
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_sharp_teeth",
+        "event_vestment",
+        "event_tablet"
+      ]
+    },
+    {
+      "source": "teeth_options",
+      "expected": "event_sharp_teeth",
+      "size": [
+        1536,
+        864
+      ],
+      "passed": true,
+      "hits": [
+        "Detection(key='event_sharp_teeth', confidence=0.9819101095199585, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=0.9819101095199585, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))",
+        "Detection(key='event_sharp_teeth', confidence=0.9819101095199585, bounds=Rect(x=576, y=1069, width=1066, height=158), anchor=Point(x=1510, y=1090))"
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 329.422
+      },
+      "index_position": 1,
+      "shortlist": [
+        "event_sharp_teeth",
+        "event_vestment",
+        "event_tablet"
+      ]
+    }
+  ],
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260928-101138-teeth-stairs-event-templates-c6789ef2\\results\\validation.json",
+  "limitations": [
+    "One real options positive per new event; scaled samples are synthetic.",
+    "No returned-map screenshot or live input test. Both right-side choices lead directly to text; no reward or experience branch.",
+    "Index and scene metadata are validated candidate configuration, not enabled production configuration."
+  ],
+  "validation_passed": true,
+  "validation_report_sha256": "f0033af478f2243188e514d59aa224f95a3305d5735f8143b0c3d672efb1c50f",
+  "visible_pixels_unchanged": true,
+  "flow_proposal": [
+    "right option",
+    "text triangle",
+    "original-floor map"
+  ],
+  "approval": "通过模板",
+  "validation_reuse": "Reuse 45 recorded checks; PNG, ROI, thresholds and algorithm unchanged."
+}

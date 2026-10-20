@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "title_warrior",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-44e656ee-0219-4192-82b6-32497b097137.png",
+  "original_sha256": "6ca13d24c83f9f50c872c3e1f5ac3a8fbd928a9429bf8d2d60cdfa06bfb84f29",
+  "client_rect": [
+    50,
+    107,
+    2322,
+    1306
+  ],
+  "crop": [
+    30,
+    20,
+    345,
+    80
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "ink",
+  "patches": null,
+  "validation": [
+    {
+      "source": "warrior_list",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "warrior_filter",
+      "kind": "real_positive",
+      "score": 0.999907,
+      "structure": 0.999769,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "thief_list",
+      "kind": "real_negative",
+      "score": 0.902952,
+      "structure": 0.73139,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "soul_list",
+      "kind": "real_negative",
+      "score": 0.705729,
+      "structure": 0.314414,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "knight_list",
+      "kind": "real_negative",
+      "score": 0.932536,
+      "structure": 0.80715,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "all_list",
+      "kind": "real_negative",
+      "score": 0.634704,
+      "structure": 0.285028,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "warrior_list",
+      "kind": "synthetic_1536x864",
+      "score": 0.97857,
+      "structure": 0.941133,
+      "location": [
+        30,
+        20,
+        345,
+        80
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": null,
+  "mask_sha256": null,
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "cd514306d01d41e0d661d4d0bb56bcec6735902a66d7c6d9cc2e1e2c705e7e34",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_remaining_before_revision14.json",
+      "sha256": "935f91d469dfa8f2e04f5b0dd89acd397c24fda1f8e58a4e0079a2c1fd05b95f"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\title_warrior.source.json",
+    "sha256": "104cc056594dcb3f6676302b547295f7d10295368b8e422370dc070333d0e621"
+  },
+  "search_roi": [
+    0,
+    0,
+    700,
+    140
+  ],
+  "threshold": 0.964,
+  "structure_threshold": 0.8,
+  "limitations": [],
+  "resource_scenes": [
+    "title_warrior"
+  ],
+  "additional_validation_records": [],
+  "operation": "relocate",
+  "previous_filename": "title_warrior.png",
+  "target_filename": "recruitment/title_warrior.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-title_warrior-cd514306d01d-8a96afeee39c.json",
+    "record_sha256": "8a96afeee39cef7ae9e70e81710b38c92ef5dfe9298bb0821c6f9df4b4c7993f"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_twins",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "assets\\templates\\chaos\\recruitment\\recruited_twins.png",
+  "original_sha256": "c3d3cf29d99bbe52539d1a95309449d1604dcde884726ea4e4b24992ce70ef31",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-recruited_twins-c3d3cf29d99b-b47aca54003f.json",
+    "record_sha256": "b47aca54003f4dc1b587dde31c26e2de2079869ed8e702d8db99eedec46e692b"
+  },
+  "crop": [
+    0,
+    0,
+    220,
+    102
+  ],
+  "candidate_sha256": "d884d76ca52519e164f5afb65229ba073d86661382982f235370a134babf5a06",
+  "editing_basis": "User requested removal of lower-right profession icon and tight cropping to the two original text lines. BGR pixels and text alpha preserved exactly. No redraw, resize or threshold change.",
+  "review_status": "approved",
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\validation-initial.json",
+  "limitations": [
+    "Synthetic scaled screenshots do not establish real-window coverage. No post-change live game run or installer build."
+  ],
+  "approved_candidate_sha256": "d884d76ca52519e164f5afb65229ba073d86661382982f235370a134babf5a06",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260930-144239-recruitment-text-only-16ee0a2e\\results\\user-approval.json",
+      "sha256": "a692f99032207669916b4fd66cac416ff65dffe889a4416e918564a4cdc6246a"
+    }
+  ],
+  "validation": [
+    {
+      "key": "recruited_twins",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9999467134475708,
+          "bounds": [
+            1812,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9630550146102905,
+          "bounds": [
+            1812,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "old_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9623516201972961,
+          "bounds": [
+            1811,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9999004602432251,
+          "bounds": [
+            1812,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9629559516906738,
+          "bounds": [
+            1812,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "old_team_alt",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\recruit_done_alt.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": [
+        {
+          "score": 0.9623076319694519,
+          "bounds": [
+            1811,
+            789,
+            220,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "key": "recruited_twins",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "new_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\result-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_initial",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\ivanna_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "budget_team",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\team_done-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_all",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_recruited-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "actual_failure_1536",
+      "path": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\run-20260930-130149-005851-33010434be09-stop.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "ivanna_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-192833-ivanna-recruitment-templates-accdc8f3\\inputs\\selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "teacher_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260926-210512-team-lineup-template-review-191f65d7\\inputs\\teacher_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "rose_selected",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\rose_selected-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    },
+    {
+      "key": "recruited_twins",
+      "source": "departure_missing",
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\inputs\\departure_missing-client.png",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true,
+      "threshold": 0.952,
+      "structure_threshold": 0.8,
+      "hits": []
+    }
+  ],
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.952,
+  "structure_threshold": 0.8,
+  "validation_reuse": "Approved PNG hash, runtime configuration, ROI and matching/normalization code unchanged. Reused candidate-stage checks; no repeated image scans after approval."
+}

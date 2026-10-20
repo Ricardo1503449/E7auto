@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "recruited_peini",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-c833a961-347c-4653-b8a4-f034f7283e40.png",
+  "original_sha256": "624e4339a0d5d03f8baf1b1d54052b4221324b9c9b0969b80d71bff66b81c7b0",
+  "client_rect": null,
+  "crop": [
+    172,
+    35,
+    246,
+    172
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "recruit_done_alt",
+      "kind": "source_self",
+      "score": 0.999982,
+      "structure": 0.999929,
+      "location": [
+        1356,
+        789,
+        246,
+        172
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done",
+      "kind": "real_positive",
+      "score": 0.999971,
+      "structure": 0.999891,
+      "location": [
+        1356,
+        789,
+        246,
+        172
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "recruit_done_alt",
+      "kind": "synthetic_1536x864",
+      "score": 0.973942,
+      "structure": 0.907811,
+      "location": [
+        1356,
+        789,
+        246,
+        172
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision2_masks\\recruited_peini.png",
+  "mask_sha256": "c6887c47f651402cc13836ebd6eb9ff571fd620f97fbedb7a2016904bb379f42",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "c5f11454710d602d5c8b3e03b7b1b6e9c51d39cafe66d56fbe643e687cfc7164",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision2.json",
+      "sha256": "95223e4157d428d47160353d9b97a4ab3f7849844bf249a97bbc0d1a2ca8dda8"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\recruited_peini.source.json",
+    "sha256": "350c6baa0f6e38f051e2e3548e713375deff481e5bd3c8126b236449ce197027"
+  },
+  "search_roi": [
+    100,
+    730,
+    2120,
+    380
+  ],
+  "threshold": 0.959,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "第二轮修订：职业图标内部背景透明，不填充孔洞，仅保留原图笔画及抗锯齿边缘；清除名称末端头像残留；裴妮职业图标扩大原图取样范围，保留左侧弧线。待复审。"
+  ],
+  "resource_scenes": [
+    "recruited_peini"
+  ],
+  "additional_validation_records": []
+}

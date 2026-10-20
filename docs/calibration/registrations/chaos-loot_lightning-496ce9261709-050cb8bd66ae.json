@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_lightning",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-891f0f06-d832-4998-8eb2-6f9a121bbc89.png",
+  "original_sha256": "534d52b1f553b97c86368d1107f0c6e8a7b6f62725eb1691ef5fa6fca7e47e8d",
+  "client_rect": null,
+  "crop": [
+    115,
+    154,
+    327,
+    340
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_selected_middle",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1580,
+        282,
+        327,
+        340
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_left",
+      "kind": "real_positive",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1580,
+        282,
+        327,
+        340
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_right",
+      "kind": "real_positive",
+      "score": 0.991364,
+      "structure": 0.986505,
+      "location": [
+        1580,
+        282,
+        327,
+        340
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_selected_middle",
+      "kind": "synthetic_1536x864",
+      "score": 0.982886,
+      "structure": 0.958623,
+      "location": [
+        1581,
+        282,
+        327,
+        340
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_lightning.png",
+  "mask_sha256": "f272e94be9b1472fb7748747303903507719226508f193bbd68faf3327217544",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "496ce9261709ed535a10ef4d72b8940d4195c643db60f1272d69c28a5e33bc57",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_lightning.source.json",
+    "sha256": "bfda3af13686f656333ec8ccc24c79fd005923db183de1e9d7d6ea254bb92ac6"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。"
+  ],
+  "resource_scenes": [
+    "loot_lightning"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "loot_lightning.png",
+  "target_filename": "loot/loot_lightning.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-loot_lightning-496ce9261709-0fafa8c347c0.json",
+    "record_sha256": "0fafa8c347c0b0fd3a456c4665cc1147999e2fa4e1589dd39963c8ca733f3dca"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

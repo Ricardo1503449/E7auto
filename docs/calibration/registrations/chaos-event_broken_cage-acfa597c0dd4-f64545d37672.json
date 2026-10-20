@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_broken_cage",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_broken_cage.png",
+  "original_sha256": "08f10564972f48e511b892bf558ae144abc27204e235411102f2632f902c8498",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_broken_cage-08f10564972f-8714193840ad.json",
+    "record_sha256": "8714193840ad8b2eeda0787d086fe4128b5e7afa0e8d0633fe93ada7fe7bd25b"
+  },
+  "canvas_size": [
+    1765,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1765,
+      80
+    ],
+    [
+      1248,
+      80,
+      517,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 8699,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_broken_cage",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\inputs\\cage_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_broken_cage",
+        "event_broken_cage",
+        "event_broken_cage"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ],
+        [
+          1161,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 4,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 381.365
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9999998807907104,
+        "anchor": [
+          1161,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_cage",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\inputs\\cage_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_cage",
+        "event_broken_cage",
+        "event_broken_cage"
+      ],
+      "scores": [
+        0.9919515252113342,
+        0.9919515252113342,
+        0.9919515252113342
+      ],
+      "anchors": [
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ],
+        [
+          768,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 65.556
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9882546067237854,
+        "anchor": [
+          768,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_cage",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\inputs\\cage_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_cage",
+        "event_broken_cage",
+        "event_broken_cage"
+      ],
+      "scores": [
+        0.9780514240264893,
+        0.9780514240264893,
+        0.9780514240264893
+      ],
+      "anchors": [
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ],
+        [
+          960,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 83.819
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9733371138572693,
+        "anchor": [
+          960,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_cage",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\inputs\\cage_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_cage",
+        "event_broken_cage",
+        "event_broken_cage"
+      ],
+      "scores": [
+        0.9949924945831299,
+        0.9949924945831299,
+        0.9949924945831299
+      ],
+      "anchors": [
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ],
+        [
+          1152,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 102.557
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.993428647518158,
+        "anchor": [
+          1152,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_broken_cage",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-231907-broken-cage-event-template-1bbecb20\\inputs\\cage_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_broken_cage",
+        "event_broken_cage",
+        "event_broken_cage"
+      ],
+      "scores": [
+        0.9865965843200684,
+        0.9865965843200684,
+        0.9865965843200684
+      ],
+      "anchors": [
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ],
+        [
+          1280,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 111.014
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9839030504226685,
+        "anchor": [
+          1280,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

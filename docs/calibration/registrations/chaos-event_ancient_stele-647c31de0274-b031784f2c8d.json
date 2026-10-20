@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "event_ancient_stele",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\inputs\\before\\assets\\templates\\chaos\\events\\options\\event_ancient_stele.png",
+  "original_sha256": "326473e999e0ab0f7d77f2b972a77a5bead91f2531cd8c2030cb28c9930ee9f2",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-event_ancient_stele-326473e999e0-02a0fb7b4747.json",
+    "record_sha256": "02a0fb7b47470b741dc7564b4616c452f456dda18fe27102d5e3affcbb6dc6ba"
+  },
+  "canvas_size": [
+    1167,
+    168
+  ],
+  "keep_rectangles": [
+    [
+      0,
+      0,
+      1167,
+      80
+    ],
+    [
+      0,
+      80,
+      517,
+      88
+    ]
+  ],
+  "editing_basis": "User-approved alpha-only removal of ordinary effect descriptions. Original canvas, all RGB, positions, title/icon/digit/disabled-notice RGBA remain unchanged. No redraw, resize, crop, threshold, ROI, index or click-anchor change.",
+  "authorization": "2026-10-13: user confirmed unchanged canvas and RGB, alpha-only removal, shared by baseline and nonbaseline, then instructed execution; subsequently requested holding event_old_armory_left and proceeding with the rest.",
+  "review": "Existing resource mask edit; agent checked original/candidate pixel invariants and complete contact sheets. No new event or new route.",
+  "removed_pixels": 6588,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261013-174902-event-option-description-mask-806ad50e\\results\\image-validation.json",
+  "validation_report_sha256": "a1bb7eee9055962b7177a052be261206eb74be7cced4646b508a78a873db3932",
+  "validation": [
+    {
+      "key": "event_ancient_stele",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\stele_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2322,
+        1306
+      ],
+      "derived": false,
+      "hits": [
+        "event_ancient_stele",
+        "event_ancient_stele",
+        "event_ancient_stele"
+      ],
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "anchors": [
+        [
+          1510,
+          1090
+        ],
+        [
+          1510,
+          1090
+        ],
+        [
+          1510,
+          1090
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 3,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 425.844
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 1.0,
+        "anchor": [
+          1510,
+          1090
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_ancient_stele",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\stele_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1536,
+        864
+      ],
+      "derived": true,
+      "hits": [
+        "event_ancient_stele",
+        "event_ancient_stele",
+        "event_ancient_stele"
+      ],
+      "scores": [
+        0.9767175316810608,
+        0.9767175316810608,
+        0.9767175316810608
+      ],
+      "anchors": [
+        [
+          999,
+          721
+        ],
+        [
+          999,
+          721
+        ],
+        [
+          999,
+          721
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 81.729
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9726585745811462,
+        "anchor": [
+          999,
+          721
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_ancient_stele",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\stele_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        1920,
+        1080
+      ],
+      "derived": true,
+      "hits": [
+        "event_ancient_stele",
+        "event_ancient_stele",
+        "event_ancient_stele"
+      ],
+      "scores": [
+        0.9885943531990051,
+        0.9885943531990051,
+        0.9885943531990051
+      ],
+      "anchors": [
+        [
+          1249,
+          901
+        ],
+        [
+          1249,
+          901
+        ],
+        [
+          1249,
+          901
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 84.567
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9852860569953918,
+        "anchor": [
+          1249,
+          901
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_ancient_stele",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\stele_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2304,
+        1296
+      ],
+      "derived": true,
+      "hits": [
+        "event_ancient_stele",
+        "event_ancient_stele",
+        "event_ancient_stele"
+      ],
+      "scores": [
+        0.9946514964103699,
+        0.9946514964103699,
+        0.9946514964103699
+      ],
+      "anchors": [
+        [
+          1498,
+          1082
+        ],
+        [
+          1498,
+          1082
+        ],
+        [
+          1498,
+          1082
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 119.375
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9933305978775024,
+        "anchor": [
+          1498,
+          1082
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "event_ancient_stele",
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260924-155610-seven-events-september24-candidates-8b47438d\\inputs\\stele_options-client.png",
+      "kind": "source_capture_positive",
+      "size": [
+        2560,
+        1440
+      ],
+      "derived": true,
+      "hits": [
+        "event_ancient_stele",
+        "event_ancient_stele",
+        "event_ancient_stele"
+      ],
+      "scores": [
+        0.9906300902366638,
+        0.9906300902366638,
+        0.9906300902366638
+      ],
+      "anchors": [
+        [
+          1665,
+          1202
+        ],
+        [
+          1665,
+          1202
+        ],
+        [
+          1665,
+          1202
+        ]
+      ],
+      "stats": {
+        "event_frames": 3,
+        "event_index_queries": 2,
+        "event_candidates_checked": 2,
+        "event_cache_checks": 2,
+        "event_cache_failures": 0,
+        "event_fallbacks": 0,
+        "event_recognition_ms": 139.388
+      },
+      "passed": true,
+      "old_hit": {
+        "score": 0.9886603355407715,
+        "anchor": [
+          1665,
+          1202
+        ]
+      },
+      "anchor_delta": [
+        0,
+        0
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical captures include original template extraction sources, not independent device captures.",
+    "Four additional sizes of each baseline source are synthetic resizes.",
+    "New altar 2304x1296 is an independent real failure capture.",
+    "Three offline invocations use copies of the same saved image, not a live temporal sequence.",
+    "No game capture, input or end-to-end gameplay."
+  ]
+}

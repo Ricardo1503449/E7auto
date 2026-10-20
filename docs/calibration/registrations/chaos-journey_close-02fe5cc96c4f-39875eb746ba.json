@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "journey_close",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\run_result.png",
+  "original_sha256": "87e2a436fe05759a3eefc7998df3d2d67f6d3cc467da99edecb110d36ffff823",
+  "crop": [
+    1107,
+    1243,
+    153,
+    28
+  ],
+  "old_template_sha256": "f640f15acba65fea1ebd0d247b3da13b041507bb18fd86a0c4f069c5dfde0823",
+  "editing_basis": "完整原图重新提取 min(BGR)>180、通道差<90 的笔画，并恢复相邻 min(BGR)>160、通道差<85 的原始弱边。；仅增加一像素八邻域原始边缘，RGB逐像素不变，无锐化、重绘或缩放。",
+  "candidate": "D:\\E7auto\\artifacts\\template-candidates\\20261001-182857-a60fd5ec\\chaos\\journey_close.png",
+  "candidate_sha256": "02fe5cc96c4fe560e0d3705850fb22c7b02bc192f98690c17afca397190f0c0b",
+  "original_full_image_available": true,
+  "source_limitations": "来源图与离线缩放不是独立实机验证。",
+  "review_status": "authorized_existing_template_update",
+  "validation": [
+    {
+      "report": "D:\\E7auto\\artifacts\\tasks\\common\\20261001-182857-five-text-template-edges-2b0766f3\\results\\validation.json",
+      "sha256": "5b26027d4f55238e8a6ecc00bd2d3576cefe3b23783fe00a280474ff1b32fed1",
+      "summary": {
+        "positive_cases": 16,
+        "old_hits": 16,
+        "new_hits": 16,
+        "positive_regressions": [],
+        "negative_cases": 12,
+        "old_false_positives": 0,
+        "new_false_positives": 0,
+        "baseline_anchor_changes": [],
+        "nonbaseline_score_decreases": [
+          {
+            "size": [
+              1536,
+              864
+            ],
+            "shift": [
+              0,
+              0
+            ],
+            "color_delta": -0.0031209588050842285,
+            "structure_delta": -0.004039466381072998
+          },
+          {
+            "size": [
+              3072,
+              1728
+            ],
+            "shift": [
+              0,
+              0
+            ],
+            "color_delta": -0.0017347335815429688,
+            "structure_delta": 0.021555662155151367
+          },
+          {
+            "size": [
+              3072,
+              1728
+            ],
+            "shift": [
+              1,
+              0
+            ],
+            "color_delta": -1.1920928955078125e-05,
+            "structure_delta": 0.0643426775932312
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              0,
+              1
+            ],
+            "color_delta": -0.0013044476509094238,
+            "structure_delta": 0.057420551776885986
+          },
+          {
+            "size": [
+              1920,
+              1080
+            ],
+            "shift": [
+              1,
+              1
+            ],
+            "color_delta": -0.0006511807441711426,
+            "structure_delta": 0.04285597801208496
+          }
+        ]
+      },
+      "aggregate_nonbaseline": {
+        "color": {
+          "old": {
+            "minimum": 0.9951552748680115,
+            "mean": 0.9974126666784286
+          },
+          "new": {
+            "minimum": 0.9946386814117432,
+            "mean": 0.997640331586202
+          }
+        },
+        "structure": {
+          "old": {
+            "minimum": 0.8005937933921814,
+            "mean": 0.8785008291403452
+          },
+          "new": {
+            "minimum": 0.8940786719322205,
+            "mean": 0.9531754950682322
+          }
+        }
+      }
+    }
+  ],
+  "visual_review": "逐字放大对照原 RGB、旧模板、新模板及白色遮罩；新遮罩保留全部旧有效像素，补入原始边缘，原 RGB 无变化。",
+  "decision": "register",
+  "decision_reason": "非基准最低结构分数明显提高，颜色仍高于原门槛；个别样本分数小幅下降，全部原通过样本仍通过。",
+  "baseline_anchor_unchanged": true,
+  "nonbaseline_anchor_delta_max": 1,
+  "approval": "User requested one original-pixel edge on these existing controls and explicitly required before/after comparisons at both baseline and nonbaseline sizes."
+}

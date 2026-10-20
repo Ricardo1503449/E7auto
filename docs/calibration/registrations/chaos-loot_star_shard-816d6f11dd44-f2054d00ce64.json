@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "loot_star_shard",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-f6620cbb-5168-47d9-a05b-5b59b7e4e65f.png",
+  "original_sha256": "0ec1f656ecfd0dc56613f50980ec61ef544306e9be94f5a0597f3bff877fecb0",
+  "client_rect": [
+    58,
+    113,
+    2322,
+    1306
+  ],
+  "crop": [
+    432,
+    269,
+    298,
+    353
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "loot_set_b",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        432,
+        269,
+        298,
+        353
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "loot_set_b",
+      "kind": "synthetic_1536x864",
+      "score": 0.983331,
+      "structure": 0.960132,
+      "location": [
+        433,
+        269,
+        298,
+        353
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision11_masks\\loot_star_shard.png",
+  "mask_sha256": "00165191309e021c96ccfcf8024052f9594eb0d42d4c71ef97e8e0c122dd3f19",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "816d6f11dd441424f7a5c25fd5412f7849b1ccf9cdb014339e8def6dff451829",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision11.json",
+      "sha256": "28e2a4b8acc5d208306a3f20fbbba3c9d9d5ac31406e490894c5a33d4935c9f7"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\loot_star_shard.source.json",
+    "sha256": "b6270439c9e895e3395418d46383799649a57617d3d33a4ce3149f147f5b1b67"
+  },
+  "search_roi": [
+    250,
+    100,
+    1820,
+    970
+  ],
+  "threshold": 0.968,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留上方战利品图标、名称及完整效果说明（含数字和标点）；卡片边框、底纹、公共N标记及其他背景透明。原图RGB及优先级不变。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "loot_star_shard"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision11_validation.json",
+      "sha256": "a8c486034b79ccb8d4804f901f832c7673065d10c77476f43bd669cab5685318"
+    }
+  ]
+}

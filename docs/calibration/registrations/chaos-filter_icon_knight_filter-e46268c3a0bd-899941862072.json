@@ -1,0 +1,518 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "filter_icon_knight_filter",
+  "label": "骑士筛选：未选中",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-27 142647.png",
+  "original_sha256": "23c0c4caaf9e1263207604d2fdeba60dd19b12358632d9c83ad6f83f8e9147ac",
+  "client_rect": [
+    41,
+    96,
+    2322,
+    1306
+  ],
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    1032,
+    387,
+    114,
+    83
+  ],
+  "candidate_sha256": "e46268c3a0bdf8ffa7729c9b8b9a232cf0bafb54600bab24871403303eeda49c",
+  "editing_basis": "Use the same exact canvas dimensions and silhouette alpha mask as filter_icon_thief_filter; all visible BGR pixels come from the provided new source, without resizing or redrawing.",
+  "visible_pixels_unchanged": true,
+  "review_status": "approved",
+  "search_roi": [
+    990,
+    350,
+    220,
+    180
+  ],
+  "threshold": 0.948,
+  "structure_threshold": 0.8,
+  "action": [
+    0.49122807017543857,
+    0.5060240963855421
+  ],
+  "validation_passed": true,
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260927-143654-phantom-departure-templates-10f78d8b\\results\\validation_revision2.json",
+  "validation_report_sha256": "7eefc1550fb79d7fa86889525936dff92116daa153280c9e32988d1c48c6d25c",
+  "checks": [
+    {
+      "source": "phantom_options",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_options",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "departure_missing",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_reward",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "phantom_text",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_light_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_dark_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_list",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "arowell_selected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='filter_icon_knight_filter', confidence=1.0, bounds=Rect(x=1032, y=387, width=114, height=83), anchor=Point(x=1088, y=429))"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='filter_icon_knight_filter', confidence=0.951397180557251, bounds=Rect(x=1031, y=387, width=114, height=83), anchor=Point(x=1087, y=429))"
+    },
+    {
+      "source": "knight_unselected",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": true,
+      "passed": true,
+      "hit": "Detection(key='filter_icon_knight_filter', confidence=0.963695228099823, bounds=Rect(x=1032, y=386, width=114, height=83), anchor=Point(x=1088, y=428))"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        2322,
+        1306
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1920,
+        1080
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    },
+    {
+      "source": "rose_recruited",
+      "size": [
+        1536,
+        864
+      ],
+      "key": "filter_icon_knight_filter",
+      "expected": false,
+      "passed": true,
+      "hit": "None"
+    }
+  ],
+  "limitations": [
+    "Single real event/Missing/departure-button/recruit-result positive; synthetic scaled samples.",
+    "Missing sample is Arowell only; glyphs exclude all hero-specific content, other heroes have no real Missing samples.",
+    "Candidate-only validation; no runtime changes or live input."
+  ],
+  "revision": 2,
+  "reference_key": "filter_icon_thief_filter",
+  "reference_file": "D:\\E7auto\\assets\\templates\\chaos\\recruitment\\filter_icon_thief_filter.png",
+  "reference_sha256": "d385b788933b8a0e4f80d108821e41aeaa01cf6dd7c2b1991017e5bc3b1e62de",
+  "approval": "User approved three originals, then approved all four revised candidates: 通过，继续执行",
+  "validation_reuse": "Approved pixels, ROI, thresholds and algorithm unchanged; reuse recorded candidate checks."
+}

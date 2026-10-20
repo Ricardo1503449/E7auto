@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_loot",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-78b0ac0d-1529-4849-9680-521c25bdaf25.png",
+  "original_sha256": "fdd0fc4774a0112223d556ce42f2e31541720003a76e0aea5cc8158357012916",
+  "client_rect": null,
+  "crop": [
+    24,
+    58,
+    125,
+    128
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "revision5_loot_map",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1131,
+        471,
+        125,
+        128
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "revision5_gray_map",
+      "kind": "real_negative",
+      "score": 0.0,
+      "structure": 0.86783,
+      "location": [
+        221,
+        471,
+        125,
+        128
+      ],
+      "detected": false,
+      "passed": true
+    },
+    {
+      "source": "revision5_loot_map",
+      "kind": "synthetic_1536x864",
+      "score": 0.996685,
+      "structure": 0.984052,
+      "location": [
+        1131,
+        471,
+        125,
+        128
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision5_masks\\node_loot.png",
+  "mask_sha256": "bb4cfbb7354a581d3414245040f4fd8c76d41dcccbf8b5dcdaebc79abfb576a5",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "b78f301eb8bea713b8cf97774eb11d141809b8010a8943813508e14e35044353",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision4.json",
+      "sha256": "e4f7b60b78376405034825517dc2e0e99df89f511ada0ca4f0ff54cdeb8c93a1"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision5.json",
+      "sha256": "c1bf2e073e061aeb84ce23dce50d5cdc790a5af446da332a880fd6fd7f11a180"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\node_loot.source.json",
+    "sha256": "0bb6ebc5757bd969fe93c5ff21a94a7ecae9c10f6878c5ccb43a5da936364aa8"
+  },
+  "search_roi": [
+    0,
+    160,
+    2322,
+    970
+  ],
+  "threshold": 0.97,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "改用用户新提供的可选补给节点原图，完整截图中带上方可选三角。模板本体排除三角及地图背景；三角仍使用独立模板。旧经过状态图片不再作为本模板制作来源。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "node_loot"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision4_validation.json",
+      "sha256": "7f6294103cde49414a6d7239655272b689cedbaf7e9e55e19e17d942899c1c24"
+    },
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision5_validation.json",
+      "sha256": "8ebe85519abbfbf85c9be43bca91ac09fb3aed6351a86283c80410ad15ad8b12"
+    }
+  ],
+  "operation": "relocate",
+  "previous_filename": "node_loot.png",
+  "target_filename": "map/node_loot.png",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_loot-b78f301eb8be-444d3917251e.json",
+    "record_sha256": "444d3917251e32390bac8cc75c30d173880317bf480e064b2340593703ccb3e4"
+  },
+  "lifecycle_approval": "User requested canonical three-choice loot and categorized Chaos template directories.",
+  "lifecycle_pixel_policy": "Original PNG bytes, BGR and alpha unchanged."
+}

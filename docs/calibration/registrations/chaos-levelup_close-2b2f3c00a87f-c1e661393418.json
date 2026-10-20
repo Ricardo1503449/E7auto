@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "levelup_close",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-924492d2-f2ac-4a61-ac94-af6672fbebf9.png",
+  "original_sha256": "a92cc6cbb2fef694fbdc6094cf58831517fb34ac39d5cf588453501966c5ab77",
+  "client_rect": [
+    61,
+    93,
+    2322,
+    1306
+  ],
+  "crop": [
+    1093,
+    1141,
+    138,
+    33
+  ],
+  "editing_basis": "Original BGR pixels preserved; alpha mask only; no raster redraw or template resize.",
+  "mask": "full",
+  "patches": null,
+  "validation": [
+    {
+      "source": "levelup",
+      "kind": "source_self",
+      "score": 1.0,
+      "structure": 1.0,
+      "location": [
+        1093,
+        1141,
+        138,
+        33
+      ],
+      "detected": true,
+      "passed": true
+    },
+    {
+      "source": "levelup",
+      "kind": "synthetic_1536x864",
+      "score": 0.973678,
+      "structure": 0.804357,
+      "location": [
+        1093,
+        1141,
+        138,
+        33
+      ],
+      "detected": true,
+      "passed": true
+    }
+  ],
+  "review_status": "approved",
+  "mask_file": "inputs\\revision14_masks\\levelup_close.png",
+  "mask_sha256": "83d02101f4a904f904c70e83e4c20e93528c787a484a1f47f17b8d4165ae5ccb",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "approved_candidate_sha256": "2b2f3c00a87f5e65dbc0d8b4c5212cb96fe12b5f1531ccfb7f51f1abdb889c0e",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\user_approval_revision14.json",
+      "sha256": "4aceff69412a9c5f03762ade25eafe22dd007474ca8f63dbe4bd3d696def547d"
+    }
+  ],
+  "source_export": {
+    "path": "D:\\E7auto\\artifacts\\template-candidates\\20260920-170617-81e7982d\\levelup_close.source.json",
+    "sha256": "80e380d07e3a77c977918345540ecac77f70a82c50df812fcda06f12028c0330"
+  },
+  "search_roi": [
+    1060,
+    1120,
+    280,
+    130
+  ],
+  "threshold": 0.959,
+  "structure_threshold": 0.8,
+  "limitations": [
+    "仅保留点击关闭文字，排除下方箭头、透出的继续探查文字和周围背景。",
+    "原始RGB保持，不缩放、不重绘。待复审。",
+    "尚无独立完整画面正例；自匹配不能代替跨场景验证。"
+  ],
+  "resource_scenes": [
+    "levelup_close"
+  ],
+  "additional_validation_records": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\results\\revision14_validation.json",
+      "sha256": "307385eeda9c20819932209b73f06f7f70a2e93f8bd3944158208bde87902118"
+    }
+  ]
+}
