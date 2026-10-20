@@ -72,6 +72,24 @@ def test_misplaced_files_are_reported_even_when_ignored(project, path):
     assert any(path in error for error in check_layout(project))
 
 
+@pytest.mark.parametrize('filename,operation,allowed',[
+    ('obsolete_template.old','relocate',True),
+    ('obsolete_template.old','retire',True),
+    ('obsolete_template.old','register',False),
+    ('obsolete_template.old',None,False),
+    ('obsolete_template.new','relocate',False),
+    ('unrelated.old','relocate',False),
+])
+def test_lifecycle_backup_requires_exact_filename_and_declared_deletion(project,filename,operation,allowed):
+    directory='artifacts/template-registration/transactions/'+'a'*32
+    path=directory+'/'+filename
+    put(project,path)
+    if operation is not None:
+        put(project,directory+'/journal.json',json.dumps({'plan':{'operation':operation},'entries':{'obsolete_template':{'old_sha256':'1'*64,'new_sha256':None}}}))
+    problems=check_layout(project)
+    assert (not any(path in error for error in problems))==allowed
+
+
 def test_run_metadata_and_sections_are_checked(project):
     run = create_artifact_run("tasks", "fix-entry", feature="shop", root=project)
     (run / "loose.json").write_text("{}")

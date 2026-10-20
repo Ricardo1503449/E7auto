@@ -7,8 +7,10 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import yaml
 
 from scripts.common.paths import PROJECT_ROOT
+from scripts.common.git_objects import GitBlobReader
 
 
 FOLDERS = ("assets/templates", "docs/calibration/registrations")
@@ -33,14 +35,15 @@ def snapshot(root: Path, revision: str | None = None, *, staged: bool = False) -
         else:
             commit = git(root, "rev-parse", "--verify", "--end-of-options", revision + "^{commit}").decode().strip()
             entries = git(root, "ls-tree", "-r", "-z", commit, "--", *FOLDERS)
-        for entry in entries.split(b"\0"):
-            if not entry:
-                continue
-            metadata, path = entry.split(b"\t", 1)
-            mode, second, third = metadata.decode().split()
-            if mode not in {"100644", "100755"} or (staged and third != "0"):
-                raise ValueError(f"Unsupported or unmerged resource: {path!r}")
-            files[path.decode("utf-8")] = git(root, "cat-file", "blob", second if staged else third)
+        with GitBlobReader(root) as reader:
+            for entry in entries.split(b"\0"):
+                if not entry:
+                    continue
+                metadata, path = entry.split(b"\t", 1)
+                mode, second, third = metadata.decode().split()
+                if mode not in {"100644", "100755"} or (staged and third != "0"):
+                    raise ValueError(f"Unsupported or unmerged resource: {path!r}")
+                files[path.decode("utf-8")] = reader.read(second if staged else third)
     else:
         for folder in FOLDERS:
             directory = root / folder
@@ -118,7 +121,40 @@ def check(base: dict[str, bytes], current: dict[str, bytes]) -> tuple[list[str],
                     problems.append(f"{label}: registration record does not match current template")
                 if record not in current or digest(current[record]) != record_hash:
                     problems.append(f"{label}: registration record missing or hash mismatch (include it in the same change)")
-        except (KeyError, TypeError, AttributeError, ValueError) as exc:
+                elif old_entry and old_entry.get("file") != entry["file"]:
+                    details = yaml.safe_load(current[record])
+                    if (source == old_entry.get("source") or not isinstance(details, dict)
+                            or details.get("operation") != "relocate" or details.get("target_filename") != entry["file"]):
+                        problems.append(f"{label}: relocation lacks matching registration provenance")
+            retired = catalog.get("retired_templates", {})
+            if not isinstance(retired, dict):
+                raise ValueError("Invalid retired template records")
+            for key in previous.keys() - catalog["templates"].keys() - retired.keys():
+                problems.append(f"{feature}/{key}: removal lacks retirement provenance")
+            old_retired = old_catalogs.get(catalog_path, {}).get("retired_templates", {})
+            for key, entry in retired.items():
+                label = f"{feature}/{key}"
+                changed_count += int(old_retired.get(key) != entry)
+                if key in catalog["templates"]:
+                    problems.append(f"{label}: active template is also marked retired")
+                path = template_path(catalog_path, entry["file"])
+                if path in current:
+                    problems.append(f"{label}: retired template PNG still exists")
+                source = entry.get("source", {})
+                sha, record_sha = entry.get("sha256", ""), source.get("record_sha256", "")
+                record = source.get("record", "")
+                if not all(isinstance(h, str) and re.fullmatch(r"[0-9a-f]{64}", h) for h in (sha, record_sha)):
+                    problems.append(f"{label}: invalid retirement hashes")
+                    continue
+                stem = f"docs/calibration/registrations/{feature}-{key}-{sha[:12]}-{record_sha[:12]}"
+                if record not in {stem+suffix for suffix in (".json", ".yaml", ".yml")} or record not in current or digest(current[record]) != record_sha:
+                    problems.append(f"{label}: retirement registration record missing or inconsistent")
+                    continue
+                details = yaml.safe_load(current[record])
+                if (not isinstance(details, dict) or details.get("operation") != "retire"
+                        or details.get("previous_filename") != entry["file"] or not details.get("retirement_reason")):
+                    problems.append(f"{label}: invalid retirement provenance")
+        except (KeyError, TypeError, AttributeError, ValueError, yaml.YAMLError) as exc:
             problems.append(f"{catalog_path}: {exc}")
     for path, data in current.items():
         if path.startswith("assets/templates/") and path.lower().endswith(".png") and path not in covered:

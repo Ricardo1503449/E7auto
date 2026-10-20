@@ -1,4 +1,6 @@
 .venv/
+/tools/
+/.wrangler/
 .pip-cache/
 .nuitka-cache/
 .pytest_cache/
@@ -12,7 +14,7 @@ build/*
 # Local task outputs are checked by scripts.project.check_layout even when ignored.
 artifacts/*
 !artifacts/README.md
-# Local build output only. Publish versioned ZIP files through GitHub Releases.
+# Local distribution output only; publish the versioned Setup EXE through GitHub Releases.
 dist/
 *.build/
 *.dist/

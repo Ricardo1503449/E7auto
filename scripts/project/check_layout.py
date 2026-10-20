@@ -12,6 +12,7 @@ import subprocess
 from urllib.parse import unquote
 
 from scripts.common.paths import PROJECT_ROOT
+from scripts.common.git_objects import GitBlobReader
 from scripts.project.check_dependencies import check_dependencies
 
 RUN_ID = re.compile(r"\d{8}-\d{6}-[a-z][a-z0-9-]*-[0-9a-f]{8}")
@@ -30,6 +31,16 @@ def _git(root: Path, *args: str) -> bytes:
 
 def _files(root: Path, names: list[str], errors: list[str]) -> set[str]:
     found = set()
+    try:
+        registry = json.loads((root / POLICY).read_text(encoding="utf-8")).get("development_tools", {})
+        tool_root = registry.get("root", "tools")
+        vendor_roots = {f"{tool_root}/{item['path']}" for item in registry.get("installations", {}).values()}
+        vendor_roots.update(f"{tool_root}/{item}" for item in registry.get("caches", {}).values())
+        vendor_roots.update(f"{tool_root}/{item}" for item in registry.get("states", {}).values())
+        manifests = {json.loads((root / item["manifest"]).read_text(encoding="utf-8"))["name"]
+                     for item in registry.get("installations", {}).values() if "manifest" in item}
+    except (OSError, ValueError, KeyError, TypeError):
+        vendor_roots, manifests = set(), set()
     for name in names:
         base = root / name
         if not base.exists():
@@ -45,6 +56,17 @@ def _files(root: Path, names: list[str], errors: list[str]) -> set[str]:
                     children.remove(child)
                 elif child in {"__pycache__", ".pytest_cache"}:
                     children.remove(child)
+                elif path.relative_to(root).as_posix() in vendor_roots:
+                    children.remove(child)
+                elif child == "node_modules" and path.relative_to(root).parts[0] == "artifacts":
+                    manifest = Path(directory) / "package.json"
+                    try:
+                        installed_name = json.loads(manifest.read_text(encoding="utf-8"))["name"]
+                    except (OSError, ValueError, KeyError):
+                        installed_name = None
+                    if installed_name in manifests:
+                        errors.append(f"Persistent tool installation belongs in tools, not a task: {manifest.relative_to(root).as_posix()}")
+                        children.remove(child)
             for file in files:
                 path = Path(directory) / file
                 if path.is_symlink():
@@ -55,6 +77,11 @@ def _files(root: Path, names: list[str], errors: list[str]) -> set[str]:
 
 
 def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str]:
+    with GitBlobReader(root) as reader:
+        return _check_layout(root, staged=staged, read_blob=reader.read)
+
+
+def _check_layout(root: Path, *, staged: bool, read_blob) -> list[str]:
     root = root.resolve()
     errors: list[str] = []
     if staged:
@@ -76,12 +103,12 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
         def read(name: str) -> bytes:
             if name not in blobs:
                 raise FileNotFoundError(name)
-            return _git(root, "cat-file", "blob", blobs[name])
+            return read_blob(blobs[name])
 
         def exists(name: str) -> bool:
             return name in paths or any(p.startswith(name.rstrip("/") + "/") for p in paths)
     else:
-        paths = _files(root, ["docs", "tests", "artifacts", "build", "scripts", "src"], errors)
+        paths = _files(root, ["docs", "tests", "artifacts", "build", "scripts", "src", "tools"], errors)
         paths.update(name for name in ["README.md", "AGENTS.md", "pyproject.toml"] if (root / name).is_file())
 
         def read(name: str) -> bytes:
@@ -104,7 +131,43 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return errors + [f"Missing or invalid layout policy ({'index' if staged else 'worktree'}): {exc}"]
 
+    registry = policy.get("development_tools", {})
+    areas = []
+    if registry:
+        if registry.get("root") != "tools":
+            errors.append("Development tools must use the registered tools root")
+        for category in ("installations", "caches", "states"):
+            for key, value in registry.get(category, {}).items():
+                relative = value.get("path") if category == "installations" else value
+                if (not isinstance(relative, str) or PurePosixPath(relative).is_absolute()
+                        or ".." in PurePosixPath(relative).parts or "\\" in relative or ":" in relative):
+                    errors.append(f"Invalid registered development tool path: {category}/{key}")
+                else:
+                    areas.append(PurePosixPath(relative))
     if not staged:
+        directory = root / "tools"
+        if directory.exists():
+            if directory.is_symlink() or directory.is_junction():
+                errors.append("Linked development tools root is not allowed")
+            else:
+                def inspect_area(parent):
+                    for child in parent.iterdir():
+                        relative = PurePosixPath(child.relative_to(directory).as_posix())
+                        if child.is_symlink() or child.is_junction():
+                            errors.append(f"Linked development tool area: tools/{relative}")
+                        elif relative in areas:
+                            continue
+                        elif child.is_dir() and any(relative in area.parents for area in areas):
+                            inspect_area(child)
+                        else:
+                            errors.append(f"Unregistered local development tool content: tools/{relative}")
+                inspect_area(directory)
+        for key, value in registry.get("installations", {}).items():
+            directory = root / "tools" / value["path"]
+            if directory.is_dir() and not (directory / value["entry"]).is_file():
+                errors.append(f"Incomplete registered tool installation: {key}")
+        if registry and (root / ".venv/tools").is_dir():
+            errors.append("Reusable non-Python tools must not be installed under .venv/tools")
         for top, key in [("docs", "docs_sections"), ("tests", "test_sections"),
                          ("artifacts", "artifact_categories"), ("build", "build_sections")]:
             directory = root / top
@@ -119,6 +182,10 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
         p = PurePosixPath(name)
         parts, suffix = p.parts, p.suffix.lower()
         top = parts[0]
+        if top == "tools":
+            if staged:
+                errors.append(f"Local tool/cache/private state must not be staged: {name}")
+            continue
         if top == "docs":
             if name == "docs/README.md":
                 continue
@@ -150,7 +217,8 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
                     errors.append(f"Fixture needs a registered owner: {name}")
                 if suffix not in {".png", ".jpg", ".jpeg", ".npz", ".npy", ".json", ".yaml", ".txt", ".md"}:
                     errors.append(f"Unexpected fixture file type: {name}")
-            elif suffix not in {".py", ".md"}:
+            elif suffix not in (set(policy.get("tool_test_extensions", {}).get(parts[2], [".py", ".md"]))
+                                if parts[1] == "scripts" and len(parts) >= 4 else {".py", ".md"}):
                 errors.append(f"Generated output in test source directory: {name}")
             if parts[1] == "scripts" and p.name != "__init__.py" and (
                 len(parts) < 4 or parts[2] not in policy["test_script_sections"]
@@ -179,8 +247,17 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
             if category == "template-registration":
                 valid = name == "artifacts/template-registration/writer.lock" or (
                     len(parts) == 5 and parts[2] == "transactions" and re.fullmatch(r"[0-9a-f]{32}", parts[3])
-                    and (parts[4] == "journal.json" or re.fullmatch(r"(?:record|template|manifest)\.(?:old|new)", parts[4]))
+                    and parts[4] in policy["registration_transaction_files"]
                 )
+                if valid and parts[-1] == "obsolete_template.old":
+                    try:
+                        journal = json.loads(read(f"artifacts/template-registration/transactions/{parts[3]}/journal.json"))
+                        backup = journal["entries"]["obsolete_template"]
+                        valid = (journal["plan"].get("operation") in {"relocate", "retire"}
+                                 and re.fullmatch(r"[0-9a-f]{64}", backup["old_sha256"]) is not None
+                                 and backup["new_sha256"] is None)
+                    except (OSError, KeyError, TypeError, AttributeError, ValueError):
+                        valid = False
                 if not valid:
                     errors.append(f"Unexpected registration workspace entry: {name}")
                 continue
@@ -286,7 +363,11 @@ def check_layout(root: Path = PROJECT_ROOT, *, staged: bool = False) -> list[str
         }:
             continue
         try:
-            syntax = ast.parse(read(name).decode("utf-8-sig"))
+            text = read(name).decode("utf-8-sig")
+            if any(value in text.replace("\\", "/") for value in (
+                    "scratch/toolchain", "scratch/wrangler-config", "scratch/npm-cache", ".venv/tools")):
+                errors.append(f"Formal tool entry must use registered development paths: {name}")
+            syntax = ast.parse(text)
         except (SyntaxError, UnicodeError) as exc:
             errors.append(f"Cannot inspect tool output defaults: {name}: {exc}")
             continue

@@ -32,6 +32,21 @@
 
 新模板必须加上 `--filename`，该路径相对于功能目录，例如 `--feature new_feature --key entry --filename entry.png`。不能接管其他模板的文件、覆盖未登记文件或越出功能目录。新功能还需要按 `TEMPLATES.md` 接入运行配置、功能入口及发布验证；登记图片不会自动启用功能。
 
+### 审核通过后沿用既有验证
+
+此规则跨对话生效。先读取对应任务results中的候选/验证记录及候选校验文件，核对批准PNG的SHA-256；不因上下文丢失从头重测。候选PNG包含其透明遮罩，按原字节登记不构成新的像素变化。
+
+| 实际变化 | 验证范围 |
+| --- | --- |
+| 图片、识别算法、ROI和阈值均未变，仅正式登记或迁移路径 | 沿用已通过的正反例、缩放及识别结果；只核对哈希、来源、目标路径和登记完整性，不再扫描旧截图 |
+| 新增事件，复用已有战斗/文本/返回能力，仅增加绑定和分派条目 | 最小检查新增资源绑定、点击方向、事件分支及返回流程；复用已有公共能力的验证，不重跑全部旧事件 |
+| 图片、识别参数或公共识别/流程行为变化 | 只重测失效证据对应的样本与受影响分支；新失败或新样本揭示问题时再补相关边界 |
+| 仅补审核状态、说明或记录文档 | 核对内容、必要链接和差异，不运行图像或业务测试 |
+
+单纯向事件注册表添加条目，不视为公共流程行为变化。需要扩大回归时，说明具体改动或失败依据；不得仅以“审核后再确认”“保险起见”重复旧检查。前次验证记录确实缺失时，只补无法确认的最小范围，不默认全量重跑。
+
+`prepare → 核对计划 → apply`、`check_changes`及适用的布局/源码边界、提交前检查仍须执行。登记完整性不替代首次识别验证，也不要求重复已有效的识别验证。交付时区分“沿用此前通过的结果”和“本次实际执行的检查”，复用原任务记录，避免重做审核网页或重复过程文档。
+
 ## 3. 显式应用已核对的计划
 
 ```powershell
@@ -87,3 +102,19 @@
 本项目使用本地检查命令，不配置模板检查CI，也不自动安装hook。首次提交没有基准时使用 `--base EMPTY`。`.gitattributes` 禁止Git转换登记来源记录的换行，保留哈希对应的原始字节；该文件应随检查工具一起提交。此检查验证可追溯状态，不能证明调用历史，也不是文件系统写保护；禁止用伪造登记记录绕过工具。Git提交授权与相关识别测试要求不变。
 
 本次实现的测试范围和正式资源保护检查见 [验证记录](../validation/templates/TEMPLATE_WORKFLOW_VALIDATION.md)。
+
+## 6. 保留原字节的目录迁移与退役
+
+仍逐项执行候选导出→核对prepare计划→apply，不能并发写入。`write_candidate_png(path, decoded_image, png_bytes=original_bytes)`可在解码像素完全一致时原样导出已有PNG，连同候选校验文件一起保留；不重新编码图片。
+
+- `prepare --operation relocate`：候选摘要必须等于现有PNG，`--filename`指定不同的用途子目录；来源记录必须包含 `operation: relocate`、`previous_filename`和一致的`target_filename`。既有目标文件或其他模板占用目标均拒绝。apply写入新路径、更新清单、删除旧路径，旧PNG留有事务备份。
+- `prepare --operation retire`：候选仍需保留被移除PNG的原始字节，来源记录包含 `operation: retire`、`previous_filename`及非空`retirement_reason`；不提供新filename。apply从活动templates移除条目、写入retired_templates登记引用并删除正式PNG。退役前必须同步运行绑定，防止启动继续要求已撤掉的文件。
+- apply/recover继续校验旧文件、候选、来源、清单和所有输出；迁移/删除失败会按事务恢复原路径和清单，遇到外部改动则保留并报告冲突。源路径及目标路径都必须位于对应功能目录。
+- check_changes检查迁移的新登记来源、移除的退役来源以及正式目录不残留退役PNG；普通register行为不变。以后补齐新的正式小卡时，可用普通register重新登记相同键和明确filename，清单自动移除旧退役索引；原历史记录保留。
+
+示例（路径仅示意，实际使用准备好的候选导出目录）：
+
+```powershell
+python -m scripts.templates.register prepare --operation relocate --feature chaos --key loot_old_sword --filename loot/loot_old_sword.png --candidate "artifacts/template-candidates/本次目录/chaos/loot/loot_old_sword.png" --source-record "artifacts/template-candidates/本次目录/sources/loot_old_sword.json" --plan-out "artifacts/template-candidates/本次目录/plans/loot_old_sword.json"
+python -m scripts.templates.register apply --plan "artifacts/template-candidates/本次目录/plans/loot_old_sword.json"
+```

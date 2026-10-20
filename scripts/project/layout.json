@@ -1,8 +1,33 @@
 {
   "schema_version": 1,
+  "development_tools": {
+    "root": "tools",
+    "installations": {
+      "cloudflare_shop_stats": {
+        "path": "cloudflare/shop-stats",
+        "manifest": "scripts/cloudflare/shop_stats/package.json",
+        "lock": "scripts/cloudflare/shop_stats/package-lock.json",
+        "entry": "node_modules/wrangler/bin/wrangler.js"
+      },
+      "innosetup": {
+        "path": "innosetup",
+        "version": "6.7.3",
+        "entry": "6.7.3/ISCC.exe"
+      },
+      "nuitka_gcc": {
+        "path": "cache/nuitka/downloads/gcc/x86_64/15.2.0posix-13.0.0-msvcrt-r6/mingw64",
+        "version": "15.2.0",
+        "distribution": "WinLibs MinGW-w64 13.0.0 MSVCRT POSIX SEH r6",
+        "entry": "bin/gcc.exe"
+      }
+    },
+    "caches": {"npm": "cache/npm", "nuitka": "cache/nuitka"},
+    "states": {"cloudflare": "state/cloudflare", "tool_paths": "state/tool-paths.json"}
+  },
   "features": [
     "shop",
     "penguin",
+    "chaos",
     "common",
     "platform",
     "ui"
@@ -15,6 +40,16 @@
     "archive",
     "template-candidates",
     "template-registration"
+  ],
+  "registration_transaction_files": [
+    "journal.json",
+    "record.old",
+    "record.new",
+    "template.old",
+    "template.new",
+    "manifest.old",
+    "manifest.new",
+    "obsolete_template.old"
   ],
   "task_sections": [
     "inputs",
@@ -52,8 +87,12 @@
     "validation",
     "release",
     "templates",
-    "project"
+    "project",
+    "cloudflare"
   ],
+  "tool_test_extensions": {
+    "cloudflare": [".py", ".md", ".mjs"]
+  },
   "build_sections": [
     "nuitka",
     "staging"

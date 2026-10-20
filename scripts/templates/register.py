@@ -76,9 +76,11 @@ def _destinations(root: Path, feature: str, key: str, filename: str,
 
 
 def prepare(root: Path, feature: str, key: str, candidate: Path, source_record: Path,
-            filename: str | None = None) -> dict:
+            filename: str | None = None, *, operation: str = "register") -> dict:
     """Read only: validate inputs and pin every input/output involved in apply."""
     root = root.resolve()
+    if operation not in {"register", "relocate", "retire"}:
+        raise ValueError("Unknown registration operation")
     candidate = _candidate_path(root, candidate)
     source_record = source_record.resolve()
     data, source_data = candidate.read_bytes(), source_record.read_bytes()
@@ -114,9 +116,27 @@ def prepare(root: Path, feature: str, key: str, candidate: Path, source_record: 
             raise ValueError("Manifest changed while preparing plan")
         catalog = json.loads(manifest_bytes)
     previous = catalog["templates"].get(key)
+    if operation != "register":
+        if previous is None:
+            raise ValueError("Relocation/retirement requires an existing registered template")
+        if digest(data) != previous["sha256"]:
+            raise ValueError("Relocation/retirement must preserve the original PNG bytes")
+        if source.get("operation") != operation or source.get("previous_filename") != previous["file"]:
+            raise ValueError("Source record does not describe the requested lifecycle operation")
+        if operation == "relocate":
+            if filename is None or filename == previous["file"]:
+                raise ValueError("Relocation requires a different explicit --filename")
+            if source.get("target_filename") != filename:
+                raise ValueError("Source record does not name the relocation target")
+        else:
+            if not source.get("retirement_reason") or (filename is not None and filename != previous["file"]):
+                raise ValueError("Retirement requires a reason and the existing filename")
+            if len(catalog["templates"]) <= 1:
+                raise ValueError("Cannot retire the last template in a feature catalog")
+            filename = previous["file"]
     if previous is None and filename is None:
         raise ValueError("New templates require an explicit --filename")
-    if previous is not None:
+    if previous is not None and operation == "register":
         if filename is not None and filename != previous["file"]:
             raise ValueError("Registration does not rename an existing template")
         filename = previous["file"]
@@ -126,8 +146,11 @@ def prepare(root: Path, feature: str, key: str, candidate: Path, source_record: 
             raise ValueError("Filename already belongs to another template")
     if previous is None and destinations["template"].exists():
         raise ValueError("New registration cannot overwrite an unregistered file")
-    if previous is not None and file_digest(destinations["template"]) != previous["sha256"]:
+    old_path = (directory / previous["file"]).resolve() if previous is not None else None
+    if previous is not None and file_digest(old_path) != previous["sha256"]:
         raise ValueError("Template changed while preparing plan")
+    if operation == "relocate" and (old_path == destinations["template"] or destinations["template"].exists()):
+        raise ValueError("Relocation destination already exists or is the original path")
     if destinations["record"].exists() and file_digest(destinations["record"]) != digest(source_data):
         raise ValueError("Source record destination already contains different data")
     updated = dict(previous or {})
@@ -135,8 +158,18 @@ def prepare(root: Path, feature: str, key: str, candidate: Path, source_record: 
         "record": destinations["record"].relative_to(root).as_posix(),
         "record_sha256": digest(source_data),
     })
-    catalog["templates"][key] = updated
-    return {
+    if operation == "retire":
+        del catalog["templates"][key]
+        catalog.setdefault("retired_templates", {})[key] = updated
+        destinations = {"record": destinations["record"], "manifest": destinations["manifest"],
+                        "obsolete_template": old_path}
+    else:
+        catalog["templates"][key] = updated
+        if key in catalog.get("retired_templates", {}):
+            del catalog["retired_templates"][key]
+        if operation == "relocate":
+            destinations["obsolete_template"] = old_path
+    plan = {
         "schema_version": 1, "project_root": str(root), "feature": feature, "key": key,
         "filename": filename, "candidate": str(candidate), "source_record": str(source_record),
         "candidate_sha256": digest(data), "source_sha256": digest(source_data),
@@ -145,6 +178,9 @@ def prepare(root: Path, feature: str, key: str, candidate: Path, source_record: 
         "destinations": {role: str(path.relative_to(root)) for role, path in destinations.items()},
         "expected": {role: file_digest(path) for role, path in destinations.items()},
     }
+    if operation != "register":
+        plan.update(operation=operation, previous_filename=previous["file"])
+    return plan
 
 
 def _atomic_write(path: Path, data: bytes) -> None:
@@ -205,6 +241,20 @@ def _journal_paths(root: Path, journal: dict) -> dict[str, Path]:
         raise ValueError("Transaction belongs to another project")
     paths = _destinations(root, plan["feature"], plan["key"], plan["filename"],
                           plan["candidate_sha256"], plan["source_sha256"], Path(plan["source_record"]).suffix.lower())
+    operation = plan.get("operation", "register")
+    if operation in {"relocate", "retire"}:
+        old = _destinations(root, plan["feature"], plan["key"], plan["previous_filename"],
+                            plan["candidate_sha256"], plan["source_sha256"], Path(plan["source_record"]).suffix.lower())["template"]
+        if operation == "retire":
+            if old != paths["template"]:
+                raise ValueError("Retirement target differs from registered filename")
+            paths = {"record": paths["record"], "manifest": paths["manifest"], "obsolete_template": old}
+        else:
+            if old == paths["template"]:
+                raise ValueError("Relocation has no path change")
+            paths["obsolete_template"] = old
+    elif operation != "register":
+        raise ValueError("Unknown lifecycle operation in transaction")
     if plan["destinations"] != {role: str(path.relative_to(root)) for role, path in paths.items()}:
         raise ValueError("Transaction contains unexpected output paths")
     return paths
@@ -225,8 +275,9 @@ def _recover(root: Path, transaction: Path) -> str:
         if old != journal["plan"]["expected"][role]:
             raise ValueError("Recovery backup does not match original plan")
         previous = (transaction / f"{role}.old").read_bytes() if old is not None else None
-        new = (transaction / f"{role}.new").read_bytes()
-        if (previous is not None and digest(previous) != old) or digest(new) != entry["new_sha256"]:
+        new_path = transaction / f"{role}.new"
+        new = new_path.read_bytes() if entry["new_sha256"] is not None else None
+        if (previous is not None and digest(previous) != old) or (digest(new) if new is not None else None) != entry["new_sha256"] or (new is None and new_path.exists()):
             raise ValueError("Recovery backup/staged data checksum mismatch")
         current = file_digest(path)
         if current not in (old, entry["new_sha256"]):
@@ -253,13 +304,17 @@ def apply(root: Path, plan: dict) -> str:
             if json.loads(pending.read_text(encoding="utf-8"))["status"] not in {"committed", "rolled_back"}:
                 raise ValueError(f"Recover unfinished transaction first: {pending.parent.name}")
         fresh = prepare(root, plan["feature"], plan["key"], Path(plan["candidate"]),
-                        Path(plan["source_record"]), plan["filename"])
+                        Path(plan["source_record"]), plan["filename"], operation=plan.get("operation", "register"))
         if fresh != plan:
             raise ValueError("Inputs or formal resources changed after preview; prepare a new plan")
         paths = _journal_paths(root, {"plan": plan})
-        contents = {"record": Path(plan["source_record"]).read_bytes(),
-                    "template": Path(plan["candidate"]).read_bytes(), "manifest": encoded(plan["catalog"])}
-        if digest(contents["record"]) != plan["source_sha256"] or digest(contents["template"]) != plan["candidate_sha256"]:
+        candidate_bytes = Path(plan["candidate"]).read_bytes()
+        contents = {"record": Path(plan["source_record"]).read_bytes(), "manifest": encoded(plan["catalog"])}
+        if "template" in paths:
+            contents["template"] = candidate_bytes
+        if "obsolete_template" in paths:
+            contents["obsolete_template"] = None
+        if digest(contents["record"]) != plan["source_sha256"] or digest(candidate_bytes) != plan["candidate_sha256"]:
             raise ValueError("Candidate/source changed during apply")
         transaction = work / "transactions" / uuid.uuid4().hex
         transaction.mkdir(parents=True)
@@ -270,8 +325,9 @@ def apply(root: Path, plan: dict) -> str:
                 raise ValueError("Formal resource changed during staging")
             if previous is not None:
                 _atomic_write(transaction / f"{role}.old", previous)
-            _atomic_write(transaction / f"{role}.new", contents[role])
-            journal["entries"][role] = {"old_sha256": plan["expected"][role], "new_sha256": digest(contents[role])}
+            if contents[role] is not None:
+                _atomic_write(transaction / f"{role}.new", contents[role])
+            journal["entries"][role] = {"old_sha256": plan["expected"][role], "new_sha256": digest(contents[role]) if contents[role] is not None else None}
         journal_path = transaction / "journal.json"
         _atomic_write(journal_path, encoded(journal))
         try:
@@ -280,10 +336,13 @@ def apply(root: Path, plan: dict) -> str:
             for role, path in paths.items():
                 if file_digest(path) != plan["expected"][role]:
                     raise ValueError(f"Formal resource changed before replacement: {path}")
-                _atomic_write(path, contents[role])
+                if contents[role] is None:
+                    path.unlink()
+                else:
+                    _atomic_write(path, contents[role])
             load_template_manifest(paths["manifest"], tuple(plan["baseline"]))
             for role, path in paths.items():
-                if file_digest(path) != digest(contents[role]):
+                if file_digest(path) != (digest(contents[role]) if contents[role] is not None else None):
                     raise ValueError(f"Formal resource changed during final verification: {path}")
             journal["status"] = "committed"
             _atomic_write(journal_path, encoded(journal))
@@ -317,6 +376,7 @@ def main() -> int:
     preview.add_argument("--candidate", type=Path, required=True)
     preview.add_argument("--source-record", type=Path, required=True)
     preview.add_argument("--filename", help="Required for new templates; relative to feature directory")
+    preview.add_argument("--operation", choices=("register", "relocate", "retire"), default="register")
     preview.add_argument("--plan-out", type=Path, required=True)
     commit = modes.add_parser("apply", help="Apply exactly one previously reviewed plan")
     commit.add_argument("--plan", type=Path, required=True)
@@ -326,7 +386,7 @@ def main() -> int:
     try:
         root = args.project_root.resolve()
         if args.mode == "prepare":
-            plan = prepare(root, args.feature, args.key, args.candidate, args.source_record, args.filename)
+            plan = prepare(root, args.feature, args.key, args.candidate, args.source_record, args.filename, operation=args.operation)
             plan_path = _candidate_path(root, args.plan_out)
             if plan_path in {args.candidate.resolve(), args.source_record.resolve(),
                              args.candidate.resolve().with_suffix(".candidate.json")}:

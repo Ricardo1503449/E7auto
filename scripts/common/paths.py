@@ -16,12 +16,69 @@ CANDIDATES_DIR = PROJECT_ROOT / "artifacts" / "template-candidates"
 LAYOUT_POLICY = PROJECT_ROOT / "scripts" / "project" / "layout.json"
 
 
+def build_nuitka_dir(root: Path = PROJECT_ROOT) -> Path:
+    return root / "build" / "nuitka"
+
+
+def build_staging_dir(root: Path = PROJECT_ROOT) -> Path:
+    return root / "build" / "staging"
+
+
 def release_runs_dir(root: Path = PROJECT_ROOT) -> Path:
     return root / "artifacts" / "releases"
 
 
 def layout_policy() -> dict:
     return json.loads(LAYOUT_POLICY.read_text(encoding="utf-8"))
+
+
+def development_tool_path(name: str, *, kind: str = "installations", root: Path = PROJECT_ROOT) -> Path:
+    """Resolve registered local tools/cache/state, never a task-dependent default."""
+    policy = json.loads((root / "scripts/project/layout.json").read_text(encoding="utf-8"))
+    registry = policy["development_tools"]
+    if registry["root"] != "tools":
+        raise ValueError("Development tools must use the registered tools root")
+    try:
+        item = registry[kind][name]
+    except KeyError as exc:
+        raise ValueError(f"Unregistered development tool {kind}/{name}") from exc
+    relative = item["path"] if kind == "installations" else item
+    base = root.resolve() / registry["root"]
+    parts = Path(relative)
+    if parts.is_absolute() or ".." in parts.parts or base.is_symlink() or base.is_junction():
+        raise ValueError("Invalid development tool path")
+    resolved = (base / parts).resolve()
+    cursor = base
+    for part in parts.parts:
+        cursor = cursor / part
+        if cursor.is_symlink() or cursor.is_junction():
+            raise ValueError("Linked development tool area is not allowed")
+    if not resolved.is_relative_to(base.resolve()):
+        raise ValueError("Development tool path escapes its registered root")
+    return resolved
+
+
+def development_tool_entry(name: str, *, root: Path = PROJECT_ROOT) -> Path:
+    policy = json.loads((root / "scripts/project/layout.json").read_text(encoding="utf-8"))
+    entry = policy["development_tools"]["installations"][name]["entry"]
+    directory = development_tool_path(name, root=root)
+    result = (directory / entry).resolve()
+    if not result.is_relative_to(directory):
+        raise ValueError("Development tool entry escapes its installation")
+    return result
+
+
+def development_run_directory(path: Path) -> Path:
+    """Accept a managed maintenance run or a shop task for development logs."""
+    path = path.resolve()
+    metadata = json.loads((path / "task.json").read_text(encoding="utf-8"))
+    if metadata.get("kind") == "tasks":
+        return managed_task_directory(path, feature="shop")
+    base = PROJECT_ROOT / "artifacts" / "maintenance"
+    if (path.parent != base.resolve() or metadata.get("kind") != "maintenance"
+            or metadata.get("run_id") != path.name or not metadata.get("subject")):
+        raise ValueError("Tool output needs a managed maintenance run or shop task")
+    return path
 
 
 def calibration_record_path(name: str, directory: Path = CALIBRATION_DIR) -> Path:
@@ -133,6 +190,18 @@ def ensure_task_result_path(path: Path, root: Path = PROJECT_ROOT) -> Path:
             or parts[2] not in layout_policy()["features"] or parts[4] != "results"
             or not (root.joinpath(*parts[:4]) / "task.json").is_file()):
         raise ValueError("Project validation output must be inside a managed task/results directory")
+    return resolved
+
+
+def managed_task_directory(path: Path, *, feature: str, root: Path = PROJECT_ROOT) -> Path:
+    """Validate an existing task before staging tools or other local development output."""
+    resolved = path.resolve()
+    base = root.resolve() / "artifacts" / "tasks" / feature
+    if feature not in layout_policy()["features"] or not resolved.is_relative_to(base):
+        raise ValueError("Tool output must use a registered feature task")
+    metadata = json.loads((resolved / "task.json").read_text(encoding="utf-8"))
+    if metadata.get("kind") != "tasks" or metadata.get("feature") != feature:
+        raise ValueError("Tool output must use a registered feature task")
     return resolved
 
 
