@@ -70,10 +70,10 @@ def _normalized_path(value: str) -> str:
     return os.path.normcase(os.path.normpath(value))
 
 
-def _validate_window_identity(window: WindowRef) -> int:
+def _validate_window_identity(window: WindowRef, *, allow_minimized: bool = False) -> int:
     if not win32gui.IsWindow(window.hwnd):
         raise BackgroundInputError("game window no longer exists")
-    if win32gui.IsIconic(window.hwnd):
+    if win32gui.IsIconic(window.hwnd) and not allow_minimized:
         raise BackgroundInputError("game window is minimized")
     if win32gui.GetWindowText(window.hwnd) != window.title:
         raise BackgroundInputError("game window title changed")
@@ -110,9 +110,12 @@ class Win32WindowMessageInputService:
         *,
         post_message: Callable[[int, int, int, int], object] | None = None,
         sleep: Callable[[float], None] = time.sleep,
+        on_input_complete: Callable[[], None] | None = None,
     ) -> None:
         self._post_message = post_message or win32gui.PostMessage
         self._sleep = sleep
+        self._on_input_complete = on_input_complete
+        self._drag_owner: WindowRef | None = None
 
     @staticmethod
     def _validate_client_point(hwnd: int, point: Point) -> None:
@@ -125,6 +128,8 @@ class Win32WindowMessageInputService:
     def _dispatch(self, hwnd: int, message: int, wparam: int, lparam: int) -> None:
         try:
             self._post_message(hwnd, message, wparam, lparam)
+            if self._on_input_complete is not None:
+                self._on_input_complete()
         except Exception as exc:
             raise BackgroundInputError(
                 f"PostMessage failed for message 0x{message:04X}: {exc}"
@@ -162,3 +167,37 @@ class Win32WindowMessageInputService:
             _pack_wheel_wparam(delta),
             screen_lparam,
         )
+
+    def pointer_down(self, window: WindowRef, point: Point) -> None:
+        hwnd = _validate_window_identity(window)
+        self._validate_client_point(hwnd, point)
+        packed = _pack_signed_point(point.x, point.y)
+        self._dispatch(hwnd, win32con.WM_MOUSEMOVE, 0, packed)
+        self._sleep(_CLICK_HOVER_SECONDS)
+        if _validate_window_identity(window) != hwnd:
+            raise BackgroundInputError("game window changed during drag hover")
+        self._validate_client_point(hwnd, point)
+        self._dispatch(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, packed)
+        self._drag_owner = window
+
+    def pointer_move(self, window: WindowRef, point: Point, *, allow_outside_client: bool = False) -> None:
+        hwnd = _validate_window_identity(window)
+        if allow_outside_client:
+            # Overscroll coordinates belong only to a drag begun inside this
+            # window. They are messages to its HWND, not physical cursor input.
+            if self._drag_owner != window:
+                raise BackgroundInputError("outside-client movement requires an active drag in this window")
+        else:
+            self._validate_client_point(hwnd, point)
+        self._dispatch(hwnd, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON,
+                       _pack_signed_point(point.x, point.y))
+
+    def pointer_up(self, window: WindowRef, point: Point) -> None:
+        # Cleanup must work after a resize, when the last drag coordinate may no
+        # longer be inside the client. Never redirect release to a changed HWND.
+        try:
+            hwnd = _validate_window_identity(window, allow_minimized=True)
+            self._dispatch(hwnd, win32con.WM_LBUTTONUP, 0, _pack_signed_point(point.x, point.y))
+        finally:
+            if self._drag_owner == window:
+                self._drag_owner = None

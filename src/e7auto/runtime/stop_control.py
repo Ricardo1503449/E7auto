@@ -17,14 +17,16 @@ class StopExecution(RuntimeError):
 
 
 class StopController:
-    """Serializes stop requests with input dispatch.
+    """Serialize input admission without holding the stop-state lock during I/O.
 
-    If F5 wins the lock, subsequent input is rejected. If a single input call already
-    owns the lock, that call is considered dispatched and cannot be retracted.
+    If a stop request wins admission, subsequent input is rejected. An admitted
+    input may finish, including its release-only cleanup. Requests never wait
+    for that input's platform calls or logging.
     """
 
     def __init__(self) -> None:
         self._lock = threading.RLock()
+        self._dispatch_lock = threading.RLock()
         self._reason: StopReason | None = None
 
     def request(self, reason: StopReason) -> bool:
@@ -45,7 +47,6 @@ class StopController:
                 raise StopExecution(self._reason)
 
     def dispatch(self, action: Callable[[], T]) -> T:
-        with self._lock:
-            if self._reason is not None:
-                raise StopExecution(self._reason)
+        with self._dispatch_lock:
+            self.checkpoint()
             return action()

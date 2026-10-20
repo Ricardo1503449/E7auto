@@ -66,7 +66,7 @@ def wait_stable_observation(
                 object=name,
                 detected=True,
                 confidence=f"{observation.confidence:.6f}",
-                roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
+                roi=f"{observation.bounds.x},{observation.bounds.y},{observation.bounds.width},{observation.bounds.height}",
                 stable=stable,
             )
             if stable >= max(minimum_stable_frames, ctx.config.timing.stable_frames):

@@ -44,8 +44,6 @@ class RuntimeContext(Generic[VisionT]):
         self.capture_seconds = 0.0
         self.vision_calls = 0
         self.vision_seconds = 0.0
-        self.normalization_count = 0
-        self.normalization_seconds = 0.0
 
 
     def prepare(self) -> None:
@@ -80,6 +78,14 @@ class RuntimeContext(Generic[VisionT]):
 
     def click(self, action: str, point: Point, **fields: object) -> None:
         return guarded_input.click(self, action, point, **fields)
+
+    def drag(self, action: str, start: Point, end: Point, *, duration_ms: int, step_ms: int,
+             frame_guard: Callable[[object], bool] | None = None,
+             step_guard: Callable[[], bool] | None = None,
+             allow_outside_client: bool = False, frame_check_ms: int = 0) -> bool:
+        return guarded_input.drag(self, action, start, end, duration_ms=duration_ms,
+                                  step_ms=step_ms, frame_guard=frame_guard, step_guard=step_guard,
+                                  allow_outside_client=allow_outside_client, frame_check_ms=frame_check_ms)
 
     def interruptible_wait(self, seconds: int) -> None:
         return guarded_input.interruptible_wait(self, seconds)

@@ -1,0 +1,52 @@
+{
+  "source_kind": "real user captures, lossless native-pixel crops",
+  "baseline_size": [
+    2322,
+    1306
+  ],
+  "actual_size": [
+    1536,
+    864
+  ],
+  "records": [
+    {
+      "file": "scroll_content_before.png",
+      "source": "run-20261016-182636-908721-9761c98428e2-scroll-before.png",
+      "source_png_sha256": "a9ca3825cd08e851e1b3b876b027ea58fadd461db53c125c52735647f05a3931",
+      "crop_client": [
+        628,
+        72,
+        629,
+        782
+      ],
+      "png_sha256": "149dd1ac2bf1fb66f91ea8320c390722f00e96b4bcbd566c06bac21fc36da595",
+      "bgr_sha256": "43267a81d6635465be2609512f590d307a8532257e57501bee10f2638fc73383"
+    },
+    {
+      "file": "scroll_content_first.png",
+      "source": "run-20261016-182636-908721-9761c98428e2-scroll-first.png",
+      "source_png_sha256": "f43c4324e940d8e17d6f7ce292a3e16ecda5b767e3a276425c516a6f28bbaa3f",
+      "crop_client": [
+        628,
+        72,
+        629,
+        782
+      ],
+      "png_sha256": "ebf3c822e30afd213e9db4fd4cd6c6fc4cfd590d9ac502da74d576e54dd8138c",
+      "bgr_sha256": "92b9f8dd7382b87ec6429ffc13cc28e16973bb5bc7e51ef2117f12bed6b322fc"
+    },
+    {
+      "file": "scroll_content_last-3.png",
+      "source": "run-20261016-182636-908721-9761c98428e2-scroll-last-3.png",
+      "source_png_sha256": "626e414e6242fc3996f659272a07ad06f4f0f0f0d584d26e01c87b8caf2d0e08",
+      "crop_client": [
+        628,
+        72,
+        629,
+        782
+      ],
+      "png_sha256": "d50ebbac5ffb0375f6013c67b4c11b34f8c340126fa130305ae98baeabd9f895",
+      "bgr_sha256": "ef3935e746387a86a2090d2837e33a127c71a1644b9c69d42c955cdbcdfc61c8"
+    }
+  ]
+}

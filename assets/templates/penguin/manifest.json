@@ -120,16 +120,11 @@
     },
     "altar_close": {
       "file": "09_altar_close.png",
-      "sha256": "3d0d8e1aac4a08641399c455414353f5a742cfdf2fe9d1344da0cb4a7bac6f30",
+      "sha256": "6d1e4da125019d67a0272363cf18a7506779b20ce03ab56cc22481c515afe0a6",
       "label": "成长祭坛：叉号及点击关闭",
       "source": {
-        "approved_candidate": "penguin-template-candidates-v2",
-        "crop": [
-          1094,
-          1235,
-          178,
-          44
-        ]
+        "record": "docs/calibration/registrations/penguin-altar_close-6d1e4da12501-4b915ac74cbd.json",
+        "record_sha256": "4b915ac74cbda65dc57efc6e91ab6c1e536d57f023b9929ebeb3d71a599f025a"
       }
     },
     "forest_back": {

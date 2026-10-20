@@ -1,163 +1,185 @@
 from __future__ import annotations
-from math import ceil, floor, isfinite
+
+from math import ceil, isfinite, sqrt
 import cv2
 import numpy as np
-from e7auto.core.types import Rect
-from e7auto.vision.frames import AdaptedFrame
+from e7auto.configuration.models import ScrollConfig
 from e7auto.core.ports import Frame
-from e7auto.features.shop.contracts import ScrollMovementObservation, ScrollOverlapObservation, SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION, SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX
-_SCROLL_OVERLAP_BORDER = 2
-_SCROLL_OVERLAP_MINIMUM_STDDEV = 8.0
-_SCROLL_OVERLAP_MINIMUM_SCORE = 0.75
-_SCROLL_OVERLAP_REQUIRED_BLOCKS = 3
-def _inventory_gray(frame: Frame | AdaptedFrame, roi: Rect) -> np.ndarray:
-    if isinstance(frame, AdaptedFrame):
-        source = frame.normalized_roi(roi)
-    else:
-        height, width = frame.shape[:2]
-        if roi.x < 0 or roi.y < 0 or roi.right > width or roi.bottom > height:
-            raise ValueError(f"Scroll ROI outside frame: {roi} vs {width}x{height}")
-        source = frame[roi.y : roi.bottom, roi.x : roi.right]
-    if source.ndim != 3 or source.shape[2] not in (3, 4):
-        raise ValueError("Scroll comparison frame must have 3 or 4 channels")
-    conversion = cv2.COLOR_BGRA2GRAY if source.shape[2] == 4 else cv2.COLOR_BGR2GRAY
-    return cv2.cvtColor(source, conversion)
+from e7auto.core.types import Rect
+from e7auto.features.shop.contracts import ScrollMovementObservation
+from e7auto.vision.frames import FrameView, frame_view
 
 
-def _measure_gray_movement(
-    before_gray: np.ndarray,
-    after_gray: np.ndarray,
-    difference_threshold: int,
-    *,
-    scale_x: float = 1.0,
-    scale_y: float = 1.0,
-) -> ScrollMovementObservation:
-    difference = cv2.absdiff(before_gray, after_gray)
-    phase_shift, phase_response = cv2.phaseCorrelate(
-        before_gray.astype(np.float32),
-        after_gray.astype(np.float32),
-    )
-    return ScrollMovementObservation(
-        mean_absolute_difference=float(np.mean(difference)),
-        changed_fraction=float(np.mean(difference > difference_threshold)),
-        maximum_difference=int(np.max(difference)),
-        phase_shift_x=float(phase_shift[0] * scale_x),
-        phase_shift_y=float(phase_shift[1] * scale_y),
-        phase_response=float(phase_response),
-    )
+def _content_gray(frame: Frame | FrameView, roi: Rect) -> np.ndarray:
+    return cv2.cvtColor(frame_view(frame).crop(roi).raw, cv2.COLOR_BGR2GRAY)
 
 
-def measure_inventory_scroll(
-    before: Frame,
-    after: Frame,
-    roi: Rect,
-    difference_threshold: int,
-) -> ScrollMovementObservation:
-    if before.shape != after.shape:
-        raise ValueError(
-            f"Scroll comparison frames must have identical shapes: {before.shape} != {after.shape}"
-        )
-    if difference_threshold <= 0:
-        raise ValueError("Scroll difference threshold must be positive")
-
-    return _measure_gray_movement(
-        _inventory_gray(before, roi),
-        _inventory_gray(after, roi),
-        difference_threshold,
-    )
+def _validate_pair(before: Frame | FrameView, after: Frame | FrameView) -> None:
+    first, second = frame_view(before), frame_view(after)
+    if first.shape != second.shape or first.transform != second.transform or first.origin != second.origin:
+        raise ValueError("Scroll comparison frames must have identical shapes and client geometry")
 
 
-def measure_inventory_scroll_stability(
-    before: Frame,
-    after: Frame,
-    roi: Rect,
-    difference_threshold: int,
-    downsample_factor: int,
-) -> ScrollMovementObservation:
-    if before.shape != after.shape:
-        raise ValueError(
-            f"Scroll comparison frames must have identical shapes: {before.shape} != {after.shape}"
-        )
-    if difference_threshold <= 0:
-        raise ValueError("Scroll difference threshold must be positive")
-    if downsample_factor <= 0:
-        raise ValueError("Scroll stability downsample factor must be positive")
-
-    before_gray = _inventory_gray(before, roi)
-    after_gray = _inventory_gray(after, roi)
-    width = max(1, before_gray.shape[1] // downsample_factor)
-    height = max(1, before_gray.shape[0] // downsample_factor)
-    size = (width, height)
-    before_small = cv2.resize(before_gray, size, interpolation=cv2.INTER_AREA)
-    after_small = cv2.resize(after_gray, size, interpolation=cv2.INTER_AREA)
-    return _measure_gray_movement(
-        before_small,
-        after_small,
-        difference_threshold,
-        scale_x=before_gray.shape[1] / width,
-        scale_y=before_gray.shape[0] / height,
-    )
+def _even_dft_size(size: int) -> int:
+    result = cv2.getOptimalDFTSize(size)
+    while result % 2:
+        result = cv2.getOptimalDFTSize(result + 1)
+    return result
 
 
-def prepare_scroll_overlap_reference(
-    frame: Frame | AdaptedFrame, roi: Rect, downsample_factor: int,
-) -> np.ndarray:
-    """Prepare only on demand; the caller owns this scroll's reference cache."""
-    if downsample_factor <= 0:
-        raise ValueError("Scroll overlap downsample factor must be positive")
-    gray = _inventory_gray(frame, roi)
-    size = (max(1, roi.width // downsample_factor), max(1, roi.height // downsample_factor))
-    return cv2.resize(gray, size, interpolation=cv2.INTER_AREA).astype(np.float32)
+def _phase_candidates(before: np.ndarray, after: np.ndarray, count: int) -> list[tuple[float, float, float]]:
+    """One content-only surface proposes translations; native pixels verify them."""
+    height, width = (_even_dft_size(n) for n in before.shape)
+    spectra = []
+    for gray in (before, after):
+        padded = np.zeros((height, width), np.float32)
+        padded[:gray.shape[0], :gray.shape[1]] = gray
+        spectra.append(cv2.dft(padded, flags=cv2.DFT_COMPLEX_OUTPUT))
+    product = cv2.mulSpectrums(spectra[0], spectra[1], 0, conjB=True)
+    magnitude = cv2.magnitude(product[:, :, 0], product[:, :, 1])
+    product /= np.maximum(magnitude[:, :, None], np.finfo(np.float32).eps)
+    surface = cv2.idft(product, flags=cv2.DFT_REAL_OUTPUT | cv2.DFT_SCALE)
+    surface = np.roll(surface, (height // 2, width // 2), axis=(0, 1))
+    peaks = surface.copy()
+    candidates = []
+    for _ in range(count):
+        _, maximum, _, (x, y) = cv2.minMaxLoc(peaks)
+        if not isfinite(maximum) or maximum <= 0:
+            break
+        left, right = max(0, x - 2), min(width, x + 3)
+        top, bottom = max(0, y - 2), min(height, y + 3)
+        weights = surface[top:bottom, left:right]
+        response = float(weights.sum())
+        if response > np.finfo(np.float32).eps:
+            rows, columns = np.mgrid[top:bottom, left:right]
+            dx = width / 2 - float(np.sum(weights * columns) / response)
+            dy = height / 2 - float(np.sum(weights * rows) / response)
+            if all(isfinite(v) for v in (dx, dy, response)):
+                candidates.append((dx, dy, response))
+        peaks[max(0, y - 5):y + 6, max(0, x - 5):x + 6] = -np.inf
+    return candidates
 
 
-def verify_scroll_overlap(
-    reference: np.ndarray,
-    current: Frame | AdaptedFrame,
-    roi: Rect,
-    shift_x: float,
-    shift_y: float,
-) -> ScrollOverlapObservation:
-    """Check the proposed translation, without searching for another match."""
-    if not all(isfinite(value) for value in (shift_x, shift_y)):
-        return ScrollOverlapObservation(False, "non_finite_shift", 0.0)
-    overlap = max(0.0, 1.0 - abs(shift_y) / roi.height)
-    if abs(shift_x) > SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX:
-        return ScrollOverlapObservation(False, "horizontal_shift", overlap)
-    if overlap < SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION:
-        return ScrollOverlapObservation(False, "insufficient_overlap", overlap)
+def _has_content_texture(block: np.ndarray, minimum: float) -> bool:
+    """Preserve the float32 std gate for native uint8 pixels cast to float32.
 
-    height, width = reference.shape
-    dx, dy = shift_x * width / roi.width, shift_y * height / roi.height
-    border = _SCROLL_OVERLAP_BORDER
-    left, right = max(0, ceil(dx)) + border, min(width, floor(width + dx)) - border
-    top, bottom = max(0, ceil(dy)) + border, min(height, floor(height + dy)) - border
-    if right - left < 2 or bottom - top < 2:
-        return ScrollOverlapObservation(False, "insufficient_overlap", overlap)
+    C++ moments avoid NumPy's full-size deviation buffer. A conservative bound
+    covers float32 mean/reduction, subtraction, square and sqrt rounding. Only
+    decisions outside that interval are final; borderline blocks use the exact
+    existing statistic. No empirical epsilon is used to move the threshold.
+    """
+    unit32 = float(np.finfo(np.float32).eps) / 2
+    unit64 = float(np.finfo(np.float64).eps) / 2
+    count32 = (block.size + 2) * unit32
+    count64 = (block.size + 8) * unit64
+    if block.dtype != np.float32 or count32 >= 0.5:
+        return float(block.std()) >= minimum
+    mean, deviation = cv2.meanStdDev(block)
+    mean, deviation = float(mean[0, 0]), float(deviation[0, 0])
+    if not isfinite(mean) or not isfinite(deviation):
+        return float(block.std()) >= minimum
+    gamma32 = count32 / (1 - count32)
+    gamma64 = count64 / (1 - count64)
+    # Raw gray values are in [0,255]. Double moments need an absolute bound
+    # because variance subtracts two moments which can be almost equal.
+    variance_error = (4 * gamma64 + 8 * unit64) * 255**2
+    mean_error = gamma32 * (abs(mean) + gamma64 * 255) + gamma64 * 255
+    variance = deviation**2
+    lower = sqrt(max(0.0, variance - variance_error) * (1 - gamma32) * (1 - unit32)**3) * (1 - unit32)
+    upper = sqrt((variance + variance_error + mean_error**2) * (1 + gamma32) * (1 + unit32)**3) * (1 + unit32)
+    if lower * (1 - 8 * unit64) >= minimum:
+        return True
+    if upper * (1 + 8 * unit64) < minimum:
+        return False
+    return float(block.std()) >= minimum
 
-    # AdaptedFrame reuses its normalized ROI, including work done by the main gate.
-    gray = _inventory_gray(current, roi)
-    current_small = cv2.resize(gray, (width, height), interpolation=cv2.INTER_AREA).astype(np.float32)
-    aligned = cv2.warpAffine(
-        reference, np.array([[1, 0, dx], [0, 1, dy]], dtype=np.float32),
-        (width, height), flags=cv2.INTER_LINEAR,
-    )
-    first = aligned[top:bottom, left:right]
-    second = current_small[top:bottom, left:right]
+
+def _native_content_scores(before: np.ndarray, after: np.ndarray, dx: float, dy: float,
+                           config: ScrollConfig, scale_x: float, scale_y: float) -> tuple[float | None, ...]:
+    """Check four native blocks with a bounded allowance for local raster alignment."""
+    if abs(dx / scale_x) > config.maximum_horizontal_shift_px:
+        return ()
+    height, width = before.shape
+    if 1 - abs(dy) / height < config.minimum_overlap_fraction:
+        return ()
+    ix, iy = round(dx), round(dy)
+    rx = max(1, ceil(config.content_alignment_tolerance_px * scale_x))
+    ry = max(1, ceil(config.content_alignment_tolerance_px * scale_y))
+    left, right = max(0, -ix) + rx, min(width, width - ix) - rx
+    top, bottom = max(0, -iy) + ry, min(height, height - iy) - ry
+    if right - left < 4 or bottom - top < 4:
+        return ()
     scores: list[float | None] = []
-    passed = 0
-    for first_row, second_row in zip(np.array_split(first, 2), np.array_split(second, 2)):
-        for first_block, second_block in zip(
-            np.array_split(first_row, 2, axis=1), np.array_split(second_row, 2, axis=1),
-        ):
-            if min(float(first_block.std()), float(second_block.std())) < _SCROLL_OVERLAP_MINIMUM_STDDEV:
-                scores.append(None)
-                continue
-            score = float(cv2.matchTemplate(second_block, first_block, cv2.TM_CCOEFF_NORMED)[0, 0])
-            scores.append(score if isfinite(score) else None)
-            if isfinite(score) and score >= _SCROLL_OVERLAP_MINIMUM_SCORE:
-                passed += 1
-    accepted = passed >= _SCROLL_OVERLAP_REQUIRED_BLOCKS
-    return ScrollOverlapObservation(
-        accepted, "matched" if accepted else "insufficient_matching_blocks",
-        overlap, tuple(scores), passed,
+    failed = 0
+    for y0, y1 in ((top, (top + bottom) // 2), ((top + bottom) // 2, bottom)):
+        for x0, x1 in ((left, (left + right) // 2), ((left + right) // 2, right)):
+            reference = before[y0:y1, x0:x1]
+            search = after[y0 + iy - ry:y1 + iy + ry, x0 + ix - rx:x1 + ix + rx]
+            score = None
+            if (_has_content_texture(reference, config.minimum_content_stddev)
+                    and _has_content_texture(search, config.minimum_content_stddev)):
+                _, value, _, (x, _) = cv2.minMaxLoc(cv2.matchTemplate(search, reference, cv2.TM_CCOEFF_NORMED))
+                actual_dx = ix + x - rx
+                if isfinite(value) and abs(actual_dx / scale_x) <= config.maximum_horizontal_shift_px:
+                    score = float(value)
+            scores.append(score)
+            if score is None or score < config.minimum_content_score:
+                failed += 1
+                if failed == 2:
+                    return tuple(scores)
+    return tuple(scores)
+
+
+def measure_inventory_scroll(before: Frame | FrameView, after: Frame | FrameView, roi: Rect,
+                             difference_threshold: int, *, config: ScrollConfig) -> ScrollMovementObservation:
+    _validate_pair(before, after)
+    if difference_threshold <= 0:
+        raise ValueError("Scroll difference threshold must be positive")
+    first, second = _content_gray(before, roi), _content_gray(after, roi)
+    difference = cv2.absdiff(first, second)
+    transform = frame_view(before).transform
+    candidates = _phase_candidates(first, second, 4)
+    first_float, second_float = first.astype(np.float32), second.astype(np.float32)
+    reason = "insufficient_matching_content"
+    verified = False
+    chosen = candidates[0] if candidates else (0.0, 0.0, 0.0)
+    scores: tuple[float | None, ...] = ()
+    tolerance = config.content_alignment_tolerance_px * 2
+    # Zero motion is a competing explanation, not assumed upward movement.
+    for candidate in [*candidates, (0.0, 0.0, 0.0)]:
+        dx, dy, _ = candidate
+        current_scores = _native_content_scores(first_float, second_float, dx, dy, config, transform.scale_x, transform.scale_y)
+        if sum(score is not None and score >= config.minimum_content_score for score in current_scores) < 3:
+            continue
+        if not verified:
+            chosen, scores = candidate, current_scores
+            verified, reason = True, "matched"
+        elif (abs(dx - chosen[0]) / transform.scale_x > tolerance
+              or abs(dy - chosen[1]) / transform.scale_y > tolerance):
+            verified, reason = False, "ambiguous_content"
+            break
+    return ScrollMovementObservation(
+        float(difference.mean()), float(np.mean(difference > difference_threshold)), int(difference.max()),
+        chosen[0] / transform.scale_x, chosen[1] / transform.scale_y, chosen[2], verified, reason, scores,
+    )
+
+
+def measure_inventory_scroll_stability(before: Frame | FrameView, after: Frame | FrameView, roi: Rect,
+                                      difference_threshold: int, downsample_factor: int) -> ScrollMovementObservation:
+    _validate_pair(before, after)
+    if difference_threshold <= 0 or downsample_factor <= 0:
+        raise ValueError("Scroll thresholds and downsample factor must be positive")
+    first, second = _content_gray(before, roi), _content_gray(after, roi)
+    height, width = (max(1, n // downsample_factor) for n in first.shape)
+    size = (width, height)
+    a = cv2.resize(first, size, interpolation=cv2.INTER_AREA)
+    b = cv2.resize(second, size, interpolation=cv2.INTER_AREA)
+    difference = cv2.absdiff(a, b)
+    proposals = _phase_candidates(a, b, 1)
+    dx, dy, response = proposals[0] if proposals else (0.0, 0.0, 0.0)
+    transform = frame_view(before).transform
+    return ScrollMovementObservation(
+        float(difference.mean()), float(np.mean(difference > difference_threshold)), int(difference.max()),
+        dx * first.shape[1] / width / transform.scale_x,
+        dy * first.shape[0] / height / transform.scale_y, response,
     )

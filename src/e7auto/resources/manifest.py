@@ -9,6 +9,7 @@ import struct
 
 def load_template_manifest(
     path: Path, baseline: tuple[int, int], *, prefix: str = "",
+    keys: frozenset[str] | None = None,
 ) -> tuple[dict[str, Path], dict[str, tuple[int, int]]]:
     try:
         manifest = json.loads(path.read_text(encoding="utf-8"))
@@ -17,6 +18,10 @@ def load_template_manifest(
         entries = manifest["templates"]
         if not isinstance(entries, dict) or not entries:
             raise ValueError("template catalog must not be empty")
+        if keys is not None:
+            if not keys or keys - entries.keys():
+                raise ValueError(f"unknown or empty requested template set: {keys - entries.keys()}")
+            entries = {name: entry for name, entry in entries.items() if name in keys}
         paths, sizes = {}, {}
         directory = path.resolve().parent
         for name, entry in entries.items():

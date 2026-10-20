@@ -1,5 +1,6 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from hashlib import sha256
 import cv2
 import numpy as np
 from e7auto.configuration.models import AppConfig
@@ -8,6 +9,14 @@ from e7auto.core.ports import Frame
 class TemplateData:
     image: Frame
     mask: np.ndarray | None = None
+    identity: bytes = field(init=False, repr=False)
+
+    def __post_init__(self):
+        self.image.setflags(write=False)
+        if self.mask is not None:
+            self.mask.setflags(write=False)
+        object.__setattr__(self, 'identity', sha256(self.image.tobytes() +
+                           (b'' if self.mask is None else (self.mask > 0).tobytes())).digest())
 
 
 class TemplateRepository:

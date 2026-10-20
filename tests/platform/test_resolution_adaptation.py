@@ -11,7 +11,7 @@ import e7auto.platform.windows as platform_windows
 from e7auto.configuration.models import DisplayConfig
 from e7auto.core.types import Point, Rect, Size
 from e7auto.core.domain import StopReason
-from e7auto.vision.frames import AdaptedFrame, CoordinateTransform, adapt_frame, initial_client_size
+from e7auto.vision.frames import FrameView, CoordinateTransform, adapt_frame, initial_client_size
 from e7auto.platform.windows import Win32WindowService, WindowOperationError
 from e7auto.core.ports import DisplayGeometry, WindowRef
 from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
@@ -32,25 +32,26 @@ def test_reference_path_is_identity_and_non_reference_target_uses_width_fraction
     assert adapt_frame(frame, transform) is frame
 
 
-def test_non_reference_frame_normalizes_each_baseline_roi_once() -> None:
+def test_non_reference_frame_crops_native_pixels_without_resizing() -> None:
     frame = np.zeros((60, 75, 4), dtype=np.uint8)
-    adapted = AdaptedFrame(frame, CoordinateTransform(Size(100, 80), Size(75, 60)))
+    adapted = FrameView(frame, CoordinateTransform(Size(100, 80), Size(75, 60)))
     roi = Rect(10, 10, 20, 20)
 
-    first = adapted.normalized_roi(roi)
-    second = adapted.normalized_roi(roi)
+    first = adapted.crop(roi)
+    second = adapted.crop(roi)
 
-    assert first.shape == (20, 20, 3)
-    assert second is first
-    assert adapted.normalization_count == 1
+    assert first.shape == (16,16,3)
+    assert np.shares_memory(first.raw,frame)
+    np.testing.assert_array_equal(first.raw,second.raw)
 
 
-def test_non_reference_template_match_returns_baseline_anchor() -> None:
+def test_non_reference_template_match_returns_client_anchor() -> None:
     template = np.arange(75, dtype=np.uint8).reshape(5, 5, 3)
     baseline_frame = np.zeros((80, 100, 3), dtype=np.uint8)
     baseline_frame[22:27, 33:38] = template
-    actual_frame = cv2.resize(baseline_frame, (200, 160), interpolation=cv2.INTER_NEAREST)
-    adapted = AdaptedFrame(
+    actual_frame = np.zeros((160,200,3),np.uint8)
+    actual_frame[44:54,66:76] = cv2.resize(template,(10,10),interpolation=cv2.INTER_LINEAR)
+    adapted = FrameView(
         actual_frame,
         CoordinateTransform(Size(100, 80), Size(200, 160)),
     )
@@ -63,7 +64,8 @@ def test_non_reference_template_match_returns_baseline_anchor() -> None:
     found = vision.match(adapted, "needle", Rect(20, 10, 40, 30), 0.99)
 
     assert found is not None
-    assert found.anchor == Point(35, 24)
+    assert found.anchor == Point(71,49)
+    assert adapted.transform.point(found.anchor) is found.anchor
 
 
 def test_display_geometry_cross_checks_current_mode_and_skips_mode_query_when_cheap(
@@ -208,7 +210,7 @@ def test_non_reference_run_scales_input_overlay_and_wraps_capture() -> None:
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
     assert windows.fit_calls[0][0] == Size(150, 120)
     assert windows.resize_calls == [Size(150, 120)]
-    assert isinstance(vision.scan_frames[0], AdaptedFrame)
+    assert isinstance(vision.scan_frames[0], FrameView)
     transform = CoordinateTransform(config.baseline_client_size, Size(150, 120))
     assert [point for action, point, _ in inputs.actions if action == "click"] == [
         transform.point(config.points["shop_icon"]),

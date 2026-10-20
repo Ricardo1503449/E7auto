@@ -17,12 +17,28 @@ class _DigitMatch:
         return self.confidence - self.runner_up_confidence
 
 
+@dataclass(frozen=True, slots=True)
+class _Glyph:
+    mask: np.ndarray
+    dilated: np.ndarray
+    pixels: int
+
+    @classmethod
+    def prepare(cls, image: np.ndarray) -> _Glyph:
+        mask = (image > 0).astype(np.uint8)
+        dilated = cv2.dilate(mask, _GLYPH_KERNEL)
+        mask.setflags(write=False)
+        dilated.setflags(write=False)
+        return cls(mask, dilated, int(np.count_nonzero(mask)))
+
+
 class DigitMatcher:
     """Shared glyph templates; each caller retains its own color and confidence policy."""
     def __init__(self, templates, template_keys):
         self._templates = templates
         self._template_keys = frozenset(template_keys)
         self._variants = None
+        self._prepared_variants = None
 
     @staticmethod
     def neutral_bright_mask(image: Frame) -> np.ndarray:
@@ -55,75 +71,58 @@ class DigitMatcher:
 
 
     @staticmethod
-    def _glyph_similarity(left: np.ndarray, right: np.ndarray) -> float:
-        left_mask = (left > 0).astype(np.uint8)
-        right_mask = (right > 0).astype(np.uint8)
-        union = np.count_nonzero(left_mask | right_mask)
-        if union == 0:
+    def _glyph_similarity(left: _Glyph, right: _Glyph) -> float:
+        union = np.count_nonzero(left.mask | right.mask)
+        if union == 0 or left.pixels == 0 or right.pixels == 0:
             return 0.0
-        left_pixels = np.count_nonzero(left_mask)
-        right_pixels = np.count_nonzero(right_mask)
-        if left_pixels == 0 or right_pixels == 0:
-            return 0.0
-        intersection = np.count_nonzero(left_mask & right_mask)
-        strict_overlap = float(intersection / union)
-
-        left_coverage = float(
-            np.count_nonzero(left_mask & cv2.dilate(right_mask, _GLYPH_KERNEL))
-            / left_pixels
-        )
-        right_coverage = float(
-            np.count_nonzero(right_mask & cv2.dilate(left_mask, _GLYPH_KERNEL))
-            / right_pixels
-        )
+        strict_overlap = float(np.count_nonzero(left.mask & right.mask) / union)
+        left_coverage = float(np.count_nonzero(left.mask & right.dilated) / left.pixels)
+        right_coverage = float(np.count_nonzero(right.mask & left.dilated) / right.pixels)
         tolerant_overlap = (
             2.0 * left_coverage * right_coverage / (left_coverage + right_coverage)
-            if left_coverage + right_coverage
-            else 0.0
+            if left_coverage + right_coverage else 0.0
         )
         return 0.60 * strict_overlap + 0.40 * tolerant_overlap
 
-
-    @classmethod
-    def _aligned_glyph_similarity(cls, glyph: np.ndarray, template: np.ndarray) -> float:
-        best = 0.0
+    @staticmethod
+    def _shifted_glyphs(glyph: np.ndarray) -> tuple[_Glyph, ...]:
         height, width = glyph.shape
+        variants = []
         for offset_y in range(-1, 2):
             for offset_x in range(-1, 2):
                 shifted = np.zeros_like(glyph)
-                destination_x = max(0, offset_x)
-                destination_y = max(0, offset_y)
-                source_x = max(0, -offset_x)
-                source_y = max(0, -offset_y)
-                copy_width = width - abs(offset_x)
-                copy_height = height - abs(offset_y)
-                shifted[
-                    destination_y : destination_y + copy_height,
-                    destination_x : destination_x + copy_width,
-                ] = glyph[
-                    source_y : source_y + copy_height,
-                    source_x : source_x + copy_width,
-                ]
-                best = max(best, cls._glyph_similarity(shifted, template))
-        return best
+                dx, dy = max(0, offset_x), max(0, offset_y)
+                sx, sy = max(0, -offset_x), max(0, -offset_y)
+                w, h = width - abs(offset_x), height - abs(offset_y)
+                shifted[dy:dy+h, dx:dx+w] = glyph[sy:sy+h, sx:sx+w]
+                variants.append(_Glyph.prepare(shifted))
+        return tuple(variants)
 
+    @staticmethod
+    def _prepare_variants(variants):
+        return {digit: tuple((_Glyph.prepare(mask), width) for mask, width in items)
+                for digit, items in variants.items()}
 
-    @classmethod
     def best_match(
-        cls,
+        self,
         glyph: np.ndarray,
         template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]],
+        *, width_scale: float = 1.,
     ) -> _DigitMatch:
-        normalized = cls._normalize_glyph(glyph)
+        shifted = self._shifted_glyphs(self._normalize_glyph(glyph))
+        # Only repository-owned, immutable variants are cached across calls.
+        prepared = (self._prepared_variants
+                    if self._variants is not None and template_variants is self._variants[0]
+                    else self._prepare_variants(template_variants))
         ys, xs = np.nonzero(glyph)
         glyph_width = int(xs.max() - xs.min() + 1) if len(xs) else 0
         class_scores: list[tuple[float, int, str]] = []
-        for digit, variants in template_variants.items():
+        for digit, variants in prepared.items():
             best_confidence = 0.0
             best_width_error = 2**31 - 1
-            for template_mask, template_width in variants:
-                confidence = cls._aligned_glyph_similarity(normalized, template_mask)
-                width_error = abs(glyph_width - template_width)
+            for template, template_width in variants:
+                confidence = max(self._glyph_similarity(item, template) for item in shifted)
+                width_error = abs(glyph_width - max(1,round(template_width*width_scale)))
                 if confidence > best_confidence or (
                     confidence == best_confidence and width_error < best_width_error
                 ):
@@ -135,12 +134,7 @@ class DigitMatcher:
             return _DigitMatch("", 0.0, 0.0, 0)
         best_confidence, best_width_error, best_digit = class_scores[0]
         runner_up_confidence = class_scores[1][0] if len(class_scores) > 1 else 0.0
-        return _DigitMatch(
-            best_digit,
-            best_confidence,
-            runner_up_confidence,
-            best_width_error,
-        )
+        return _DigitMatch(best_digit, best_confidence, runner_up_confidence, best_width_error)
 
 
     @classmethod
@@ -162,11 +156,14 @@ class DigitMatcher:
 
 
     def template_variants(
-        self,
+        self, scale_x: float = 1.,
     ) -> tuple[
         dict[str, tuple[tuple[np.ndarray, int], ...]],
         tuple[int, ...],
     ]:
+        if scale_x != 1.:
+            variants,widths = self.template_variants()
+            return (variants,tuple(max(1,round(w*scale_x)) for w in widths))
         if self._variants is not None:
             return self._variants
         template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]] = {}
@@ -191,5 +188,9 @@ class DigitMatcher:
                 )
                 template_widths.append(foreground_width)
             template_variants[digit] = tuple(variants)
+        for variants in template_variants.values():
+            for mask, _ in variants:
+                mask.setflags(write=False)
+        self._prepared_variants = self._prepare_variants(template_variants)
         self._variants = template_variants, tuple(template_widths)
         return self._variants

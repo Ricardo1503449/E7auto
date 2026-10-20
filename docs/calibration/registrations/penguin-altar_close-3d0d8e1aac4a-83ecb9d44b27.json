@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "feature": "penguin",
+  "key": "altar_close",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\artifacts\\tasks\\penguin\\20260916-145543-legacy-penguin-template-candidates-v2-da7d6a8b\\inputs\\source_crops\\09_altar_close.png",
+  "original_sha256": "05d505074322c56d35958fb6969d8bc764ad8f6689d1b18f3127ff3a7a16010b",
+  "crop": [
+    0,
+    0,
+    178,
+    44
+  ],
+  "editing_basis": "Restore exact pre-task approved PNG bytes after user required review before activation. No new edge candidate is activated.",
+  "restored_png_sha256": "3d0d8e1aac4a08641399c455414353f5a742cfdf2fe9d1344da0cb4a7bac6f30",
+  "previous_legacy_source": {
+    "approved_candidate": "penguin-template-candidates-v2",
+    "crop": [
+      1094,
+      1235,
+      178,
+      44
+    ]
+  },
+  "validation_report": "D:\\E7auto\\artifacts\\tasks\\common\\20261001-182857-five-text-template-edges-2b0766f3\\results\\validation.json",
+  "validation_report_sha256": "5b26027d4f55238e8a6ecc00bd2d3576cefe3b23783fe00a280474ff1b32fed1",
+  "validation_reused": "The old-template half of the already completed paired validation remains valid; no image rerun.",
+  "review_status": "restore_original_only_new_candidate_pending_user_review"
+}

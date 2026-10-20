@@ -27,6 +27,72 @@ def configuration(tmp_path):
     return tmp_path / "internal.yaml", raw
 
 
+@pytest.mark.parametrize('value',[0,-1,True,1.5,'64',None])
+def test_candidate_cache_budget_rejects_invalid_values(configuration,value):
+    path,raw=configuration
+    raw['vision']['candidate_cache_mib']=value
+    path.write_text(yaml.safe_dump(raw),encoding='utf-8')
+    with pytest.raises(ConfigError,match='vision.candidate_cache_mib'):
+        load_config(path)
+
+
+def test_candidate_cache_budget_defaults_to_64_mib(configuration):
+    path,raw=configuration
+    raw['vision'].pop('candidate_cache_mib')
+    path.write_text(yaml.safe_dump(raw),encoding='utf-8')
+    assert load_config(path).candidate_cache_mib==64
+
+
+@pytest.mark.parametrize('value', [None, 0, -1, True, 250.5, '1000', float('inf')])
+def test_invalid_capture_frame_timeout_is_rejected(configuration, value):
+    path, raw = configuration
+    raw['timing']['capture_frame_timeout_ms'] = value
+    path.write_text(yaml.safe_dump(raw), encoding='utf-8')
+    with pytest.raises(ConfigError, match='timing.capture_frame_timeout_ms'):
+        load_config(path)
+
+
+@pytest.mark.parametrize('value,expected', [(750, 750), (1000, 1000), (None, 1000)])
+def test_capture_frame_timeout_configuration_and_legacy_default(configuration, value, expected):
+    path, raw = configuration
+    if value is None:
+        raw['timing'].pop('capture_frame_timeout_ms', None)
+    else:
+        raw['timing']['capture_frame_timeout_ms'] = value
+    path.write_text(yaml.safe_dump(raw), encoding='utf-8')
+    assert load_config(path).timing.capture_frame_timeout_ms == expected
+
+
+CAPTURE_RECOVERY_DEFAULTS = {
+    'capture_recovery_timeout_ms': 3000,
+    'capture_rebuild_cooldown_ms': 60000,
+    'capture_rebuild_window_ms': 600000,
+    'capture_rebuild_max_attempts': 3,
+}
+
+
+@pytest.mark.parametrize('field', CAPTURE_RECOVERY_DEFAULTS)
+@pytest.mark.parametrize('value', [None, 0, -1, True, 250.5, '1000', float('inf')])
+def test_invalid_capture_recovery_setting_is_rejected(configuration, field, value):
+    path, raw = configuration
+    raw['timing'][field] = value
+    path.write_text(yaml.safe_dump(raw), encoding='utf-8')
+    with pytest.raises(ConfigError, match=f'timing.{field}'):
+        load_config(path)
+
+
+@pytest.mark.parametrize('field,default', CAPTURE_RECOVERY_DEFAULTS.items())
+@pytest.mark.parametrize('explicit', [False, True])
+def test_capture_recovery_setting_override_and_legacy_default(configuration, field, default, explicit):
+    path, raw = configuration
+    if explicit:
+        raw['timing'][field] = default + 1
+    else:
+        raw['timing'].pop(field, None)
+    path.write_text(yaml.safe_dump(raw), encoding='utf-8')
+    assert getattr(load_config(path).timing, field) == default + int(explicit)
+
+
 @pytest.mark.parametrize("feature", ["shop", "penguin"])
 @pytest.mark.parametrize("name", ["color", "structure"])
 @pytest.mark.parametrize("value", [None, True, 0, 1.01, float("nan"), float("inf")])

@@ -32,21 +32,9 @@ class ScrollMovementObservation:
     phase_shift_x: float
     phase_shift_y: float
     phase_response: float
-
-
-SCROLL_OVERLAP_MINIMUM_HEIGHT_FRACTION = 0.50
-
-
-SCROLL_OVERLAP_MAXIMUM_HORIZONTAL_SHIFT_PX = 4.0
-
-
-@dataclass(frozen=True, slots=True)
-class ScrollOverlapObservation:
-    accepted: bool
-    reason: str
-    overlap_height_fraction: float
-    block_scores: tuple[float | None, ...] = ()
-    passed_blocks: int = 0
+    content_verified: bool = False
+    content_reason: str = "not_checked"
+    content_scores: tuple[float | None, ...] = ()
 
 
 class PurchaseOutcome(str, Enum):
@@ -88,12 +76,6 @@ class ShopVisionPort(Protocol):
         before: object,
         after: object,
     ) -> ScrollMovementObservation: ...
-
-    def prepare_scroll_overlap_reference(self, frame: object) -> object: ...
-
-    def verify_scroll_overlap(
-        self, reference: object, current: object, shift_x: float, shift_y: float,
-    ) -> ScrollOverlapObservation: ...
 
     def sky_stone_balance(self, frame: object) -> SkyStoneBalanceObservation | None: ...
 

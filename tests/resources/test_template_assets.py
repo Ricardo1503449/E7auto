@@ -271,7 +271,13 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
         }
     entry = manifest["template"]
     assert entry["source"] == "insufficient_gold"
-    output_path = TEMPLATE_DIR / entry["output_path"]
+    catalog = yaml.safe_load((TEMPLATE_DIR / "shop/manifest.json").read_text(encoding="utf-8"))
+    registered = catalog["templates"]["insufficient_funds"]
+    current_source = yaml.safe_load((ROOT / registered["source"]["record"]).read_text(encoding="utf-8"))
+    assert current_source["feature"] == "shop"
+    assert current_source["key"] == "insufficient_funds"
+    assert current_source["approved_candidate_sha256"] == registered["sha256"]
+    output_path = TEMPLATE_DIR / "shop" / registered["file"]
     output = read_png(output_path)
     assert output.shape == (
         entry["output_size"]["height"],
@@ -279,7 +285,8 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
         4,
     )
     assert set(np.unique(output[:, :, 3])) == {0, 255}
-    assert np.count_nonzero(output[:, :, 3]) == entry["mask"]["foreground_pixels"]
+    # The historical source describes the original mask, not later approved repairs.
+    assert np.count_nonzero(output[:, :, 3]) == current_source["mask_foreground_pixels"]
     assert sum(entry["mask"]["component_areas"]) == entry["mask"]["foreground_pixels"]
     assert manifest["positive_evidence"]["confidence"] >= 0.999
 

@@ -509,7 +509,8 @@ def _run_scroll(args: argparse.Namespace) -> tuple[dict[str, object], int]:
         )
     cursor_before = tuple(int(value) for value in win32api.GetCursorPos())
     capture = _capture_service(args.capture_backend)
-    inputs = Win32WindowMessageInputService()
+    inputs = (Win32WindowMessageInputService(on_input_complete=capture.mark_input_complete)
+              if hasattr(capture, "mark_input_complete") else Win32WindowMessageInputService())
     events_sent = 0
     last_input_sent_at: float | None = None
     initial_observation_wait_ms = 0
@@ -644,7 +645,8 @@ def _run_navigation(args: argparse.Namespace) -> tuple[dict[str, object], int]:
     config, vision, windows, window, bounds, foreground = _base_context(args)
     cursor_before = tuple(int(value) for value in win32api.GetCursorPos())
     capture = _capture_service(args.capture_backend)
-    inputs = Win32WindowMessageInputService()
+    inputs = (Win32WindowMessageInputService(on_input_complete=capture.mark_input_complete)
+              if hasattr(capture, "mark_input_complete") else Win32WindowMessageInputService())
     events_sent = 0
     try:
         startup_ms = _warm_capture(

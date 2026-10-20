@@ -103,10 +103,10 @@
     },
     "network_retry": {
       "file": "network/network_retry.png",
-      "sha256": "7c41faa6972664f78730effb252138b1765fa92871c1154e56e10dfc37360969",
+      "sha256": "8bd057a573997a3d6b661e860051a1e470a24ef94ecb4c1be5a819737bb0f407",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-network_retry-8bd057a57399-e1bda038a8dd.json",
+        "record_sha256": "e1bda038a8dd48f7296ee157e8d04566d88ce0eeeb5be9dc84e2469e6654cf2a"
       }
     }
   }

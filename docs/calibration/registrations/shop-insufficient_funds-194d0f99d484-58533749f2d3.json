@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "feature": "shop",
+  "key": "insufficient_funds",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\shop\\insufficient_funds.png",
+  "original_sha256": "1b66c737c1af8be862848e16761248d782f371d00bedf52e77762a9392652e76",
+  "previous_registration": {
+    "calibration_records": "docs/calibration",
+    "registered_from": "config/internal.yaml before catalog migration"
+  },
+  "retained_source_pixels": "The formal PNG retains unmodified original screenshot RGB beneath its alpha. The new paragraph mask is rebuilt from these original crop pixels, not from a preview or zeroed RGB.",
+  "editing_basis": "Rebuild paragraph glyphs directly from retained original RGB, including darker internal strokes, then retain one pixel of original antialias/dark edge. BGR, canvas, icon/name RGBA and paragraph-external pixels unchanged. No sharpening, redraw or resizing.",
+  "repair_roi": [
+    0,
+    153,
+    249,
+    83
+  ],
+  "mask_extraction": {
+    "color_space": "HSV",
+    "min_value_exclusive": 85,
+    "max_saturation_exclusive": 80,
+    "original_edge_pixels": 1
+  },
+  "candidate_sha256": "194d0f99d4845e5bd86fe605e682cab76455debafce9b7e7f2e0ae43f9908b35",
+  "review_status": "approved",
+  "validation": [
+    {
+      "check": "canvas_and_all_RGB_unchanged",
+      "passed": true
+    },
+    {
+      "check": "audit_missing_stroke_regions_restored",
+      "passed": true
+    },
+    {
+      "kind": "retained_real_crop_in_synthetic_client",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": true,
+      "passed": true,
+      "confidence": 1.0,
+      "threshold": 0.93
+    },
+    {
+      "kind": "retained_real_crop_in_synthetic_client",
+      "size": [
+        1920,
+        1080
+      ],
+      "expected": true,
+      "passed": true,
+      "confidence": 0.9866810999810696,
+      "threshold": 0.93
+    },
+    {
+      "kind": "retained_real_crop_in_synthetic_client",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": true,
+      "passed": true,
+      "confidence": 0.9778298884630203,
+      "threshold": 0.93
+    },
+    {
+      "kind": "synthetic_missing_title",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true
+    },
+    {
+      "kind": "synthetic_missing_title",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true
+    },
+    {
+      "kind": "synthetic_missing_message",
+      "size": [
+        2322,
+        1306
+      ],
+      "expected": false,
+      "passed": true
+    },
+    {
+      "kind": "synthetic_missing_message",
+      "size": [
+        1536,
+        864
+      ],
+      "expected": false,
+      "passed": true
+    },
+    {
+      "kind": "real_shop_inventory_crop_negative",
+      "source": "scroll_overlap_top.png",
+      "size": [
+        1320,
+        1180
+      ],
+      "expected": false,
+      "passed": true
+    },
+    {
+      "kind": "real_shop_inventory_crop_negative",
+      "source": "scroll_overlap_bottom.png",
+      "size": [
+        1320,
+        1180
+      ],
+      "expected": false,
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "The original full terminal screenshot is unavailable. Positive tests use retained real crop pixels at historically recorded coordinates in a synthetic client. Not independent full-screen/live evidence.",
+    "No independent full terminal screenshot or live game test. Two real inventory crops are negative samples, not full client screenshots."
+  ],
+  "mask_foreground_pixels": 14407,
+  "validation_record": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\validation.json",
+  "approved_candidate_sha256": "194d0f99d4845e5bd86fe605e682cab76455debafce9b7e7f2e0ae43f9908b35",
+  "approvals": [
+    {
+      "path": "D:\\E7auto\\artifacts\\tasks\\common\\20260930-155455-template-mask-repair-60757600\\results\\user-approval.json",
+      "sha256": "488e7a75650bc3195e7eec91c4d8eb7671014a40e890f9a7e9921df531302b11"
+    }
+  ],
+  "validation_reuse": "Reused approved candidate-stage checks. PNG/alpha, configuration, ROI and recognition code unchanged; no image scans repeated after approval.",
+  "resource_test_policy": "Current mask foreground count is checked against this registration, while the historical calibration source remains immutable."
+}

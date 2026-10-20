@@ -1,5 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
+from math import isfinite
 from typing import Any, Literal
 import yaml
 from e7auto.core.types import Point, Rect, Size
@@ -72,23 +73,7 @@ def _mapping(value: Any, path: str, errors: list[str]) -> dict[str, Any]:
     return value
 
 
-def load_config(
-    path: str | Path, *, template_profile: Literal["shop", "penguin"] = "shop"
-) -> AppConfig:
-    if template_profile not in {"shop", "penguin"}:
-        raise ConfigError([f"unknown template profile: {template_profile}"])
-    source_path = Path(path).resolve()
-    errors: list[str] = []
-    try:
-        raw = yaml.safe_load(source_path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError) as exc:
-        raise ConfigError([f"cannot read configuration: {exc}"]) from exc
-    root = _mapping(raw, "root", errors)
-    if root.get("schema_version") != 1:
-        errors.append("schema_version must be 1")
-    if root.get("calibration_complete") is not True:
-        errors.append("calibration_complete must be true after real-machine calibration")
-
+def _load_game(root, errors):
     game = _mapping(root.get("game"), "game", errors)
     executable_path_raw = game.get("executable_path")
     window_title = game.get("window_title")
@@ -125,14 +110,10 @@ def load_config(
             "display must use reference_mode 3120x2080, minimum_mode 2560x1440, "
             "and client_width_fraction 0.60"
         )
+    return executable_path, process_name, window_title, baseline_size, display
 
-    economy = _mapping(root.get("economy"), "economy", errors)
-    refresh_cost = _positive_int(economy.get("refresh_cost"), "economy.refresh_cost", errors)
-    if refresh_cost != 3:
-        errors.append("economy.refresh_cost must be the confirmed fixed value 3")
 
-    # Production features use the same catalog loader. Explicit path registries
-    # remain supported for small standalone/synthetic configurations.
+def _load_templates(root, source_path, baseline_size, template_profile, errors):
     catalogs_raw = root.get("template_manifests")
     template_raw = _mapping(root.get("templates", {}), "templates", errors)
     template_paths: dict[str, Path] = {}
@@ -148,12 +129,20 @@ def load_config(
                 errors.append(f"template_manifests.{profile} is required")
                 continue
             template_manifest_paths[profile] = (source_path.parent / value).resolve()
+        if template_profile == "chaos":
+            value = catalogs.get("chaos")
+            if not isinstance(value, str) or not value:
+                errors.append("template_manifests.chaos is required")
+            else:
+                template_manifest_paths["chaos"] = (source_path.parent / value).resolve()
         for profile in (("common", "shop") if template_profile == "shop" else ("common",)):
             if profile not in template_manifest_paths:
                 continue
             try:
                 registered, sizes = load_template_manifest(
                     template_manifest_paths[profile], (baseline_size.width, baseline_size.height),
+                    keys=(frozenset({"network_connection_abnormal", "network_retry"})
+                          if template_profile == "chaos" else COMMON_TEMPLATE_KEYS if profile == "common" else None),
                 )
                 if template_paths.keys() & registered.keys():
                     errors.append(f"duplicate template keys in {profile} manifest")
@@ -162,9 +151,10 @@ def load_config(
             except ValueError as exc:
                 errors.append(str(exc))
     required_templates = (
-        COMMON_TEMPLATE_KEYS if template_profile == "penguin" else _REQUIRED_TEMPLATES
+        {"network_connection_abnormal", "network_retry"} if template_profile == "chaos"
+        else COMMON_TEMPLATE_KEYS if template_profile == "penguin" else _REQUIRED_TEMPLATES
     )
-    selected_templates = COMMON_TEMPLATE_KEYS if template_profile == "penguin" else set(template_raw)
+    selected_templates = required_templates if template_profile != "shop" else set(template_raw)
     for key in sorted((required_templates | selected_templates) if catalogs_raw is None else ()):
         value = template_raw.get(key)
         if not isinstance(value, str) or not value.strip():
@@ -177,7 +167,10 @@ def load_config(
         template_paths[key] = candidate
     for key in sorted(required_templates - template_paths.keys()):
         errors.append(f"templates.{key} is required")
+    return template_paths, template_manifest_paths, template_sizes
 
+
+def _load_coordinates(root, template_profile, errors):
     roi_raw = _mapping(root.get("rois"), "rois", errors)
     rois: dict[str, Rect] = {}
     required_rois = _REQUIRED_ROIS | (
@@ -199,12 +192,13 @@ def load_config(
                 errors.append(f"points.{key} is required")
             continue
         points[key] = _point(points_raw[key], f"points.{key}", errors)
+    return rois, points
 
-    # Keep validating the shared configuration structure, but penguin startup
-    # must not read or require the shop's image files.
+
+def _load_inventory(root, template_paths, template_profile, errors):
     target_templates = (
         {name + suffix for name in _EXPECTED_TARGET_POLICY for suffix in ("", "_confirm", "_purchased")}
-        if template_profile == "penguin" else template_paths
+        if template_profile != "shop" else template_paths
     )
     targets_raw = root.get("targets")
     targets: list[TargetConfig] = []
@@ -280,7 +274,10 @@ def load_config(
                     _point(item.get("buy_point"), f"slots[{index}].buy_point", errors),
                 )
             )
+    return targets, slots
 
+
+def _load_scroll(root, errors):
     scroll_raw = _mapping(root.get("scroll"), "scroll", errors)
     scroll = ScrollConfig(
         _point(scroll_raw.get("cursor_point"), "scroll.cursor_point", errors),
@@ -333,6 +330,11 @@ def load_config(
             "scroll.minimum_changed_fraction",
             errors,
         ),
+        _positive_number(scroll_raw.get("maximum_horizontal_shift_px"), "scroll.maximum_horizontal_shift_px", errors),
+        _positive_fraction(scroll_raw.get("minimum_overlap_fraction"), "scroll.minimum_overlap_fraction", errors),
+        _positive_fraction(scroll_raw.get("minimum_content_score"), "scroll.minimum_content_score", errors),
+        _positive_number(scroll_raw.get("minimum_content_stddev"), "scroll.minimum_content_stddev", errors),
+        _positive_number(scroll_raw.get("content_alignment_tolerance_px"), "scroll.content_alignment_tolerance_px", errors),
     )
     if scroll.delta == 0:
         errors.append("scroll.delta must be a non-zero integer")
@@ -340,6 +342,13 @@ def load_config(
         errors.append("scroll.delta must not be a boolean")
     if scroll.minimum_settle_ms >= scroll.settle_ms:
         errors.append("scroll.minimum_settle_ms must be less than scroll.settle_ms")
+    if scroll.minimum_settle_ms + scroll.stable_observations * scroll.settle_poll_interval_ms > scroll.settle_ms:
+        errors.append("scroll stable observations must fit within settle_ms")
+    for name in ("maximum_horizontal_shift_px", "minimum_content_stddev", "content_alignment_tolerance_px"):
+        if not isfinite(getattr(scroll, name)):
+            errors.append(f"scroll.{name} must be finite")
+    if scroll.content_alignment_tolerance_px >= scroll.minimum_upward_shift_px:
+        errors.append("scroll.content_alignment_tolerance_px must be less than minimum_upward_shift_px")
     if scroll.settle_poll_interval_ms > scroll.settle_ms - scroll.minimum_settle_ms:
         errors.append(
             "scroll.settle_poll_interval_ms must fit between minimum_settle_ms and settle_ms"
@@ -348,7 +357,10 @@ def load_config(
         errors.append(
             "scroll.maximum_pairwise_shift_px must be less than minimum_upward_shift_px"
         )
+    return scroll
 
+
+def _load_timing(root, errors):
     timing_raw = _mapping(root.get("timing"), "timing", errors)
     timing = TimingConfig(
         *(
@@ -362,9 +374,25 @@ def load_config(
                 "refresh_timeout_ms",
                 "stable_frames",
             )
-        )
+        ),
+        capture_frame_timeout_ms=_positive_int(
+            timing_raw.get("capture_frame_timeout_ms", 1000),
+            "timing.capture_frame_timeout_ms", errors,
+        ),
+        **{
+            name: _positive_int(timing_raw.get(name, default), f"timing.{name}", errors)
+            for name, default in (
+                ("capture_recovery_timeout_ms", 3000),
+                ("capture_rebuild_cooldown_ms", 60000),
+                ("capture_rebuild_window_ms", 600000),
+                ("capture_rebuild_max_attempts", 3),
+            )
+        },
     )
+    return timing
 
+
+def _load_refresh_strategy(root, errors):
     strategy_raw = _mapping(root.get("refresh_strategy"), "refresh_strategy", errors)
 
     def positive_integer_tuple(name: str, length: int) -> tuple[int, ...]:
@@ -387,7 +415,10 @@ def load_config(
             "refresh_strategy must use batch_refreshes [13, 13, 13, 10] "
             "and recovery_wait_seconds [5, 180, 5]"
         )
+    return refresh_strategy
 
+
+def _load_vision(root, errors):
     vision_raw = _mapping(root.get("vision"), "vision", errors)
     default_confidence = vision_raw.get("default_confidence")
     anchor_confidence = vision_raw.get("anchor_confidence")
@@ -450,19 +481,10 @@ def load_config(
         if isinstance(sky_stone_digit_margin, (int, float))
         else 1.0
     )
+    return default_confidence, anchor_confidence, entry_thresholds, penguin_control_confidence, penguin_price_digit_confidence, penguin_price_digit_margin, purchased_button_padding, penguin_price_rect, sky_stone_digit_confidence, sky_stone_digit_margin, sky_stone_digits_offset
 
-    overlay_raw = _mapping(root.get("overlay"), "overlay", errors)
-    overlay_offset = _point(overlay_raw.get("offset"), "overlay.offset", errors)
 
-    logging_raw = _mapping(root.get("logging"), "logging", errors)
-    defaults = LoggingConfig()
-    logging_config = LoggingConfig(
-        **{
-            name: _positive_int(logging_raw.get(name, getattr(defaults, name)), f"logging.{name}", errors)
-            for name in ("keep_days", "keep_runs", "max_file_mb", "backup_count", "max_total_mb")
-        }
-    )
-
+def _validate_geometry(baseline_size, rois, points, template_sizes, slots, scroll, purchased_button_padding, errors):
     def point_in_client(point: Point) -> bool:
         return 0 <= point.x < baseline_size.width and 0 <= point.y < baseline_size.height
 
@@ -500,12 +522,21 @@ def load_config(
     if not point_in_client(scroll.cursor_point):
         errors.append("scroll.cursor_point must fit inside the baseline client")
     inventory_roi = rois.get("inventory_list")
+    content_roi = rois.get("inventory_content")
+    if content_roi is not None and inventory_roi is not None and not (
+        inventory_roi.x <= content_roi.x < content_roi.right <= inventory_roi.right
+        and inventory_roi.y <= content_roi.y < content_roi.bottom <= inventory_roi.bottom
+        and content_roi.width < inventory_roi.width
+    ):
+        errors.append("rois.inventory_content must be narrower than and contained in rois.inventory_list")
     if inventory_roi is not None and not (
         inventory_roi.x <= scroll.cursor_point.x < inventory_roi.right
         and inventory_roi.y <= scroll.cursor_point.y < inventory_roi.bottom
     ):
         errors.append("scroll.cursor_point must be inside rois.inventory_list")
 
+
+def _validate_inventory(targets, slots, errors):
     target_ids = [target.target_id for target in targets]
     if len(set(target_ids)) != len(target_ids):
         errors.append("target ids must be unique")
@@ -525,6 +556,86 @@ def load_config(
         errors.append("slot order must be unique within each screen")
     if slots and {slot.screen for slot in slots} != {"top", "bottom"}:
         errors.append("slots must include calibrated entries for both top and bottom screens")
+
+
+def load_config(
+    path: str | Path, *, template_profile: Literal["shop", "penguin", "chaos"] = "shop"
+) -> AppConfig:
+    if template_profile not in {"shop", "penguin", "chaos"}:
+        raise ConfigError([f"unknown template profile: {template_profile}"])
+    source_path = Path(path).resolve()
+    errors: list[str] = []
+    try:
+        raw = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise ConfigError([f"cannot read configuration: {exc}"]) from exc
+    root = _mapping(raw, "root", errors)
+    if root.get("schema_version") != 1:
+        errors.append("schema_version must be 1")
+    if root.get("calibration_complete") is not True:
+        errors.append("calibration_complete must be true after real-machine calibration")
+
+    (
+        executable_path,
+        process_name,
+        window_title,
+        baseline_size,
+        display,
+    ) = _load_game(root, errors)
+
+    economy = _mapping(root.get("economy"), "economy", errors)
+    refresh_cost = _positive_int(economy.get("refresh_cost"), "economy.refresh_cost", errors)
+    if refresh_cost != 3:
+        errors.append("economy.refresh_cost must be the confirmed fixed value 3")
+
+    # Production features use the same catalog loader. Explicit path registries
+    # remain supported for small standalone/synthetic configurations.
+    template_paths, template_manifest_paths, template_sizes = _load_templates(root, source_path, baseline_size, template_profile, errors)
+
+    rois, points = _load_coordinates(root, template_profile, errors)
+
+    # Keep validating the shared configuration structure, but penguin startup
+    # must not read or require the shop's image files.
+    targets, slots = _load_inventory(root, template_paths, template_profile, errors)
+
+    scroll = _load_scroll(root, errors)
+
+    timing = _load_timing(root, errors)
+
+    refresh_strategy = _load_refresh_strategy(root, errors)
+
+    (
+        default_confidence,
+        anchor_confidence,
+        entry_thresholds,
+        penguin_control_confidence,
+        penguin_price_digit_confidence,
+        penguin_price_digit_margin,
+        purchased_button_padding,
+        penguin_price_rect,
+        sky_stone_digit_confidence,
+        sky_stone_digit_margin,
+        sky_stone_digits_offset,
+    ) = _load_vision(root, errors)
+
+    vision_mapping = root.get("vision") if isinstance(root.get("vision"), dict) else {}
+    candidate_cache_mib = _positive_int(vision_mapping.get("candidate_cache_mib", 64),
+                                        "vision.candidate_cache_mib", errors)
+    overlay_raw = _mapping(root.get("overlay"), "overlay", errors)
+    overlay_offset = _point(overlay_raw.get("offset"), "overlay.offset", errors)
+
+    logging_raw = _mapping(root.get("logging"), "logging", errors)
+    defaults = LoggingConfig()
+    logging_config = LoggingConfig(
+        **{
+            name: _positive_int(logging_raw.get(name, getattr(defaults, name)), f"logging.{name}", errors)
+            for name in ("keep_days", "keep_runs", "max_file_mb", "backup_count", "max_total_mb")
+        }
+    )
+
+    _validate_geometry(baseline_size, rois, points, template_sizes, slots, scroll, purchased_button_padding, errors)
+
+    _validate_inventory(targets, slots, errors)
 
     if errors:
         raise ConfigError(errors)
@@ -558,4 +669,5 @@ def load_config(
         overlay_offset=overlay_offset,
         logging=logging_config,
         template_manifest_paths=template_manifest_paths,
+        candidate_cache_mib=candidate_cache_mib,
     )

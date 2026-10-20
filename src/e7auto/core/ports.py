@@ -13,10 +13,23 @@ Frame = NDArray[np.uint8]
 
 
 @dataclass(frozen=True, slots=True)
+class CaptureTiming:
+    """Source/receive timestamps share a platform clock, in 100 ns units."""
+    source_ticks: int
+    received_ticks: int
+    wait_ms: float
+
+    @property
+    def source_age_ms(self) -> float:
+        return (self.received_ticks - self.source_ticks) / 10_000
+
+
+@dataclass(frozen=True, slots=True)
 class CachedGameFrame:
     frame: Frame
     captured_at: str
     captured_monotonic: float
+    timing: CaptureTiming | None = None
 
 
 class CaptureError(RuntimeError):
@@ -81,18 +94,15 @@ class InputService(Protocol):
 
     def scroll(self, window: WindowRef, point: Point, delta: int) -> None: ...
 
+    def pointer_down(self, window: WindowRef, point: Point) -> None: ...
+
+    def pointer_move(self, window: WindowRef, point: Point, *, allow_outside_client: bool = False) -> None: ...
+
+    def pointer_up(self, window: WindowRef, point: Point) -> None: ...
+
 
 class RuntimeEnvironment(Protocol):
     def is_elevated(self) -> bool: ...
-
-
-class HotkeyService(Protocol):
-    def register_f5(
-        self,
-        callback: Callable[[], None],
-    ) -> bool: ...
-
-    def unregister_f5(self) -> None: ...
 
 
 class OverlayService(Protocol):
@@ -121,3 +131,12 @@ class TextRunLogger(Protocol):
 class NetworkVisionPort(Protocol):
     def network_connection_error(self, frame: object) -> Observation | None: ...
     def network_retry(self, frame: object) -> Observation | None: ...
+
+
+class HotkeyService(Protocol):
+    def register_f5(
+        self,
+        callback: Callable[[], None],
+    ) -> bool: ...
+
+    def unregister_f5(self) -> None: ...

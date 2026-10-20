@@ -42,6 +42,7 @@ rois:
   refresh_confirm_prompt: {x: 925, y: 540, width: 475, height: 90}
   refresh_confirm_button: {x: 1150, y: 755, width: 415, height: 160}
   inventory_list: {x: 950, y: 110, width: 1320, height: 1180}
+  inventory_content: {x: 950, y: 110, width: 900, height: 1180}
   confirm_item: {x: 880, y: 535, width: 220, height: 225}
   confirm_button: {x: 1385, y: 860, width: 200, height: 130}
   purchase_result: {x: 975, y: 210, width: 400, height: 300}
@@ -123,9 +124,19 @@ scroll:
   downsample_factor: 4
   minimum_upward_shift_px: 300
   difference_threshold: 8
-  minimum_changed_fraction: 0.30
+  minimum_changed_fraction: 0.20
+  maximum_horizontal_shift_px: 4.0
+  minimum_overlap_fraction: 0.50
+  minimum_content_score: 0.75
+  minimum_content_stddev: 8.0
+  content_alignment_tolerance_px: 4.0
 
 timing:
+  capture_frame_timeout_ms: 1000
+  capture_recovery_timeout_ms: 3000
+  capture_rebuild_cooldown_ms: 60000
+  capture_rebuild_window_ms: 600000
+  capture_rebuild_max_attempts: 3
   poll_interval_ms: 100
   entry_timeout_ms: 5000
   scan_timeout_ms: 3000
@@ -135,6 +146,7 @@ timing:
   stable_frames: 3
 
 vision:
+  candidate_cache_mib: 64
   default_confidence: 0.90
   anchor_confidence: 0.93
   entry_thresholds:
@@ -142,7 +154,7 @@ vision:
     penguin: {color: 0.96, structure: 0.80}
   penguin_control_confidence: 0.96
   penguin_price_digit_confidence: 0.84
-  penguin_price_digit_margin: 0.09
+  penguin_price_digit_margin: 0.06
   # Per-side button search padding: x=horizontal, y=vertical.
   purchased_button_padding: {x: 18, y: 16}
   # Relative to the detected purchase button's top-left, not screen coordinates.
@@ -160,3 +172,11 @@ logging:
   max_file_mb: 10
   backup_count: 3
   max_total_mb: 500
+
+# Shared date-change workflow; loaded only by features that explicitly opt in.
+penguin_component_matching:
+  tolerance: [6, 8]
+  templates:
+    altar_close:
+      primary: [41, 0, 137, 44]
+      secondary: [0, 0, 41, 44]

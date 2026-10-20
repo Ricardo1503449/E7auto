@@ -40,8 +40,8 @@ def test_active_run_is_protected_across_processes(tmp_path: Path) -> None:
     try:
         code = '''from pathlib import Path
 import sys
-from e7auto.run_logging import RunLogManager
-from e7auto.config import LoggingConfig
+from e7auto.logging.run import RunLogManager
+from e7auto.configuration.models import LoggingConfig
 log = RunLogManager(Path(sys.argv[1]), LoggingConfig(keep_runs=1)).start('child')
 log.close()
 '''
@@ -91,12 +91,12 @@ def test_cleanup_failure_is_warning_and_does_not_stop_logging(tmp_path: Path, mo
 
     monkeypatch.setattr(Path, 'unlink', fail)
     log = RunLogManager(tmp_path, LoggingConfig(keep_runs=1)).start('new')
-    log.event('run_stopped', reason='manual_f5')
+    log.event('run_stopped', reason='manual_stop')
     log.close()
     text = log.path.read_text(encoding='utf-8')
     assert 'WARNING event=log_cleanup_warning' in text
     assert 'locked by other software' in text
-    assert 'reason=manual_f5' in text
+    assert 'reason=manual_stop' in text
     assert old.exists()
 
 
@@ -160,7 +160,7 @@ def test_measurements_are_compacted_without_float_rounding(value, expected):
 def test_vector_positions_and_missing_values_are_preserved():
     value = 'na,-393.380,-0.000,0.004000,nan,inf,0.000001'
     assert _field_value('pair_shift_y', value) == 'na,-393.38,-0,0.004,nan,inf,0.000001'
-    assert _field_value('fallback_block_scores', 'na,0.800000,0.000000,0.750000') == 'na,0.8,0,0.75'
+    assert _field_value('content_scores', 'na,0.800000,0.000000,0.750000') == 'na,0.8,0,0.75'
 
 
 @pytest.mark.parametrize('key', ['version', 'path', 'detail', 'error', 'traceback', 'run_id', 'object'])
@@ -179,7 +179,7 @@ def test_real_log_keeps_every_event_and_error_detail_while_compacting_numbers(tm
     for _ in range(3):
         log.event('recognition', object='shop', detected=False, confidence='0.800000')
     log.event('scroll_settle_trace', outcome='timeout', pair_shift_y='na,-393.380,0.000',
-              fallback_checks=2, fallback_block_scores='na,0.800000,0.100000,0.200000')
+              total_gate_checks=2, content_scores='na,0.800000,0.100000,0.200000')
     log.event('internal_error', error=original_error, traceback=original_error)
     log.event('run_stopped', reason='scroll_verification_failed', detail=original_error)
     log.close()
@@ -189,8 +189,8 @@ def test_real_log_keeps_every_event_and_error_detail_while_compacting_numbers(tm
     assert text.count('event=recognition ') == 3
     assert text.count('confidence=0.8') == 3
     assert 'pair_shift_y=na,-393.38,0' in text
-    assert 'fallback_checks=2' in text
-    assert 'fallback_block_scores=na,0.8,0.1,0.2' in text
+    assert 'total_gate_checks=2' in text
+    assert 'content_scores=na,0.8,0.1,0.2' in text
     assert text.count('failure at x=12.340000\\nstack\\tline') == 3
     assert 'event=run_stopped' in lines[-1]
     assert 'reason=scroll_verification_failed' in lines[-1]

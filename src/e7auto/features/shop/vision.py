@@ -2,16 +2,18 @@ from __future__ import annotations
 import cv2
 import numpy as np
 from e7auto.configuration.models import AppConfig
-from e7auto.core.types import Rect
-from e7auto.vision.frames import AdaptedFrame
+from e7auto.core.types import Rect, ClientRect
+from e7auto.vision.frames import FrameView
 from e7auto.core.ports import Frame
 from e7auto.core.observations import Observation
-from e7auto.features.shop.contracts import InventoryMatch, SkyStoneBalanceObservation, ScrollMovementObservation, ScrollOverlapObservation, PurchaseOutcome
+from e7auto.features.shop.contracts import InventoryMatch, SkyStoneBalanceObservation, ScrollMovementObservation, PurchaseOutcome
 from e7auto.resources.templates import TemplateRepository
 from e7auto.vision.matching import TemplateMatcher
+from e7auto.vision.candidates import CandidateCache
+from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher, _DigitMatch
 from e7auto.vision.network import NetworkVision
-from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability, prepare_scroll_overlap_reference, verify_scroll_overlap
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
 
 class ShopVision:
     """Shop detectors composed from shared matching and glyph services."""
@@ -20,7 +22,7 @@ class ShopVision:
         self._templates = templates
         self._targets = config.targets
         self._targets_by_id = {target.target_id: target for target in config.targets}
-        self._matcher = TemplateMatcher(templates)
+        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
 
@@ -87,7 +89,7 @@ class ShopVision:
         return Observation(
             "refresh_confirm_dialog",
             min(prompt.confidence, button.confidence),
-            prompt.roi,
+            prompt.bounds,
             button.anchor,
         )
 
@@ -113,7 +115,7 @@ class ShopVision:
         return Observation(
             f"confirm:{target_id}",
             min(identity.confidence, button.confidence),
-            identity.roi,
+            identity.bounds,
             button.anchor,
         )
 
@@ -238,8 +240,9 @@ class ShopVision:
         return measure_inventory_scroll(
             before,
             after,
-            self._config.rois["inventory_list"],
+            self._config.rois["inventory_content"],
             self._config.scroll.difference_threshold,
+            config=self._config.scroll,
         )
 
 
@@ -251,23 +254,9 @@ class ShopVision:
         return measure_inventory_scroll_stability(
             before,
             after,
-            self._config.rois["inventory_list"],
+            self._config.rois["inventory_content"],
             self._config.scroll.difference_threshold,
             self._config.scroll.downsample_factor,
-        )
-
-
-    def prepare_scroll_overlap_reference(self, frame: Frame | AdaptedFrame) -> np.ndarray:
-        return prepare_scroll_overlap_reference(
-            frame, self._config.rois["inventory_list"], self._config.scroll.downsample_factor,
-        )
-
-
-    def verify_scroll_overlap(
-        self, reference: np.ndarray, current: Frame | AdaptedFrame, shift_x: float, shift_y: float,
-    ) -> ScrollOverlapObservation:
-        return verify_scroll_overlap(
-            reference, current, self._config.rois["inventory_list"], shift_x, shift_y,
         )
 
 
@@ -285,6 +274,7 @@ class ShopVision:
         template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]],
         minimum_width: int,
         maximum_width: int,
+        *, width_scale: float = 1.,
     ) -> tuple[tuple[str, float], ...] | None:
         ys, xs = np.nonzero(glyph)
         if not len(xs):
@@ -307,7 +297,7 @@ class ShopVision:
                 if trailing and trailing < minimum_width:
                     continue
                 segment = glyph[:, start:end]
-                match = self._digits.best_match(segment, template_variants)
+                match = self._digits.best_match(segment, template_variants, width_scale=width_scale)
                 if not self._digit_match_is_safe(match):
                     continue
                 visit(
@@ -338,54 +328,41 @@ class ShopVision:
     def _sky_stone_digits_roi(
         self, frame: Frame, icon: Observation
     ) -> Rect | None:
-        base_roi = self._config.rois["sky_stone_digits"]
+        view = frame_view(frame)
+        base_roi = view.transform.rect(self._config.rois["sky_stone_digits"])
         offset = self._config.sky_stone_digits_offset
         if offset is None:
             roi = base_roi
         else:
-            icon_template = self._templates.get("sky_stone_icon").image
-            icon_left = icon.anchor.x - icon_template.shape[1] // 2
-            icon_top = icon.anchor.y - icon_template.shape[0] // 2
-            digit_left = icon_left + offset.x
-            # The configured ROI is the allowed top-bar band. Its right edge,
-            # rather than a fixed digit width, bounds balances of any visible length.
-            digit_right = base_roi.right
-            if digit_left < base_roi.x or digit_left >= digit_right:
+            image = self._templates.get("sky_stone_icon").image
+            g=icon.geometry
+            sx,sy=(g.scale_x,g.scale_y) if g is not None else (icon.bounds.width/image.shape[1],icon.bounds.height/image.shape[0])
+            x,y=(g.x,g.y) if g is not None else (icon.bounds.x,icon.bounds.y)
+            left = round(x+offset.x*sx)
+            top = round(y+offset.y*sy)
+            roi = ClientRect(left,top,base_roi.right-left,base_roi.height)
+            if left<base_roi.x or left>=base_roi.right:
                 return None
-            roi = Rect(
-                digit_left,
-                icon_top + offset.y,
-                digit_right - digit_left,
-                base_roi.height,
-            )
-        if isinstance(frame, AdaptedFrame):
-            frame_width = frame.transform.baseline.width
-            frame_height = frame.transform.baseline.height
-        else:
-            frame_height, frame_width = frame.shape[:2]
-        if (
-            roi.x < 0
-            or roi.y < 0
-            or roi.right > frame_width
-            or roi.bottom > frame_height
-        ):
+        b=view.bounds
+        if roi.x<b.x or roi.y<b.y or roi.right>b.right or roi.bottom>b.bottom:
             return None
         return roi
 
 
     def _read_sky_stone_digits(
         self,
-        frame: Frame | AdaptedFrame,
+        frame: Frame | FrameView,
         roi: Rect,
     ) -> tuple[int, float] | None:
         source = self._matcher.crop(self._matcher.prepare_bgr(frame), roi)
         mask = self._digits.neutral_bright_mask(source)
         count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
-        min_height = max(8, int(round(source.shape[0] * 0.40)))
+        sx,sy = frame_view(frame).transform.scale_x,frame_view(frame).transform.scale_y
+        min_height = max(round(8*sy), int(round(source.shape[0] * 0.40)))
         components: list[tuple[int, int, np.ndarray]] = []
         for component in range(1, count):
             x, y, width, height, area = (int(value) for value in stats[component])
-            if height < min_height or area < 20:
+            if height < min_height or area < 20*sx*sy:
                 continue
             glyph = labels[y : y + height, x : x + width] == component
             components.append((x, width, glyph))
@@ -393,10 +370,10 @@ class ShopVision:
         if not components:
             return None
 
-        template_variants, template_widths = self._digits.template_variants()
+        template_variants, template_widths = self._digits.template_variants(sx)
 
-        minimum_segment_width = max(1, min(template_widths) - 2)
-        maximum_segment_width = max(template_widths) + 2
+        minimum_segment_width = max(1, min(template_widths) - max(1,round(2*sx)))
+        maximum_segment_width = max(template_widths) + max(1,round(2*sx))
         maximum_run_gap = maximum_segment_width
 
         parsed: list[str] = []
@@ -411,7 +388,7 @@ class ShopVision:
                     break
                 return None
 
-            match = self._digits.best_match(glyph, template_variants)
+            match = self._digits.best_match(glyph, template_variants, width_scale=sx)
             if self._digit_match_is_safe(match):
                 parsed.append(match.digit)
                 confidences.append(match.confidence)
@@ -425,6 +402,7 @@ class ShopVision:
                 template_variants,
                 minimum_segment_width,
                 maximum_segment_width,
+                width_scale=sx,
             )
             if split is None:
                 return None
@@ -435,7 +413,7 @@ class ShopVision:
 
 
     def sky_stone_balance(
-        self, frame: Frame | AdaptedFrame
+        self, frame: Frame | FrameView
     ) -> SkyStoneBalanceObservation | None:
         icon = self.match(
             frame,
@@ -454,3 +432,6 @@ class ShopVision:
             return None
         value, confidence = parsed
         return SkyStoneBalanceObservation(value, min(icon.confidence, confidence), roi)
+
+    def clear_template_cache(self):
+        self._matcher.cache.clear()

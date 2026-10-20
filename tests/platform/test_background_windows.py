@@ -146,6 +146,112 @@ def test_background_input_rejects_minimized_or_reused_window(
         service.scroll(window, Point(12, 34), -120)
 
 
+def test_drag_messages_hold_the_button_and_use_client_coordinates(monkeypatch):
+    window=install_valid_window(monkeypatch);events=[]
+    service=Win32WindowMessageInputService(post_message=lambda *args:events.append(args),sleep=lambda _:None)
+    service.pointer_down(window,Point(12,20))
+    service.pointer_move(window,Point(40,55))
+    service.pointer_move(window,Point(80,90))
+    service.pointer_up(window,Point(80,90))
+    assert events==[
+        (101,win32con.WM_MOUSEMOVE,0,_pack_signed_point(12,20)),
+        (101,win32con.WM_LBUTTONDOWN,win32con.MK_LBUTTON,_pack_signed_point(12,20)),
+        (101,win32con.WM_MOUSEMOVE,win32con.MK_LBUTTON,_pack_signed_point(40,55)),
+        (101,win32con.WM_MOUSEMOVE,win32con.MK_LBUTTON,_pack_signed_point(80,90)),
+        (101,win32con.WM_LBUTTONUP,0,_pack_signed_point(80,90)),
+    ]
+
+
+def test_release_only_cleanup_is_allowed_after_resize_or_minimize(monkeypatch):
+    window=install_valid_window(monkeypatch);events=[]
+    service=Win32WindowMessageInputService(post_message=lambda *args:events.append(args),sleep=lambda _:None)
+    service.pointer_down(window,Point(80,90))
+    monkeypatch.setattr(background_windows.win32gui,'IsIconic',lambda _:True)
+    monkeypatch.setattr(background_windows.win32gui,'GetClientRect',lambda _:(0,0,10,10))
+    service.pointer_up(window,Point(80,90))
+    assert events[-1]==(101,win32con.WM_LBUTTONUP,0,_pack_signed_point(80,90))
+    with pytest.raises(BackgroundInputError):service.pointer_move(window,Point(1,1))
+
+
+def test_release_never_targets_a_reused_window_handle(monkeypatch):
+    window=install_valid_window(monkeypatch);events=[]
+    service=Win32WindowMessageInputService(post_message=lambda *args:events.append(args),sleep=lambda _:None)
+    monkeypatch.setattr(background_windows.win32process,'GetWindowThreadProcessId',lambda _:(12,99))
+    with pytest.raises(BackgroundInputError):service.pointer_up(window,Point(80,90))
+    assert events==[]
+
+
+def test_long_drag_preserves_message_coordinates_only_with_explicit_active_owner(monkeypatch):
+    window=install_valid_window(monkeypatch);events=[]
+    service=Win32WindowMessageInputService(post_message=lambda *args:events.append(args),sleep=lambda _:None)
+    end=Point(12,5320)
+    with pytest.raises(BackgroundInputError,match='active drag'):
+        service.pointer_move(window,end,allow_outside_client=True)
+    with pytest.raises(BackgroundInputError,match='outside'):
+        service.pointer_down(window,end)
+    assert events==[]
+    service.pointer_down(window,Point(12,20))
+    with pytest.raises(BackgroundInputError,match='outside'):
+        service.pointer_move(window,end)
+    for y in (1080,2140,3200,4260,5320):
+        service.pointer_move(window,Point(12,y),allow_outside_client=True)
+    assert events[2:]==[(101,win32con.WM_MOUSEMOVE,win32con.MK_LBUTTON,_pack_signed_point(12,y))
+                        for y in (1080,2140,3200,4260,5320)]
+    with pytest.raises(BackgroundInputError,match='signed 16-bit'):
+        service.pointer_move(window,Point(12,40000),allow_outside_client=True)
+    service.pointer_up(window,end)
+    assert events[-1]==(101,win32con.WM_LBUTTONUP,0,_pack_signed_point(12,5320))
+    with pytest.raises(BackgroundInputError,match='active drag'):
+        service.pointer_move(window,end,allow_outside_client=True)
+
+
+def test_long_drag_still_rejects_changed_window_identity(monkeypatch):
+    window=install_valid_window(monkeypatch);events=[]
+    service=Win32WindowMessageInputService(post_message=lambda *args:events.append(args),sleep=lambda _:None)
+    service.pointer_down(window,Point(12,20));count=len(events)
+    monkeypatch.setattr(background_windows.win32process,'GetWindowThreadProcessId',lambda _:(12,99))
+    with pytest.raises(BackgroundInputError,match='process identity'):
+        service.pointer_move(window,Point(12,5320),allow_outside_client=True)
+    assert len(events)==count
+
+
+@pytest.mark.parametrize("action", ["click", "scroll", "drag"])
+def test_input_timestamp_notification_follows_every_successful_message(monkeypatch, action):
+    window = install_valid_window(monkeypatch)
+    monkeypatch.setattr(background_windows.win32gui, "ClientToScreen", lambda hwnd, p: p)
+    events = []
+    service = Win32WindowMessageInputService(
+        post_message=lambda hwnd, message, wparam, lparam: events.append(("sent", message)),
+        sleep=lambda _: None,
+        on_input_complete=lambda: events.append(("marked", events[-1][1])),
+    )
+    if action == "click":
+        service.click(window, Point(12, 34))
+    elif action == "scroll":
+        service.scroll(window, Point(12, 34), -120)
+    else:
+        service.pointer_down(window, Point(12, 34))
+        service.pointer_move(window, Point(20, 40))
+        service.pointer_up(window, Point(20, 40))
+    assert events
+    for sent, marked in zip(events[::2], events[1::2]):
+        assert sent[0] == "sent" and marked == ("marked", sent[1])
+    assert events[-1][1] == (win32con.WM_MOUSEWHEEL if action == "scroll" else win32con.WM_LBUTTONUP)
+
+
+def test_failed_message_is_not_reported_as_completed_input(monkeypatch):
+    window = install_valid_window(monkeypatch)
+    monkeypatch.setattr(background_windows.win32gui, "ClientToScreen", lambda hwnd, p: p)
+    marks = []
+    service = Win32WindowMessageInputService(
+        post_message=lambda *_: (_ for _ in ()).throw(OSError("not sent")),
+        on_input_complete=lambda: marks.append(1),
+    )
+    with pytest.raises(BackgroundInputError):
+        service.scroll(window, Point(12, 34), -120)
+    assert marks == []
+
+
 def test_runtime_source_contains_no_printwindow_or_real_cursor_backend() -> None:
     forbidden = (
         "PrintWindow",

@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from math import floor
-from time import perf_counter
-
-import cv2
+from dataclasses import dataclass
+from math import ceil, floor
 import numpy as np
-
-from e7auto.core.types import Point, Rect, Size
+from e7auto.core.types import Point, Rect, Size, ClientPoint, ClientRect
 from e7auto.core.ports import Frame
 
 
@@ -21,72 +17,78 @@ class CoordinateTransform:
     actual: Size
 
     @property
-    def is_identity(self) -> bool:
+    def is_identity(self):
         return self.baseline == self.actual
 
     @property
-    def scale_x(self) -> float:
+    def scale_x(self):
         return self.actual.width / self.baseline.width
 
     @property
-    def scale_y(self) -> float:
+    def scale_y(self):
         return self.actual.height / self.baseline.height
 
-    def point(self, point: Point) -> Point:
-        return Point(
-            _round_half_up(point.x * self.scale_x),
-            _round_half_up(point.y * self.scale_y),
-        )
+    def point(self, point: Point) -> ClientPoint:
+        if isinstance(point, ClientPoint):
+            return point
+        return ClientPoint(_round_half_up(point.x*self.scale_x), _round_half_up(point.y*self.scale_y))
 
-    def rect(self, rect: Rect) -> Rect:
-        left = _round_half_up(rect.x * self.scale_x)
-        top = _round_half_up(rect.y * self.scale_y)
-        right = _round_half_up(rect.right * self.scale_x)
-        bottom = _round_half_up(rect.bottom * self.scale_y)
-        return Rect(left, top, max(1, right - left), max(1, bottom - top))
+    def rect(self, rect: Rect) -> ClientRect:
+        if isinstance(rect, ClientRect):
+            return rect
+        left, top = floor(rect.x*self.scale_x), floor(rect.y*self.scale_y)
+        right, bottom = ceil(rect.right*self.scale_x), ceil(rect.bottom*self.scale_y)
+        return ClientRect(left, top, right-left, bottom-top)
 
 
-@dataclass(slots=True)
-class AdaptedFrame:
-    """One captured non-reference frame with per-baseline-ROI normalization cache."""
-
+@dataclass(frozen=True, slots=True)
+class FrameView:
+    """Unresampled pixels with full-client geometry and a global crop origin."""
     raw: Frame
     transform: CoordinateTransform
-    _roi_cache: dict[Rect, Frame] = field(default_factory=dict)
-    normalization_count: int = 0
-    normalization_seconds: float = 0.0
+    origin: ClientPoint = ClientPoint(0, 0)
 
     @property
-    def shape(self) -> tuple[int, ...]:
+    def shape(self):
         return self.raw.shape
 
-    def normalized_roi(self, roi: Rect) -> Frame:
-        cached = self._roi_cache.get(roi)
-        if cached is not None:
-            return cached
-        started = perf_counter()
-        try:
-            actual = self.transform.rect(roi)
-            height, width = self.raw.shape[:2]
-            if actual.x < 0 or actual.y < 0 or actual.right > width or actual.bottom > height:
-                raise ValueError(f"Scaled ROI outside frame: {actual} vs {width}x{height}")
-            if self.raw.ndim != 3 or self.raw.shape[2] not in (3, 4):
-                raise ValueError("Frame must be an HxWx3 or HxWx4 uint8 array")
-            source = self.raw[actual.y : actual.bottom, actual.x : actual.right, :3]
-            if source.shape[1] != roi.width or source.shape[0] != roi.height:
-                source = cv2.resize(source, (roi.width, roi.height), interpolation=cv2.INTER_AREA)
-            normalized = np.ascontiguousarray(source)
-            self._roi_cache[roi] = normalized
-            return normalized
-        finally:
-            self.normalization_count += 1
-            self.normalization_seconds += perf_counter() - started
+    @property
+    def bounds(self):
+        return ClientRect(self.origin.x, self.origin.y, self.raw.shape[1], self.raw.shape[0])
+
+    def region(self, roi: Rect, *, clip: bool = False) -> ClientRect:
+        """Resolve a complete region, or explicitly intersect a dynamic search."""
+        if roi.width < 0 or roi.height < 0:
+            raise ValueError(f"Negative region size: {roi}")
+        r, b = self.transform.rect(roi), self.bounds
+        if not clip:
+            if r.x < b.x or r.y < b.y or r.right > b.right or r.bottom > b.bottom:
+                raise ValueError(f"ROI outside frame: {r} vs {b}")
+            return r
+        x, y = min(max(r.x,b.x),b.right), min(max(r.y,b.y),b.bottom)
+        right, bottom = max(b.x,min(r.right,b.right)), max(b.y,min(r.bottom,b.bottom))
+        return ClientRect(x,y,max(0,right-x),max(0,bottom-y))
+
+    def crop(self, roi: Rect, *, clip: bool = False) -> FrameView:
+        r = self.region(roi, clip=clip)
+        x,y = r.x-self.origin.x,r.y-self.origin.y
+        return FrameView(self.raw[y:y+r.height,x:x+r.width,:3], self.transform, ClientPoint(r.x,r.y))
 
 
-def adapt_frame(frame: Frame, transform: CoordinateTransform) -> Frame | AdaptedFrame:
-    if transform.is_identity:
+def frame_view(frame: Frame | FrameView) -> FrameView:
+    if isinstance(frame, FrameView):
         return frame
-    return AdaptedFrame(frame, transform)
+    if frame.ndim != 3 or frame.shape[2] not in (3,4) or frame.dtype != np.uint8:
+        raise ValueError("Frame must be an HxWx3 or HxWx4 uint8 array")
+    size = Size(frame.shape[1],frame.shape[0])
+    return FrameView(frame[:,:,:3],CoordinateTransform(size,size))
+
+
+def adapt_frame(frame: Frame, transform: CoordinateTransform) -> Frame | FrameView:
+    if transform.is_identity:
+        return frame  # Matching wraps this zero-copy path in the same FrameView.
+    frame_view(frame)  # Validate without copying captured pixels.
+    return FrameView(frame, transform)
 
 
 def initial_client_size(

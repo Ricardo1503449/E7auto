@@ -1,6 +1,8 @@
 from __future__ import annotations
 from dataclasses import replace
+import yaml
 from e7auto.configuration.models import AppConfig, ConfigError
+from e7auto.configuration.components import load_component_layouts
 from e7auto.configuration.schema import COMMON_TEMPLATE_KEYS, PENGUIN_CONTROLS
 from e7auto.resources.manifest import load_template_manifest
 CONTROLS = PENGUIN_CONTROLS
@@ -31,6 +33,9 @@ def with_penguin_config(config: AppConfig) -> AppConfig:
                 raise ValueError(f"rois.{roi_key} must fit the client and contain the template")
         paths = {key: config.template_paths[key] for key in COMMON_TEMPLATE_KEYS}
         paths.update(registered)
-        return replace(config, template_paths=paths)
-    except (ValueError, KeyError, TypeError) as exc:
+        raw = yaml.safe_load(config.source_path.read_text(encoding='utf-8'))
+        components = load_component_layouts(raw['penguin_component_matching'], sizes,
+                                            {'altar_close'}, prefix='penguin_')
+        return replace(config, template_paths=paths, component_layouts=components)
+    except (OSError, ValueError, KeyError, TypeError, yaml.YAMLError) as exc:
         raise ConfigError([f"Penguin templates: {exc}"]) from exc

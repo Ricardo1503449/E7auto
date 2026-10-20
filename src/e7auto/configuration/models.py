@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from e7auto.core.types import Point, Rect, Size
+from e7auto.core.recognition import ComponentLayout
 
 @dataclass(frozen=True, slots=True)
 class DisplayConfig:
@@ -38,6 +39,11 @@ class TimingConfig:
     purchase_result_timeout_ms: int
     refresh_timeout_ms: int
     stable_frames: int
+    capture_frame_timeout_ms: int = 1000
+    capture_recovery_timeout_ms: int = 3000
+    capture_rebuild_cooldown_ms: int = 60000
+    capture_rebuild_window_ms: int = 600000
+    capture_rebuild_max_attempts: int = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,6 +68,11 @@ class ScrollConfig:
     minimum_upward_shift_px: int
     difference_threshold: int
     minimum_changed_fraction: float
+    maximum_horizontal_shift_px: float = 4.0
+    minimum_overlap_fraction: float = 0.50
+    minimum_content_score: float = 0.75
+    minimum_content_stddev: float = 8.0
+    content_alignment_tolerance_px: float = 4.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +123,8 @@ class AppConfig:
     template_manifest_paths: dict[str, Path] = field(default_factory=dict)
     network_error_template: str = "network_connection_abnormal"
     network_retry_template: str = "network_retry"
+    candidate_cache_mib: int = 64
+    component_layouts: dict[str, ComponentLayout] = field(default_factory=dict)
 
 
 class ConfigError(ValueError):

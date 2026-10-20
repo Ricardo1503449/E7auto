@@ -54,13 +54,32 @@ def test_existing_digit_templates_generate_cached_stroke_variants() -> None:
     )
 
 
+def test_digit_query_reuses_template_dilations_and_only_prepares_nine_shifts(monkeypatch):
+    config = load_config(ROOT / "config/internal.yaml")
+    vision = OpenCvGameVision(config, TemplateRepository(config))
+    variants, _ = vision._digits.template_variants()
+    glyph = variants['8'][0][0]
+    expected = vision._digits.best_match(glyph, variants)
+    calls = []
+    original = cv2.dilate
+    def counted(*args, **kwargs):
+        calls.append(1)
+        return original(*args, **kwargs)
+    monkeypatch.setattr(cv2, 'dilate', counted)
+    assert vision._digits.best_match(glyph, variants) == expected
+    assert len(calls) == 9
+    assert all(not mask.flags.writeable for items in variants.values() for mask, _ in items)
+
+
 def _read_actual_digit_roi(path: Path) -> tuple[int, float] | None:
     config = load_config(ROOT / "config" / "internal.yaml")
     vision = OpenCvGameVision(config, TemplateRepository(config))
     actual_roi = cv2.imread(str(path), cv2.IMREAD_COLOR)
     assert actual_roi is not None
-    normalized_roi = cv2.resize(actual_roi, (110, 45), interpolation=cv2.INTER_AREA)
-    return vision._read_sky_stone_digits(normalized_roi, Rect(0, 0, 110, 45))
+    from e7auto.vision.frames import FrameView, CoordinateTransform
+    from e7auto.core.types import Size
+    native=FrameView(actual_roi,CoordinateTransform(Size(2322,1306),Size(1536,864)))
+    return vision._read_sky_stone_digits(native,Rect(0,0,110,45))
 
 
 def test_1536_client_digit_roi_parses_real_2118_failure() -> None:

@@ -58,8 +58,8 @@ def test_real_entries_survive_scale_and_brightness(entry, samples, sample, width
     assert reference is not None
     observed = detect(frame_for(samples[sample], width, brightness))
     assert observed is not None
-    assert abs(observed.anchor.x - reference.anchor.x) <= 2
-    assert abs(observed.anchor.y - reference.anchor.y) <= 2
+    assert abs(observed.anchor.x - reference.anchor.x*width/2322) <= 2
+    assert abs(observed.anchor.y - reference.anchor.y*round(width*1306/2322)/1306) <= 2
 
 
 @pytest.mark.parametrize("sample", ["hidden_192723", "hidden_192753", "hidden_193020"])
@@ -135,7 +135,7 @@ def test_sanctuary_search_can_be_calibrated_independently_of_template_origin(sam
     ))
     result = PenguinVision(changed, TemplateRepository(changed)).control(frame, "sanctuary_entry")
     assert result is not None and result.anchor == Point(304, 441)
-    assert result.roi == requested
+    assert result.search_region == requested
 
 
 @pytest.mark.parametrize("right,bottom", [(False, False), (True, False), (False, True), (True, True)])
@@ -197,7 +197,7 @@ def test_nonfinite_structure_scores_fail_closed(monkeypatch, value):
         return np.full_like(result, value) if method == cv2.TM_CCOEFF_NORMED else result
 
     monkeypatch.setattr(cv2, "matchTemplate", match)
-    assert vision.match_entry(template, "entry", Rect(0, 0, 12, 12), 0.96, structure_threshold=0.8) is None
+    assert vision.match_entry(np.pad(template,((0,8),(0,8),(0,0))), "entry", Rect(0, 0, 20, 20), 0.96, structure_threshold=0.8) is None
 
 
 @pytest.mark.parametrize("score, accepted", [(0.7999, False), (0.8, True), (0.8001, True)])
@@ -210,7 +210,7 @@ def test_structure_threshold_boundary(monkeypatch, score, accepted):
         return np.full_like(result, score) if method == cv2.TM_CCOEFF_NORMED else result
 
     monkeypatch.setattr(cv2, "matchTemplate", match)
-    result = vision.match_entry(template, "entry", Rect(0, 0, 12, 12), 0.96, structure_threshold=0.8)
+    result = vision.match_entry(np.pad(template,((0,8),(0,8),(0,0))), "entry", Rect(0, 0, 20, 20), 0.96, structure_threshold=0.8)
     assert (result is not None) is accepted
 
 

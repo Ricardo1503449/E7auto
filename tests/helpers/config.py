@@ -40,6 +40,7 @@ def make_config(
             "refresh_confirm_prompt": Rect(20, 20, 20, 10),
             "refresh_confirm_button": Rect(40, 40, 20, 10),
             "inventory_list": Rect(10, 10, 70, 50),
+            "inventory_content": Rect(10, 10, 40, 50),
             "confirm_item": Rect(20, 20, 20, 20),
             "confirm_button": Rect(40, 40, 20, 10),
             "purchase_result": Rect(30, 20, 40, 20),

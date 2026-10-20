@@ -8,9 +8,12 @@ import numpy as np
 
 from e7auto.configuration.models import AppConfig, ConfigError
 from e7auto.configuration.schema import PENGUIN_CONTROLS
-from e7auto.core.types import Rect
+from e7auto.core.types import Rect, ClientRect
 from e7auto.resources.templates import TemplateData, TemplateRepository
 from e7auto.vision.matching import TemplateMatcher
+from e7auto.vision.candidates import CandidateCache
+from e7auto.vision.components import ComponentMatcher
+from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher
 from e7auto.vision.network import NetworkVision
 from e7auto.core.observations import Observation
@@ -31,7 +34,8 @@ class PenguinVision:
     def __init__(self, config: AppConfig, templates: TemplateRepository):
         self._config = config
         self._templates = templates
-        self._matcher = TemplateMatcher(templates)
+        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
+        self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
         approved = templates.get("penguin_penguin_buy_5100")
@@ -43,9 +47,12 @@ class PenguinVision:
         # Only the amount is excluded for locating a dialog whose price changed.
         # Full 5100 recognition still uses the unmodified approved template.
         self._purchase_body = TemplateData(approved.image, mask)
-        self._body_matcher = TemplateMatcher(_PurchaseBodyRepository(self._purchase_body))
+        self._body_matcher = TemplateMatcher(_PurchaseBodyRepository(self._purchase_body), self._matcher.cache)
 
     def match(self, frame, template_key: str, roi: Rect, threshold: float) -> Observation | None:
+        if template_key in self._components.layouts:
+            hits = self._components.locate_all(frame, template_key, roi, threshold, limit=1, force_color=False)
+            return hits[0] if hits else None
         return self._matcher.match(frame, template_key, roi, threshold)
 
     def match_entry(self, frame, template_key: str, roi: Rect, threshold: float,
@@ -75,8 +82,11 @@ class PenguinVision:
             return None
         height, width = self._purchase_body.image.shape[:2]
         r = self._config.penguin_price_rect
-        price_roi = Rect(body.anchor.x - width//2 + r.x,
-                         body.anchor.y - height//2 + r.y, r.width, r.height)
+        g=body.geometry
+        sx,sy=(g.scale_x,g.scale_y) if g is not None else (body.bounds.width/width,body.bounds.height/height)
+        x,y=(g.x,g.y) if g is not None else (body.bounds.x,body.bounds.y)
+        left,top = round(x+r.x*sx),round(y+r.y*sy)
+        price_roi = ClientRect(left,top,round(x+r.right*sx)-left,round(y+r.bottom*sy)-top)
         price = self._price(frame, price_roi)
         full = self.control(frame, "penguin_buy_5100") is not None
         return PenguinDialog(price, body, maximum, cancel, full)
@@ -87,20 +97,21 @@ class PenguinVision:
         mask = ((hsv[:, :, 0] >= 15) & (hsv[:, :, 0] <= 40)
                 & (hsv[:, :, 1] > 90) & (hsv[:, :, 2] > 170)).astype(np.uint8)
         count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
+        sx,sy = frame_view(frame).transform.scale_x,frame_view(frame).transform.scale_y
         glyphs = []
         for index in range(1, count):
             x, y, width, height, area = (int(v) for v in stats[index])
-            if height < 12 and area < 45:  # thousands separator / isolated noise
+            if height < 12*sy and area < 45*sx*sy:  # thousands separator / isolated noise
                 continue
-            if height < 20 or height > 40 or area < 35 or x == 0 or x+width >= roi.width:
+            if height < 20*sy or height > 40*sy or area < 35*sx*sy or x == 0 or x+width >= source.shape[1]:
                 return None
             glyphs.append((x, labels[y:y+height, x:x+width] == index))
         if not 1 <= len(glyphs) <= 6:
             return None
-        variants, _ = self._digits.template_variants()
+        variants, _ = self._digits.template_variants(sx)
         digits = []
         for _, glyph in sorted(glyphs, key=lambda item: item[0]):
-            match = self._digits.best_match(glyph, variants)
+            match = self._digits.best_match(glyph, variants, width_scale=sx)
             if (match.confidence < self._config.penguin_price_digit_confidence
                     or match.margin < self._config.penguin_price_digit_margin):
                 return None
@@ -113,3 +124,6 @@ class PenguinVision:
 
     def network_retry(self, frame):
         return self._network.network_retry(frame)
+
+    def clear_template_cache(self):
+        self._matcher.cache.clear()

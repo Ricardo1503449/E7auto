@@ -159,6 +159,17 @@ class FakeInput:
         self.actions.append(("scroll", point, delta))
         self._trigger()
 
+    def pointer_down(self, window: WindowRef, point: Point) -> None:
+        self.actions.append(("pointer_down", point, None))
+        self._trigger()
+
+    def pointer_move(self, window: WindowRef, point: Point, *, allow_outside_client: bool = False) -> None:
+        self.actions.append(("pointer_move", point, None))
+        self._trigger()
+
+    def pointer_up(self, window: WindowRef, point: Point) -> None:
+        self.actions.append(("pointer_up", point, None))
+
 
 class FakeRuntimeEnvironment:
     def __init__(self, elevated: bool = True) -> None:
@@ -182,6 +193,25 @@ class FakeOverlay:
         return self.succeeds
 
 
+class FakeLogger:
+    def __init__(self) -> None:
+        self.events: list[tuple[str, dict[str, object]]] = []
+        self.closed = 0
+        self.stop_snapshots: list[tuple[CachedGameFrame | None, str, float]] = []
+
+    def event(self, event: str, **fields: object) -> None:
+        self.events.append((event, fields))
+
+    def close(self) -> None:
+        self.closed += 1
+
+    def save_stop_snapshot(
+        self, cached: CachedGameFrame | None, *, stop_reason: str, stopped_monotonic: float,
+    ) -> None:
+        if not self.stop_snapshots:
+            self.stop_snapshots.append((cached, stop_reason, stopped_monotonic))
+
+
 class FakeHotkeys:
     def __init__(self, succeeds: bool = True, on_register: Callable[[Callable[[], None]], None] | None = None):
         self.succeeds = succeeds
@@ -202,22 +232,3 @@ class FakeHotkeys:
 
     def unregister_f5(self) -> None:
         self.unregistered += 1
-
-
-class FakeLogger:
-    def __init__(self) -> None:
-        self.events: list[tuple[str, dict[str, object]]] = []
-        self.closed = 0
-        self.stop_snapshots: list[tuple[CachedGameFrame | None, str, float]] = []
-
-    def event(self, event: str, **fields: object) -> None:
-        self.events.append((event, fields))
-
-    def close(self) -> None:
-        self.closed += 1
-
-    def save_stop_snapshot(
-        self, cached: CachedGameFrame | None, *, stop_reason: str, stopped_monotonic: float,
-    ) -> None:
-        if not self.stop_snapshots:
-            self.stop_snapshots.append((cached, stop_reason, stopped_monotonic))

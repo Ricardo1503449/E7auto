@@ -1,159 +1,149 @@
 from __future__ import annotations
 
-from dataclasses import replace
-from pathlib import Path
-
 import cv2
 import numpy as np
 import pytest
-
-from e7auto.core.types import Rect, Size
-from e7auto.features.shop.scrolling import ScrollProgress, ScrollServices, scroll_to_bottom
-from e7auto.vision.frames import AdaptedFrame, CoordinateTransform
-from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
-from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability, prepare_scroll_overlap_reference, verify_scroll_overlap
-from tests.helpers import FakeClock, FakeLogger, make_config
-from tests.helpers.paths import FIXTURES_DIR
-
-
-ROI = Rect(0, 0, 1320, 1180)
+from e7auto.configuration.loader import load_config
+from e7auto.core.types import Rect, Size, ClientPoint
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
+from e7auto.features.shop.scrolling import ScrollServices, ScrollProgress, scroll_to_bottom
+from e7auto.features.shop.vision import ShopVision
+from e7auto.vision.frames import CoordinateTransform, FrameView
+from tests.helpers import FakeClock, FakeLogger
+from tests.helpers.paths import ROOT, FIXTURES_DIR
 
 
-@pytest.fixture(scope="module")
-def screenshots():
-    # Inventory ROIs only, from the user's 2026-09-15 top/bottom screenshots.
-    directory = FIXTURES_DIR / "shop"
-    top = cv2.imread(str(directory / "scroll_overlap_top.png"))
-    bottom = cv2.imread(str(directory / "scroll_overlap_bottom.png"))
-    assert top is not None and bottom is not None
-    return top, bottom
+@pytest.fixture(scope='module')
+def config():
+    return load_config(ROOT / 'config/internal.yaml')
 
 
-@pytest.mark.parametrize("shift_y", [-393.212, -393.409])
-def test_real_inventory_overlap_accepts_correct_subpixel_displacement(screenshots, shift_y):
-    top, bottom = screenshots
-    ref = prepare_scroll_overlap_reference(top, ROI, 4)
-    result = verify_scroll_overlap(ref, bottom, ROI, 0.0, shift_y)
-    assert result.accepted
-    assert result.passed_blocks == 4
-    assert min(result.block_scores) >= 0.75
-    assert result.overlap_height_fraction == pytest.approx(1 - abs(shift_y) / ROI.height)
+def real_frames(config):
+    transform = CoordinateTransform(config.baseline_client_size, Size(1536, 864))
+    return {label: FrameView(cv2.imread(str(FIXTURES_DIR / 'shop' / ('scroll_content_' + label + '.png'))),
+                             transform, ClientPoint(628, 72)) for label in ['before', 'first', 'last-3']}
 
 
-@pytest.mark.parametrize("shift_y", [-300, -350, -500, 0])
-def test_real_inventory_overlap_rejects_wrong_displacement(screenshots, shift_y):
-    top, bottom = screenshots
-    result = verify_scroll_overlap(prepare_scroll_overlap_reference(top, ROI, 4), bottom, ROI, 0, shift_y)
-    assert not result.accepted
-    assert result.reason == "insufficient_matching_blocks"
+@pytest.mark.parametrize('label', ['first', 'last-3'])
+def test_real_repeated_price_failure_verifies_native_product_content(config, label):
+    frames = real_frames(config)
+    result = measure_inventory_scroll(frames['before'], frames[label], config.rois['inventory_content'], 8, config=config.scroll)
+    assert result.content_verified
+    assert result.phase_shift_y == pytest.approx(-394, abs=2)
+    assert abs(result.phase_shift_x) < 1
+    assert result.changed_fraction > config.scroll.minimum_changed_fraction
+    assert sum(s is not None and s >= config.scroll.minimum_content_score for s in result.content_scores) >= 3
 
 
-def test_stationary_inventory_cannot_validate_fabricated_motion(screenshots):
-    top, _ = screenshots
-    result = verify_scroll_overlap(prepare_scroll_overlap_reference(top, ROI, 4), top, ROI, 0, -393.409)
-    assert not result.accepted
+@pytest.mark.parametrize('size', [Size(2322, 1306), Size(1920, 1080), Size(1536, 864)])
+def test_previous_real_baseline_sample_and_derived_sizes(config, size):
+    frames = []
+    for label in ['top', 'bottom']:
+        raw = np.zeros((1306, 2322, 3), np.uint8)
+        raw[110:1290, 950:2270] = cv2.imread(str(FIXTURES_DIR / 'shop' / ('scroll_overlap_' + label + '.png')))
+        if size != config.baseline_client_size:
+            raw = cv2.resize(raw, (size.width, size.height), interpolation=cv2.INTER_AREA)
+        frames.append(FrameView(raw, CoordinateTransform(config.baseline_client_size, size)))
+    result = measure_inventory_scroll(*frames, config.rois['inventory_content'], 8, config=config.scroll)
+    assert result.content_verified
+    assert result.phase_shift_y == pytest.approx(-393, abs=3)
+    assert result.changed_fraction > config.scroll.minimum_changed_fraction
 
 
-def test_main_algorithm_on_real_screenshots_still_passes(screenshots):
-    top, bottom = screenshots
-    result = measure_inventory_scroll(top, bottom, ROI, 8)
-    assert result.phase_shift_y == pytest.approx(-393.212, abs=0.5)
-    assert result.changed_fraction > 0.30
-
-
-def test_uniform_images_do_not_pass_correlation(screenshots):
-    top, _ = screenshots
-    blank = np.full_like(top, 100)
-    result = verify_scroll_overlap(prepare_scroll_overlap_reference(blank, ROI, 4), blank, ROI, 0, -393)
-    assert not result.accepted
-    assert result.block_scores == (None, None, None, None)
-    assert result.passed_blocks == 0
-
-
-@pytest.mark.parametrize("shift_x,shift_y,reason", [
-    (0, -591, "insufficient_overlap"), (4.01, -393, "horizontal_shift"),
-    (float("nan"), -393, "non_finite_shift"), (0, float("inf"), "non_finite_shift"),
-])
-def test_overlap_rejects_invalid_geometry_before_processing_current_frame(screenshots, shift_x, shift_y, reason):
-    top, _ = screenshots
-    ref = prepare_scroll_overlap_reference(top, ROI, 4)
-    # An inaccessible current frame proves rejection precedes any pixel processing.
-    result = verify_scroll_overlap(ref, None, ROI, shift_x, shift_y)
-    assert not result.accepted
-    assert result.reason == reason
-
-
-def test_overlap_reuses_existing_adapted_roi(screenshots):
-    top, bottom = screenshots
-    scaled = cv2.resize(bottom, (660, 590), interpolation=cv2.INTER_AREA)
-    current = AdaptedFrame(scaled, CoordinateTransform(Size(1320, 1180), Size(660, 590)))
-    current.normalized_roi(ROI)
-    count = current.normalization_count
-    ref = prepare_scroll_overlap_reference(top, ROI, 4)
-    verify_scroll_overlap(ref, current, ROI, 0, -393.212)
-    assert current.normalization_count == count
-
-
-@pytest.mark.parametrize("bad_blocks,accepted", [(0, True), (1, True), (2, False)])
-def test_overlap_requires_three_textured_matching_blocks(bad_blocks, accepted):
-    # Build in downsampled space, then expand: avoids texture dilution during resize.
-    rng = np.random.default_rng(47)
-    gray = rng.integers(0, 256, (80, 80), dtype=np.uint8)
-    after = gray.copy()
-    for row, column in [(slice(2, 40), slice(2, 40)), (slice(2, 40), slice(40, 78))][:bad_blocks]:
-        after[row, column] = 100
-    current = np.repeat(np.repeat(after, 4, axis=0), 4, axis=1)
-    current = np.repeat(current[:, :, None], 3, axis=2)
-    result = verify_scroll_overlap(gray.astype(np.float32), current, Rect(0, 0, 320, 320), 0, 0)
-    assert result.accepted is accepted
-    assert result.passed_blocks == 4 - bad_blocks
-
-
-def test_game_vision_exposes_preparation_and_verification(screenshots):
-    top, bottom = screenshots
-    base = make_config()
-    config = replace(base, rois={**base.rois, "inventory_list": ROI})
-    vision = OpenCvGameVision(config, None)
-    reference = vision.prepare_scroll_overlap_reference(top)
-    assert reference.shape == (295, 330)
-    assert vision.verify_scroll_overlap(reference, bottom, 0, -393.212).accepted
-
-
-def test_real_primary_path_has_no_additional_image_operations(screenshots, monkeypatch):
-    top, bottom = screenshots
-    frames = iter([top, top, bottom, bottom, bottom])
+def test_first_detection_already_at_bottom_passes_the_single_production_path(config):
+    frames = real_frames(config)
+    sequence = iter([frames['before'], frames['first'], frames['last-3'], frames['last-3']])
     clock, logger, progress = FakeClock(), FakeLogger(), ScrollProgress()
-    calls = {name: 0 for name in ("cvtColor", "resize", "phaseCorrelate", "matchTemplate", "warpAffine")}
-    captures = 0
-
-    for name in calls:
-        original = getattr(cv2, name)
-
-        def counted(*args, _name=name, _original=original, **kwargs):
-            calls[_name] += 1
-            return _original(*args, **kwargs)
-
-        monkeypatch.setattr(cv2, name, counted)
-
-    def capture():
-        nonlocal captures
-        captures += 1
-        return next(frames)
-
-    def forbidden_overlap(*args):
-        pytest.fail("Primary success must never enter the overlap path")
-
+    roi = config.rois['inventory_content']
     services = ScrollServices(
-        capture=capture, dispatch_scroll=lambda *_: None, checkpoint=lambda: None,
-        sleep=clock.sleep, active_monotonic=clock.monotonic,
-        measure_stability=lambda a, b: measure_inventory_scroll_stability(a, b, ROI, 8, 4),
-        measure_movement=lambda a, b: measure_inventory_scroll(a, b, ROI, 8),
-        verify_overlap=forbidden_overlap, inventory_height=ROI.height, logger=logger,
+        capture=lambda: next(sequence), dispatch_scroll=lambda *_: None,
+        checkpoint=lambda: None, sleep=clock.sleep, active_monotonic=clock.monotonic,
+        measure_stability=lambda a, b: measure_inventory_scroll_stability(a, b, roi, 8, 4),
+        measure_movement=lambda a, b: measure_inventory_scroll(a, b, roi, 8, config=config.scroll), logger=logger,
     )
-    returned = scroll_to_bottom(make_config().scroll, 3, services, progress)
-    assert captures == 5  # B, F1 (top), F2..F4 (bottom).
-    assert len(returned) == 3
-    assert calls == {"cvtColor": 8, "resize": 6, "phaseCorrelate": 4, "matchTemplate": 0, "warpAffine": 0}
-    logged = next(fields for event, fields in logger.events if event == "scroll_settle_trace")
-    assert logged["verification_method"] == "primary"
-    assert logged["fallback_checks"] == 0
+    result = scroll_to_bottom(config.scroll, 3, services, progress)
+    assert len(result) == 3
+    trace = next(fields for event, fields in logger.events if event == 'scroll_settle_trace')
+    assert trace['verification_method'] == 'content'
+    assert trace['total_gate_checks'] == 1
+    assert trace['sample_count'] == 3
+    assert not any('fallback' in key or 'cumulative' in key for key in trace)
+
+
+def test_prices_and_buttons_cannot_influence_movement_or_stability(config):
+    frames = real_frames(config)
+    raw = []
+    for label in ['before', 'last-3']:
+        image = np.zeros((864, 1536, 3), np.uint8)
+        image[72:854, 628:1257] = frames[label].raw
+        raw.append(image)
+    vision = ShopVision(config, None)
+    transform = frames['before'].transform
+    original = vision.inventory_scroll_movement(*(FrameView(p, transform) for p in raw))
+    rng = np.random.default_rng(43)
+    for image in raw:
+        image[:, 1257:] = rng.integers(0, 256, image[:, 1257:].shape, dtype=np.uint8)
+    assert vision.inventory_scroll_movement(*(FrameView(p, transform) for p in raw)) == original
+    stable_before = raw[1].copy()
+    raw[1][:, 1257:] = 255
+    stable = vision.inventory_scroll_stability(FrameView(stable_before, transform), FrameView(raw[1], transform))
+    assert abs(stable.phase_shift_x) < 1e-4
+    assert abs(stable.phase_shift_y) < 1e-4
+
+
+@pytest.mark.parametrize('shape', [(782, 874), (781, 629), (195, 218), (196, 219)])
+def test_identical_native_pixels_have_zero_shift_on_odd_and_even_grids(shape):
+    raw = np.random.default_rng(19).integers(0, 256, (*shape, 3), dtype=np.uint8)
+    result = measure_inventory_scroll_stability(raw, raw, Rect(0, 0, shape[1], shape[0]), 8, 4)
+    assert result.phase_shift_x == pytest.approx(0, abs=1e-4)
+    assert result.phase_shift_y == pytest.approx(0, abs=1e-4)
+    assert result.phase_response == pytest.approx(1, abs=1e-4)
+
+
+def test_reverse_real_content_keeps_its_actual_direction(config):
+    frames = real_frames(config)
+    result = measure_inventory_scroll(frames['last-3'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll)
+    assert result.content_verified
+    assert result.phase_shift_y > 390
+
+
+def test_stationary_and_unrelated_content_cannot_fabricate_upward_motion(config):
+    frames = real_frames(config)
+    stationary = measure_inventory_scroll(frames['before'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll)
+    assert abs(stationary.phase_shift_y) < 1e-4
+    assert stationary.changed_fraction == 0
+    noise = FrameView(np.random.default_rng(81).integers(0, 256, frames['before'].raw.shape, dtype=np.uint8),
+                      frames['before'].transform, frames['before'].origin)
+    unrelated = measure_inventory_scroll(frames['before'], noise, config.rois['inventory_content'], 8, config=config.scroll)
+    assert not unrelated.content_verified
+
+
+def test_repeated_product_content_is_rejected_as_ambiguous(config):
+    row = np.random.default_rng(74).integers(0, 256, (80, 160, 3), dtype=np.uint8)
+    before = np.tile(row, (6, 1, 1))
+    after = np.roll(before, -40, axis=0)
+    result = measure_inventory_scroll(before, after, Rect(0, 0, 160, 480), 8, config=config.scroll)
+    assert not result.content_verified
+    assert result.content_reason == 'ambiguous_content'
+
+
+def test_final_content_verification_does_not_resize_native_pixels(config, monkeypatch):
+    frames = real_frames(config)
+    def forbidden(*args, **kwargs):
+        pytest.fail('Final scroll evidence must use native pixels')
+    monkeypatch.setattr(cv2, 'resize', forbidden)
+    assert measure_inventory_scroll(frames['before'], frames['last-3'], config.rois['inventory_content'], 8, config=config.scroll).content_verified
+
+
+def test_flat_content_cannot_verify_a_translation(config):
+    blank = np.full((200, 300, 3), 100, np.uint8)
+    result = measure_inventory_scroll(blank, blank, Rect(0, 0, 300, 200), 8, config=config.scroll)
+    assert not result.content_verified
+
+
+def test_cropped_frames_must_keep_the_same_full_client_geometry(config):
+    frames = real_frames(config)
+    wrong = FrameView(frames['last-3'].raw, CoordinateTransform(config.baseline_client_size, Size(1920, 1080)),
+                      frames['last-3'].origin)
+    with pytest.raises(ValueError, match='client geometry'):
+        measure_inventory_scroll(frames['before'], wrong, config.rois['inventory_content'], 8, config=config.scroll)

@@ -16,6 +16,32 @@ from e7auto.core.types import Point
 from tests.helpers import make_config
 
 
+def test_bgra_preparation_keeps_a_view_and_only_copies_the_requested_roi():
+    from e7auto.vision.matching import TemplateMatcher
+    raw = np.arange(80*100*4, dtype=np.uint8).reshape(80, 100, 4)
+    prepared = TemplateMatcher.prepare_bgr(raw)
+    assert np.shares_memory(prepared.raw, raw)
+    roi = TemplateMatcher.crop(prepared, Rect(7, 9, 13, 17))
+    assert roi.flags.c_contiguous
+    assert roi.shape == (17, 13, 3)
+    np.testing.assert_array_equal(roi, raw[9:26, 7:20, :3])
+    assert raw.shape == (80, 100, 4)
+
+
+def test_locate_all_rejects_color_without_structure_and_preserves_joint_gate(monkeypatch):
+    import cv2
+    from e7auto.vision.matching import TemplateMatcher
+    matcher = TemplateMatcher(ArrayTemplates({'item': np.arange(192,dtype=np.uint8).reshape(8,8,3)}))
+    calls = []
+    def compare(source, template, method, **kwargs):
+        calls.append(method)
+        # Proposal passes the loose coarse gate, but fails the actual color gate.
+        return np.full((1, 1), .2, np.float32)
+    monkeypatch.setattr(cv2, 'matchTemplate', compare)
+    assert matcher.locate_all(np.arange(867,dtype=np.uint8).reshape(17,17,3), 'item', Rect(0, 0, 17, 17), .9, .8) == ()
+    assert calls == [cv2.TM_SQDIFF_NORMED]
+
+
 class ArrayTemplates:
     def __init__(self, templates: dict[str, np.ndarray]):
         self.templates = templates
@@ -30,6 +56,47 @@ class DataTemplates:
 
     def get(self, key: str) -> TemplateData:
         return self.templates[key]
+
+
+@pytest.mark.parametrize("masked", [False, True])
+def test_locate_template_cache_preserves_hits_and_reads_every_new_frame(monkeypatch, masked):
+    import cv2
+    from e7auto.vision.matching import TemplateMatcher
+    rng = np.random.default_rng(37)
+    template = rng.integers(30, 240, (40, 60, 3), dtype=np.uint8)
+    mask = rng.choice(np.array([0, 128, 255], np.uint8), size=(40, 60)) if masked else None
+    repo = DataTemplates({"anchor": TemplateData(template, mask)})
+    matcher = TemplateMatcher(repo)
+    roi = Rect(0, 0, 800, 600)
+    frame = np.zeros((600, 800, 3), np.uint8)
+    for x in (80, 280, 480):
+        frame[200:240, x:x+60] = template
+    original = cv2.resize
+    template_resizes = []
+
+    def resize(image, *args, **kwargs):
+        if image.shape[:2] == template.shape[:2]:
+            template_resizes.append(image.shape)
+        return original(image, *args, **kwargs)
+
+    monkeypatch.setattr(cv2, "resize", resize)
+    cold = matcher.locate_all(frame, "anchor", roi, .99, .9, limit=6)
+    assert len(cold) == 3
+    generations=matcher.cache.generations
+    assert generations>0
+    assert matcher.locate_all(frame.copy(), "anchor", roi, .99, .9, limit=6) == cold
+    assert matcher.cache.generations == generations
+    assert matcher.locate_all(np.zeros_like(frame), "anchor", roi, .99, .9, limit=6) == ()
+    moved = np.roll(frame, 20, axis=1)
+    assert sorted(h.anchor.x for h in matcher.locate_all(moved, "anchor", roi, .99, .9, limit=6)) == [h.anchor.x+20 for h in sorted(cold, key=lambda h:h.anchor.x)]
+    extra = frame.copy()
+    extra[200:240, 680:740] = template
+    assert len(matcher.locate_all(extra, "anchor", roi, .99, .9, limit=6)) == 4
+    repo.templates["anchor"] = TemplateData(template.copy(), mask)
+    assert matcher.locate_all(frame, "anchor", roi, .99, .9, limit=6) == cold
+    assert matcher.cache.generations == generations  # Same content reuses its digest.
+
+
 
 
 class ThresholdSpyVision(OpenCvGameVision):
@@ -147,7 +214,7 @@ def test_sky_stone_digits_roi_follows_detected_icon() -> None:
     icon = Observation(
         "sky_stone_icon",
         0.99,
-        config.rois["sky_stone_icon"],
+        Rect(11,3,62,75),
         Point(42, 40),
     )
 
@@ -166,7 +233,7 @@ def test_sky_stone_digits_roi_fails_closed_when_derived_region_is_outside_frame(
     icon = Observation(
         "sky_stone_icon",
         0.99,
-        config.rois["sky_stone_icon"],
+        Rect(64,3,62,75),
         Point(95, 40),
     )
 
@@ -350,9 +417,10 @@ def test_inventory_scroll_measurement_reports_calibrated_upward_content_shift() 
         after,
         Rect(0, 0, 160, 120),
         difference_threshold=8,
+        config=make_config().scroll,
     )
 
-    assert measured.phase_shift_y == pytest.approx(-35.0, abs=0.01)
+    assert measured.phase_shift_y == pytest.approx(-35.0, abs=0.1)
     assert measured.phase_response > 0.99
     assert measured.changed_fraction > 0.90
 

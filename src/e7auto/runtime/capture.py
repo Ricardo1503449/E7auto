@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 from e7auto.core.domain import StopReason
 from e7auto.vision.frames import adapt_frame
-from e7auto.core.ports import CachedGameFrame, CaptureError
+from e7auto.core.ports import CachedGameFrame, CaptureError, CaptureTiming
 from e7auto.runtime.stop_control import StopExecution
 
 
@@ -13,13 +13,22 @@ def capture_raw(ctx) -> object:
     try:
         ctx.ensure_window()
         assert ctx.window is not None and ctx.baseline_bounds is not None
+        set_checkpoint = getattr(ctx.deps.capture, "set_wait_checkpoint", None)
+        if set_checkpoint is not None:
+            set_checkpoint(ctx.ensure_window)
         try:
             frame = ctx.deps.capture.capture_client(ctx.window, ctx.baseline_bounds)
         except CaptureError as exc:
             raise StopExecution(StopReason.CAPTURE_FAILURE, str(exc)) from exc
+        finally:
+            if set_checkpoint is not None:
+                set_checkpoint(None)
+        # Backends without source timestamps leave their age explicitly unknown.
+        timing = getattr(ctx.deps.capture, "last_capture_timing", None)
         ctx.last_captured_frame = CachedGameFrame(
             frame, datetime.now().astimezone().isoformat(timespec="milliseconds"),
             ctx.deps.clock.monotonic(),
+            timing if isinstance(timing, CaptureTiming) else None,
         )
         ctx.control.checkpoint()
         assert ctx.transform is not None

@@ -23,10 +23,10 @@
     },
     "refresh_confirm_prompt": {
       "file": "refresh_confirm_prompt.png",
-      "sha256": "d34a22b420c364975b9f781d9b629449c48fea21e90ca02ddb0851b76e5fa36a",
+      "sha256": "40f602cfc804de67ab69990cfa69bc7f890a42c4a53144cfc69ad15d1b4ed86f",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/shop-refresh_confirm_prompt-40f602cfc804-dfec784a9245.json",
+        "record_sha256": "dfec784a92459b10e2da5011a6f97a9cfc90ec7da91b3158502b2ca521f5aaf8"
       }
     },
     "refresh_confirm_button": {
@@ -55,10 +55,10 @@
     },
     "insufficient_funds": {
       "file": "insufficient_funds.png",
-      "sha256": "1b66c737c1af8be862848e16761248d782f371d00bedf52e77762a9392652e76",
+      "sha256": "194d0f99d4845e5bd86fe605e682cab76455debafce9b7e7f2e0ae43f9908b35",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/shop-insufficient_funds-194d0f99d484-58533749f2d3.json",
+        "record_sha256": "58533749f2d31f0175327c229d9509388356a4fdf7886c851fc5633da06087ea"
       }
     },
     "purchased_button": {

@@ -29,6 +29,7 @@ _REQUIRED_ROIS = {
     "refresh_confirm_prompt",
     "refresh_confirm_button",
     "inventory_list",
+    "inventory_content",
     "confirm_item",
     "confirm_button",
     "purchase_result",

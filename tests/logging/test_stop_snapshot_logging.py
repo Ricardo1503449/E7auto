@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 
 from e7auto.configuration.models import LoggingConfig
-from e7auto.core.ports import CachedGameFrame
+from e7auto.core.ports import CachedGameFrame, CaptureTiming
 from e7auto.logging.run import RunLogManager
 
 
@@ -55,7 +55,7 @@ def test_png_matches_raw_client_pixels_in_unicode_directory_and_logs_metadata(tm
 def test_no_frame_skips_without_encoding_or_fabricated_metadata(tmp_path, monkeypatch):
     monkeypatch.setattr(cv2, "imencode", lambda *_: pytest.fail("No cache must not encode"))
     log = RunLogManager(tmp_path, LoggingConfig()).start("empty")
-    log.save_stop_snapshot(None, stop_reason="hotkey_failure", stopped_monotonic=1)
+    log.save_stop_snapshot(None, stop_reason="internal_error", stopped_monotonic=1)
     save(log)  # At most one attempt even when the first attempt had no cache.
     log.close()
     lines = result_lines(log)
@@ -64,6 +64,31 @@ def test_no_frame_skips_without_encoding_or_fabricated_metadata(tmp_path, monkey
     for field in ("width=", "height=", "captured_at=", "frame_age_ms=", " path="):
         assert field not in lines[0]
     assert not list(tmp_path.glob("*.png"))
+
+
+def test_stop_snapshot_distinguishes_source_age_from_cache_residence(tmp_path):
+    log = RunLogManager(tmp_path, LoggingConfig()).start("frame-times")
+    frame = cached()
+    frame = CachedGameFrame(frame.frame, frame.captured_at, frame.captured_monotonic,
+                            CaptureTiming(100_000_000, 100_500_000, 8.25))
+    save(log, frame)
+    log.close()
+    fields = dict(word.split("=", 1) for word in result_lines(log)[0].split() if "=" in word)
+    assert float(fields["frame_age_ms"]) == 2500
+    assert float(fields["source_age_at_receive_ms"]) == 50
+    assert float(fields["source_frame_age_ms"]) == 2550
+    assert float(fields["capture_wait_ms"]) == 8.25
+    assert fields["source_frame_ticks"] == "100000000"
+    assert fields["received_frame_ticks"] == "100500000"
+
+
+def test_backend_without_frame_timestamp_logs_unknown_source_age(tmp_path):
+    log = RunLogManager(tmp_path, LoggingConfig()).start("unknown-frame-time")
+    save(log)
+    log.close()
+    line = result_lines(log)[0]
+    assert "source_frame_age_ms=unknown" in line
+    assert "source_frame_ticks=" not in line
 
 
 @pytest.mark.parametrize("failure", ["encode_false", "encode_raise", "open", "write", "rename"])
@@ -222,8 +247,8 @@ def test_active_run_snapshot_is_protected_across_processes(tmp_path):
     image = log.path.with_name(log.path.stem + "-stop.png")
     code = """import sys
 from pathlib import Path
-from e7auto.run_logging import RunLogManager
-from e7auto.config import LoggingConfig
+from e7auto.logging.run import RunLogManager
+from e7auto.configuration.models import LoggingConfig
 log = RunLogManager(Path(sys.argv[1]), LoggingConfig(keep_runs=1)).start('child')
 log.close()
 """

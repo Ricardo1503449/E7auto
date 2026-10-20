@@ -23,8 +23,7 @@ _DECIMAL_LOG_FIELDS = frozenset({
     "duration_ms", "capture_ms", "vision_ms", "normalization_ms", "cache_wait_ms",
     "scale_x", "scale_y", "phase_shift_x", "phase_shift_y", "phase_response",
     "mean_absolute_difference", "changed_fraction", "total_phase_shift_y",
-    "total_phase_response", "total_changed_fraction", "cumulative_shift_x",
-    "cumulative_shift_y", "fallback_overlap_height_fraction", "fallback_block_scores",
+    "total_phase_response", "total_changed_fraction", "content_scores",
     "pair_shift_y", "pair_response", "pair_changed_fraction",
 })
 _PLAIN_DECIMAL = re.compile(r"-?(?:0|[1-9][0-9]*)\.[0-9]+")
@@ -81,7 +80,9 @@ def _run_group_name(name: str) -> str | None:
     if log is not None:
         return log[1]
     snapshot = _STOP_SNAPSHOT_NAME.fullmatch(name)
-    return snapshot[1] + ".log" if snapshot is not None else None
+    if snapshot is not None:
+        return snapshot[1] + ".log"
+    return None
 
 
 def _is_local_path(path: Path, directory: Path) -> bool:
@@ -150,6 +151,17 @@ class RunLogger:
                 captured_at=cached.captured_at,
                 frame_age_ms=max(0, round((stopped_monotonic - cached.captured_monotonic) * 1000)),
             )
+            timing = cached.timing
+            fields["source_frame_age_ms"] = "unknown"
+            if timing is not None:
+                fields.update(
+                    source_frame_ticks=timing.source_ticks,
+                    received_frame_ticks=timing.received_ticks,
+                    source_age_at_receive_ms=round(timing.source_age_ms, 3),
+                    source_frame_age_ms=round(timing.source_age_ms + max(
+                        0., (stopped_monotonic - cached.captured_monotonic) * 1000), 3),
+                    capture_wait_ms=round(timing.wait_ms, 3),
+                )
             if frame.dtype != np.uint8 or frame.ndim != 3 or frame.shape[2] not in (3, 4):
                 raise ValueError("cached game frame must be an HxWx3 or HxWx4 uint8 image")
             height, width = frame.shape[:2]
