@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1136" height="696" viewBox="0 0 1136 696" role="img" aria-label="两种策略效果展示">
+    <desc>转运池和连续刷新池各展示五项累计指标；同类条形图在两池间使用相同比例。</desc>
+    <rect width="1136" height="696" fill="#f6f7f9"/>
+    <g font-family="Microsoft YaHei UI,Segoe UI,sans-serif" fill="#000000">
+      <text x="24" y="35" fill="#228A50" font-size="13" font-weight="700" letter-spacing=".12em">E7AUTO · 社区统计</text>
+      <text x="24" y="75" font-size="26" font-weight="600">两种策略效果展示</text>
+      <text x="24" y="108" font-size="14">数据更新时间（北京时间）：2026-10-20 18:32</text>
+      <g transform="translate(24 136)"><g data-pool="transfer" role="img" aria-label="转运池统计">
+    <desc>天空石总消耗：2,439；圣约书签购买次数：35；神秘奖牌购买次数：9；圣约书签购买次数 / 100天空石：1.44；神秘奖牌购买次数 / 100天空石：0.37</desc>
+    <rect width="528" height="536" rx="10" fill="#ffffff" stroke="#e5e8ee"/>
+    <circle cx="28.5" cy="37.5" r="4.5" fill="#5BC7A4"/>
+    <text x="43" y="44" font-size="20" font-weight="600">转运池</text>
+    <text x="24" y="88" font-size="16">天空石总消耗</text>
+    <text x="24" y="134" font-size="38" font-weight="500">2,439</text>
+    <line x1="24" x2="504" y1="162" y2="162" stroke="#e5e8ee"/>
+      <text x="24" y="192" font-size="15" font-weight="600">累计购买</text><text x="24" y="230" font-size="14">圣约书签购买次数</text>
+          <text x="504" y="230" text-anchor="end" font-size="22" font-weight="500">35</text>
+          <rect x="24" y="241" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="covenant_purchases" x="24" y="241" width="480" height="9" rx="3" fill="#5BC7A4"/><text x="24" y="296" font-size="14">神秘奖牌购买次数</text>
+          <text x="504" y="296" text-anchor="end" font-size="22" font-weight="500">9</text>
+          <rect x="24" y="307" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="mystic_purchases" x="24" y="307" width="123.42857142857142" height="9" rx="3" fill="#5BC7A4"/><line x1="24" x2="504" y1="342" y2="342" stroke="#e5e8ee"/>
+      <text x="24" y="372" font-size="15" font-weight="600">获得效率</text><text x="24" y="410" font-size="14">圣约书签购买次数 / 100天空石</text>
+          <text x="504" y="410" text-anchor="end" font-size="22" font-weight="500">1.44</text>
+          <rect x="24" y="421" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="covenant_per_100" x="24" y="421" width="480" height="9" rx="3" fill="#5BC7A4"/><text x="24" y="476" font-size="14">神秘奖牌购买次数 / 100天空石</text>
+          <text x="504" y="476" text-anchor="end" font-size="22" font-weight="500">0.37</text>
+          <rect x="24" y="487" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="mystic_per_100" x="24" y="487" width="123.42857142857142" height="9" rx="3" fill="#5BC7A4"/></g></g><g transform="translate(584 136)"><g data-pool="continuous" role="img" aria-label="连续刷新池统计">
+    <desc>天空石总消耗：339；圣约书签购买次数：4；神秘奖牌购买次数：0；圣约书签购买次数 / 100天空石：1.18；神秘奖牌购买次数 / 100天空石：0.00</desc>
+    <rect width="528" height="536" rx="10" fill="#ffffff" stroke="#e5e8ee"/>
+    <circle cx="28.5" cy="37.5" r="4.5" fill="#73B6E6"/>
+    <text x="43" y="44" font-size="20" font-weight="600">连续刷新池</text>
+    <text x="24" y="88" font-size="16">天空石总消耗</text>
+    <text x="24" y="134" font-size="38" font-weight="500">339</text>
+    <line x1="24" x2="504" y1="162" y2="162" stroke="#e5e8ee"/>
+      <text x="24" y="192" font-size="15" font-weight="600">累计购买</text><text x="24" y="230" font-size="14">圣约书签购买次数</text>
+          <text x="504" y="230" text-anchor="end" font-size="22" font-weight="500">4</text>
+          <rect x="24" y="241" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="covenant_purchases" x="24" y="241" width="54.857142857142854" height="9" rx="3" fill="#73B6E6"/><text x="24" y="296" font-size="14">神秘奖牌购买次数</text>
+          <text x="504" y="296" text-anchor="end" font-size="22" font-weight="500">0</text>
+          <rect x="24" y="307" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="mystic_purchases" x="24" y="307" width="0" height="9" rx="3" fill="#73B6E6"/><line x1="24" x2="504" y1="342" y2="342" stroke="#e5e8ee"/>
+      <text x="24" y="372" font-size="15" font-weight="600">获得效率</text><text x="24" y="410" font-size="14">圣约书签购买次数 / 100天空石</text>
+          <text x="504" y="410" text-anchor="end" font-size="22" font-weight="500">1.18</text>
+          <rect x="24" y="421" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="covenant_per_100" x="24" y="421" width="394.6801517067003" height="9" rx="3" fill="#73B6E6"/><text x="24" y="476" font-size="14">神秘奖牌购买次数 / 100天空石</text>
+          <text x="504" y="476" text-anchor="end" font-size="22" font-weight="500">0.00</text>
+          <rect x="24" y="487" width="480" height="9" rx="3" fill="#eef0f5"/>
+          <rect data-key="mystic_per_100" x="24" y="487" width="0" height="9" rx="3" fill="#73B6E6"/></g></g>
+    </g></svg>
