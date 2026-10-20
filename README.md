@@ -34,7 +34,7 @@
 [近实时详情](https://e7auto-shop-stats.e7auto-stats.workers.dev/stats) · [每日快照](https://github.com/Ricardo1503449/E7auto/tree/stats)
 <!-- shop-statistics:end -->
 
-每日快照需维护者[启用工作流](docs/development/SHOP_STATISTICS.md#github每日快照)后使用。
+每日快照保留最近365天的历史JSON，图表只保留最新一份；配置方式见[工作流说明](docs/development/SHOP_STATISTICS.md#github每日快照)。
 
 ## 注意事项
 

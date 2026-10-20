@@ -61,10 +61,14 @@ $env:SHOP_STATS_NODE = $statsPaths.node
 | stats分支文件 | 内容 |
 | --- | --- |
 | latest.json、latest.svg | 最近一次成功快照的汇总及图表 |
-| history/YYYY-MM-DD.json、history/YYYY-MM-DD.svg | 对应北京时间日期的汇总及图表 |
+| history/YYYY-MM-DD.json | 最近365个日历日内对应北京时间日期的汇总 |
 | README.md | 图表入口、快照日期和统计口径 |
 
-本地生成的snapshot-files.json仅作这五个文件的发布白名单，不上传。首次运行创建没有源码历史父提交的独立stats分支；之后基于该分支原tree保留旧日期文件，以非强制方式更新引用并核对返回提交。源码默认分支不会被发布器修改。
+本地生成的snapshot-files.json仅作这四个文件的发布白名单，不上传。清单不再接受每日SVG，发布前核对真实日历日期、汇总字段/比率、latest与当天JSON一致及SVG格式。首次运行创建没有源码历史父提交的独立stats分支；之后读取旧提交的完整tree，保留范围内历史，以非强制方式更新引用并核对返回提交。源码默认分支不会被发布器修改。
+
+保留期包含快照当天，最早日期为当天减364天，按日历日而非现有文件数量计算；漏跑日期不补零，数据updated_at较旧也不改变保留边界。每次成功发布在同一提交中更新四个文件，并删除history下早于边界的JSON和既有每日SVG。仅匹配有效YYYY-MM-DD日期的普通文件，其他路径、无效日期、链接和异常文件类型保留；不得递归删除整个history目录。Git提交历史仍可找到移除内容，当前文件数量受到控制不等于回收历史仓库空间。
+
+清理使用Git trees接口的base_tree和sha:null条目，目标来自完整旧tree；若递归响应truncated或读取失败，写入前终止。生成失败时发布步骤不运行；发布器不会另建一次只含清理的提交。更新分支引用前的失败不改变可见快照，引用请求结果不明确时按下文复核。[GitHub Git trees接口](https://docs.github.com/en/rest/git/trees#create-a-tree)
 
 ### 启用顺序
 
@@ -74,13 +78,13 @@ $env:SHOP_STATS_NODE = $statsPaths.node
 2. 在仓库`Settings → Secrets and variables → Actions → Variables`新增**仓库变量**`SHOP_STATS_API_URL`，值为真实HTTPS服务根地址，例如`https://e7auto-shop-stats.e7auto-stats.workers.dev`，不附加`/v1/shop-stats`。只在本机config中填写地址不会配置GitHub变量；变量缺失或为空时整个snapshot作业跳过。[变量配置](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables)
 3. 确认仓库允许GitHub Actions及checkout/setup-python/setup-node，保留工作流声明的`contents: write`。发布步骤使用GitHub为本次作业提供的`GITHUB_TOKEN`，不需要个人长期令牌或Cloudflare管理密钥。组织策略、分支保护或ruleset若拒绝创建/更新stats，应先由维护者审查权限，不改为强制推送。[令牌权限](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token)
 4. 在`Actions → Shop community statistics snapshot → Run workflow`选择默认分支，手动运行一次。[手动运行说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
-5. 核对任务成功、stats分支实际提交与发布器输出一致，且五个文件齐全；latest与当天history的JSON/SVG内容一致、保留旧日期、没有新增源码或逐次上报明细。比较必须使用本次快照的数据，不能要求它与之后又收到上报的实时接口完全相等。首次成功后，README中的每日快照链接才有对应分支可访问。
+5. 核对任务成功、stats分支实际提交与发布器输出一致，且当次四个文件齐全；latest与当天history的JSON内容一致，范围内旧JSON保留、过期JSON和每日SVG移除，没有新增源码或逐次上报明细。比较必须使用本次快照的数据，不能要求它与之后又收到上报的实时接口完全相等。首次成功后，README中的每日快照链接才有对应分支可访问。
 
 工作流安排每日UTC 18:17，即北京时间次日02:17；日期由实际执行时的北京时间决定。同一仓库的快照作业串行排队，不取消正在运行的任务，单个作业上限5分钟。GitHub定时触发可能延迟或漏跑，公共仓库60天无活动时还可能自动禁用，不能承诺每天准点；维护者应查看Actions执行记录。[定时限制](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
 ### 失败与复核
 
-- 请求失败、重定向、超过32 KiB的响应、非法汇总或渲染失败都会使生成步骤失败，后续发布步骤不执行，保留已发布快照，不用零值替代失败结果。
+- 请求失败、重定向、超过32 KiB的响应、非法汇总或渲染失败都会使生成步骤失败，后续发布步骤及清理均不执行，保留已发布快照，不用零值替代失败结果。
 - 发布器只接受白名单文件。更新stats引用失败时不强制覆盖；若最后的引用核对失败，先只读查看实际分支，因为分支可能已经更新，不能仅凭任务失败认定远端未改变。
 - 没有新的上报时，快照仍可成功保存相同累计值；updated_at是服务汇总更新时间，不是任务运行时间。每日快照和README实时图表是两条展示路径，图片缓存不影响stats分支里的文件记录。
 - 首次启用和后续真实执行结论记入统计验证文档，原始请求、Actions结果及引用核对留在shop管理任务的results；不要在README或通用发布检查单中逐次追加运行记录。

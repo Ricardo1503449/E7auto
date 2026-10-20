@@ -1,8 +1,10 @@
 from copy import deepcopy
+from datetime import date, timedelta
 import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 
 import pytest
 
@@ -19,6 +21,12 @@ def aggregate():
             'updated_at':'2026-10-03T00:00:00.000Z'}
 
 
+def publication_files(day='2026-10-03'):
+    data = json.dumps(aggregate())
+    return {'latest.json': data, 'latest.svg': '<svg xmlns="http://www.w3.org/2000/svg"/>',
+            'README.md': 'index', f'history/{day}.json': data}
+
+
 def test_snapshot_json_and_svg_use_one_aggregate_and_publish_only_expected_files(tmp_path):
     node = os.environ.get('SHOP_STATS_NODE') or shutil.which('node')
     if not node:
@@ -26,7 +34,9 @@ def test_snapshot_json_and_svg_use_one_aggregate_and_publish_only_expected_files
     files = snapshot.build_files(aggregate(),'https://service.example',node=node,day='2026-10-03')
     assert '1.21' in files['latest.svg'] and '0.30' in files['latest.svg']
     assert json.loads(files['latest.json']) == aggregate()
-    assert files['latest.svg'] == files['history/2026-10-03.svg']
+    assert set(files) == {'latest.json', 'latest.svg', 'README.md', 'history/2026-10-03.json'}
+    assert files['latest.json'] == files['history/2026-10-03.json']
+    assert '最近365个日历日的JSON' in files['README.md']
     snapshot.write_files(tmp_path,files)
     assert publish.read_files(tmp_path) == files
 
@@ -48,13 +58,13 @@ def test_failed_fetch_leaves_last_snapshot_untouched(tmp_path,monkeypatch):
     output = tmp_path/'latest.json'; output.write_text('previous',encoding='utf-8')
     def failure(endpoint): raise OSError('unreachable')
     monkeypatch.setattr(snapshot,'fetch_stats',failure)
-    monkeypatch.setattr('sys.argv',['snapshot','--endpoint','https://service.example','--output-dir',str(tmp_path)])
+    monkeypatch.setattr('sys.argv',['snapshot','--endpoint','https://service.example','--node','unused','--output-dir',str(tmp_path)])
     with pytest.raises(OSError): snapshot.main()
     assert output.read_text(encoding='utf-8') == 'previous'
 
 
 def test_publication_manifest_cannot_include_other_sources(tmp_path):
-    (tmp_path/'snapshot-files.json').write_text(json.dumps(['../README.md']*5),encoding='utf-8')
+    (tmp_path/'snapshot-files.json').write_text(json.dumps(['../README.md']*4),encoding='utf-8')
     with pytest.raises(ValueError): publish.read_files(tmp_path)
 
 
@@ -67,11 +77,11 @@ def test_publication_uses_stats_ref_and_preserves_prior_history(existing):
             if len(calls) == 1: return {'object':{'sha':'old'}} if existing else None
             return {'object':{'sha':'new'}}
         if path == '/git/commits/old': return {'tree':{'sha':'old-tree'}}
+        if path == '/git/trees/old-tree?recursive=1': return {'tree': [], 'truncated': False}
         if path == '/git/trees': return {'sha':'new-tree'}
         if path == '/git/commits': return {'sha':'new'}
         return {}
-    files = {'latest.json':'{}','latest.svg':'svg','README.md':'index',
-             'history/2026-10-03.json':'{}','history/2026-10-03.svg':'svg'}
+    files = publication_files()
     assert publish.publish(request,files) == 'new'
     tree = next(body for method,path,body in calls if path == '/git/trees')
     assert tree.get('base_tree') == ('old-tree' if existing else None)
@@ -79,6 +89,140 @@ def test_publication_uses_stats_ref_and_preserves_prior_history(existing):
     assert not any('main' in path or 'master' in path for _,path,_ in calls)
     update = next(body for method,path,body in calls if method == 'PATCH') if existing else None
     if existing: assert update['force'] is False
+
+
+class SnapshotGit:
+    """Model visible branch changes separately from unreferenced trees/commits."""
+
+    def __init__(self, files, *, fail_at=None, truncated=False):
+        self.files = dict(files)
+        self.ref = 'old'
+        self.calls = []
+        self.fail_at = fail_at
+        self.truncated = truncated
+
+    def __call__(self, method, path, body=None, **kwargs):
+        self.calls.append((method, path, body))
+        if (method, path) == self.fail_at:
+            raise RuntimeError('simulated GitHub failure')
+        if method == 'GET' and path == '/git/ref/heads/stats':
+            return {'object': {'sha': self.ref}}
+        if path == '/git/commits/old':
+            return {'tree': {'sha': 'old-tree'}}
+        if path == '/git/trees/old-tree?recursive=1':
+            return {'truncated': self.truncated, 'tree': [
+                {'path': name, 'mode': '100644', 'type': 'blob'} for name in self.files]}
+        if (method, path) == ('POST', '/git/trees'):
+            assert body['base_tree'] == 'old-tree'
+            self.pending = dict(self.files)
+            for entry in body['tree']:
+                if 'sha' in entry:
+                    assert entry['sha'] is None and 'content' not in entry
+                    del self.pending[entry['path']]
+                else:
+                    self.pending[entry['path']] = entry['content']
+            return {'sha': 'new-tree'}
+        if (method, path) == ('POST', '/git/commits'):
+            assert body['parents'] == ['old'] and body['tree'] == 'new-tree'
+            return {'sha': 'new'}
+        if (method, path) == ('PATCH', '/git/refs/heads/stats'):
+            assert body == {'sha': 'new', 'force': False}
+            self.files, self.ref = self.pending, 'new'
+            return {}
+        raise AssertionError((method, path))
+
+
+@pytest.mark.parametrize('day', ['2026-10-03', '2024-03-01', '2025-01-01'])
+def test_retention_keeps_exact_365_calendar_days_and_cleans_daily_svg_in_same_commit(day):
+    today = date.fromisoformat(day)
+    cutoff = today - timedelta(days=364)
+    expired = today - timedelta(days=365)
+    old = {
+        f'history/{expired}.json': 'expired',
+        f'history/{cutoff}.json': 'keep boundary',
+        f'history/{today - timedelta(days=1)}.json': 'keep recent',
+        f'history/{today}.json': 'replace same day',
+        f'history/{expired}.svg': 'old daily SVG',
+        f'history/{today}.svg': 'current daily SVG',
+        f'history/{today + timedelta(days=1)}.json': 'preserve unexpected future data',
+        'history/2026-02-30.json': 'invalid calendar name',
+        'history/2026-02-30.svg': 'invalid calendar name',
+        'history/manual.svg': 'unrelated',
+        'history/nested/2020-01-01.json': 'unrelated nested file',
+        'notes.md': 'unrelated notes',
+        'latest.json': 'previous latest', 'latest.svg': 'previous chart'}
+    git = SnapshotGit(old)
+    files = publication_files(day)
+    assert publish.publish(git, files) == 'new'
+    removed = {f'history/{expired}.json', f'history/{expired}.svg', f'history/{today}.svg'}
+    assert git.files == {**{name: value for name, value in old.items() if name not in removed}, **files}
+    assert sum(method == 'PATCH' for method, _, _ in git.calls) == 1
+    assert not any('main' in path or 'master' in path for _, path, _ in git.calls)
+
+
+def test_retention_does_not_remove_links_directories_or_other_file_modes():
+    entries = [
+        {'path': 'history/2020-01-01.json', 'type': 'blob', 'mode': '120000'},
+        {'path': 'history/2020-01-02.json', 'type': 'blob', 'mode': '100755'},
+        {'path': 'history/2020-01-03.svg', 'type': 'tree', 'mode': '040000'}]
+    assert publish.history_deletions({'tree': entries, 'truncated': False}, date(2026, 10, 3)) == []
+
+
+@pytest.mark.parametrize('fail_at', [
+    ('GET', '/git/trees/old-tree?recursive=1'), ('POST', '/git/trees'),
+    ('POST', '/git/commits'), ('PATCH', '/git/refs/heads/stats')])
+def test_publication_failure_does_not_publish_cleanup_separately(fail_at):
+    old = {'latest.json': 'previous', 'history/2020-01-01.json': 'expired',
+           'history/2026-10-03.svg': 'daily chart'}
+    git = SnapshotGit(old, fail_at=fail_at)
+    with pytest.raises(RuntimeError, match='simulated GitHub failure'):
+        publish.publish(git, publication_files())
+    assert git.files == old and git.ref == 'old'
+    assert (git.calls[-1][0], git.calls[-1][1]) == fail_at
+
+
+def test_truncated_tree_aborts_before_any_remote_write():
+    git = SnapshotGit({'history/2020-01-01.json': 'expired'}, truncated=True)
+    with pytest.raises(ValueError, match='complete stats tree'):
+        publish.publish(git, publication_files())
+    assert all(method == 'GET' for method, _, _ in git.calls)
+    assert git.ref == 'old'
+
+
+@pytest.mark.parametrize('problem', ['bad_date', 'extra_svg', 'mismatched_json', 'bad_stats', 'bad_svg'])
+def test_invalid_publication_bundle_cannot_trigger_remote_cleanup(problem):
+    files = publication_files()
+    if problem == 'bad_date': files['history/2026-02-30.json'] = files.pop('history/2026-10-03.json')
+    elif problem == 'extra_svg': files['history/2026-10-03.svg'] = files['latest.svg']
+    elif problem == 'mismatched_json': files['history/2026-10-03.json'] = '{}'
+    elif problem == 'bad_stats': files['latest.json'] = files['history/2026-10-03.json'] = '{}'
+    else: files['latest.svg'] = '<svg'
+    git = SnapshotGit({'history/2020-01-01.json': 'expired'})
+    with pytest.raises(ValueError): publish.publish(git, files)
+    assert git.calls == []
+
+
+@pytest.mark.parametrize('failure', ['validation', 'rendering'])
+def test_generation_failure_leaves_previous_bundle_and_history_untouched(tmp_path, monkeypatch, failure):
+    previous = {**publication_files(), 'history/2020-01-01.json': 'expired',
+                'history/2020-01-01.svg': 'old chart'}
+    for name, text in previous.items():
+        path = tmp_path/name; path.parent.mkdir(parents=True, exist_ok=True); path.write_text(text, encoding='utf-8')
+    (tmp_path/'snapshot-files.json').write_text('previous manifest', encoding='utf-8')
+    monkeypatch.setattr(snapshot, 'fetch_stats', lambda _: {} if failure == 'validation' else aggregate())
+    def rendering_failed(*args, **kwargs): raise subprocess.CalledProcessError(1, 'node')
+    monkeypatch.setattr(snapshot.subprocess, 'run', rendering_failed)
+    monkeypatch.setattr('sys.argv', ['snapshot', '--endpoint', 'https://service.example',
+                                    '--node', 'unused', '--output-dir', str(tmp_path)])
+    with pytest.raises((ValueError, subprocess.CalledProcessError)): snapshot.main()
+    assert {name: (tmp_path/name).read_text(encoding='utf-8') for name in previous} == previous
+    assert (tmp_path/'snapshot-files.json').read_text(encoding='utf-8') == 'previous manifest'
+
+
+@pytest.mark.parametrize('day', ['2026-02-30', '2026-13-01', '20261003'])
+def test_generation_rejects_invalid_calendar_dates_before_rendering(day):
+    with pytest.raises(ValueError):
+        snapshot.build_files(aggregate(), 'https://service.example', node='unused', day=day)
 
 
 def test_task_staging_cannot_use_unmanaged_or_other_feature_output(tmp_path):

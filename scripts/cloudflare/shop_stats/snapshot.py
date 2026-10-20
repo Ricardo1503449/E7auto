@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 import json
 import math
 import os
@@ -19,6 +19,13 @@ from scripts.common.paths import PROJECT_ROOT, create_artifact_run, ensure_task_
 COUNTERS = ('skystone_spent','covenant_purchases','mystic_purchases')
 STRATEGIES = ('transfer','continuous')
 SOURCE = Path(__file__).resolve().parent
+HISTORY_DAYS = 365
+
+
+def snapshot_date(value: str) -> date:
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', value):
+        raise ValueError('invalid snapshot date')
+    return date.fromisoformat(value)
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -75,8 +82,7 @@ def fetch_stats(endpoint: str) -> dict:
 
 
 def build_files(stats: dict, endpoint: str, *, node: str, day: str) -> dict[str,str]:
-    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',day):
-        raise ValueError('invalid snapshot date')
+    snapshot_date(day)
     endpoint = endpoint_base(endpoint)
     validate_stats(stats)
     data = json.dumps(stats,ensure_ascii=False,indent=2)+'\n'
@@ -88,8 +94,10 @@ def build_files(stats: dict, endpoint: str, *, node: str, day: str) -> dict[str,
     readme = (f'# 刷商店社区统计\n\n![两个策略池统计](latest.svg)\n\n'
               f'[查看近实时详情]({endpoint}/stats) · [汇总 JSON](latest.json) · [每日快照](history/)\n\n'
               f'快照日期：{day}（北京时间）。数据来自成功上报的匿名客户端，包含启动时已有商品的成功购买。'
-              '每100天空石购买次数按累计总量计算；这些数据不能证明游戏结果真实，也不覆盖未成功上传的运行。\n')
-    return {'latest.json':data,'latest.svg':svg,f'history/{day}.json':data,f'history/{day}.svg':svg,'README.md':readme}
+              '每100天空石购买次数按累计总量计算；这些数据不能证明游戏结果真实，也不覆盖未成功上传的运行。\n\n'
+              f'历史仅保留包含快照当天在内的最近{HISTORY_DAYS}个日历日的JSON，不保存每日SVG。'
+              '成功更新快照时同时移除过期JSON及旧每日SVG；旧内容仍保留在Git提交历史中。\n')
+    return {'latest.json':data,'latest.svg':svg,f'history/{day}.json':data,'README.md':readme}
 
 
 def write_files(output: Path, files: dict[str,str]) -> None:
