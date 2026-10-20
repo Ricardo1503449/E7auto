@@ -30,7 +30,7 @@ def test_back_hides_stopped_overlay_until_next_run_is_positioned(tmp_path, from_
         else:
             overlay.configure(config)
             previous = RuntimeSnapshot.initial("old", (), 100).with_refresh_spent(9)
-        overlay.update_snapshot(previous.finalized(StopReason.MANUAL_F5))
+        overlay.update_snapshot(previous.finalized(StopReason.MANUAL_STOP))
         overlay.show()
         if collapsed:
             overlay._collapse_overlay()
@@ -38,7 +38,7 @@ def test_back_hides_stopped_overlay_until_next_run_is_positioned(tmp_path, from_
         assert overlay.isVisible()
         old_count_text = overlay._currency.text()
 
-        window._module_pages[old_id].back_button.click()
+        window._title_bar.back_button.click()
         app.processEvents()
         assert window._pages.currentWidget() is window._function_center_page
         assert not overlay.isVisible()
@@ -75,7 +75,7 @@ def test_back_request_during_run_does_not_hide_overlay(tmp_path):
     app = QApplication.instance() or QApplication([])
     window = MainWindow(tmp_path)
     try:
-        window._show_shop_page()
+        window._show_module_page("shop_refresh")
         window._overlay.configure(make_config())
         window._overlay.show()
         window._thread = object()
@@ -103,27 +103,27 @@ def test_right_hand_card_opens_minimal_penguin_settings(tmp_path: Path):
         assert isinstance(page.leaf_cost_display, QLabel)
         assert page.leaf_cost_display.text() == "0"
         assert page.leaf_cost_display.textInteractionFlags() == Qt.TextInteractionFlag.NoTextInteraction
-        assert len(page.findChildren(QAbstractButton)) == 2  # back + start
+        assert len(page.findChildren(QAbstractButton)) == 1  # shared shell owns back
         assert "购买次数上限" in [label.text() for label in page.findChildren(QLabel)]
         for text, expected_cost in (("0", "0"), ("1", "5,100"), ("2", "10,200"),
                                     ("2147483647", "10,952,166,599,700")):
             page.limit_input.setText(text)
-            assert page.purchase_limit() == int(text)
+            assert page.limit_value() == int(text)
             assert page.leaf_cost_display.text() == expected_cost
             assert page.start_button.isEnabled()
         for text in ("", "-1", "1.5", "2147483648", "abc"):
             page.limit_input.setText(text)
-            assert page.purchase_limit() is None
+            assert page.limit_value() is None
             assert page.leaf_cost_display.text() == "—"
             assert not page.start_button.isEnabled()
         page.limit_input.setText("3")
         assert page.leaf_cost_display.text() == "15,300"
         assert page.start_button.isEnabled()
         window._thread = object()
-        window._show_shop_page()
+        window._show_module_page("shop_refresh")
         assert window._pages.currentWidget() is page
         window._thread = None
-        page.back_button.click()
+        window._title_bar.back_button.click()
         assert window._pages.currentWidget() is center
     finally:
         window._thread = None
@@ -131,7 +131,7 @@ def test_right_hand_card_opens_minimal_penguin_settings(tmp_path: Path):
         app.processEvents()
 
 
-def test_penguin_overlay_has_four_lines_and_preserves_final_count():
+def test_penguin_overlay_has_three_lines_and_preserves_final_count():
     app = QApplication.instance() or QApplication([])
     overlay = StatsOverlay()
     config = make_config()
@@ -146,7 +146,7 @@ def test_penguin_overlay_has_four_lines_and_preserves_final_count():
         assert overlay._target_labels == {}
         assert overlay._no_target.isHidden()
         visible = [label.text() for label in overlay.findChildren(QLabel) if label.isVisible()]
-        assert visible == ["已耗时：0时0分0秒", "已购买次数：0 / 20", "当前状态：已启动", "F5结束"]
+        assert visible == ["已耗时：0时0分0秒", "已购买次数：0 / 20", "当前状态：已启动"]
         overlay.update_snapshot(initial.with_overlay_status(OverlayActivityStatus.RECONNECTING))
         assert overlay._status.text() == "当前状态：重连中"
         assert overlay._currency.text() == "已购买次数：0 / 20"

@@ -18,6 +18,60 @@ from tests.helpers.paths import ROOT
 import e7auto.ui.overlay as overlay_module
 
 
+@pytest.mark.parametrize("feature", ["shop", "penguin", "chaos"])
+def test_stop_button_requires_expanded_panel_and_resets_each_run(feature):
+    application = QApplication.instance() or QApplication([])
+    overlay = StatsOverlay()
+    configure = {"shop": overlay.configure, "penguin": overlay.configure_penguins,
+                 "chaos": overlay.configure_chaos}[feature]
+    initial = {"shop": RuntimeSnapshot.initial("stop", (), 3),
+               "penguin": RuntimeSnapshot.penguins("stop", 2),
+               "chaos": RuntimeSnapshot.chaos_run("stop", 2)}[feature]
+    requests = []
+    overlay.stop_requested.connect(lambda: requests.append(True))
+    try:
+        configure(make_config())
+        overlay.show()
+        overlay.update_snapshot(initial)
+        application.processEvents()
+        expanded_size = overlay.size()
+        stop = overlay._stop_button
+        assert all(not widget.toolTip() for widget in [overlay, *overlay.findChildren(QWidget)])
+        assert stop.size() == overlay._collapse_button.size()
+        assert stop.x() == overlay._collapse_button.x()
+        assert stop.y() > overlay._collapse_button.geometry().bottom()
+        assert "background: #c62828" in overlay.styleSheet()
+        assert all(not stop.geometry().intersects(label.geometry())
+                   for label in overlay.findChildren(QLabel) if label.isVisible())
+
+        overlay._collapse_button.click()
+        assert overlay._collapsed_icon.isVisible()
+        assert overlay.toolTip() == ""
+        assert not stop.isVisible()
+        assert not requests
+        QTest.mouseClick(overlay, Qt.MouseButton.LeftButton, pos=overlay.rect().center())
+        assert stop.isVisible() and stop.isEnabled()
+        QTest.mouseClick(stop, Qt.MouseButton.LeftButton)
+        assert requests == [True]
+        assert not stop.isEnabled()
+        assert overlay._stop_button.toolTip() == ""
+        assert overlay._stop_button.accessibleDescription() == "正在停止…"
+        overlay.update_snapshot(initial.with_overlay_status(OverlayActivityStatus.RECONNECTING))
+        stop.click()
+        assert requests == [True] and not stop.isEnabled()
+        assert overlay._stop_button.toolTip() == ""
+        assert overlay._stop_button.accessibleDescription() == "正在停止…"
+        overlay.update_snapshot(initial.finalized(StopReason.MANUAL_STOP))
+        assert not stop.isEnabled() and overlay._close_button.isVisible()
+        assert overlay.size() == expanded_size
+        configure(make_config())
+        overlay.update_snapshot(initial)
+        assert stop.isEnabled() and not overlay._close_button.isVisible()
+    finally:
+        overlay.close()
+        application.processEvents()
+
+
 @pytest.mark.parametrize("miss_count", [50, 100, 9_999_999, 2_147_483_647 // 3])
 def test_stats_overlay_keeps_one_size_for_all_runtime_values(miss_count) -> None:
     application = QApplication.instance() or QApplication([])
@@ -69,7 +123,8 @@ def test_stats_overlay_keeps_one_size_for_all_runtime_values(miss_count) -> None
         assert not overlay._elapsed_timer.isActive()
         assert overlay.isVisible()
         assert overlay._status.text() == "当前状态：已停止"
-        assert overlay._hint.text() == "F5结束"
+        assert overlay._stop_button.toolTip() == ""
+        assert overlay._stop_button.accessibleDescription() == "已停止"
         assert all(label.sizeHint().width() <= label.width() for label in overlay.findChildren(QLabel))
     finally:
         overlay.close()
@@ -279,7 +334,7 @@ def test_stats_overlay_recomputes_fixed_size_when_configured_for_a_second_run() 
         overlay.show()
         first_size = overlay.size()
         first_final = RuntimeSnapshot.initial("first-run", targets, 150).finalized(
-            StopReason.MANUAL_F5
+            StopReason.MANUAL_STOP
         )
         overlay.update_snapshot(first_final)
         application.processEvents()
@@ -329,7 +384,7 @@ def test_stats_overlay_uses_centered_symmetric_longest_line_layout() -> None:
         assert overlay._elapsed.text() == "已耗时：0时0分0秒"
         assert overlay._no_target.text() == "已经9999999次未出货"
         assert overlay._status.text() == "当前状态：转运ing..."
-        assert overlay._hint.text() == "F5结束"
+        assert not any("点击左上方停止按钮结束" in label.text() for label in overlay.findChildren(QLabel))
         assert all(
             label.alignment() & Qt.AlignmentFlag.AlignHCenter for label in labels
         )
@@ -342,8 +397,8 @@ def test_stats_overlay_uses_centered_symmetric_longest_line_layout() -> None:
         assert panel_layout.itemAt(4).spacerItem() is not None
         assert panel_layout.itemAt(4).spacerItem().sizeHint().height() == overlay._SECTION_GAP_PX
         margins = panel.layout().contentsMargins()
-        assert (margins.left(), margins.right()) == (14, 14)
-        assert overlay.width() == max(label.sizeHint().width() for label in labels) + 28
+        assert (margins.left(), margins.right()) == (66, 66)
+        assert overlay.width() == max(label.sizeHint().width() for label in labels) + 132
 
         for label in labels:
             text_width = label.fontMetrics().horizontalAdvance(label.text())
@@ -406,7 +461,7 @@ def test_overlay_is_always_draggable_and_saves_position_after_move(
         overlay._apply_command(command)
         assert command.result
         assert not overlay.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        assert overlay._hint.text() == "F5结束"
+        assert not any("点击左上方停止按钮结束" in label.text() for label in overlay.findChildren(QLabel))
         assert not styles[-1] & overlay_module.win32con.WS_EX_TRANSPARENT
 
         overlay.move(123, 234)

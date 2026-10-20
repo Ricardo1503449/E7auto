@@ -210,25 +210,3 @@ class FakeLogger:
     ) -> None:
         if not self.stop_snapshots:
             self.stop_snapshots.append((cached, stop_reason, stopped_monotonic))
-
-
-class FakeHotkeys:
-    def __init__(self, succeeds: bool = True, on_register: Callable[[Callable[[], None]], None] | None = None):
-        self.succeeds = succeeds
-        self.on_register = on_register
-        self.registered = 0
-        self.unregistered = 0
-        self.callback: Callable[[], None] | None = None
-
-    def register_f5(
-        self,
-        callback: Callable[[], None],
-    ) -> bool:
-        self.registered += 1
-        self.callback = callback
-        if self.succeeds and self.on_register is not None:
-            self.on_register(callback)
-        return self.succeeds
-
-    def unregister_f5(self) -> None:
-        self.unregistered += 1

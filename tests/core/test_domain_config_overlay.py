@@ -14,6 +14,18 @@ from e7auto.logging.run import RunLogManager
 from e7auto.configuration.models import LoggingConfig
 
 
+def test_chaos_defeats_accumulate_independently_and_freeze_at_stop() -> None:
+    initial = RuntimeSnapshot.chaos_run("first", 1)
+    counted = initial.with_chaos_defeat().with_chaos_defeat().with_chaos_round()
+    assert initial.defeats == 0
+    assert counted.defeats == 2 and counted.rounds_completed == 1
+    final = counted.finalized(StopReason.MANUAL_STOP)
+    assert final.with_chaos_defeat() is final and final.defeats == 2
+    assert RuntimeSnapshot.chaos_run("next", 1).defeats == 0
+    with pytest.raises(ValueError):
+        RuntimeSnapshot.penguins("other", 1).with_chaos_defeat()
+
+
 def test_default_configuration_loads_after_completed_calibration() -> None:
     config = load_config(Path("config/internal.yaml"))
 
@@ -128,6 +140,11 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
             "minimum_upward_shift_px": 300,
             "difference_threshold": 8,
             "minimum_changed_fraction": 0.30,
+            "maximum_horizontal_shift_px": 4.0,
+            "minimum_overlap_fraction": .50,
+            "minimum_content_score": .75,
+            "minimum_content_stddev": 8.0,
+            "content_alignment_tolerance_px": 4.0,
         },
         "timing": {"poll_interval_ms": 10, "entry_timeout_ms": 10, "scan_timeout_ms": 10, "dialog_timeout_ms": 10, "purchase_result_timeout_ms": 10, "refresh_timeout_ms": 10, "stable_frames": 1},
         "refresh_strategy": {
@@ -150,6 +167,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "overlay": {"offset": {"x": 1, "y": 2}},
         "logging": {"keep_days": 7, "keep_runs": 2},
     }
+    raw["rois"]["inventory_content"] = {**rect, "width": 5}
     path = tmp_path / "internal.yaml"
     path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     loaded = load_config(path)

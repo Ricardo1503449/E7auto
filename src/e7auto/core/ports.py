@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Protocol
+from typing import Protocol
 
 from numpy.typing import NDArray
 import numpy as np
@@ -131,12 +131,3 @@ class TextRunLogger(Protocol):
 class NetworkVisionPort(Protocol):
     def network_connection_error(self, frame: object) -> Observation | None: ...
     def network_retry(self, frame: object) -> Observation | None: ...
-
-
-class HotkeyService(Protocol):
-    def register_f5(
-        self,
-        callback: Callable[[], None],
-    ) -> bool: ...
-
-    def unregister_f5(self) -> None: ...

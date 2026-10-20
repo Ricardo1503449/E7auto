@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import pytest
+
+from e7auto.runtime.stop_control import StopController
+
 from dataclasses import replace
 
 from tests.automation.support import run_session
@@ -9,11 +13,52 @@ from e7auto.core.domain import RuntimeSnapshot, StopReason
 from e7auto.core.ports import WindowState
 from e7auto.core.observations import Observation
 from e7auto.features.shop.contracts import PurchaseOutcome, ScrollMovementObservation
-from tests.helpers import FakeHotkeys, FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, match
+from tests.helpers import FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, match
+
+
+def test_stop_request_does_not_wait_for_admitted_input_and_blocks_queued_input():
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    from e7auto.runtime.stop_control import StopExecution
+
+    control = StopController()
+    entered, release, queued = Event(), Event(), Event()
+    actions = []
+
+    def admitted():
+        actions.append("down")
+        entered.set()
+        assert release.wait(5)
+        actions.append("up")  # The already admitted operation may release.
+
+    def next_input():
+        queued.set()
+        return control.dispatch(lambda: actions.append("unexpected"))
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        first = pool.submit(control.dispatch, admitted)
+        try:
+            assert entered.wait(2)
+            second = pool.submit(next_input)
+            assert queued.wait(2)
+            request = pool.submit(control.request, StopReason.MANUAL_STOP)
+            assert request.result(timeout=2) is True
+            assert control.reason is StopReason.MANUAL_STOP
+            assert control.request(StopReason.INTERNAL_ERROR) is False
+            assert not first.done()
+        finally:
+            release.set()
+        first.result(timeout=2)
+        with pytest.raises(StopExecution) as error:
+            second.result(timeout=2)
+        assert error.value.reason is StopReason.MANUAL_STOP
+    assert actions == ["down", "up"]
+
+
 
 
 def test_entry_success_resizes_window_and_scans_both_screens() -> None:
-    final, _, windows, inputs, overlay, hotkeys, _ = run_session(
+    final, _, windows, inputs, overlay, control, _ = run_session(
         ScriptedVision(top=[()], bottom=[()]), limit=0
     )
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
@@ -23,7 +68,6 @@ def test_entry_success_resizes_window_and_scans_both_screens() -> None:
         Point(5, 5),
         Point(6, 6),
     ]
-    assert hotkeys.registered == hotkeys.unregistered == 1
 
 
 def test_initial_background_window_starts_without_foreground_activation() -> None:
@@ -92,12 +136,11 @@ def test_entry_click_uses_the_recognized_main_shop_anchor() -> None:
 
 
 def test_entry_recognition_failure_only_wakes_once_and_restores_failure_reason() -> None:
-    final, _, _, inputs, _, hotkeys, _ = run_session(
+    final, _, _, inputs, _, control, _ = run_session(
         ScriptedVision(main_visible=False), limit=0
     )
     assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
     assert inputs.actions == [("click", make_config().points["main_screen_wake"], None)]
-    assert hotkeys.unregistered == 1
 
 
 def test_entry_retries_only_after_stable_main_screen_confirmation() -> None:
@@ -216,7 +259,7 @@ def test_delayed_background_frame_waits_past_stale_stability_until_total_gate_pa
     stable = ScrollMovementObservation(0.5, 0.005, 8, 0.0, 0.0, 0.95)
     transition = ScrollMovementObservation(25.0, 0.40, 254, 0.0, -350.0, 0.95)
     stale_total = ScrollMovementObservation(0.5, 0.005, 8, 0.0, 0.0, 0.99)
-    valid_total = ScrollMovementObservation(25.0, 0.40, 254, 0.0, -350.0, 0.45)
+    valid_total = ScrollMovementObservation(25.0, 0.40, 254, 0.0, -350.0, 0.45, True, "matched")
     config = replace(
         make_config(),
         scroll=replace(make_config().scroll, settle_ms=1500),
@@ -267,25 +310,26 @@ def test_unexpected_sky_stone_delta_is_fail_closed_without_counting() -> None:
     assert not any(event == "refresh_counted" for event, _ in logger.events)
 
 
-def test_hotkey_registration_failure_never_prepares_or_inputs() -> None:
-    hotkeys = FakeHotkeys(succeeds=False)
+def test_stop_before_session_start_never_prepares_or_inputs() -> None:
+    control = StopController()
+    control.request(StopReason.MANUAL_STOP)
     final, snapshots, windows, inputs, _, _, _ = run_session(
-        ScriptedVision(), hotkeys=hotkeys
+        ScriptedVision(), control=control
     )
-    assert final.stop_reason is StopReason.HOTKEY_FAILURE
+    assert final.stop_reason is StopReason.MANUAL_STOP
     assert windows.locate_calls == 0
     assert inputs.actions == []
-    assert hotkeys.unregistered == 0
     assert len([snapshot for snapshot in snapshots if snapshot.is_final]) == 1
 
 
-def test_f5_after_one_dispatched_input_blocks_every_new_input() -> None:
+def test_manual_stop_after_one_dispatched_input_blocks_every_new_input() -> None:
     inputs = FakeInput()
-    hotkeys = FakeHotkeys(on_register=lambda callback: setattr(inputs, "trigger_once", callback))
+    control = StopController()
+    inputs.trigger_once = lambda: control.request(StopReason.MANUAL_STOP)
     final, snapshots, _, _, _, _, _ = run_session(
-        ScriptedVision(top=[()], bottom=[()]), inputs=inputs, hotkeys=hotkeys
+        ScriptedVision(top=[()], bottom=[()]), inputs=inputs, control=control
     )
-    assert final.stop_reason is StopReason.MANUAL_F5
+    assert final.stop_reason is StopReason.MANUAL_STOP
     assert [action for action, _, _ in inputs.actions] == ["click"]
     assert len([snapshot for snapshot in snapshots if snapshot.is_final]) == 1
 
@@ -345,8 +389,43 @@ def test_new_session_starts_every_counter_at_zero() -> None:
 def test_snapshot_publisher_ignores_mutation_after_final() -> None:
     emitted: list[RuntimeSnapshot] = []
     publisher = SnapshotPublisher(RuntimeSnapshot.initial("r", (("wood", "木材"),), 0), emitted.append)
-    final = publisher.finalize(StopReason.MANUAL_F5)
+    final = publisher.finalize(StopReason.MANUAL_STOP)
     publisher.mutate(lambda snapshot: snapshot.with_incremented_target("wood"))
     publisher.finalize(StopReason.INTERNAL_ERROR)
     assert publisher.snapshot is final
     assert len(emitted) == 1
+
+
+@pytest.mark.parametrize('final_callback_fails', [False, True])
+@pytest.mark.parametrize('cache_cleanup_fails', [False, True])
+def test_initial_snapshot_failure_still_closes_session_resources(final_callback_fails, cache_cleanup_fails):
+    from types import SimpleNamespace
+    from e7auto.runtime.contracts import RunPolicy
+    from e7auto.runtime.session import RuntimeSession
+    from tests.helpers import FakeCapture, FakeClock, FakeLogger
+
+    capture, logger = FakeCapture(), FakeLogger()
+    cleared, snapshots = [], []
+    def clear():
+        cleared.append(True)
+        if cache_cleanup_fails:
+            raise RuntimeError('cache cleanup failed')
+    def notify(snapshot):
+        snapshots.append(snapshot)
+        if len(snapshots) == 1 or final_callback_fails:
+            raise RuntimeError('snapshot callback failed')
+    def create_flow(*args):
+        pytest.fail('initial callback failure must not start a feature')
+    dependencies = SimpleNamespace(capture=capture, logger=logger, clock=FakeClock(),
+                                   vision=SimpleNamespace(clear_template_cache=clear))
+    session = RuntimeSession(dependencies, StopController(), notify)
+    initial = RuntimeSnapshot.initial('callback-failure', (), 0)
+    if final_callback_fails:
+        with pytest.raises(RuntimeError, match='snapshot callback failed'):
+            session.run(initial, create_flow, RunPolicy(frozenset(), frozenset()))
+    else:
+        result = session.run(initial, create_flow, RunPolicy(frozenset(), frozenset()))
+        assert result == snapshots[-1]
+    assert cleared == [True] and capture.closed and logger.closed == 1
+    assert snapshots[0] == initial and len(snapshots) == 2
+    assert snapshots[-1].is_final and snapshots[-1].stop_reason is StopReason.INTERNAL_ERROR

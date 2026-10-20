@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from ..styles import PAGE_MARGINS
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QResizeEvent
-from PySide6.QtWidgets import QFrame, QGridLayout, QLabel, QScrollArea, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QGridLayout, QScrollArea, QVBoxLayout, QWidget
 
 from ..widgets import ModuleCardSpec, _ModuleCard
 
@@ -16,12 +18,8 @@ class _FunctionCenterPage(QWidget):
         super().__init__(parent)
         self.setObjectName("functionCenterPage")
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(52, 36, 52, 42)
+        layout.setContentsMargins(*PAGE_MARGINS)
         layout.setSpacing(24)
-
-        heading = QLabel("功能中心")
-        heading.setObjectName("pageHeading")
-        layout.addWidget(heading)
 
         self._scroll = QScrollArea()
         self._scroll.setObjectName("moduleScrollArea")
@@ -48,7 +46,7 @@ class _FunctionCenterPage(QWidget):
                 True,
             ),
             ModuleCardSpec("penguin_exchange", "红叶换企鹅", "penguin-card-background.png", True),
-            ModuleCardSpec("future_2", None, None, False),
+            ModuleCardSpec("chaos", "自动卡厄思", "chaos-card-background.png", True),
             ModuleCardSpec("future_3", None, None, False),
         )
         self._cards_by_id: dict[str, _ModuleCard] = {}
@@ -63,6 +61,7 @@ class _FunctionCenterPage(QWidget):
                 "shopModuleCard"
                 if spec.module_id == "shop_refresh"
                 else "penguinModuleCard" if spec.module_id == "penguin_exchange"
+                else "chaosModuleCard" if spec.module_id == "chaos"
                 else f"futureModuleCard{index}"
             )
             card = _ModuleCard(
@@ -81,6 +80,7 @@ class _FunctionCenterPage(QWidget):
             self._cards.append(card)
         self.shop_card = self._cards_by_id["shop_refresh"]
         self.penguin_card = self._cards_by_id["penguin_exchange"]
+        self.chaos_card = self._cards_by_id["chaos"]
         self._column_count = 0
         self._apply_columns(2)
 

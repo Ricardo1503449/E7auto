@@ -3,6 +3,7 @@ from __future__ import annotations
 import uuid
 from e7auto.core.domain import RuntimeSnapshot, StopReason
 from e7auto.runtime.session import RuntimeSession
+from e7auto.runtime.stop_control import StopController
 from e7auto.runtime.contracts import RunPolicy
 from e7auto.features.shop.flow import ShopFlow
 from e7auto.features.penguin.flow import PenguinFlow
@@ -17,11 +18,11 @@ NORMAL_COMPLETION = frozenset({
 })
 RUN_POLICY = RunPolicy(
     normal_completion=NORMAL_COMPLETION,
-    expected_stops=NORMAL_COMPLETION | {StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_F5},
+    expected_stops=NORMAL_COMPLETION | {StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_STOP},
 )
 
 
-def create_production_session(config, feature_id, overlay, logger, on_snapshot):
+def create_production_session(config, feature_id, overlay, logger, on_snapshot, control=None):
     """Called by the worker thread; native capture must never be imported at module scope."""
     if feature_id not in {"shop", "penguin", "chaos"}:
         raise ValueError(f"Unknown feature: {feature_id}")
@@ -37,7 +38,7 @@ def create_production_session(config, feature_id, overlay, logger, on_snapshot):
         vision = ChaosVision(config, templates)
     from e7auto.platform.wgc_capture import WindowsGraphicsCaptureService
     from e7auto.platform.input import Win32WindowMessageInputService
-    from e7auto.platform.windows import Win32F5HotkeyService, Win32RuntimeEnvironment, Win32WindowService
+    from e7auto.platform.windows import Win32RuntimeEnvironment, Win32WindowService
 
     capture = WindowsGraphicsCaptureService(
         logger=logger, frame_timeout_seconds=config.timing.capture_frame_timeout_ms / 1000,
@@ -56,17 +57,17 @@ def create_production_session(config, feature_id, overlay, logger, on_snapshot):
         logger=logger,
         runtime=Win32RuntimeEnvironment(),
     )
-    return AutomationSession(config, dependencies, Win32F5HotkeyService(), on_snapshot)
+    return AutomationSession(config, dependencies, control if control is not None else StopController(), on_snapshot)
 
 class AutomationSession:
     """Application facade with explicitly selected feature start requests."""
-    def __init__(self, config, dependencies, hotkeys, on_snapshot):
+    def __init__(self, config, dependencies, control, on_snapshot):
         self._config = config
         self._dependencies = dependencies
-        self._runner = RuntimeSession(dependencies, hotkeys, on_snapshot)
+        self._runner = RuntimeSession(dependencies, control, on_snapshot)
 
-    def request_f5_stop(self):
-        self._runner.request_f5_stop()
+    def request_stop(self):
+        self._runner.request_stop()
 
     def run(
         self,

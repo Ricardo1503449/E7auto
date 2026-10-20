@@ -97,25 +97,25 @@ def test_failed_wake_times_out_without_additional_clicks(engine_state):
     assert len(wake_events(engine)) == 1
 
 
-def test_f5_after_missing_observation_blocks_wake(engine_state):
+def test_manual_stop_after_missing_observation_blocks_wake(engine_state):
     engine, _, _ = engine_state
 
     def detect(frame):
-        engine.runtime.control.request(StopReason.MANUAL_F5)
+        engine.runtime.control.request(StopReason.MANUAL_STOP)
         return None
 
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine, detect)
-    assert stopped.value.reason is StopReason.MANUAL_F5
+    assert stopped.value.reason is StopReason.MANUAL_STOP
     assert engine.runtime.deps.inputs.actions == []
 
 
-def test_f5_immediately_after_wake_blocks_further_capture_and_entry(engine_state):
+def test_manual_stop_immediately_after_wake_blocks_further_capture_and_entry(engine_state):
     engine, _, _ = engine_state
-    engine.runtime.deps.inputs.trigger_once = lambda: engine.runtime.control.request(StopReason.MANUAL_F5)
+    engine.runtime.deps.inputs.trigger_once = lambda: engine.runtime.control.request(StopReason.MANUAL_STOP)
     with pytest.raises(StopExecution) as stopped:
         wait_icon(engine)
-    assert stopped.value.reason is StopReason.MANUAL_F5
+    assert stopped.value.reason is StopReason.MANUAL_STOP
     assert len(wake_events(engine)) == 1 and engine.runtime.deps.capture.calls == 1
 
 

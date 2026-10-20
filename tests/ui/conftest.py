@@ -5,6 +5,15 @@ import pytest
 from PySide6.QtWidgets import QApplication
 
 from tests.helpers.qt import dispose_widgets
+from e7auto.ui.updates import UpdateController
+
+
+@pytest.fixture(autouse=True)
+def offline_update_startup(monkeypatch):
+    """Unrelated UI tests never start background network requests."""
+    start = UpdateController.start
+    monkeypatch.setattr(UpdateController, "start", lambda self: None)
+    return start
 
 
 @pytest.fixture(scope="session")

@@ -35,7 +35,6 @@ class OverlayActivityStatus(str, Enum):
 class StopReason(str, Enum):
     BUDGET_COMPLETE = "budget_complete"
     REFRESH_STRATEGY_EXHAUSTED = "refresh_strategy_exhausted"
-    MANUAL_F5 = "manual_f5"
     MANUAL_STOP = "manual_stop"
     PURCHASE_FUNDS_INSUFFICIENT = "purchase_funds_insufficient"
     WINDOW_ABNORMAL = "window_abnormal"
@@ -45,7 +44,6 @@ class StopReason(str, Enum):
     PERMISSION_REQUIRED = "permission_required"
     CAPTURE_FAILURE = "capture_failure"
     INPUT_FAILURE = "input_failure"
-    HOTKEY_FAILURE = "hotkey_failure"
     RECOGNITION_TIMEOUT = "recognition_timeout"
     REFRESH_CLICK_UNACKNOWLEDGED = "refresh_click_unacknowledged"
     PURCHASE_RESULT_AMBIGUOUS = "purchase_result_ambiguous"

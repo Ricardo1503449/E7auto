@@ -11,7 +11,7 @@ from e7auto.core.types import Point, Rect
 from e7auto.core.domain import RuntimeSnapshot, StopReason
 from e7auto.core.observations import Observation
 from e7auto.features.shop.contracts import PurchaseOutcome
-from tests.helpers import FakeHotkeys, FakeInput, ScriptedVision, make_config, make_dependencies, match
+from tests.helpers import FakeInput, ScriptedVision, make_config, make_dependencies, match
 
 
 @pytest.mark.parametrize("continuous_refresh", [False, True])
@@ -91,10 +91,10 @@ def test_high_confidence_refresh_confirmation_uses_fast_path_and_detected_anchor
         frozenset(target.target_id for target in config.targets),
     )
     engine.runtime.prepare()
-    engine._trusted_sky_stone_balance = 100
-    engine._wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
+    engine.state.trusted_sky_stone_balance = 100
+    engine.refresh.wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
 
-    engine._refresh_inventory()
+    engine.refresh.refresh_inventory()
 
     assert vision.dialog_checks == 1
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
@@ -141,10 +141,10 @@ def test_lower_confidence_refresh_confirmation_keeps_three_frame_gate() -> None:
         frozenset(target.target_id for target in config.targets),
     )
     engine.runtime.prepare()
-    engine._trusted_sky_stone_balance = 100
-    engine._wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
+    engine.state.trusted_sky_stone_balance = 100
+    engine.refresh.wait_for_refresh_balance = lambda before, expected: None  # type: ignore[method-assign]
 
-    engine._refresh_inventory()
+    engine.refresh.refresh_inventory()
 
     assert vision.dialog_checks == 3
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
@@ -289,32 +289,31 @@ def test_refresh_retry_rejects_changed_balance_without_second_click() -> None:
 
 
 @pytest.mark.parametrize("continuous_refresh", [False, True])
-def test_f5_after_unacknowledged_refresh_blocks_retry_click(continuous_refresh) -> None:
+def test_manual_stop_after_unacknowledged_refresh_blocks_retry_click(continuous_refresh) -> None:
     vision = ScriptedVision(
         top=[()],
         bottom=[()],
         balances=[100],
         refresh_confirm_visible=False,
     )
-    hotkeys = FakeHotkeys()
+    control = StopController()
 
     class StopAfterFirstRefresh(FakeInput):
         def click(self, window, point: Point) -> None:
             super().click(window, point)
             if point == Point(90, 70):
-                assert hotkeys.callback is not None
-                hotkeys.callback()
+                control.request(StopReason.MANUAL_STOP)
 
     inputs = StopAfterFirstRefresh()
     final, _, _, _, _, _, _ = run_session(
         vision,
         limit=3,
         inputs=inputs,
-        hotkeys=hotkeys,
+        control=control,
         continuous_refresh=continuous_refresh,
     )
 
-    assert final.stop_reason is StopReason.MANUAL_F5
+    assert final.stop_reason is StopReason.MANUAL_STOP
     assert final.refresh_spent == 0
     clicks = [point for action, point, _ in inputs.actions if action == "click"]
     assert clicks == [Point(5, 5), Point(90, 70)]

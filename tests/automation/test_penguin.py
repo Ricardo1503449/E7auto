@@ -13,7 +13,7 @@ from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReaso
 from e7auto.features.penguin.configuration import CONTROLS
 from e7auto.features.penguin.contracts import PenguinDialog
 from e7auto.core.observations import Observation
-from tests.helpers import FakeClock, FakeHotkeys, FakeInput, make_config, make_dependencies
+from tests.helpers import FakeClock, FakeInput, make_config, make_dependencies
 
 
 class PenguinGame:
@@ -94,20 +94,19 @@ class PenguinGame:
             self.on_click(name)
 
 
-def run(game, limit=2, stop_after=None, config=None, clock=None, hotkeys=None):
+def run(game, limit=2, stop_after=None, config=None, clock=None, control=None):
     class Inputs(FakeInput):
         def click(self, window, point):
             super().click(window, point)
             game.click(point)
 
     deps, *_ = make_dependencies(game, inputs=Inputs(), clock=clock)
-    hotkeys = hotkeys or FakeHotkeys()
+    control = control or StopController()
     snapshots = []
     if stop_after:
-        game.on_click = lambda name: hotkeys.callback() if len(game.actions) == stop_after else None
-    final = AutomationSession(config or make_config(), deps, hotkeys, snapshots.append).run_penguins(limit, "penguin-test")
+        game.on_click = lambda name: control.request(StopReason.MANUAL_STOP) if len(game.actions) == stop_after else None
+    final = AutomationSession(config or make_config(), deps, control, snapshots.append).run_penguins(limit, "penguin-test")
     assert deps.capture.closed
-    assert hotkeys.unregistered == 1
     assert sum(s.is_final for s in snapshots) == 1
     assert snapshots[-1] == final
     return final, snapshots, game
@@ -174,10 +173,10 @@ def test_success_count_survives_close_failure_without_recounting():
 
 
 @pytest.mark.parametrize("stop_after", range(1, 14))
-def test_f5_blocks_all_later_inputs_including_normal_return(stop_after):
+def test_manual_stop_blocks_all_later_inputs_including_normal_return(stop_after):
     # Two complete batches contain 13 inputs including first max and final return.
     final, _, game = run(PenguinGame(), stop_after=stop_after)
-    assert final.stop_reason == StopReason.MANUAL_F5
+    assert final.stop_reason == StopReason.MANUAL_STOP
     assert len(game.actions) == stop_after
 
 
@@ -249,7 +248,7 @@ def test_finalized_penguin_snapshot_cannot_be_recounted():
 def test_invalid_limit_rejected_before_session_inputs(limit):
     deps, *_ = make_dependencies(PenguinGame())
     with pytest.raises(ValueError):
-        AutomationSession(make_config(), deps, FakeHotkeys(), lambda _: None).run_penguins(limit)
+        AutomationSession(make_config(), deps, StopController(), lambda _: None).run_penguins(limit)
     assert deps.inputs.actions == []
 
 
@@ -329,9 +328,9 @@ def test_sanctuary_arrival_retains_independent_forest_preclick_recognition():
     assert game.reads_when_clicked == 11  # five missing + three arrival + three pre-click
 
 
-def test_f5_during_sanctuary_retry_prevents_third_click():
+def test_manual_stop_during_sanctuary_retry_prevents_third_click():
     final, _, game = run(DroppedSanctuaryClicks(99), 1, stop_after=2)
-    assert final.stop_reason == StopReason.MANUAL_F5
+    assert final.stop_reason == StopReason.MANUAL_STOP
     assert game.actions == ["sanctuary_entry"] * 2
 
 
@@ -379,7 +378,7 @@ def test_sanctuary_long_animation_wait_and_recheck_do_not_repeat_successful_clic
         assert 20 <= elapsed < 20.5
 
 
-def test_f5_interrupts_long_sanctuary_animation_wait():
+def test_manual_stop_interrupts_long_sanctuary_animation_wait():
     class InterruptingClock(FakeClock):
         callback = None
 
@@ -390,10 +389,11 @@ def test_f5_interrupts_long_sanctuary_animation_wait():
                 self.callback = None
 
     clock = InterruptingClock()
-    hotkeys = FakeHotkeys(on_register=lambda cb: setattr(clock, "callback", cb))
+    control = StopController()
+    clock.callback = lambda: control.request(StopReason.MANUAL_STOP)
     game = AnimatedSanctuary(clock, 20)
-    final, _, game = run(game, 1, clock=clock, hotkeys=hotkeys)
-    assert final.stop_reason == StopReason.MANUAL_F5
+    final, _, game = run(game, 1, clock=clock, control=control)
+    assert final.stop_reason == StopReason.MANUAL_STOP
     assert game.actions == ["sanctuary_entry"]
     assert clock.monotonic() < 2.1
 
@@ -475,7 +475,7 @@ def test_network_prompt_clearing_itself_needs_no_retry_click():
     assert any(s.overlay_status == OverlayActivityStatus.RECONNECTING for s in snapshots)
 
 
-def test_f5_interrupts_network_recovery_before_retry_button_is_ready():
+def test_manual_stop_interrupts_network_recovery_before_retry_button_is_ready():
     class StopClock(FakeClock):
         callback = None
 
@@ -486,10 +486,11 @@ def test_f5_interrupts_network_recovery_before_retry_button_is_ready():
                 self.callback = None
 
     clock = StopClock()
-    hotkeys = FakeHotkeys(on_register=lambda cb: setattr(clock, "callback", cb))
+    control = StopController()
+    clock.callback = lambda: control.request(StopReason.MANUAL_STOP)
     game = ReconnectingPenguinGame(clock, ["penguin_buy_5100"])
-    final, snapshots, game = run(game, 1, clock=clock, hotkeys=hotkeys)
-    assert final.stop_reason == StopReason.MANUAL_F5
+    final, snapshots, game = run(game, 1, clock=clock, control=control)
+    assert final.stop_reason == StopReason.MANUAL_STOP
     assert final.purchases_completed == 0
     assert game.actions[-1] == "penguin_buy_5100"
     assert any(s.overlay_status == OverlayActivityStatus.RECONNECTING for s in snapshots)

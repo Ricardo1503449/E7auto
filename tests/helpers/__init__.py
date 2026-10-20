@@ -7,9 +7,8 @@ from .services import (
     FakeInput,
     FakeRuntimeEnvironment,
     FakeOverlay,
-    FakeHotkeys,
     FakeLogger,
 )
 from .vision import match, ScriptedVision
 
-__all__ = ['make_config', 'FakeClock', 'FakeWindowService', 'FakeCapture', 'FakeInput', 'FakeRuntimeEnvironment', 'FakeOverlay', 'FakeHotkeys', 'FakeLogger', 'match', 'ScriptedVision', 'make_dependencies']
+__all__ = ['make_config', 'FakeClock', 'FakeWindowService', 'FakeCapture', 'FakeInput', 'FakeRuntimeEnvironment', 'FakeOverlay', 'FakeLogger', 'match', 'ScriptedVision', 'make_dependencies']

@@ -32,7 +32,6 @@ class _OverlayCloseButton(QPushButton):
         super().__init__("", parent)
         self.setObjectName("overlayCloseButton")
         self.setAccessibleName("关闭悬浮窗")
-        self.setToolTip("关闭悬浮窗")
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFixedSize(32, 32)
@@ -100,6 +99,7 @@ class _CollapsedOverlayIcon(QWidget):
 
 class StatsOverlay(QWidget):
     command_requested = Signal(object)
+    stop_requested = Signal()
     _MAX_DISPLAY_DIGITS = 7
     _FONT_SIZE_PX = 18
     _SECTION_GAP_PX = _FONT_SIZE_PX
@@ -134,6 +134,7 @@ class StatsOverlay(QWidget):
         self._expanded_size = QSize()
         self._target_labels: dict[str, QLabel] = {}
         self._penguins = False
+        self._chaos = False
         self._target_layout = QVBoxLayout()
         self._target_layout.setContentsMargins(0, 0, 0, 0)
         self._elapsed = QLabel("已耗时：0时0分0秒")
@@ -145,20 +146,22 @@ class StatsOverlay(QWidget):
         self._elapsed_timer.timeout.connect(self._update_elapsed)
         self._currency = QLabel()
         self._currency.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._defeats = QLabel("战败次数：0")
+        self._defeats.setObjectName("chaosDefeats")
+        self._defeats.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._defeats.hide()
         self._no_target = QLabel("已经0次未出货")
         self._no_target.setObjectName("noTargetRefreshes")
         self._no_target.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._status = QLabel("当前状态：已启动")
         self._status.setObjectName("activityStatus")
         self._status.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._hint = QLabel("F5结束")
-        self._hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
         for label in (
             self._elapsed,
             self._currency,
+            self._defeats,
             self._no_target,
             self._status,
-            self._hint,
         ):
             label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
 
@@ -168,7 +171,6 @@ class StatsOverlay(QWidget):
         self._collapse_button = QPushButton("收起", self._panel)
         self._collapse_button.setObjectName("overlayCollapseButton")
         self._collapse_button.setAccessibleName("收起悬浮窗")
-        self._collapse_button.setToolTip("收起悬浮窗")
         self._collapse_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self._collapse_button.setCursor(Qt.CursorShape.PointingHandCursor)
         collapse_font = self._collapse_button.font()
@@ -176,24 +178,34 @@ class StatsOverlay(QWidget):
         self._collapse_button.setFont(collapse_font)
         self._collapse_button.setFixedSize(54, 32)
         self._collapse_button.clicked.connect(self._collapse_overlay)
+        self._stop_button = QPushButton("停止", self._panel)
+        self._stop_button.setObjectName("overlayStopButton")
+        self._stop_button.setAccessibleName("停止脚本")
+        self._stop_button.setAccessibleDescription("停止当前运行的脚本")
+        self._stop_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self._stop_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._stop_button.setFont(collapse_font)
+        self._stop_button.setFixedSize(self._collapse_button.size())
+        self._stop_button.clicked.connect(self._request_stop)
+        self._stop_pending = False
         self._close_button = _OverlayCloseButton(self._panel)
         self._close_button.hide()
         self._close_button.clicked.connect(self._dismiss_stopped_overlay)
         self._dismissible = False
         layout = QVBoxLayout(self._panel)
-        layout.setContentsMargins(14, 10, 14, 10)
+        layout.setContentsMargins(66, 10, 66, 10)
         layout.addWidget(self._elapsed)
         # Keep the elapsed-time line visually separated from the target rows.
         layout.addSpacing(self._SECTION_GAP_PX)
         self._elapsed_gap = layout.itemAt(layout.count() - 1).spacerItem()
         layout.addLayout(self._target_layout)
         layout.addWidget(self._currency)
+        layout.addWidget(self._defeats)
         # Keep the spent-currency line visually separated from the no-target streak.
         layout.addSpacing(self._SECTION_GAP_PX)
         self._streak_gap = layout.itemAt(layout.count() - 1).spacerItem()
         layout.addWidget(self._no_target)
         layout.addWidget(self._status)
-        layout.addWidget(self._hint)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(self._panel)
@@ -217,11 +229,17 @@ class StatsOverlay(QWidget):
             f"background: {self._ACCENT_GREEN}; border: none; border-radius: 4px; padding: 0; }} "
             "QPushButton#overlayCollapseButton:hover { background: #228a50; } "
             "QPushButton#overlayCollapseButton:pressed { background: #1d7846; }"
+            f"QPushButton#overlayStopButton {{ color: white; font-size: {self._FONT_SIZE_PX}px; "
+            "background: #c62828; border: none; border-radius: 4px; padding: 0; } "
+            "QPushButton#overlayStopButton:hover { background: #b71c1c; } "
+            "QPushButton#overlayStopButton:pressed { background: #991b1b; } "
+            "QPushButton#overlayStopButton:disabled { background: #743838; color: #dddddd; }"
         )
         self.command_requested.connect(self._apply_command, Qt.ConnectionType.QueuedConnection)
 
     def configure(self, config: AppConfig) -> None:
         self._penguins = False
+        self._chaos = False
         self._configure_display(
             config.targets,
             QPoint(config.overlay_offset.x, config.overlay_offset.y),
@@ -229,6 +247,12 @@ class StatsOverlay(QWidget):
 
     def configure_penguins(self, config: AppConfig) -> None:
         self._penguins = True
+        self._chaos = False
+        self._configure_display((), QPoint(config.overlay_offset.x, config.overlay_offset.y))
+
+    def configure_chaos(self, config: AppConfig) -> None:
+        self._penguins = False
+        self._chaos = True
         self._configure_display((), QPoint(config.overlay_offset.x, config.overlay_offset.y))
 
     def _configure_display(
@@ -236,12 +260,14 @@ class StatsOverlay(QWidget):
         targets: Sequence[TargetConfig],
         offset: QPoint,
     ) -> None:
+        self._stop_pending = False
         self._set_dismissible(False)
         self._set_collapsed(False)
         self._offset = offset
-        self._no_target.setVisible(not self._penguins)
+        self._no_target.setVisible(not (self._penguins or self._chaos))
+        self._defeats.setVisible(self._chaos)
         self._elapsed_gap.changeSize(0, self._SECTION_GAP_PX)
-        self._streak_gap.changeSize(0, 0 if self._penguins else self._SECTION_GAP_PX)
+        self._streak_gap.changeSize(0, 0 if self._penguins or self._chaos else self._SECTION_GAP_PX)
         self._configure_target_labels(targets)
         self._lock_production_size(targets)
 
@@ -283,16 +309,17 @@ class StatsOverlay(QWidget):
                 f"{target.display_name}：{self._widest_digit_run(label)}"
             )
         maximum_currency = self._widest_digit_run(self._currency)
-        if self._penguins:
+        if self._penguins or self._chaos:
             maximum_currency = maximum_currency[0] * 10
         maximum_elapsed = self._widest_digit_run(self._elapsed)
         self._elapsed.setText(f"已耗时：{maximum_elapsed}时59分59秒")
         self._currency.setText(
-            f"{'已购买次数' if self._penguins else '已消耗天空石'}：{maximum_currency} / {maximum_currency}"
+            f"{'已完成轮数' if self._chaos else '已购买次数' if self._penguins else '已消耗天空石'}：{maximum_currency} / {maximum_currency}"
         )
         self._no_target.setText(
             f"已经{self._widest_digit_run(self._no_target)}次未出货"
         )
+        self._defeats.setText(f"战败次数：{self._widest_digit_run(self._defeats)[0] * 10}")
         self._status.ensurePolished()
         self._status.setText(
             max(
@@ -337,10 +364,10 @@ class StatsOverlay(QWidget):
                 f"{target.display_name}：0"
             )
         self._elapsed.setText("已耗时：0时0分0秒")
-        self._currency.setText("已购买次数：0 / 0" if self._penguins else "已消耗天空石：0 / 0")
+        self._currency.setText("已完成轮数：0 / 0" if self._chaos else "已购买次数：0 / 0" if self._penguins else "已消耗天空石：0 / 0")
         self._no_target.setText("已经0次未出货")
-        self._status.setText("当前状态：已启动")
-        self._hint.setText("F5结束")
+        self._defeats.setText("战败次数：0")
+        self._status.setText("当前状态：运行中" if self._chaos else "当前状态：已启动")
 
     def start_elapsed_timer(self) -> None:
         self._elapsed_clock.start()
@@ -367,12 +394,17 @@ class StatsOverlay(QWidget):
         return f"已耗时：{hours}时{minutes}分{seconds}秒"
 
     def update_snapshot(self, snapshot: RuntimeSnapshot) -> None:
+        if snapshot.feature_id == "chaos":
+            self._currency.setText(f"已完成轮数：{snapshot.rounds_completed} / {snapshot.round_limit}")
+            self._defeats.setText(f"战败次数：{snapshot.defeats}")
+            self._status.setText(f"当前状态：{snapshot.overlay_status.value}")
+            self._set_dismissible(snapshot.is_final)
+            return
         if snapshot.feature_id == "penguin_exchange":
             self._currency.setText(
                 f"已购买次数：{snapshot.purchases_completed} / {snapshot.purchase_limit}"
             )
             self._status.setText(f"当前状态：{snapshot.overlay_status.value}")
-            self._hint.setText("F5结束")
             self._set_dismissible(snapshot.is_final)
             return
         for tally in snapshot.targets:
@@ -386,23 +418,38 @@ class StatsOverlay(QWidget):
             f"已经{snapshot.refreshes_without_mandatory_target}次未出货"
         )
         self._status.setText(f"当前状态：{snapshot.overlay_status.value}")
-        self._hint.setText("F5结束")
         self._set_dismissible(snapshot.is_final)
 
     def _position_corner_buttons(self) -> None:
         self._collapse_button.move(4, 4)
+        self._stop_button.move(4, self._collapse_button.geometry().bottom() + 9)
         self._close_button.move(
             max(0, self._panel.width() - self._close_button.width() - 4),
             4,
         )
         self._collapse_button.raise_()
+        self._stop_button.raise_()
         self._close_button.raise_()
 
     def _set_dismissible(self, enabled: bool) -> None:
         self._dismissible = enabled
+        self._stop_button.setEnabled(not enabled and not self._stop_pending)
+        self._stop_button.setCursor(
+            Qt.CursorShape.PointingHandCursor if self._stop_button.isEnabled()
+            else Qt.CursorShape.ArrowCursor
+        )
+        self._stop_button.setAccessibleDescription("已停止" if enabled else "正在停止…" if self._stop_pending else "停止当前运行的脚本")
         self._close_button.setVisible(enabled and self.isVisible())
         if enabled:
             self._position_corner_buttons()
+
+    @Slot()
+    def _request_stop(self) -> None:
+        if self._dismissible or self._stop_pending:
+            return
+        self._stop_pending = True
+        self._set_dismissible(False)
+        self.stop_requested.emit()
 
     @Slot()
     def _collapse_overlay(self) -> None:
@@ -422,7 +469,6 @@ class StatsOverlay(QWidget):
             )
             self.setWindowOpacity(1.0)
             self.setAccessibleName("E7auto 悬浮图标，单击展开")
-            self.setToolTip("单击展开悬浮窗")
         else:
             self._collapsed_icon.hide()
             self._panel.show()
@@ -430,7 +476,6 @@ class StatsOverlay(QWidget):
                 self.setFixedSize(self._expanded_size)
             self.setWindowOpacity(0.82)
             self.setAccessibleName("E7auto 悬浮窗")
-            self.setToolTip("")
             self._collapse_button.show()
             self._close_button.setVisible(self._dismissible and self.isVisible())
             self._position_corner_buttons()
@@ -452,12 +497,14 @@ class StatsOverlay(QWidget):
         """Show the production overlay in an explicitly draggable calibration mode."""
 
         self._penguins = False
+        self._chaos = False
         self._configure_display(targets, QPoint(0, 0))
         self._position_calibration_origin = QPoint(client_bounds.x, client_bounds.y)
         self._position_calibration_drag_delta = None
         self.move(client_bounds.x, client_bounds.y)
         self._set_collapsed(False)
         self._collapse_button.hide()
+        self._stop_button.hide()
         self.show()
         self.raise_()
 
@@ -470,6 +517,7 @@ class StatsOverlay(QWidget):
         self._position_calibration_origin = None
         self._position_calibration_drag_delta = None
         self._collapse_button.show()
+        self._stop_button.show()
 
     def _saved_position(self) -> QPoint | None:
         saved = self._position_store.load() if self._position_store is not None else None

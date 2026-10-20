@@ -16,7 +16,7 @@ from e7auto.configuration.models import LoggingConfig
 from e7auto.core.domain import RuntimeSnapshot, StopReason
 from e7auto.core.ports import CaptureError
 from e7auto.logging.run import RunLogManager
-from tests.helpers import FakeCapture, FakeClock, FakeHotkeys, FakeLogger, ScriptedVision, make_config, make_dependencies
+from tests.helpers import FakeCapture, FakeClock, FakeLogger, ScriptedVision, make_config, make_dependencies
 
 
 class Capture(FakeCapture):
@@ -97,12 +97,12 @@ def test_exception_saves_last_cache_once_before_closing_capture(tmp_path, monkey
         return original_save(logger, *args, **kwargs)
 
     monkeypatch.setattr(type(log), "save_stop_snapshot", save_before_close)
-    hotkeys = FakeHotkeys()
-    session = AutomationSession(make_config(), deps, hotkeys, lambda _: None)
+    control = StopController()
+    session = AutomationSession(make_config(), deps, control, lambda _: None)
     final = session.run_penguins(1) if penguins else session.run(0)
     assert final.stop_reason is expected
     assert deps.capture.calls == (3 if failure == "capture" else 2)
-    assert deps.capture.closed and hotkeys.unregistered == 1
+    assert deps.capture.closed
     assert engines[0].cached_game_frame() is None
     files = list(tmp_path.glob("*-stop.png"))
     assert len(files) == 1
@@ -117,7 +117,7 @@ def test_exception_saves_last_cache_once_before_closing_capture(tmp_path, monkey
 
 @pytest.mark.parametrize("reason", [StopReason.BUDGET_COMPLETE, StopReason.REFRESH_STRATEGY_EXHAUSTED,
     StopReason.PENGUIN_LIMIT_COMPLETE, StopReason.PENGUIN_FUNDS_COMPLETE,
-    StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_F5])
+    StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_STOP])
 def test_expected_stops_never_encode_or_save(tmp_path, monkeypatch, reason):
     log = RunLogManager(tmp_path, LoggingConfig()).start("normal")
     deps, _ = dependencies(log)
@@ -132,7 +132,7 @@ def test_expected_stops_never_encode_or_save(tmp_path, monkeypatch, reason):
     monkeypatch.setattr(AutomationEngine, "execute", execute)
     monkeypatch.setattr(AutomationEngine, "finish_normal_run", lambda *_: None)
     monkeypatch.setattr(cv2, "imencode", lambda *_: pytest.fail("Normal stop must not encode"))
-    final = AutomationSession(make_config(), deps, FakeHotkeys(), lambda _: None).run(0)
+    final = AutomationSession(make_config(), deps, StopController(), lambda _: None).run(0)
     assert final.stop_reason is reason
     assert deps.capture.calls == 1
     assert engines[0].cached_game_frame() is None
@@ -155,18 +155,21 @@ def test_failure_in_normal_return_home_saves_final_cached_frame(tmp_path, monkey
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
     monkeypatch.setattr(AutomationEngine, "finish_normal_run", finish)
-    final = AutomationSession(make_config(), deps, FakeHotkeys(), lambda _: None).run(0)
+    final = AutomationSession(make_config(), deps, StopController(), lambda _: None).run(0)
     assert final.stop_reason is StopReason.ENTRY_FAILURE
     image = cv2.imdecode(np.frombuffer(next(tmp_path.glob("*.png")).read_bytes(), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     np.testing.assert_array_equal(image, deps.capture.last)
     assert deps.capture.calls == 2
 
 
-def test_no_engine_initialization_failure_records_no_cache(tmp_path):
+def test_no_engine_initialization_failure_records_no_cache(tmp_path, monkeypatch):
     log = RunLogManager(tmp_path, LoggingConfig()).start("startup")
     deps, _ = dependencies(log)
-    final = AutomationSession(make_config(), deps, FakeHotkeys(succeeds=False), lambda _: None).run(0)
-    assert final.stop_reason is StopReason.HOTKEY_FAILURE
+    def fail_setup(*args, **kwargs):
+        raise RuntimeError("synthetic engine setup failure")
+    monkeypatch.setattr("e7auto.bootstrap.ShopFlow", fail_setup)
+    final = AutomationSession(make_config(), deps, StopController(), lambda _: None).run(0)
+    assert final.stop_reason is StopReason.INTERNAL_ERROR
     assert deps.capture.calls == 0 and deps.capture.closed
     text = log.path.read_text(encoding="utf-8")
     assert "outcome=skipped" in text and "detail=no_cached_frame" in text
@@ -186,12 +189,62 @@ def test_writer_exception_does_not_replace_original_error_or_prevent_cleanup(mon
         raise StopExecution(StopReason.INPUT_FAILURE, "original input error")
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
-    hotkeys = FakeHotkeys()
-    final = AutomationSession(make_config(), deps, hotkeys, lambda _: None).run(0)
+    control = StopController()
+    final = AutomationSession(make_config(), deps, control, lambda _: None).run(0)
     assert final.stop_reason is StopReason.INPUT_FAILURE
-    assert deps.capture.closed and hotkeys.unregistered == 1 and logger.closed == 1
+    assert deps.capture.closed and logger.closed == 1
     assert logger.events[-1][0] == "run_stopped"
     assert logger.events[-1][1]["detail"] == "original input error"
+
+
+@pytest.mark.parametrize("broken_logging", [False, True])
+def test_feature_cleanup_failure_preserves_reason_and_still_closes_capture(monkeypatch, broken_logging):
+    class Logger(FakeLogger):
+        broken = False
+
+        def event(self, event, **fields):
+            if self.broken:
+                raise OSError("logging failed")
+            super().event(event, **fields)
+
+    logger = Logger()
+    deps, _ = dependencies(logger)
+    snapshots = []
+
+    def execute(engine):
+        logger.broken = broken_logging
+        raise StopExecution(StopReason.RECOGNITION_TIMEOUT, "original recognition failure")
+
+    def cleanup(engine):
+        raise RuntimeError("feature cleanup failed")
+
+    monkeypatch.setattr(AutomationEngine, "execute", execute)
+    monkeypatch.setattr(AutomationEngine, "release_cached_game_frame", cleanup)
+    final = AutomationSession(make_config(), deps, StopController(), snapshots.append).run(0)
+    assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
+    assert deps.capture.closed and logger.closed == 1
+    assert [s for s in snapshots if s.is_final] == [final]
+    if not broken_logging:
+        detail = logger.events[-1][1]["detail"]
+        assert "original recognition failure" in detail and "feature cleanup failed" in detail
+
+
+def test_final_callback_failure_does_not_skip_logger_close(monkeypatch):
+    logger = FakeLogger()
+    deps, _ = dependencies(logger)
+
+    def execute(engine):
+        raise StopExecution(StopReason.MANUAL_STOP)
+
+    def publish(snapshot):
+        if snapshot.is_final:
+            raise RuntimeError("notification failed")
+
+    monkeypatch.setattr(AutomationEngine, "execute", execute)
+    with pytest.raises(RuntimeError, match="notification failed"):
+        AutomationSession(make_config(), deps, StopController(), publish).run(0)
+    assert deps.capture.closed and logger.closed == 1
+    assert logger.events[-1][1]["reason"] == StopReason.MANUAL_STOP.value
 
 
 def test_second_run_cannot_reuse_first_runs_cache(tmp_path, monkeypatch):
@@ -208,7 +261,7 @@ def test_second_run_cannot_reuse_first_runs_cache(tmp_path, monkeypatch):
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT)
 
         monkeypatch.setattr(AutomationEngine, "execute", execute)
-        AutomationSession(make_config(), deps, FakeHotkeys(), lambda _: None).run(0)
+        AutomationSession(make_config(), deps, StopController(), lambda _: None).run(0)
         runs.append(log.path.read_text(encoding="utf-8"))
     assert "outcome=saved" in runs[0]
     assert "outcome=skipped" in runs[1]
@@ -228,10 +281,10 @@ def test_actual_png_encoding_failure_preserves_session_error_and_closes_resource
 
     monkeypatch.setattr(AutomationEngine, "execute", execute)
     monkeypatch.setattr(cv2, "imencode", fail_encode)
-    hotkeys = FakeHotkeys()
-    final = AutomationSession(make_config(), deps, hotkeys, lambda _: None).run(0)
+    control = StopController()
+    final = AutomationSession(make_config(), deps, control, lambda _: None).run(0)
     assert final.stop_reason is StopReason.REFRESH_BALANCE_MISMATCH
-    assert deps.capture.closed and hotkeys.unregistered == 1
+    assert deps.capture.closed
     assert deps.capture.calls == 1
     text = log.path.read_text(encoding="utf-8")
     assert text.count("event=stop_snapshot ") == 1

@@ -3,10 +3,9 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
-import pywintypes
 
 import e7auto.platform.windows as platform_windows
-from e7auto.platform.windows import Win32F5HotkeyService, Win32RuntimeEnvironment, Win32WindowService, WindowLookupError, WindowOperationError
+from e7auto.platform.windows import Win32RuntimeEnvironment, Win32WindowService, WindowLookupError, WindowOperationError
 from e7auto.core.types import Rect
 from e7auto.core.ports import WindowRef
 
@@ -126,53 +125,6 @@ def test_minimized_window_restore_timeout_fails_closed(
         Win32WindowService().restore_without_activation(
             WindowRef(100, "第七史诗", "EpicSeven.exe")
         )
-
-
-def test_f5_hotkey_treats_pywin32_none_return_as_success(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    registered: list[tuple[object, int, int, int]] = []
-    unregistered: list[tuple[object, int]] = []
-
-    def register_hotkey(hwnd: object, hotkey_id: int, modifiers: int, key: int) -> None:
-        registered.append((hwnd, hotkey_id, modifiers, key))
-
-    monkeypatch.setattr(platform_windows.win32gui, "RegisterHotKey", register_hotkey)
-    monkeypatch.setattr(platform_windows.win32gui, "GetMessage", lambda *args: (0, None))
-    monkeypatch.setattr(
-        platform_windows.win32gui,
-        "UnregisterHotKey",
-        lambda hwnd, hotkey_id: unregistered.append((hwnd, hotkey_id)),
-    )
-    monkeypatch.setattr(platform_windows.win32api, "GetCurrentThreadId", lambda: 1234)
-    monkeypatch.setattr(platform_windows.win32api, "PostThreadMessage", lambda *args: None)
-
-    service = Win32F5HotkeyService()
-    assert service.register_f5(lambda: None) is True
-    service.unregister_f5()
-
-    assert registered == [(None, service._HOTKEY_ID, 0, platform_windows.win32con.VK_F5)]
-    assert unregistered == [(None, service._HOTKEY_ID)]
-    assert not hasattr(service, "_F6_HOTKEY_ID")
-
-
-def test_f5_hotkey_keeps_real_registration_failure_fail_closed(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    def reject_hotkey(*args: object) -> None:
-        raise pywintypes.error(1409, "RegisterHotKey", "Hot key already registered")
-
-    monkeypatch.setattr(platform_windows.win32gui, "RegisterHotKey", reject_hotkey)
-    monkeypatch.setattr(platform_windows.win32api, "GetCurrentThreadId", lambda: 1234)
-
-    service = Win32F5HotkeyService()
-    assert service.register_f5(lambda: None) is False
-    assert service._thread is None
-    assert service._thread_id is None
-
-
-def test_f5_hotkey_uses_the_documented_application_id_range() -> None:
-    assert 0x0000 <= Win32F5HotkeyService._HOTKEY_ID <= 0xBFFF
 
 
 def test_runtime_environment_reads_the_windows_administrator_token(

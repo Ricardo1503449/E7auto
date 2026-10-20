@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from e7auto.runtime.stop_control import StopController
+
 from dataclasses import replace
 
 from e7auto.bootstrap import AutomationSession
 from e7auto.configuration.models import RefreshStrategyConfig
 from e7auto.core.domain import RuntimeSnapshot
-from tests.helpers import FakeHotkeys, FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, make_dependencies
+from tests.helpers import FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, make_dependencies
 
 
 def run_session(
@@ -15,7 +17,7 @@ def run_session(
     windows: FakeWindowService | None = None,
     inputs: FakeInput | None = None,
     overlay: FakeOverlay | None = None,
-    hotkeys: FakeHotkeys | None = None,
+    control: StopController | None = None,
     config=None,
     enabled_optional_target_ids: frozenset[str] = frozenset(),
     clock: FakeClock | None = None,
@@ -31,14 +33,14 @@ def run_session(
         clock=clock,
         runtime=runtime,
     )
-    fake_hotkeys = hotkeys or FakeHotkeys()
-    final = AutomationSession(config or make_config(), deps, fake_hotkeys, snapshots.append).run(
+    stop_control = control or StopController()
+    final = AutomationSession(config or make_config(), deps, stop_control, snapshots.append).run(
         limit,
         "test-run",
         enabled_optional_target_ids=enabled_optional_target_ids,
         continuous_refresh=continuous_refresh,
     )
-    return final, snapshots, fake_windows, fake_inputs, fake_overlay, fake_hotkeys, logger
+    return final, snapshots, fake_windows, fake_inputs, fake_overlay, stop_control, logger
 
 
 def balances_for_refreshes(count: int, start: int = 1000) -> list[int]:

@@ -78,8 +78,9 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
             "stable_counts": "0,1,2",
             "settle_elapsed_ms": 400,
             "early_exit_ms": 400,
-            "verification_method": "primary",
-            "fallback_checks": 0,
+            "verification_method": "content",
+            "content_reason": "matched",
+            "content_scores": "",
         }
     ]
     verified = [fields for event, fields in logger.events if event == "scroll_verified"]
@@ -92,8 +93,6 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
     assert "verification_method" not in verified[0]
     assert "cumulative_shift_y" not in verified[0]
     assert "fallback_checks" not in verified[0]
-    assert vision.overlap_reference_frames == []
-    assert vision.overlap_queries == []
     stage = next(fields for event, fields in logger.events
                  if event == "performance_stage" and fields.get("stage") == "scroll_to_bottom")
     assert stage["capture_count"] == 4

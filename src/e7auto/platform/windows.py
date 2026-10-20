@@ -2,13 +2,10 @@ from __future__ import annotations
 
 import ctypes
 import os
-import threading
 import time
 from ctypes import wintypes
 from pathlib import Path
-from typing import Callable
 
-import pywintypes
 import win32api
 import win32con
 import win32gui
@@ -228,71 +225,3 @@ class Win32WindowService:
 class Win32RuntimeEnvironment:
     def is_elevated(self) -> bool:
         return bool(ctypes.windll.shell32.IsUserAnAdmin())
-
-
-class Win32F5HotkeyService:
-    _F5_HOTKEY_ID = 0x67A0
-    _HOTKEY_ID = _F5_HOTKEY_ID
-
-    def __init__(self) -> None:
-        self._thread: threading.Thread | None = None
-        self._thread_id: int | None = None
-        self._stop = threading.Event()
-
-    def register_f5(
-        self,
-        callback: Callable[[], None],
-    ) -> bool:
-        if self._thread is not None:
-            return False
-        ready = threading.Event()
-        result: list[bool] = []
-        self._stop.clear()
-
-        def loop() -> None:
-            self._thread_id = win32api.GetCurrentThreadId()
-            registered = False
-            try:
-                win32gui.RegisterHotKey(None, self._F5_HOTKEY_ID, 0, win32con.VK_F5)
-            except pywintypes.error:
-                pass
-            else:
-                registered = True
-            result.append(registered)
-            ready.set()
-            if not registered:
-                return
-            try:
-                while not self._stop.is_set():
-                    message = win32gui.GetMessage(None, 0, 0)
-                    if not message or message[0] == 0:
-                        break
-                    _, msg = message
-                    if (
-                        msg[1] == win32con.WM_HOTKEY
-                        and msg[2] == self._F5_HOTKEY_ID
-                    ):
-                        callback()
-            finally:
-                win32gui.UnregisterHotKey(None, self._F5_HOTKEY_ID)
-
-        self._thread = threading.Thread(target=loop, name="e7auto-f5", daemon=True)
-        self._thread.start()
-        ready.wait(timeout=2.0)
-        if not result or not result[0]:
-            self._thread.join(timeout=1.0)
-            self._thread = None
-            self._thread_id = None
-            return False
-        return True
-
-    def unregister_f5(self) -> None:
-        thread = self._thread
-        if thread is None:
-            return
-        self._stop.set()
-        if self._thread_id is not None:
-            win32api.PostThreadMessage(self._thread_id, win32con.WM_QUIT, 0, 0)
-        thread.join(timeout=2.0)
-        self._thread = None
-        self._thread_id = None

@@ -17,6 +17,9 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QWidget
 from shiboken6 import isValid
 
+from e7auto import __version__
+from .navigation import _NavigationButton
+
 
 def _live_window(reference: ReferenceType[QMainWindow]) -> QMainWindow | None:
     window = reference()
@@ -130,11 +133,17 @@ class _TitleBar(QWidget):
         # destruction to cyclic GC, which may run inside another Qt callback.
         self._window_ref = ref(window)
         self.setObjectName("titleBar")
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setProperty("windowMaximized", False)
         self.setFixedHeight(self._HEIGHT)
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(14, 4, 6, 4)
+        layout.setContentsMargins(10, 3, 6, 3)
         layout.setSpacing(8)
+
+        self.back_button = _NavigationButton("back", "返回功能中心", "backToModulesButton")
+        self.back_button.setFixedWidth(44)
+        layout.addWidget(self.back_button)
+        layout.addSpacing(12)
 
         icon_label = _HighDpiIconLabel(icon_path, self._ICON_SIZE)
         icon_label.setObjectName("titleBarIcon")
@@ -144,6 +153,11 @@ class _TitleBar(QWidget):
         title.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
         layout.addWidget(icon_label)
         layout.addWidget(title)
+        version = QLabel(f"v{__version__}")
+        version.setObjectName("titleBarVersion")
+        version.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        layout.addSpacing(4)
+        layout.addWidget(version)
         layout.addStretch(1)
 
         self._minimize = self._window_button(

@@ -1,30 +1,67 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import ceil
 from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, QSize, Qt
 from PySide6.QtGui import (
     QColor,
     QFont,
+    QKeyEvent,
     QLinearGradient,
     QPaintEvent,
     QPainter,
     QPainterPath,
     QPen,
     QPixmap,
+    QShowEvent,
     QValidator,
 )
-from PySide6.QtWidgets import QAbstractButton, QGraphicsDropShadowEffect, QSizePolicy, QWidget
+from PySide6.QtWidgets import QAbstractButton, QDialog, QGraphicsDropShadowEffect, QPushButton, QSizePolicy, QWidget
 
 
-_MIN_REFRESH_LIMIT = 0
+_MAX_RUN_LIMIT = 2_147_483_647
 
 
-_MAX_REFRESH_LIMIT = 2_147_483_647
+def _use_smooth_text(widget: QWidget) -> None:
+    """Use symmetric DirectWrite smoothing without changing text size or color."""
+    font = widget.font()
+    font.setHintingPreference(QFont.HintingPreference.PreferNoHinting)
+    widget.setFont(font)
 
 
-class _RefreshLimitValidator(QValidator):
+class AppDialog(QDialog):
+    """Start on the container; activate buttons only after explicit focus or click."""
+
+    def __init__(self, parent: QWidget | None = None, flags: Qt.WindowType = Qt.WindowType.Dialog):
+        super().__init__(parent, flags)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+    def showEvent(self, event: QShowEvent) -> None:
+        if not event.spontaneous():
+            for button in self.findChildren(QPushButton):
+                button.setAutoDefault(False)
+                button.setDefault(False)
+        super().showEvent(event)
+        if not event.spontaneous():
+            self.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            focused = self.focusWidget()
+            if isinstance(focused, QPushButton) and focused.hasFocus() and focused.isEnabled():
+                focused.click()
+            event.accept()
+            return
+        super().keyPressEvent(event)
+
+
+class _IntegerLimitValidator(QValidator):
+    def __init__(self, parent=None, *, minimum: int = 0):
+        super().__init__(parent)
+        self._minimum = minimum
+
     def validate(
         self,
         input_text: str,
@@ -34,7 +71,7 @@ class _RefreshLimitValidator(QValidator):
             return QValidator.State.Intermediate, input_text, position
         if not input_text.isascii() or not input_text.isdecimal():
             return QValidator.State.Invalid, input_text, position
-        if _MIN_REFRESH_LIMIT <= int(input_text) <= _MAX_REFRESH_LIMIT:
+        if self._minimum <= int(input_text) <= _MAX_RUN_LIMIT:
             return QValidator.State.Acceptable, input_text, position
         return QValidator.State.Invalid, input_text, position
 
@@ -112,7 +149,7 @@ class _ModuleCard(QAbstractButton):
         self._title = title
         self._pixmap = QPixmap(str(image_path)) if image_path is not None else QPixmap()
         self._scaled_pixmap = QPixmap()
-        self._scaled_pixmap_size = QSize()
+        self._scaled_pixmap_key: tuple[int, int, float] | None = None
         self._focal_point = QPointF(0.5, 0.5)
         self.setObjectName(object_name)
         self.setAccessibleName(title or "开发中")
@@ -151,34 +188,38 @@ class _ModuleCard(QAbstractButton):
         if self._pixmap.isNull():
             painter.fillRect(rect, QColor("#25282c"))
             return
+        dpr = self.devicePixelRatioF()
         scale = max(
             rect.width() / self._pixmap.width(),
             rect.height() / self._pixmap.height(),
-        ) * self._IMAGE_ZOOM
+        ) * self._IMAGE_ZOOM * dpr
         scaled_size = QSize(
-            max(1, round(self._pixmap.width() * scale)),
-            max(1, round(self._pixmap.height() * scale)),
+            max(1, ceil(self._pixmap.width() * scale)),
+            max(1, ceil(self._pixmap.height() * scale)),
         )
-        if scaled_size != self._scaled_pixmap_size:
+        key = (scaled_size.width(), scaled_size.height(), dpr)
+        if key != self._scaled_pixmap_key:
             self._scaled_pixmap = self._pixmap.scaled(
                 scaled_size,
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation,
             )
-            self._scaled_pixmap_size = scaled_size
+            self._scaled_pixmap.setDevicePixelRatio(dpr)
+            self._scaled_pixmap_key = key
         scaled = self._scaled_pixmap
+        source_width, source_height = rect.width() * dpr, rect.height() * dpr
         source_x = min(
-            max(0.0, scaled.width() * self._focal_point.x() - rect.width() / 2),
-            max(0.0, scaled.width() - rect.width()),
+            max(0.0, scaled.width() * self._focal_point.x() - source_width / 2),
+            max(0.0, scaled.width() - source_width),
         )
         source_y = min(
-            max(0.0, scaled.height() * self._focal_point.y() - rect.height() / 2),
-            max(0.0, scaled.height() - rect.height()),
+            max(0.0, scaled.height() * self._focal_point.y() - source_height / 2),
+            max(0.0, scaled.height() - source_height),
         )
         painter.drawPixmap(
             rect,
             scaled,
-            QRectF(source_x, source_y, rect.width(), rect.height()),
+            QRectF(source_x, source_y, source_width, source_height),
         )
 
     def paintEvent(self, event: QPaintEvent) -> None:

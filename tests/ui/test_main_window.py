@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 
 from PySide6.QtCore import QPointF, QSize, Qt
 from PySide6.QtTest import QTest
@@ -20,6 +21,43 @@ import pytest
 from e7auto.ui import MainWindow
 
 
+@pytest.mark.parametrize("maximized", [False, True])
+def test_windows_native_minimize_restore_with_frameless_chrome(tmp_path, qt_application, maximized):
+    if sys.platform != "win32" or qt_application.platformName() != "windows":
+        pytest.skip("requires the native Windows Qt platform")
+    import win32con
+    import win32gui
+
+    window = MainWindow(tmp_path)
+    try:
+        initial_size = window.size()
+        window.show()
+        qt_application.processEvents()
+        hwnd = int(window.winId())
+        style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
+        assert style & win32con.WS_MINIMIZEBOX
+        assert style & win32con.WS_MAXIMIZEBOX
+        assert style & win32con.WS_SYSMENU
+        assert style & win32con.WS_CAPTION
+        assert style & win32con.WS_THICKFRAME
+        assert not win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) & win32con.WS_EX_LAYERED
+        assert window.size() == initial_size
+        if maximized:
+            window.showMaximized()
+            qt_application.processEvents()
+        win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_MINIMIZE, 0)
+        qt_application.processEvents()
+        assert win32gui.IsIconic(hwnd) and window.isMinimized()
+        win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+        qt_application.processEvents()
+        assert not win32gui.IsIconic(hwnd) and not window.isMinimized()
+        assert window.isMaximized() is maximized
+        assert window._title_bar.height() == 50
+        assert win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE) & win32con.WS_THICKFRAME
+    finally:
+        window.close()
+
+
 def test_main_window_has_approved_shop_controls_and_resizable_shell(
     tmp_path: Path,
 ) -> None:
@@ -37,7 +75,7 @@ def test_main_window_has_approved_shop_controls_and_resizable_shell(
         assert len(limit_inputs) == 1
         assert limit_inputs[0].text() == "0"
         assert limit_inputs[0].alignment() & Qt.AlignmentFlag.AlignRight
-        window._show_shop_page()
+        window._show_module_page("shop_refresh")
         window.show()
         application.processEvents()
         assert limit_labels[0].geometry().right() < limit_inputs[0].geometry().left()
@@ -56,8 +94,10 @@ def test_main_window_has_approved_shop_controls_and_resizable_shell(
         assert window.minimumSize() == window._MINIMUM_SIZE
         assert window.size().width() > window.minimumWidth()
         assert window.size().height() > window.minimumHeight()
-        assert window.testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        assert window.testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground) is (window._native_frame is None)
         assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
+        assert window.windowFlags() & Qt.WindowType.WindowMinimizeButtonHint
+        assert window.windowFlags() & Qt.WindowType.WindowMaximizeButtonHint
         assert len(window.findChildren(QWidget, "resizeHandle")) == 8
         title_bar_icon = window.findChild(QLabel, "titleBarIcon")
         title_bar_text = window.findChild(QLabel, "windowTitle")
@@ -81,7 +121,7 @@ def test_main_window_has_approved_shop_controls_and_resizable_shell(
         assert [
             label.text()
             for label in window._shop_feature_page.findChildren(QLabel, "keycap")
-        ] == ["F5"]
+        ] == []
         assert not any(
             label.text() in {"F6", "移动悬浮窗"}
             for label in window.findChildren(QLabel)
@@ -134,7 +174,7 @@ def test_refresh_limit_plain_input_accepts_only_complete_bounded_integers(
         ):
             limit_input.setText(text)
             assert limit_input.hasAcceptableInput()
-            assert window._validated_refresh_limit() == value
+            assert window._shop_feature_page.limit_value() == value
             assert start_button.isEnabled()
 
         for text in (
@@ -149,7 +189,7 @@ def test_refresh_limit_plain_input_accepts_only_complete_bounded_integers(
         ):
             limit_input.setText(text)
             assert not limit_input.hasAcceptableInput()
-            assert window._validated_refresh_limit() is None
+            assert window._shop_feature_page.limit_value() is None
             assert not start_button.isEnabled()
     finally:
         window.close()
@@ -204,9 +244,10 @@ def test_function_center_reflows_and_future_cards_are_deliberate_placeholders(
 
         future_cards = [
             window.findChild(QAbstractButton, f"futureModuleCard{index}")
-            for index in range(2, 4)
+            for index in range(3, 4)
         ]
         assert all(card is not None for card in future_cards)
+        assert window._function_center_page.chaos_card.isEnabled()
         assert all(not card.isEnabled() for card in future_cards if card is not None)
         assert all(
             card.accessibleName() == "开发中"
@@ -216,7 +257,7 @@ def test_function_center_reflows_and_future_cards_are_deliberate_placeholders(
         assert set(window._function_center_page._cards_by_id) == {
             "shop_refresh",
             "penguin_exchange",
-            "future_2",
+            "chaos",
             "future_3",
         }
         assert all(
@@ -269,7 +310,7 @@ def test_setting_toggle_changes_only_when_switch_itself_is_clicked(
         application.processEvents()
         assert toggle.isChecked()
         assert toggle.hasFocus()
-        other = window._friendship_points if name == "continuousRefreshToggle" else window._continuous_refresh
+        other = window._shop_feature_page.friendship_toggle if name == "continuousRefreshToggle" else window._shop_feature_page.continuous_refresh_toggle
         assert not other.isChecked()
 
         focused_image = toggle.grab().toImage()
@@ -281,7 +322,7 @@ def test_setting_toggle_changes_only_when_switch_itself_is_clicked(
         QTest.keyClick(toggle, Qt.Key.Key_Space)
         assert not toggle.isChecked()
         assert not any(button.isChecked() for button in (
-            window._friendship_points, window._continuous_refresh,
+            window._shop_feature_page.friendship_toggle, window._shop_feature_page.continuous_refresh_toggle,
         ))
     finally:
         window.close()
@@ -292,7 +333,7 @@ def test_continuous_refresh_layout_selection_and_small_window_scroll(tmp_path):
     application = QApplication.instance() or QApplication([])
     window = MainWindow(tmp_path)
     try:
-        window._show_shop_page()
+        window._show_module_page("shop_refresh")
         window.resize(window.minimumSize())
         window.show()
         application.processEvents()
@@ -302,14 +343,13 @@ def test_continuous_refresh_layout_selection_and_small_window_scroll(tmp_path):
         assert toggle.size() == page.friendship_toggle.size()
         assert toggle.geometry().top() > page.friendship_toggle.geometry().bottom()
         assert toggle.geometry().right() == page.friendship_toggle.geometry().right()
-        assert [label.text() for label in page.findChildren(QLabel)] == [
-            "刷新秘密商店", "运行设置", "天空石消耗上限", "购买友情点数", "连续刷新",
-            "运行快捷键", "F5", "结束脚本",
+        assert [label.text() for label in page.findChildren(QLabel) if label.text()] == [
+            "刷新秘密商店", "天空石消耗上限", "购买友情点数", "连续刷新",
         ]
         toggle.setChecked(True)
         assert not page.friendship_toggle.isChecked()
-        page.back_button.click()
-        window._show_shop_page()
+        window._title_bar.back_button.click()
+        window._show_module_page("shop_refresh")
         assert toggle.isChecked()
         scroll = page.findChild(QScrollArea, "featureScrollArea")
         assert scroll is not None
@@ -319,7 +359,7 @@ def test_continuous_refresh_layout_selection_and_small_window_scroll(tmp_path):
         assert scroll.viewport().rect().contains(center)
         assert scroll.horizontalScrollBar().maximum() == 0
         fresh_window = MainWindow(tmp_path)
-        assert not fresh_window._continuous_refresh.isChecked()
+        assert not fresh_window._shop_feature_page.continuous_refresh_toggle.isChecked()
         fresh_window.close()
     finally:
         window.close()

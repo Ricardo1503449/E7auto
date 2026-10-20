@@ -4,10 +4,20 @@ from __future__ import annotations
 import gc
 from pathlib import Path
 import weakref
+from time import monotonic
 
 from PySide6.QtCore import QCoreApplication, QEvent, QTimer
 from PySide6.QtWidgets import QApplication, QWidget
 from shiboken6 import isValid
+
+
+def wait_for(predicate, timeout_ms: int = 3000) -> None:
+    """Pump the GUI while awaiting a bounded asynchronous test condition."""
+    from PySide6.QtTest import QTest
+    deadline = monotonic() + timeout_ms / 1000
+    while not predicate() and monotonic() < deadline:
+        QTest.qWait(5)
+    assert predicate(), "Timed out waiting for Qt operation"
 
 
 def dispose_widgets(application: QApplication, widgets: list[QWidget]) -> None:
@@ -45,7 +55,7 @@ def lifecycle_probe(root: Path, rounds: int, cleanup: str) -> dict:
         overlay = window._overlay
         refs = [weakref.ref(window), weakref.ref(overlay)]
         window.show()
-        window._show_shop_page()
+        window._show_module_page("shop_refresh")
         overlay.configure(config)
         overlay.update_snapshot(RuntimeSnapshot.initial(str(index), (), 0))
         overlay.show()

@@ -47,13 +47,13 @@ def test_ui_assets_and_standalone_build_are_wired() -> None:
         in build_script
     )
     assert "--noinclude-dlls=qt6pdf.dll" in build_script
-    assert '"E7auto_v${version}_x64.zip"' in build_script
-    assert "Compress-Archive" in build_script
-    assert "Failed builds/archives never reach this cleanup" in build_script
-    assert "Remove-Item -LiteralPath $resolvedOldReleaseZip -Force" in build_script
-    assert build_script.index("Compress-Archive") < build_script.index(
-        "Remove-Item -LiteralPath $resolvedOldReleaseZip -Force"
+    assert '"E7auto_v${version}_Setup_x64.exe"' in build_script
+    assert "Compress-Archive" not in build_script
+    assert "--installer $temporaryInstaller" in build_script
+    assert build_script.index("workflow seal") < build_script.index(
+        "Move-Item -LiteralPath $temporaryInstaller"
     )
+
 
 
 def test_release_verifier_rejects_approved_forbidden_files(tmp_path: Path) -> None:

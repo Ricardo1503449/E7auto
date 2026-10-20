@@ -9,7 +9,7 @@ from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.runtime.stop_control import StopController
 from e7auto.core.domain import OverlayActivityStatus, RuntimeSnapshot, StopReason
 from e7auto.features.shop.contracts import PurchaseOutcome
-from tests.helpers import FakeHotkeys, FakeClock, ScriptedVision, make_config, make_dependencies, match
+from tests.helpers import FakeClock, ScriptedVision, make_config, make_dependencies, match
 
 
 @pytest.mark.parametrize("continuous_refresh, expected_count", [(False, 49), (True, 60)])
@@ -248,16 +248,14 @@ def test_missing_exit_recognition_stops_before_exit_click() -> None:
     )
 
 
-def test_f5_interrupts_checkpointed_strategy_wait() -> None:
-    hotkeys = FakeHotkeys()
+def test_manual_stop_interrupts_checkpointed_strategy_wait() -> None:
+    control = StopController()
 
-    class F5DuringWaitClock(FakeClock):
+    class StopDuringWaitClock(FakeClock):
         def sleep(self, seconds: float) -> None:
             super().sleep(seconds)
-            if seconds == 1.0 and hotkeys.callback is not None:
-                callback = hotkeys.callback
-                hotkeys.callback = None
-                callback()
+            if seconds == 1.0 and control.reason is None:
+                control.request(StopReason.MANUAL_STOP)
 
     config = compact_strategy_config()
     vision = ScriptedVision(
@@ -265,17 +263,17 @@ def test_f5_interrupts_checkpointed_strategy_wait() -> None:
         bottom=[(), ()],
         balances=balances_for_refreshes(1),
     )
-    clock = F5DuringWaitClock()
+    clock = StopDuringWaitClock()
 
     final, _, _, _, _, _, logger = run_session(
         vision,
         limit=6,
         config=config,
         clock=clock,
-        hotkeys=hotkeys,
+        control=control,
     )
 
-    assert final.stop_reason is StopReason.MANUAL_F5
+    assert final.stop_reason is StopReason.MANUAL_STOP
     assert any(event == "refresh_strategy_wait_started" for event, _ in logger.events)
     assert final.refresh_spent == 3
 
@@ -332,8 +330,8 @@ def test_network_reconnect_pauses_active_clock_and_restores_overlay_status(conti
         continuous_refresh=continuous_refresh,
     )
     engine.runtime.capture_raw = lambda: object()  # type: ignore[method-assign]
-    engine._trusted_sky_stone_balance = 321
-    engine._pending_top_scan = ()
+    engine.state.trusted_sky_stone_balance = 321
+    engine.state.pending_top_scan = ()
     publisher.mutate(
         lambda snapshot: snapshot.with_overlay_status(OverlayActivityStatus.REFRESHING)
     )
@@ -343,9 +341,9 @@ def test_network_reconnect_pauses_active_clock_and_restores_overlay_status(conti
     assert snapshots[-2].overlay_status is OverlayActivityStatus.RECONNECTING
     assert snapshots[-1].overlay_status is OverlayActivityStatus.REFRESHING
     assert engine.runtime.active_monotonic() == 0.0
-    assert engine._trusted_sky_stone_balance is None
-    assert engine._pending_top_scan is None
-    assert engine._continuous_refresh is continuous_refresh
+    assert engine.state.trusted_sky_stone_balance is None
+    assert engine.state.pending_top_scan is None
+    assert engine.state.continuous_refresh is continuous_refresh
     assert any(
         event == "trusted_sky_stone_balance_invalidated"
         and fields == {"reason": "network_recovery", "value": 321}
