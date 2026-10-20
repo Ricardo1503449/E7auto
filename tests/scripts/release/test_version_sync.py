@@ -28,9 +28,9 @@ def test_active_source_document_and_environment_versions_are_synchronized() -> N
     assert f"当前检入源码版本为 `v{version}`" in (ROOT / "README.md").read_text(
         encoding="utf-8"
     )
-    assert (ROOT / "docs" / "user" / "使用说明.txt").read_text(
+    assert (ROOT / "docs" / "user" / "使用说明.md").read_text(
         encoding="utf-8"
-    ).splitlines()[0] == f"E7auto v{version} x64 使用说明"
+    ).splitlines()[0] == f"# E7auto v{version} x64 使用说明"
     assert re.search(
         rf"^## v{re.escape(version)} — \d{{4}}-\d{{2}}-\d{{2}}$",
         (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"),
@@ -39,7 +39,7 @@ def test_active_source_document_and_environment_versions_are_synchronized() -> N
 
 
 def test_packaged_usage_guide_contains_window_message_risk_notice() -> None:
-    guide = (ROOT / "docs" / "user" / "使用说明.txt").read_text(encoding="utf-8")
+    guide = (ROOT / "docs" / "user" / "使用说明.md").read_text(encoding="utf-8")
 
     assert "Windows Graphics Capture" in guide
     assert "Win32 窗口消息" in guide
