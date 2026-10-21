@@ -89,37 +89,75 @@ test('invalid counts or rates cannot partially update either pool',() => {
   assert.throws(() => poolModels(value),/invalid_pool_value/);
 });
 
-test('browser keeps totals and bars on network or malformed data failures and skips hidden polling',async () => {
+test('browser advances Beijing minute time only after successful refresh and preserves failed results',async () => {
   const elements = new Map();
+  const handlers = new Map();
   const element = id => {
     if (!elements.has(id)) elements.set(id,{textContent:'—',style:{width:'0%'},attributes:{},disabled:false,
-      addEventListener(){},setAttribute(key,value){this.attributes[key]=value;}});
+      addEventListener(event,callback){handlers.set(id+':'+event,callback);},
+      setAttribute(key,value){this.attributes[key]=value;}});
     return elements.get(id);
   };
-  let interval, fail=false, malformed=false, calls=0, timestamp='2026-10-04T09:50:37.125Z';
-  const document={hidden:false,getElementById:element,addEventListener(){}};
-  vm.runInNewContext(clientScript,{document,AbortSignal,
+  let interval, failure='', calls=0, value=data();
+  value.updated_at='2026-10-04T09:50:37.125Z';
+  let now=Date.parse('2026-10-21T02:23:45.123Z');
+  class Clock extends Date {
+    constructor(...args){super(...(args.length ? args : [now]));}
+    static now(){return now;}
+  }
+  const document={hidden:false,getElementById:element,
+    addEventListener(event,callback){handlers.set('document:'+event,callback);}};
+  const settle=() => new Promise(resolve => setImmediate(resolve));
+  vm.runInNewContext(clientScript,{document,AbortSignal,Date:Clock,
     setInterval(callback,delay){assert.equal(delay,60000);interval=callback;},
-    fetch:async () => {calls++;const value=data();value.updated_at=timestamp;if(malformed){value.pools.transfer.skystone_spent=999;value.pools.continuous.mystic_purchases=-1;}
-      return {ok:!fail,json:async () => value};}});
-  await new Promise(resolve => setImmediate(resolve));
+    fetch:async () => {
+      calls++;
+      if(failure==='network') throw new Error('offline');
+      return {ok:failure!=='http',json:async () => {
+        if(failure==='json') throw new SyntaxError('invalid JSON');
+        const response=structuredClone(value);
+        if(failure==='malformed'){
+          response.pools.transfer.skystone_spent=999;
+          response.pools.continuous.mystic_purchases=-1;
+        }
+        return response;
+      }};
+    }});
+  await settle();
   assert.equal(element('transfer-skystone_spent').textContent,'300');
   assert.equal(element('continuous-mystic_per_100').textContent,'0.50');
   assert.equal(element('continuous-covenant_purchases-bar').style.width,'100%');
-  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-04 17:50');
+  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-21 10:23');
   const before=element('transfer-covenant_purchases-bar').style.width;
   assert.ok(Math.abs(parseFloat(before)-100*2/3)<1e-10);
   assert.match(element('transfer-covenant_purchases-track').attributes['aria-label'],/圣约书签购买次数：6/);
-  fail=true;interval();await new Promise(resolve => setImmediate(resolve));
-  assert.equal(element('transfer-covenant_purchases-bar').style.width,before);
-  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-04 17:50');
-  assert.match(element('status').textContent,/保留上次/);
-  fail=false;malformed=true;interval();await new Promise(resolve => setImmediate(resolve));
+
+  const click=handlers.get('refresh:click');
+  now=Date.parse('2026-10-21T02:24:01Z');await click();
+  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-21 10:24');
   assert.equal(element('transfer-skystone_spent').textContent,'300');
-  assert.equal(element('transfer-covenant_purchases-bar').style.width,before);
-  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-04 17:50');
-  malformed=false;timestamp='2026-10-04T16:00:59.999Z';interval();
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-05 00:00');
+  now=Date.parse('2026-10-21T02:24:59Z');await click();
+  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-21 10:24');
+  for(failure of ['network','http','json','malformed']){
+    now+=60000;await click();
+    assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2026-10-21 10:24');
+    assert.equal(element('transfer-skystone_spent').textContent,'300');
+    assert.equal(element('transfer-covenant_purchases-bar').style.width,before);
+    assert.match(element('status').textContent,/保留上次/);
+    assert.equal(element('refresh').disabled,false);
+  }
+
+  failure='';now=Date.parse('2026-12-31T16:00:59.999Z');
+  value.pools.transfer.skystone_spent=600;value.pools.transfer.covenant_purchases=12;
+  value.pools.transfer.mystic_per_100=.5;
+  interval();await settle();
+  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2027-01-01 00:00');
+  assert.equal(element('transfer-skystone_spent').textContent,'600');
+  assert.equal(element('transfer-covenant_purchases').textContent,'12');
+  assert.equal(element('transfer-covenant_purchases-bar').style.width,'100%');
+  assert.equal(element('status').textContent,'');
   const prior=calls;document.hidden=true;interval();assert.equal(calls,prior);
+  now+=60000;value.updated_at=null;document.hidden=false;
+  handlers.get('document:visibilitychange')();await settle();
+  assert.equal(element('updated').textContent,'数据更新时间（北京时间）：2027-01-01 00:01');
 });

@@ -138,7 +138,7 @@ export const clientScript = `(() => {
           document.getElementById(id+'-track').setAttribute('aria-label',row.label+'：'+row.display);
         }
       }
-      document.getElementById('updated').textContent = formatUpdatedAt(value.updated_at);
+      document.getElementById('updated').textContent = formatUpdatedAt(new Date().toISOString());
       status.textContent = '';
     } catch { status.textContent = '暂时无法读取统计，保留上次显示结果；稍后自动重试。'; }
     finally { loading = false; button.disabled = false; }
