@@ -63,18 +63,18 @@
     },
     "stage_one": {
       "file": "entry/stage_one.png",
-      "sha256": "47ca206331db286f6877870a4a296e78a989ab59a4cff77622a8cb83f41c34f0",
+      "sha256": "32cf60fbd3298ea54c3b3d857b0efd1ee1745765765b081441406f714e831d78",
       "source": {
-        "record": "docs/calibration/registrations/chaos-stage_one-47ca206331db-d63bd3a3b189.json",
-        "record_sha256": "d63bd3a3b189d6f4be3c1210cfcdec5eb8a7b368f365139f8c15e7c57370c8cf"
+        "record": "docs/calibration/registrations/chaos-stage_one-32cf60fbd329-2ce6526bec1b.json",
+        "record_sha256": "2ce6526bec1bee5a1b814a5db74a3c42e984e90dd62a214d9b9683572be08797"
       }
     },
     "stage_three": {
       "file": "entry/stage_three.png",
-      "sha256": "c6601b73ad01a3e82114f001c7e1e31c449012029807747a14026c2adaa6d479",
+      "sha256": "0fa558fab8cbc51439781a9c35814792ef0e696150a6d620c30fee9beb73e3b3",
       "source": {
-        "record": "docs/calibration/registrations/chaos-stage_three-c6601b73ad01-11fb21d0ef4f.json",
-        "record_sha256": "11fb21d0ef4f0f6ccef669a3f6eadbfbcc02a24c5b4509d529713f39beecebd0"
+        "record": "docs/calibration/registrations/chaos-stage_three-0fa558fab8cb-125da85fe189.json",
+        "record_sha256": "125da85fe189faace921c273b4442c63a9c73f52f003d44fa3e940d52ac373df"
       }
     },
     "stage_01": {
@@ -1959,26 +1959,26 @@
     },
     "stage_two": {
       "file": "entry/stage_two.png",
-      "sha256": "6b851710b0a5129e398f0a9fafec68265d45b4d5cd7ddf07e810803f478df1dd",
+      "sha256": "ed98800e8bd527c32a8e4e1abed7e1a311bb88d3362e5f2aad004a0fb8f0885a",
       "source": {
-        "record": "docs/calibration/registrations/chaos-stage_two-6b851710b0a5-d9fefcec5a76.json",
-        "record_sha256": "d9fefcec5a766e44e69105ca7075db5003ca9c5ff210c51e7ae77b7ec1068733"
+        "record": "docs/calibration/registrations/chaos-stage_two-ed98800e8bd5-7cd1c55d2d22.json",
+        "record_sha256": "7cd1c55d2d229f1903a9abea6255fe9e2e59f6a7b2ca5fae94813422940e9a6b"
       }
     },
     "stage_four": {
       "file": "entry/stage_four.png",
-      "sha256": "95921163af01dfc507777d426a6c9012c338ac72cad5d1dcf090a9719b3d55d9",
+      "sha256": "74c7c524184add2be0d30d21008f0b9194814a4dba7b9da1402e0b37e8842e98",
       "source": {
-        "record": "docs/calibration/registrations/chaos-stage_four-95921163af01-c633b71db6d4.json",
-        "record_sha256": "c633b71db6d41ffed94153022ab48bd538b83ad113d8ad33806ff3451a4f1b7b"
+        "record": "docs/calibration/registrations/chaos-stage_four-74c7c524184a-98327313b8ae.json",
+        "record_sha256": "98327313b8aecc6183aa859f009c5e9ac96bcf5d342f0d6ca2f98ab817f00d45"
       }
     },
     "stage_five": {
       "file": "entry/stage_five.png",
-      "sha256": "3450336a6a2c310e980838d0e1110c1f2d8906fef4bc3c6d5e5e380614d2acd7",
+      "sha256": "2d4f7dc518deb66718b7aeb08603d6bcf65b0da0eef057081635ec22bae8963a",
       "source": {
-        "record": "docs/calibration/registrations/chaos-stage_five-3450336a6a2c-a03cc0f1a31f.json",
-        "record_sha256": "a03cc0f1a31f545a117db6866085bcf2acbb0c124be2d2e4484e3f35ad3627ca"
+        "record": "docs/calibration/registrations/chaos-stage_five-2d4f7dc518de-d46c9edf4ef9.json",
+        "record_sha256": "d46c9edf4ef95ed0534629c9743f28580cc4309f1494f65f7f782bb53785074c"
       }
     },
     "story_skip": {
@@ -2291,6 +2291,22 @@
       "source": {
         "record": "docs/calibration/registrations/chaos-event_torn_map_path-665efdf59372-ef89082d4c69.json",
         "record_sha256": "ef89082d4c69ee4291f35a6cd00203f46a2b2de12b185693bb632d66672833a3"
+      }
+    },
+    "lobby_abandon": {
+      "file": "buttons/lobby_abandon.png",
+      "sha256": "5bcf4c952dced10dddb5eb1e20033ef0cd2205f16b4403ab399f92cebdb5fe23",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-lobby_abandon-5bcf4c952dce-94667b5f7390.json",
+        "record_sha256": "94667b5f73906d29cdda41c0bd1b406e54f0850b710371eec320daf30b387737"
+      }
+    },
+    "abandon_prompt": {
+      "file": "entry/abandon_prompt.png",
+      "sha256": "ecd40cfa037143baebfef42e1c876197686522d98bbe6a42e2d59979c60768d2",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-abandon_prompt-ecd40cfa0371-d996e311d590.json",
+        "record_sha256": "d996e311d5903d1fdd81a8733892a6028fce32d8010175583b4a8b8d0e189523"
       }
     }
   },

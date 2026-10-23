@@ -109,19 +109,19 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
             raise ValueError("all five lobby stage scene bindings are required")
         if target_stage not in lobby_scenes:
             raise ValueError(f"第{target_stage}阶段缺少大厅识别资源，无法确认目标阶段")
-        required = COMMON_SCENES | lineup.scenes | set(lobby_scenes.values())
+        required = COMMON_SCENES | lineup.scenes | {lobby_scenes[target_stage]}
         missing = required - set(bindings)
         unknown = set(bindings) - (KNOWN_SCENES | set(lobby_scenes.values()))
         if missing or unknown:
             raise ValueError(f"missing/unknown scenes: {missing | unknown}")
-        # Resolve only the selected lineup before loading any image or hash.
+        # Resolve the selected lineup and lobby target before loading images/hashes.
         bindings = {key: value for key, value in bindings.items() if key in required}
         regions = {k: _rect(v, size.width, size.height) for k, v in raw["rois"].items()}
         resource_keys = set()
         aliases = {"camp_leave": "shop_leave", "supply_leave": "shop_leave",
                    "boss_choose_reward": "elite_choose_reward", "shop_leave_confirm": "unclaimed_confirm",
                    "event_reward_close": "rank_close", "investment_entry": "shop_health_entry",
-                   "story_skip_confirm": "unclaimed_confirm"}
+                   "story_skip_confirm": "unclaimed_confirm", "abandon_confirm": "unclaimed_confirm"}
         for name, value in bindings.items():
             resource = value["resource"]
             expected = {"feature": "common" if name in ("network_connection_abnormal", "network_retry") else "chaos",
@@ -185,7 +185,7 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
                 raise ValueError("invalid single-rank scene or result column size")
         timing = raw["timing"]
         required_timing = {"poll_ms", "stable_frames", "page_timeout_ms", "entry_timeout_ms", "battle_timeout_ms", "settlement_poll_ms", "network_poll_ms", "action_settle_ms",
-                           "event_close_stable_ms", "event_close_retry_ms", "event_close_max_attempts", "event_entry_settle_ms",
+                           "contract_select_settle_ms", "event_close_stable_ms", "event_close_retry_ms", "event_close_max_attempts", "event_entry_settle_ms",
                            "event_choice_retry_ms", "event_choice_max_attempts",
                            "map_node_retry_ms", "map_node_max_attempts",
                            "battle_signal_poll_ms", "battle_result_settle_ms", "loot_entry_settle_ms", "supply_loot_entry_settle_ms",
@@ -268,17 +268,14 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
                 or profile['departure_hero'] != lineup.departure_hero):
             raise ValueError('invalid lineup rank priority or recruitment policy')
         stage = raw["stage_selection"]
-        stage_keys = {"open_offset", "drag_start", "drag_steps", "step_distance_px", "step_ms", "frame_check_ms", "settle_ms", "max_drags", "timeout_ms", "lobby_scenes", "top_entry_max_y", "lobby_ambiguity_margin"}
+        stage_keys = {"open_offset", "drag_start", "drag_steps", "step_distance_px", "step_ms", "frame_check_ms", "settle_ms", "max_drags", "timeout_ms", "lobby_scenes", "top_entry_max_y"}
         if set(stage) != stage_keys:
             raise ValueError("invalid stage selection settings")
         top_y = stage["top_entry_max_y"]
         if type(top_y) is not int or not regions["stage_list"].y <= top_y < regions["stage_list"].bottom:
             raise ValueError("invalid top stage entry boundary")
-        margin = stage["lobby_ambiguity_margin"]
-        if type(margin) not in (int, float) or not isfinite(margin) or not 0 < margin < 1:
-            raise ValueError("invalid lobby stage ambiguity margin")
-        if any(scenes[key].region != regions["lobby_stage_text"] for key in lobby_scenes.values()):
-            raise ValueError("lobby stage scenes must use the lobby stage text region")
+        if scenes[lobby_scenes[target_stage]].region != regions["lobby_stage_text"]:
+            raise ValueError("lobby stage scene must use the lobby stage text region")
         for name in ("drag_steps", "step_distance_px", "step_ms", "frame_check_ms", "settle_ms", "max_drags", "timeout_ms"):
             if type(stage[name]) is not int or stage[name] <= 0:
                 raise ValueError(f"invalid stage selection {name}")
@@ -463,7 +460,8 @@ loot_watcher_breastplate loot_glowing_stone loot_statue_watcher
 # Shared dependencies only; each lineup declares its own additional scenes.
 COMMON_SCENES: frozenset[str] = frozenset("""
 home_battle battle_title exploration_card exploration_back intro_enter lobby_research
-start_exploration stage_one contract contract_selected supply_confirm ticket_thief
+lobby_abandon abandon_prompt abandon_confirm
+start_exploration contract contract_selected supply_confirm ticket_thief
 title_thief ticket_soul title_soul ticket_warrior title_warrior ticket_knight
 title_knight ticket_all title_all depart_title depart_confirm depart_missing
 filter_light filter_dark filter_icon_dark
@@ -486,7 +484,7 @@ loot_selected loot_confirm loot_reroll_anchor supply_get_loot supply_loot_done s
 investment_insufficient_item health_restore health_restore_unavailable shop_health_entry purchase_health_restore health_restore_done
 investment_entry purchase_title purchase_item purchase_confirm investment_done shop_leave
 shop_leave_prompt shop_leave_confirm network_connection_abnormal network_retry
-stage_three stage_01 stage_02 stage_03 stage_04 stage_05 stage_selected stage_confirm
+stage_01 stage_02 stage_03 stage_04 stage_05 stage_selected stage_confirm
 event_trap prepare_event event_reward_close
 event_tablet event_tablet_continue
 event_vestment event_vestment_no_loot event_vestment_with_loot event_golem event_giant_eye event_prison
@@ -504,4 +502,4 @@ event_sharp_teeth event_collapsed_stairs event_bone_throne
 event_recruit_enter event_battle_rank_done
 """.split()) | LOOT_IDENTITIES
 
-KNOWN_SCENES = COMMON_SCENES | frozenset().union(*(lineup.scenes for lineup in LINEUPS))
+KNOWN_SCENES = COMMON_SCENES | frozenset(LOBBY_STAGE_SCENES.values()) | frozenset().union(*(lineup.scenes for lineup in LINEUPS))

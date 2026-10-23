@@ -255,7 +255,7 @@ class ChaosFlow:
         )
         self._act("exploration_card")
         self._act("intro_enter")
-        self._wait_round_lobby(observe_ms=0)
+        self._prepare_entry_lobby()
         if self._at_home_after_reset:
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'date changed again while reentering exploration')
 
@@ -263,6 +263,60 @@ class ChaosFlow:
         if self.vision.control(frame, 'start_exploration') is None:
             return None
         return self._entry_observation(frame, 'lobby_research')
+
+    def _prepare_entry_lobby(self):
+        """Clear a saved exploration before any target-stage selection."""
+        self._map_handoff = None
+        self.stages.invalidate_start()
+        self._at_home_after_reset = False
+
+        def wait(name, detector):
+            deadline = self.runtime.active_monotonic()+self.settings.timing['page_timeout_ms']/1000
+
+            def observe(frame):
+                if self.vision.control(frame, 'date_change_title') is not None:
+                    raise DateChangePending()
+                return detector(frame)
+
+            value = self._wait(name, observe)
+            # Matching and confirmation logging must not authorize a late input.
+            if self.runtime.active_monotonic() > deadline:
+                raise StopExecution(StopReason.RECOGNITION_TIMEOUT, f'chaos timeout: {name}')
+            return value
+
+        def lobby(frame, *, cleared=False):
+            if self.vision.control(frame, 'abandon_prompt') is not None:
+                return None
+            research = self.vision.control(frame, 'lobby_research')
+            if research is None:
+                return None
+            start = self.vision.control(frame, 'start_exploration')
+            abandon = self.vision.control(frame, 'lobby_abandon')
+            if (start is None) == (abandon is None) or (cleared and abandon is not None):
+                return None
+            return research, start if start is not None else abandon
+
+        def confirmation(frame):
+            prompt = self.vision.control(frame, 'abandon_prompt')
+            button = self.vision.control(frame, 'abandon_confirm')
+            return (prompt, button) if prompt is not None and button is not None else None
+
+        try:
+            _, button = wait('entry_lobby', lobby)
+            if button.key == 'start_exploration':
+                return
+            self._tap(button)
+            self.runtime.deps.logger.event('chaos_saved_exploration', phase='abandon_submitted')
+            _, button = wait('entry_abandon_confirmation', confirmation)
+            self._tap(button)
+            wait('entry_abandon_result', lambda f: self.vision.control(f, 'journey_result'))
+            self._close_journey()
+            if not self._at_home_after_reset:
+                wait('entry_abandon_cleared', lambda f: lobby(f, cleared=True))
+            self.runtime.deps.logger.event('chaos_saved_exploration', phase='cleared')
+        except DateChangePending:
+            # Only this entry boundary invokes date recovery; no global interception.
+            self._wait_round_lobby(observe_ms=0)
 
     def _wait_round_lobby(self, *, observe_ms=None):
         self._map_handoff = None
@@ -313,7 +367,7 @@ class ChaosFlow:
         else:
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'unstable lobby confirmation before exploration')
         contract = self._control("contract")
-        self._tap(contract)
+        self._tap(contract, settle_ms=self.settings.timing["contract_select_settle_ms"])
         region = self._card_region(contract, "contract_selected")
         self._act("supply_confirm", lambda f: self.vision.control(f, "contract_selected", region) is not None)
         for hero in self.settings.heroes:

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_two",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "reference_template": "D:\\E7auto\\assets\\templates\\chaos\\entry\\stage_two.png",
+  "reference_sha256": "6b851710b0a5129e398f0a9fafec68265d45b4d5cd7ddf07e810803f478df1dd",
+  "reference_source_record": "D:\\E7auto\\docs\\calibration\\registrations\\chaos-stage_two-6b851710b0a5-d9fefcec5a76.json",
+  "reference_source_sha256": "d9fefcec5a766e44e69105ca7075db5003ca9c5ff210c51e7ae77b7ec1068733",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-09-25 163927.png",
+  "original_sha256": "815c371fd949c72f7349908e1d7019cbe1a44becfd6a63d4a5443c81879722fa",
+  "reference_crop": [
+    34,
+    2,
+    17,
+    28
+  ],
+  "editing_basis": "Experiment requested by user: crop the complete digit connected component from the registered RGBA text template. All cropped RGBA bytes are unchanged; no resampling, redraw, sharpening, dilation, or new mask pixels. Existing dark antialiasing edge is retained.",
+  "candidate_sha256": "ed98800e8bd527c32a8e4e1abed7e1a311bb88d3362e5f2aad004a0fb8f0885a",
+  "retained_pixels": 287,
+  "review_status": "approved",
+  "validation": {
+    "status": "completed_experiment",
+    "report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261023-211247-lobby-stage-digit-experiment-66203d59\\results\\digit_validation.json",
+    "report_sha256": "bafa073d609d742c3c83455c4aa7bc315836b1e9aa1078beea11d770edb684d6",
+    "case_count": 31,
+    "independent_stage_2_4_samples_available": false,
+    "approved_threshold_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261023-211247-lobby-stage-digit-experiment-66203d59\\results\\approved-threshold-validation.json",
+    "approved_threshold_report_sha256": "1a99b49000ee9e757336d9c857d17dc54b8501fabbe915813e2b6cd12d6b4d0c",
+    "approved_threshold_checks_passed": 155,
+    "approved_threshold_checks_total": 155
+  },
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    1720,
+    1025,
+    220,
+    90
+  ],
+  "approval": {
+    "date": "2026-10-23",
+    "instruction": "那我认为可以这么修改，并且把五张模板的颜色门槛改为0.93，注意不仅要替换模板，原有的识别逻辑也要修改",
+    "approved_candidate_sha256": "ed98800e8bd527c32a8e4e1abed7e1a311bb88d3362e5f2aad004a0fb8f0885a"
+  },
+  "recognition_policy": {
+    "policy": "Match only the startup-selected stage digit at .93/.8; keep lobby guards, three frames and post-switch confirmation."
+  }
+}

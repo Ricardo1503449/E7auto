@@ -208,13 +208,8 @@ def test_fast_long_drag_uses_six_500px_steps_before_settled_01_selection():
 
 def synthetic_stage_config(target):
     """Exercise all flow branches with fake lobby observations, not image evidence."""
-    from e7auto.features.chaos.configuration import LOBBY_STAGE_SCENES
-    config=chaos_config()
-    scenes=dict(config.chaos.scenes)
-    for key in LOBBY_STAGE_SCENES.values():
-        scenes.setdefault(key,scenes['stage_one'])
-    return replace(config,chaos=replace(config.chaos,target_stage=target,scenes=scenes,
-        stage_selection=dict(config.chaos.stage_selection,lobby_scenes=dict(LOBBY_STAGE_SCENES))))
+    from e7auto.features.chaos.configuration import with_chaos_config
+    return with_chaos_config(chaos_config(), target_stage=target)
 
 
 @pytest.mark.parametrize('target',range(1,6))
@@ -261,12 +256,21 @@ def test_left_difficulty_is_never_queried_and_selected_row_skips_extra_click(mon
     assert 'stage_03' not in game.actions and game.actions.count('stage_confirm')==1
 
 
-def test_conflicting_lobby_stage_evidence_does_not_authorize_start(monkeypatch):
-    game=ChaosGame(synthetic_stage_config(3));original=game._visible
-    monkeypatch.setattr(game,'_visible',lambda:original()+(['stage_three'] if game.state=='hall' else []))
-    flow,_,_=stage_flow(game)
-    with pytest.raises(StopExecution):flow.stages.ensure()
-    assert game.actions==[]
+@pytest.mark.parametrize('target', range(1, 6))
+def test_lobby_stage_only_queries_the_selected_digit(monkeypatch, target):
+    game = ChaosGame(synthetic_stage_config(target));game.current_stage = target
+    selected = game.config.chaos.stage_selection['lobby_scenes'][target]
+    stage_keys = set(game.config.chaos.stage_selection['lobby_scenes'].values())
+    original = game.control;queries = []
+    def control(frame, key, region=None):
+        if key in stage_keys:
+            assert key == selected
+            queries.append(key)
+        return original(frame, key, region)
+    monkeypatch.setattr(game, 'control', control)
+    flow, _, _ = stage_flow(game);flow.stages.ensure()
+    assert queries == [selected] * 3
+    assert flow.stages.take_start() is not None and game.actions == []
 
 
 def test_changed_lobby_after_selecting_stage_five_is_rejected():
@@ -288,35 +292,22 @@ def test_two_rounds_keep_selected_stage_even_when_settlement_advances_it():
     assert game.actions.count('stage_confirm')==2
 
 
-@pytest.mark.parametrize('target,expected_match',[(3,False),(5,True)])
-def test_lobby_stage_uses_clear_winner_even_if_other_stage_also_matches(monkeypatch,target,expected_match):
-    game=ChaosGame(synthetic_stage_config(target));game.current_stage=5
-    original=game.control
-    def control(frame,key,region=None):
-        if frame['state']=='hall' and key=='stage_three':
-            return replace(game._hit(key,frame),confidence=.969)
-        return original(frame,key,region)
-    monkeypatch.setattr(game,'control',control)
-    flow,_,_=stage_flow(game)
-    result=flow.stages.lobby_state(flow._frame())
-    assert result is not None and result[1] is expected_match
-    assert game.actions==[]
-
-
-@pytest.mark.parametrize('lead,expected',[(.019,None),(.021,True)])
-def test_lobby_stage_requires_configured_lead_before_authorizing_start(monkeypatch,lead,expected):
-    game=ChaosGame(synthetic_stage_config(5));game.current_stage=5
-    original=game.control
-    def control(frame,key,region=None):
-        if frame['state']=='hall' and key=='stage_three':
-            return replace(game._hit(key,frame),confidence=1-lead)
-        return original(frame,key,region)
-    monkeypatch.setattr(game,'control',control)
-    flow,_,_=stage_flow(game)
-    result=flow.stages.lobby_state(flow._frame())
-    if expected is None:assert result is None
-    else:assert result is not None and result[1] is expected
-    assert game.actions==[]
+@pytest.mark.parametrize('target', range(1, 6))
+def test_missing_target_digit_requires_selection_without_querying_other_stages(monkeypatch, target):
+    game = ChaosGame(synthetic_stage_config(target));game.current_stage = 2 if target == 1 else 1
+    selected = game.config.chaos.stage_selection['lobby_scenes'][target]
+    stage_keys = set(game.config.chaos.stage_selection['lobby_scenes'].values())
+    original = game.control;queries = []
+    def control(frame, key, region=None):
+        if key in stage_keys:
+            assert key == selected
+            queries.append(key)
+        return original(frame, key, region)
+    monkeypatch.setattr(game, 'control', control)
+    flow, _, _ = stage_flow(game)
+    result = flow.stages.lobby_state(flow._frame())
+    assert result is not None and result[1] is False
+    assert queries == [selected] and flow.stages.take_start() is None and game.actions == []
 
 
 def test_stage_confirmation_matches_button_only_once_per_frame(monkeypatch):
@@ -417,8 +408,11 @@ def test_lobby_start_uses_three_fresh_joint_frames_and_last_anchor(monkeypatch, 
     stop_at_lobby_start(flow, game)
     assert game.captures == 3 and len(buttons) == 3
     assert len({id(frame) for frame in frames}) == 3
-    for key in ('date_change_title', 'lobby_research', 'start_exploration', *flow.settings.stage_selection['lobby_scenes'].values()):
+    selected = flow.settings.stage_selection['lobby_scenes'][target]
+    for key in ('date_change_title', 'lobby_research', 'start_exploration', selected):
         assert [count for (frame_id, name), count in calls.items() if name == key] == [1, 1, 1]
+    other_stages = set(flow.settings.stage_selection['lobby_scenes'].values()) - {selected}
+    assert not any(name in other_stages for frame_id, name in calls)
     event = next(fields for name, fields in flow.runtime.deps.logger.events
                  if name == 'input' and fields['action'] == 'chaos_start_exploration')
     assert event['client_x'] == buttons[-1].anchor.x

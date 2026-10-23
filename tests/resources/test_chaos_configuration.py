@@ -9,8 +9,8 @@ import yaml
 from e7auto.configuration.loader import load_config
 from e7auto.configuration.models import ConfigError
 from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
-from e7auto.features.chaos.configuration import with_chaos_config
-from e7auto.features.chaos.lineups import BUDGET_SCENES, DARK_TWINS_SCENES, RecruitmentPolicy, get_lineup
+from e7auto.features.chaos.configuration import LOBBY_STAGE_SCENES, with_chaos_config
+from e7auto.features.chaos.lineups import BUDGET_SCENES, DARK_TWINS_SCENES, LINEUPS, RecruitmentPolicy, get_lineup
 from e7auto.resources.templates import TemplateRepository
 from tests.helpers.paths import ROOT
 
@@ -33,8 +33,8 @@ def installation(tmp_path):
     return tmp_path
 
 
-def load(root):
-    return with_chaos_config(load_config(root / "config/internal.yaml", template_profile="chaos"))
+def load(root, *, target_stage=1):
+    return with_chaos_config(load_config(root / "config/internal.yaml", template_profile="chaos"), target_stage=target_stage)
 
 
 @pytest.mark.parametrize('value', [0, -1, True, 1.5, None])
@@ -315,6 +315,51 @@ def image_path(root, feature, key):
     directory=root/'assets/templates'/feature
     catalog=json.loads((directory/'manifest.json').read_text(encoding='utf8'))
     return directory/catalog['templates'][key]['file']
+
+
+@pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
+def test_startup_cleanup_resources_load_in_isolation_and_reuse_confirmation(installation, lineup_id):
+    config = with_chaos_config(load_config(installation/'config/internal.yaml', template_profile='chaos'),
+                               lineup_id=lineup_id)
+    repository = TemplateRepository(config)
+    for key, shape in [('lobby_abandon', (134, 409)), ('abandon_prompt', (35, 457))]:
+        scene = config.chaos.scenes[key]
+        assert scene.threshold == 0.9 and scene.structure == 0.8
+        assert repository.get(scene.template_key).image.shape[:2] == shape
+    prompt = config.chaos.scenes['abandon_prompt']
+    button = config.chaos.scenes['lobby_abandon']
+    assert prompt.action is None and button.action == (.5, .5)
+    confirm = config.chaos.scenes['abandon_confirm']
+    existing = config.chaos.scenes['unclaimed_confirm']
+    assert confirm == existing and confirm.threshold == 0.97
+    assert repository.get(confirm.template_key) is repository.get(existing.template_key)
+    assert 'chaos:abandon_confirm' not in config.template_paths
+
+
+@pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
+@pytest.mark.parametrize('key', ['lobby_abandon', 'abandon_prompt'])
+@pytest.mark.parametrize('damage', ['missing', 'corrupt'])
+def test_startup_cleanup_missing_or_corrupt_resource_rejects_start(installation, lineup_id, key, damage):
+    path = image_path(installation, 'chaos', key)
+    if damage == 'missing':
+        path.unlink()
+    else:
+        path.write_bytes(b'bad PNG')
+    with pytest.raises(ConfigError):
+        with_chaos_config(load_config(installation/'config/internal.yaml', template_profile='chaos'),
+                          lineup_id=lineup_id)
+
+
+@pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
+@pytest.mark.parametrize('key', ['lobby_abandon', 'abandon_prompt', 'abandon_confirm'])
+def test_startup_cleanup_scene_binding_is_required(installation, lineup_id, key):
+    path = installation/'config/chaos.yaml'
+    raw = yaml.safe_load(path.read_text(encoding='utf8'))
+    del raw['templates'][key]
+    path.write_text(yaml.safe_dump(raw), encoding='utf8')
+    with pytest.raises(ConfigError, match='missing/unknown scenes'):
+        with_chaos_config(load_config(installation/'config/internal.yaml', template_profile='chaos'),
+                          lineup_id=lineup_id)
 
 
 @pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
@@ -683,7 +728,7 @@ def test_gray_reference_does_not_become_a_runtime_dependency(installation):
     assert "node_gray_boss" not in load(installation).chaos.scenes
 
 
-@pytest.mark.parametrize('key',['stage_one','stage_two','stage_three','stage_four','stage_five','stage_01','stage_02','stage_03','stage_04','stage_05','stage_selected','stage_confirm'])
+@pytest.mark.parametrize('key',['stage_01','stage_02','stage_03','stage_04','stage_05','stage_selected','stage_confirm'])
 def test_stage_switch_resources_are_required(installation,key):
     image_path(installation,'chaos',key).unlink()
     with pytest.raises(ConfigError):load(installation)
@@ -696,7 +741,7 @@ def test_invalid_target_stage_rejected(installation,target):
 
 
 @pytest.mark.parametrize('missing',range(1,6))
-def test_missing_competitor_lobby_binding_rejects_any_target(installation,missing):
+def test_missing_lobby_stage_binding_rejects_start(installation,missing):
     path=installation/'config/chaos.yaml';raw=yaml.safe_load(path.read_text(encoding='utf8'))
     raw['stage_selection']['lobby_scenes'].pop(missing)
     path.write_text(yaml.safe_dump(raw),encoding='utf8')
@@ -705,42 +750,64 @@ def test_missing_competitor_lobby_binding_rejects_any_target(installation,missin
 
 
 @pytest.mark.parametrize('target',range(1,6))
-def test_registered_targets_and_stage_resources_load_without_difficulty(installation,target):
-    config=with_chaos_config(load_config(installation/'config/internal.yaml',template_profile='chaos'),target_stage=target)
+@pytest.mark.parametrize('lineup', LINEUPS, ids=lambda lineup: lineup.key)
+def test_registered_targets_and_stage_resources_load_without_difficulty(installation,target,lineup):
+    config=with_chaos_config(load_config(installation/'config/internal.yaml',template_profile='chaos'),target_stage=target,lineup_id=lineup.key)
     assert config.chaos.target_stage==target and 'difficulty_one' not in config.chaos.scenes
     assert 'chaos:difficulty_one' not in config.template_paths
     assert all(config.chaos.scenes[f'stage_{n:02d}'].threshold==.985 for n in range(1,6))
     assert all(f'chaos:stage_{n:02d}' in config.template_paths for n in range(1,6))
+    selected = LOBBY_STAGE_SCENES[target]
+    assert set(config.chaos.scenes) & set(LOBBY_STAGE_SCENES.values()) == {selected}
+    scene = config.chaos.scenes[selected]
+    assert scene.threshold == .93 and scene.structure == .8
+    assert 'lobby_ambiguity_margin' not in config.chaos.stage_selection
 
 
-@pytest.mark.parametrize('value',[0,-.01,1,True,float('nan')])
-def test_invalid_lobby_ambiguity_margin_rejects_start(installation,value):
+def test_removed_lobby_ambiguity_setting_rejects_stale_configuration(installation):
     path=installation/'config/chaos.yaml';raw=yaml.safe_load(path.read_text(encoding='utf8'))
-    raw['stage_selection']['lobby_ambiguity_margin']=value
+    raw['stage_selection']['lobby_ambiguity_margin']=.02
     path.write_text(yaml.safe_dump(raw),encoding='utf8')
     with pytest.raises(ConfigError):load(installation)
 
 
-@pytest.mark.parametrize('key',['stage_two','stage_four','stage_five'])
-def test_corrupt_lobby_template_rejects_start(installation,key):
-    image_path(installation,'chaos',key).write_bytes(b'corrupt')
-    with pytest.raises(ConfigError):load(installation)
+@pytest.mark.parametrize('target', range(1, 6))
+@pytest.mark.parametrize('damage', ['missing', 'corrupt'])
+def test_selected_lobby_digit_is_required(installation, target, damage):
+    path = image_path(installation, 'chaos', LOBBY_STAGE_SCENES[target])
+    if damage == 'missing':path.unlink()
+    else:path.write_bytes(b'corrupt')
+    with pytest.raises(ConfigError):load(installation, target_stage=target)
 
 
-def test_lobby_text_roi_replaces_stage_bar_for_every_stage(installation):
-    config = load(installation)
+@pytest.mark.parametrize('target', range(1, 6))
+@pytest.mark.parametrize('damage', ['missing', 'corrupt'])
+def test_unselected_lobby_digits_are_not_startup_dependencies(installation, target, damage):
+    selected = LOBBY_STAGE_SCENES[target]
+    for key in set(LOBBY_STAGE_SCENES.values()) - {selected}:
+        path = image_path(installation, 'chaos', key)
+        if damage == 'missing':path.unlink()
+        else:path.write_bytes(b'corrupt')
+    config = load(installation, target_stage=target)
+    assert {key for key in config.template_paths if key in {'chaos:' + k for k in LOBBY_STAGE_SCENES.values()}} == {'chaos:' + selected}
+    assert TemplateRepository(config).get('chaos:' + selected).image.shape[0] == 28
+
+
+@pytest.mark.parametrize('target', range(1, 6))
+def test_lobby_text_roi_replaces_stage_bar_for_every_stage(installation, target):
+    config = load(installation, target_stage=target)
     assert 'stage_bar' not in config.chaos.regions
     region = config.chaos.regions['lobby_stage_text']
     assert (region.x, region.y, region.width, region.height) == (1720, 1025, 220, 90)
-    assert all(config.chaos.scenes[key].region == region for key in config.chaos.stage_selection['lobby_scenes'].values())
+    assert config.chaos.scenes[LOBBY_STAGE_SCENES[target]].region == region
 
 
-@pytest.mark.parametrize('key', ['stage_one', 'stage_two', 'stage_three', 'stage_four', 'stage_five'])
-def test_lobby_stage_cannot_use_an_unrelated_roi(installation, key):
+@pytest.mark.parametrize('target,key', LOBBY_STAGE_SCENES.items())
+def test_lobby_stage_cannot_use_an_unrelated_roi(installation, target, key):
     path = installation/'config/chaos.yaml';raw = yaml.safe_load(path.read_text(encoding='utf8'))
     raw['templates'][key]['search_roi'] = 'bottom_right'
     path.write_text(yaml.safe_dump(raw), encoding='utf8')
-    with pytest.raises(ConfigError, match='lobby stage text region'):load(installation)
+    with pytest.raises(ConfigError, match='lobby stage text region'):load(installation, target_stage=target)
 
 
 @pytest.mark.parametrize('offset', [[0, -125], [-250, -125], [500, -125], [250, 0],

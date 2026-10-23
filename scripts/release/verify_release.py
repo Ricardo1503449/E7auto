@@ -20,7 +20,7 @@ import yaml
 from e7auto import __version__
 from e7auto.configuration.models import LoggingConfig
 from e7auto.features.penguin.configuration import CONTROLS
-from e7auto.features.chaos.configuration import with_chaos_config
+from e7auto.features.chaos.configuration import LOBBY_STAGE_SCENES, with_chaos_config
 from e7auto.features.chaos.lineups import LINEUPS
 from e7auto.configuration.loader import load_config
 from e7auto.resources.manifest import load_template_manifest
@@ -483,9 +483,10 @@ def main() -> int:
         problems.append("missing Chaos configuration")
     else:
         try:
+            base = load_config(release / "config" / "internal.yaml", template_profile="chaos")
             for lineup in LINEUPS:
-                with_chaos_config(load_config(release / "config" / "internal.yaml", template_profile="chaos"),
-                                  lineup_id=lineup.key)
+                for target_stage in LOBBY_STAGE_SCENES:
+                    with_chaos_config(base, lineup_id=lineup.key, target_stage=target_stage)
         except ValueError as exc:
             problems.append(f"invalid Chaos scene/resource bindings: {exc}")
     if not (release / USAGE_GUIDE_FILENAME).is_file():

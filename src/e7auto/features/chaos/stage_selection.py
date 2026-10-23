@@ -32,6 +32,7 @@ class StageSelection:
         self.frame, self.wait, self.tap = frame, wait, tap
         self.delay, self.lobby_guard = delay, lobby_guard
         self.target_stage = settings.target_stage
+        self.lobby_stage_key = settings.stage_selection["lobby_scenes"][self.target_stage]
         self.stage_entry_key = f"stage_{self.target_stage:02d}"
         self._pending_start: _StartConfirmation | None = None
         self._confirmed_start: _StartConfirmation | None = None
@@ -69,20 +70,8 @@ class StageSelection:
         start = self.vision.control(frame, "start_exploration")
         if start is None:
             return None
-        stages = [(n, hit) for n, key in self.settings.stage_selection["lobby_scenes"].items()
-                  if (hit := self.vision.control(frame, key)) is not None]
-        current = self.resolve_lobby_stage(stages, self.settings.stage_selection["lobby_ambiguity_margin"])
-        if stages and current is None:
-            return None  # Similar competing candidates cannot authorize exploration.
-        return start, current == self.target_stage
-
-
-    @staticmethod
-    def resolve_lobby_stage(stages, margin):
-        ranked = sorted(stages, key=lambda pair: pair[1].confidence, reverse=True)
-        if not ranked or (len(ranked) > 1 and ranked[0][1].confidence-ranked[1][1].confidence < margin):
-            return None
-        return ranked[0][0]
+        target = self.vision.control(frame, self.lobby_stage_key)
+        return start, target is not None
 
 
     def _selection_evidence(self, frame, entry, button):

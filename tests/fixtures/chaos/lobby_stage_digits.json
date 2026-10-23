@@ -1,0 +1,277 @@
+{
+  "baseline": [
+    2322,
+    1306
+  ],
+  "search_roi": [
+    1720,
+    1025,
+    220,
+    90
+  ],
+  "npz_sha256": "413188d3a2f73cd1a138b3ee819c74cd689ed38d4960364b3bee633e85137cb2",
+  "samples": [
+    {
+      "id": "lobby_one_2322x1306",
+      "expected_stage": 1,
+      "client_size": [
+        2322,
+        1306
+      ],
+      "origin": [
+        1720,
+        1025
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_one.png",
+      "source_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "client_crop": null,
+      "artificially_resized": false
+    },
+    {
+      "id": "lobby_one_1920x1080",
+      "expected_stage": 1,
+      "client_size": [
+        1920,
+        1080
+      ],
+      "origin": [
+        1422,
+        847
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_one.png",
+      "source_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "lobby_one_1536x864",
+      "expected_stage": 1,
+      "client_size": [
+        1536,
+        864
+      ],
+      "origin": [
+        1137,
+        678
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_one.png",
+      "source_sha256": "b9850ca7823796a500583500abb9585faa382eb8a4b83c40374b13a36081e15d",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "lobby_three_2322x1306",
+      "expected_stage": 3,
+      "client_size": [
+        2322,
+        1306
+      ],
+      "origin": [
+        1720,
+        1025
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_three.png",
+      "source_sha256": "9fb58c8fce335cc4b96b5f7657e212fcd29a85c27489df2b151a860e97dbcbd8",
+      "client_crop": null,
+      "artificially_resized": false
+    },
+    {
+      "id": "lobby_three_1920x1080",
+      "expected_stage": 3,
+      "client_size": [
+        1920,
+        1080
+      ],
+      "origin": [
+        1422,
+        847
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_three.png",
+      "source_sha256": "9fb58c8fce335cc4b96b5f7657e212fcd29a85c27489df2b151a860e97dbcbd8",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "lobby_three_1536x864",
+      "expected_stage": 3,
+      "client_size": [
+        1536,
+        864
+      ],
+      "origin": [
+        1137,
+        678
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_three.png",
+      "source_sha256": "9fb58c8fce335cc4b96b5f7657e212fcd29a85c27489df2b151a860e97dbcbd8",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "lobby_finished_2322x1306",
+      "expected_stage": 1,
+      "client_size": [
+        2322,
+        1306
+      ],
+      "origin": [
+        1720,
+        1025
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_finished.png",
+      "source_sha256": "7f09dc858232fdd2ebff1a2986b96c733128a4f0355bdb0c4dc4460c047c1925",
+      "client_crop": null,
+      "artificially_resized": false
+    },
+    {
+      "id": "lobby_finished_1920x1080",
+      "expected_stage": 1,
+      "client_size": [
+        1920,
+        1080
+      ],
+      "origin": [
+        1422,
+        847
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_finished.png",
+      "source_sha256": "7f09dc858232fdd2ebff1a2986b96c733128a4f0355bdb0c4dc4460c047c1925",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "lobby_finished_1536x864",
+      "expected_stage": 1,
+      "client_size": [
+        1536,
+        864
+      ],
+      "origin": [
+        1137,
+        678
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\lobby_finished.png",
+      "source_sha256": "7f09dc858232fdd2ebff1a2986b96c733128a4f0355bdb0c4dc4460c047c1925",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "intro_2322x1306",
+      "expected_stage": null,
+      "client_size": [
+        2322,
+        1306
+      ],
+      "origin": [
+        1720,
+        1025
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\intro.png",
+      "source_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "client_crop": null,
+      "artificially_resized": false
+    },
+    {
+      "id": "intro_1920x1080",
+      "expected_stage": null,
+      "client_size": [
+        1920,
+        1080
+      ],
+      "origin": [
+        1422,
+        847
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\intro.png",
+      "source_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "intro_1536x864",
+      "expected_stage": null,
+      "client_size": [
+        1536,
+        864
+      ],
+      "origin": [
+        1137,
+        678
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\intro.png",
+      "source_sha256": "6a22d2eee05bfafd898db6da2a4ca2b54d082abedf87093a237652a97519da24",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "stage_top_2322x1306",
+      "expected_stage": null,
+      "client_size": [
+        2322,
+        1306
+      ],
+      "origin": [
+        1720,
+        1025
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "client_crop": null,
+      "artificially_resized": false
+    },
+    {
+      "id": "stage_top_1920x1080",
+      "expected_stage": null,
+      "client_size": [
+        1920,
+        1080
+      ],
+      "origin": [
+        1422,
+        847
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "stage_top_1536x864",
+      "expected_stage": null,
+      "client_size": [
+        1536,
+        864
+      ],
+      "origin": [
+        1137,
+        678
+      ],
+      "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261005-222657-lobby-confirmation-speed-a622b068\\inputs\\stage_top.png",
+      "source_sha256": "5714f799370e55e152b79a00684c3c8e0cfb88cdaecd573c4b0e4a56aaa43dc3",
+      "client_crop": null,
+      "artificially_resized": true
+    },
+    {
+      "id": "user_stage_five_2290x1286",
+      "expected_stage": 5,
+      "client_size": [
+        2290,
+        1286
+      ],
+      "origin": [
+        1696,
+        1009
+      ],
+      "source": "C:\\Users\\lxy\\Documents\\Tencent Files\\2941565803\\FileRecv\\MobileFile\\1792760161624.png",
+      "source_sha256": "a5e1beb2032759cff2be2578a9f2bed0095fa4d8931ad2a969209525780027a2",
+      "client_crop": [
+        0,
+        38,
+        2290,
+        1286
+      ],
+      "artificially_resized": false
+    }
+  ],
+  "limitations": "Independent real stages 2/4 are unavailable. Resized samples are artificial, not real small-window capture."
+}

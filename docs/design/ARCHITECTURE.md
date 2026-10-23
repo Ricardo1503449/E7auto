@@ -5,9 +5,9 @@ the worker starts. `features/chaos/lineups.py` defines their identities and cont
 `chaos.yaml` binds each lineup's initial recruits, rank priority and later-recruitment
 policy. Each Lineup declares its own `scenes` independently of its typed
 `recruitment_policy` (`none`, `teacher_for_arowell` or `restore_shadow_rose`). Configuration combines
-`COMMON_SCENES`, the selected lineup's scene set and lobby identities before
+`COMMON_SCENES`, the selected lineup's scene set and the selected lobby stage before
 resolving template images; the known-scene pool is the union of registered lineup
-declarations and common scenes. It does not derive resource dependencies from the
+declarations, common scenes and all five lobby stage bindings. It does not derive resource dependencies from the
 recruitment policy or subtract one team's dependencies to construct another team.
 Runtime voucher and replacement entry points consult only the recruitment policy,
 while retaining their page, floor and pending-state guards.
@@ -178,22 +178,27 @@ configuration profile loads only its active resource keys and the two shared net
 scene aliases share pixels without merging page guards or outcome checks. The UI worker
 selects Chaos explicitly, with separate round counters and completion state.
 The selected target stage (1-5, default 1) is captured in ChaosSettings before
-the worker starts. Every round compares all five lobby identities after the
-existing color/structure gates; multiple candidates require a 0.02 confidence
-lead. Ambiguous results cannot authorize exploration. Stage switching keeps
+the worker starts. Every round matches only that stage's digit template at the
+configured 0.93 color and 0.8 structure gates. Other lobby digits are neither
+loaded nor compared; there is no score-ranking or confidence-gap requirement.
+A missing target digit enters stage selection instead of authorizing exploration.
+Stage switching keeps
 the bounded drag, target-row highlight and post-submit lobby confirmation;
 the left difficulty-number check has been removed. A stable first row near
 the list top establishes coverage of stages 1-5; an absent selectable target
-then stops without further dragging. ROI, score margin and top-row boundary
+then stops without further dragging. ROI, thresholds and top-row boundary
 remain in YAML; recognition uses the shared native-pixel FrameView contract.
 Lobby readiness remains an independent three-frame check and keeps the two-active-second
 observation after settlement. The subsequent stage check jointly verifies the date guard,
-research marker, start button and all five stage identities over three fresh frames.
+research marker, start button and the selected stage digit over three fresh frames.
 Its last start button is handed off once, including after a stage switch; no second
 start-confirmation loop follows. New captures, feature input, round initialization,
 network recovery and cleanup invalidate the handoff, whose capture count, recovery
 generation, transform and target must still match when consumed. It stores no screenshot.
-The five lobby identities use the YAML `lobby_stage_text` ROI [1720,1025,220,90].
+The five registered lobby digits use the YAML `lobby_stage_text` ROI [1720,1025,220,90].
+Only the startup-selected digit is a runtime dependency; missing or damaged other
+lobby digits do not block that target. The full five-entry binding map remains
+validated, and release verification checks both lineups with all five targets.
 The old `stage_bar` is removed. Selector input retains the start-anchor offset [250,-125],
 with only the offset scaled on non-reference clients. Pre-input checks use client bounds,
 the button search region, its horizontal extent and the band one button height above

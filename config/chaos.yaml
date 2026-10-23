@@ -3,6 +3,8 @@ baseline:
 - 2322
 - 1306
 rois:
+  lobby_abandon: [1180, 1100, 480, 195]
+  abandon_prompt: [850, 500, 650, 200]
   depart_result:
   - 850
   - 450
@@ -677,6 +679,39 @@ templates:
     priority: null
     deferred: false
     relative_roi: null
+  lobby_abandon:
+    resource:
+      feature: chaos
+      key: lobby_abandon
+    search_roi: lobby_abandon
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
+  abandon_prompt:
+    resource:
+      feature: chaos
+      key: abandon_prompt
+    search_roi: abandon_prompt
+    threshold: 0.9
+    structure_threshold: 0.8
+    action: null
+    priority: null
+    deferred: false
+    relative_roi: null
+  abandon_confirm:
+    resource:
+      feature: chaos
+      key: unclaimed_confirm
+    search_roi: confirm
+    threshold: 0.97
+    structure_threshold: 0.8
+    action: [0.5, 0.5]
+    priority: null
+    deferred: false
+    relative_roi: null
   start_exploration:
     resource:
       feature: chaos
@@ -695,7 +730,7 @@ templates:
       feature: chaos
       key: stage_one
     search_roi: lobby_stage_text
-    threshold: 0.927
+    threshold: 0.93
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2667,7 +2702,7 @@ templates:
       feature: chaos
       key: stage_three
     search_roi: lobby_stage_text
-    threshold: 0.928
+    threshold: 0.93
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2727,7 +2762,7 @@ templates:
       feature: chaos
       key: stage_two
     search_roi: lobby_stage_text
-    threshold: 0.928
+    threshold: 0.93
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2738,7 +2773,7 @@ templates:
       feature: chaos
       key: stage_four
     search_roi: lobby_stage_text
-    threshold: 0.928
+    threshold: 0.93
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2749,7 +2784,7 @@ templates:
       feature: chaos
       key: stage_five
     search_roi: lobby_stage_text
-    threshold: 0.928
+    threshold: 0.93
     structure_threshold: 0.8
     action: null
     priority: null
@@ -3743,6 +3778,7 @@ timing:
   story_max_attempts: 3
   network_poll_ms: 1000
   action_settle_ms: 300
+  contract_select_settle_ms: 100
   loot_entry_settle_ms: 1000
   supply_loot_entry_settle_ms: 3000
   event_entry_settle_ms: 4000
@@ -3915,7 +3951,7 @@ loot_priorities:
   loot_dice_hero: 0
   loot_tablet_sleeping_forest: 0
 stage_selection:
-  # All five lobby identities participate in the same comparison.
+  # Only the selected target's lobby digit is loaded and matched.
   lobby_scenes:
     1: stage_one
     2: stage_two
@@ -3923,7 +3959,6 @@ stage_selection:
     4: stage_four
     5: stage_five
   top_entry_max_y: 120
-  lobby_ambiguity_margin: 0.02
   open_offset:
   - 250
   - -125

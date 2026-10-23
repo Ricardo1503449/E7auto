@@ -1,0 +1,399 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "abandon_prompt",
+  "original": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-22 150856.png",
+  "original_sha256": "700e7c1bb931cef4b38cd24593241453a5362ae4dec43cf02d9f5b9d7e9caba3",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "client_rect": [
+    49,
+    122,
+    2322,
+    1306
+  ],
+  "crop": [
+    933,
+    568,
+    457,
+    35
+  ],
+  "editing_basis": "User requested exterior background removal for the full button following existing button templates, and minimal dark fringe for prompt text. Original RGB extracted again from full source; alpha and tight crop only. No RGB alteration, redraw, sharpening or template resizing.",
+  "mask": {
+    "method": "text strokes with one original-pixel fringe",
+    "gray_seed_min": 90,
+    "fringe_pixels": 1,
+    "excludes": "wide dark background around strokes",
+    "source_roi": [
+      910,
+      550,
+      520,
+      75
+    ]
+  },
+  "validation": {
+    "original_rgb_unchanged": true,
+    "sources": [
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-22 150848.png",
+        "sha256": "ca44015b9cd5ba746b7b391d21434680c7a4ad08b0b16cab0002b816283c21ec",
+        "client_rect": [
+          45,
+          119,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-22 150856.png",
+        "sha256": "700e7c1bb931cef4b38cd24593241453a5362ae4dec43cf02d9f5b9d7e9caba3",
+        "client_rect": [
+          49,
+          122,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-22 150908.png",
+        "sha256": "b002989cd559aded306cfe8725265720c619377b0a4cf5e51993e0711f550735",
+        "client_rect": [
+          55,
+          119,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-22 150919.png",
+        "sha256": "bfa11aa9d127312b417f8c38a557f9c31c15fdb53b2c6bf62bfdfa78a0504e94",
+        "client_rect": [
+          53,
+          113,
+          2322,
+          1306
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "scene": "abandon_prompt",
+        "source": "150848",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150848",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150848",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150848",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150856",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "color_score": 1.0,
+        "structure_score": 1.0000001192092896,
+        "bounds": [
+          933,
+          568,
+          457,
+          35
+        ],
+        "anchor": [
+          1161,
+          585
+        ]
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150856",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "color_score": 0.9828046560287476,
+        "structure_score": 0.9356507658958435,
+        "bounds": [
+          617,
+          376,
+          303,
+          24
+        ],
+        "anchor": [
+          768,
+          388
+        ]
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150856",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "color_score": 0.9654507040977478,
+        "structure_score": 0.8873995542526245,
+        "bounds": [
+          771,
+          470,
+          378,
+          29
+        ],
+        "anchor": [
+          960,
+          484
+        ]
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150856",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "color_score": 0.9843048453330994,
+        "structure_score": 0.949898362159729,
+        "bounds": [
+          1029,
+          626,
+          504,
+          39
+        ],
+        "anchor": [
+          1281,
+          645
+        ]
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150908",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150908",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150908",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150908",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150919",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150919",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150919",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "150919",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      },
+      {
+        "scene": "abandon_prompt",
+        "source": "incomplete_abandon_prompt",
+        "kind": "synthetic_missing_text",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "color_score": null,
+        "structure_score": null,
+        "bounds": null,
+        "anchor": null
+      }
+    ],
+    "limitations": "One real positive per template, also used for extraction. Non-baseline cases are artificial resizes. No live gameplay validation."
+  },
+  "review_status": "approved",
+  "approval_statement": "模板通过，然后把这两张模板的颜色门槛都改为0.9",
+  "approved_candidate_sha256": "ecd40cfa037143baebfef42e1c876197686522d98bbe6a42e2d59979c60768d2",
+  "search_roi": [
+    850,
+    500,
+    650,
+    200
+  ],
+  "threshold": 0.9,
+  "structure_threshold": 0.8
+}

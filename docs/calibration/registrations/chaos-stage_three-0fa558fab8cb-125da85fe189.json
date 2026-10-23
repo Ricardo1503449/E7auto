@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "stage_three",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "reference_template": "D:\\E7auto\\assets\\templates\\chaos\\entry\\stage_three.png",
+  "reference_sha256": "c6601b73ad01a3e82114f001c7e1e31c449012029807747a14026c2adaa6d479",
+  "reference_source_record": "D:\\E7auto\\docs\\calibration\\registrations\\chaos-stage_three-c6601b73ad01-11fb21d0ef4f.json",
+  "reference_source_sha256": "11fb21d0ef4f0f6ccef669a3f6eadbfbcc02a24c5b4509d529713f39beecebd0",
+  "original": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-2b767be7-2827-4e9b-8ab5-6c2c75a968d0.png",
+  "original_sha256": "ba84e182f6e5af65251dbb926e82496382934895ec88855d90c8e2fedb1e24fd",
+  "reference_crop": [
+    34,
+    2,
+    17,
+    28
+  ],
+  "editing_basis": "Experiment requested by user: crop the complete digit connected component from the registered RGBA text template. All cropped RGBA bytes are unchanged; no resampling, redraw, sharpening, dilation, or new mask pixels. Existing dark antialiasing edge is retained.",
+  "candidate_sha256": "0fa558fab8cbc51439781a9c35814792ef0e696150a6d620c30fee9beb73e3b3",
+  "retained_pixels": 287,
+  "review_status": "approved",
+  "validation": {
+    "status": "completed_experiment",
+    "report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261023-211247-lobby-stage-digit-experiment-66203d59\\results\\digit_validation.json",
+    "report_sha256": "bafa073d609d742c3c83455c4aa7bc315836b1e9aa1078beea11d770edb684d6",
+    "case_count": 31,
+    "independent_stage_2_4_samples_available": false,
+    "approved_threshold_report": "D:\\E7auto\\artifacts\\tasks\\chaos\\20261023-211247-lobby-stage-digit-experiment-66203d59\\results\\approved-threshold-validation.json",
+    "approved_threshold_report_sha256": "1a99b49000ee9e757336d9c857d17dc54b8501fabbe915813e2b6cd12d6b4d0c",
+    "approved_threshold_checks_passed": 155,
+    "approved_threshold_checks_total": 155
+  },
+  "threshold": 0.93,
+  "structure_threshold": 0.8,
+  "search_roi": [
+    1720,
+    1025,
+    220,
+    90
+  ],
+  "approval": {
+    "date": "2026-10-23",
+    "instruction": "那我认为可以这么修改，并且把五张模板的颜色门槛改为0.93，注意不仅要替换模板，原有的识别逻辑也要修改",
+    "approved_candidate_sha256": "0fa558fab8cbc51439781a9c35814792ef0e696150a6d620c30fee9beb73e3b3"
+  },
+  "recognition_policy": {
+    "policy": "Match only the startup-selected stage digit at .93/.8; keep lobby guards, three frames and post-switch confirmation."
+  }
+}
