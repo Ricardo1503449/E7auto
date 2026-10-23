@@ -1,0 +1,28 @@
+{
+  "source": "logs\\run-20261021-174647-996464-08c6a44e4305-stop.png",
+  "source_sha256": "738de8da7bf11ea2a5ec8e60ed59be5372912ac9ae8d0cc9e2285025d1fc0517",
+  "size": [
+    2322,
+    1306
+  ],
+  "regions": {
+    "content": [
+      950,
+      90,
+      900,
+      1200
+    ],
+    "button": [
+      105,
+      1125,
+      580,
+      150
+    ]
+  },
+  "fixture_sha256": "267637e229e8a409b14a3fdbb65cd3f8fb40f9e7f6c5a9dfd4ec8d5a289ff663",
+  "pixel_sha256": {
+    "content": "449c68c50b3de5877c9d69f9e5c75f2e8f850bb174b4cb3527e6befe86ea7c48",
+    "button": "607403ca371a2771cd755f1f9147d22a5f73ef64f98c3151d837f3e8e92d241c"
+  },
+  "scope": "Real stop-frame regions, native pixels. Tests reconstruct these regions on an otherwise empty client canvas. No temporal before/after frames were recorded for this run; perturbations in tests are synthetic."
+}

@@ -1,16 +1,168 @@
 from __future__ import annotations
+from dataclasses import dataclass, replace
+from math import isfinite
 from e7auto.core.domain import RunState, StopReason
-from e7auto.features.shop.contracts import InventoryMatch, PurchaseOutcome
+from e7auto.features.shop.contracts import InventoryMatch, PurchaseOutcome, ScrollMovementObservation
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.features.shop.scrolling import FrameSample
 
 from e7auto.runtime.context import RuntimeContext
 from .contracts import ShopVisionPort
 from .state import ShopState
+from .readiness import SceneSampleEvidence, SceneWindow, format_row_regions, format_row_changes
+
+
+@dataclass(frozen=True, slots=True)
+class _TopContinuation:
+    window: SceneWindow
+    previous_key: tuple[tuple[str, str], ...]
+    stable: int
+    epoch: int
+
+
+@dataclass(frozen=True, slots=True)
+class _PurchaseContext:
+    epoch: int
+    generation: int
+    geometry: tuple[object, ...]
+    layout: tuple[object, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class _PostPurchaseScope:
+    screen: str
+    slot_ids: frozenset[str]
+    after_slot: str
+    context: _PurchaseContext
+
 
 class InventoryScanner:
     def __init__(self, runtime: RuntimeContext[ShopVisionPort], state: ShopState):
         self.runtime, self.state = runtime, state
+        self.reference: FrameSample | None = None
+        self._evidence_epoch = 0
+        self._top_continuation: _TopContinuation | None = None
+        self._scroll_samples: tuple[FrameSample, ...] = ()
+        self._scroll_epoch = -1
+        self._scene_comparisons_reused = 0
+
+    def invalidate(self) -> None:
+        self.reference = None
+        self.state.pending_top_scan = None
+        self._evidence_epoch += 1
+        self._top_continuation = None
+        self._scroll_samples = ()
+        self._scroll_epoch = -1
+
+    def _purchase_context(self) -> _PurchaseContext:
+        return _PurchaseContext(
+            self._evidence_epoch, self.runtime.network_recovery_generation,
+            (self.runtime.window, self.runtime.transform, self.runtime.baseline_bounds),
+            (self.runtime.config.slots, self.runtime.config.rois["inventory_content"], self.state.enabled_target_ids),
+        )
+
+    def _scope_invalid_reason(self, scope: _PostPurchaseScope) -> str | None:
+        current = self._purchase_context()
+        if current.generation != scope.context.generation:
+            return "network_recovery"
+        if current.epoch != scope.context.epoch:
+            return "inventory_invalidated"
+        if current.geometry != scope.context.geometry or current.layout != scope.context.layout:
+            return "geometry_or_selection_changed"
+        return None
+
+    def _log_scope_fallback(self, scope: _PostPurchaseScope, reason: str) -> None:
+        self.runtime.deps.logger.event(
+            "post_purchase_scope_fallback", screen=scope.screen, after_slot=scope.after_slot,
+            slot_ids=",".join(sorted(scope.slot_ids)), reason=reason,
+        )
+
+    def _evidence_is_current(self, captured_at: float, generation: int, epoch: int) -> bool:
+        age_ms = (self.runtime.active_monotonic() - captured_at) * 1000
+        return (epoch == self._evidence_epoch and generation == self.runtime.network_recovery_generation
+                and isfinite(age_ms) and 0 <= age_ms <= self.runtime.config.inventory_readiness.reference_max_age_ms)
+
+    def retain_top_continuation(self, window: SceneWindow, previous_key: tuple[tuple[str, str], ...] | None,
+                                stable: int) -> int:
+        self._top_continuation = None
+        if (window.count > 0 and window.previous is not None and previous_key is not None and stable > 0
+                and self._evidence_is_current(window.previous_at, window.generation, self._evidence_epoch)):
+            self._top_continuation = _TopContinuation(window, previous_key, stable, self._evidence_epoch)
+            return window.count
+        return 0
+
+    def retain_scroll_evidence(self, samples: tuple[FrameSample, ...]) -> None:
+        self._scroll_samples = samples
+        self._scroll_epoch = self._evidence_epoch
+
+    def wait_for_sample(self, next_capture_at: float | None, deadline: float) -> float:
+        self.runtime.control.checkpoint()
+        wait = (0.0 if next_capture_at is None else
+                max(0.0, min(next_capture_at, deadline) - self.runtime.active_monotonic()))
+        if wait:
+            self.runtime.deps.clock.sleep(wait)
+        self.runtime.control.checkpoint()
+        return wait
+
+    def new_scene_window(self) -> SceneWindow:
+        return SceneWindow(max(self.runtime.config.timing.stable_frames,
+                               self.runtime.config.inventory_readiness.minimum_frames), self.runtime.config.scroll,
+                           self.runtime.config.inventory_readiness)
+
+    def observe_scene(self, window: SceneWindow, frame: object, captured_at: float,
+                      generation: int, screen: str, evidence: SceneSampleEvidence | None = None, *,
+                      slot_ids: frozenset[str] | None = None) -> bool:
+        if generation != self.runtime.network_recovery_generation:
+            window.reset("network_recovery")
+            self.invalidate()
+            return False
+        if slot_ids is not None:
+            evidence = None  # Whole-viewport certificates cannot authorize a local window.
+        if evidence is not None and not (evidence.frame is frame and evidence.captured_at == captured_at
+                                        and evidence.generation == generation and evidence.screen == screen):
+            evidence = None
+        if slot_ids is not None:
+            scene = self.runtime.vision_call(
+                lambda current: self.runtime.deps.vision.inventory_scene_state(current, screen, slot_ids=slot_ids), frame)
+        else:
+            scene = ("ready" if evidence is not None else
+                     self.runtime.vision_call(self.runtime.deps.vision.inventory_scene_state, frame, screen))
+        self.runtime.control.checkpoint()
+
+        def measure(before: object, after: object) -> ScrollMovementObservation:
+            if slot_ids is not None:
+                return self.runtime.vision_call(
+                    lambda a, b: self.runtime.deps.vision.inventory_scene_stability(a, b, screen, slot_ids=slot_ids),
+                    before, after)
+            if evidence is not None and after is frame:
+                if (before is window.previous and evidence.previous_at == window.previous_at
+                        and evidence.pair is not None):
+                    self._scene_comparisons_reused += 1
+                    return evidence.pair
+                if (before is window.first and evidence.first_at == window.first_at
+                        and evidence.span is not None):
+                    self._scene_comparisons_reused += 1
+                    return evidence.span
+            return self.runtime.vision_call(self.runtime.deps.vision.inventory_scene_stability, before, after, screen)
+
+        ready = window.observe(frame, captured_at, generation, scene, measure)
+        self.runtime.control.checkpoint()
+        return ready
+
+    def reference_is_valid(self) -> bool:
+        sample = self.reference
+        return (sample is not None and sample.generation == self.runtime.network_recovery_generation
+                and 0 <= (self.runtime.active_monotonic() - sample.captured_at) * 1000
+                <= self.runtime.config.inventory_readiness.reference_max_age_ms)
+
+    def take_scroll_reference(self) -> FrameSample:
+        if not self.reference_is_valid():
+            self.invalidate()
+            raise StopExecution(StopReason.RECOGNITION_TIMEOUT, "top inventory reference is stale or not ready")
+        sample = self.reference
+        self.invalidate()
+        assert sample is not None
+        return sample
 
     @staticmethod
     def record_inventory_skip(
@@ -46,16 +198,23 @@ class InventoryScanner:
         screen: str,
         completed_slot_ids: set[str],
         skipped: dict[tuple[str, str, str, str], tuple[int, float]],
+        *, slot_ids: frozenset[str] | None = None,
     ) -> tuple[InventoryMatch, ...]:
+        excluded = frozenset(completed_slot_ids)
+        if slot_ids is not None:
+            excluded |= frozenset(slot.slot_id for slot in self.runtime.config.slots
+                                  if slot.screen == screen and slot.slot_id not in slot_ids)
         detected = self.runtime.vision_call(
             self.runtime.deps.vision.scan_inventory,
             frame,
             screen,
             self.state.enabled_target_ids,
-            frozenset(completed_slot_ids),
+            excluded,
         )
         matches: list[InventoryMatch] = []
         for match in detected:
+            if slot_ids is not None and match.slot_id not in slot_ids:
+                continue
             if match.is_purchased:
                 self.record_inventory_skip(
                     skipped,
@@ -119,7 +278,12 @@ class InventoryScanner:
         screen: str,
         completed_slot_ids: set[str],
         initial_samples: tuple[FrameSample, ...] = (),
+        *, scope: _PostPurchaseScope | None = None,
     ) -> tuple[InventoryMatch, ...]:
+        if scope is not None and (scope.screen != screen or not scope.slot_ids or initial_samples):
+            raise ValueError("Local purchase scans require a nonempty same-screen scope and fresh frames")
+        requested_scope = scope
+        scope_fallback_reason = None
         self.runtime.transition(RunState.SCANNING_TOP if screen == "top" else RunState.SCANNING_BOTTOM)
         mark = self.runtime.performance_mark()
         deadline = self.runtime.active_monotonic() + self.runtime.config.timing.scan_timeout_ms / 1000
@@ -129,38 +293,97 @@ class InventoryScanner:
         outcome = "timeout"
         skipped: dict[tuple[str, str, str, str], tuple[int, float]] = {}
         cached_samples = list(initial_samples)
+        certified_scroll = (screen == "bottom" and bool(initial_samples)
+                            and initial_samples is self._scroll_samples)
+        scroll_epoch = self._scroll_epoch
+        self._scroll_samples, self._scroll_epoch = (), -1
         cached_frames_available = len(cached_samples)
         cached_frames_used = 0
         cached_stable_suffix: int | None = None
         fresh_frames = 0
         cache_outcome = "none" if not cached_samples else "pending"
         cache_wait_ms = 0.0
+        sample_wait_ms = 0.0
         reuse_capture_schedule = bool(cached_samples)
         next_capture_not_before: float | None = None
+        window = self.new_scene_window()
+        continuation_frames = 0
+        if screen == "top":
+            continuation, self._top_continuation = self._top_continuation, None
+            if (scope is None and continuation is not None and not completed_slot_ids and not cached_samples
+                    and self._evidence_is_current(continuation.window.previous_at,
+                                                  continuation.window.generation, continuation.epoch)):
+                window = continuation.window
+                previous_key, stable = continuation.previous_key, continuation.stable
+                continuation_frames = window.count
+                next_capture_not_before = window.previous_at + self.runtime.config.timing.poll_interval_ms / 1000
+        scene_frames_reused = 0
+        comparisons_before = self._scene_comparisons_reused
+        self.reference = None
+
+        def discard_scope(reason: str) -> None:
+            nonlocal scope, previous_key, stable, next_capture_not_before, scope_fallback_reason
+            assert scope is not None
+            self._log_scope_fallback(scope, reason)
+            scope = None
+            scope_fallback_reason = reason
+            window.reset("post_purchase_scope_invalidated")
+            previous_key, stable, next_capture_not_before = None, 0, None
+
         try:
             while self.runtime.active_monotonic() <= deadline:
+                self.runtime.control.checkpoint()
+                if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
+                    discard_scope(reason)
+                if (certified_scroll and cached_samples
+                        and not self._evidence_is_current(initial_samples[-1].captured_at,
+                                                         initial_samples[-1].generation, scroll_epoch)):
+                    cached_samples.clear()
+                    window.reset("invalidated_scroll_evidence")
+                    previous_key, stable = None, 0
+                    certified_scroll = False
+                evidence = None
                 if cached_samples:
                     sample = cached_samples.pop(0)
                     frame = sample.frame
                     captured_at = sample.captured_at
                     cached_frames_used += 1
                     source = "scroll_settle_cache"
+                    generation = sample.generation
+                    if certified_scroll:
+                        evidence = sample.scene_evidence
                 else:
-                    if reuse_capture_schedule and next_capture_not_before is not None:
-                        remaining = next_capture_not_before - self.runtime.active_monotonic()
-                        if remaining > 0:
-                            self.runtime.control.checkpoint()
-                            self.runtime.deps.clock.sleep(remaining)
-                            cache_wait_ms += remaining * 1000
+                    waited = self.wait_for_sample(next_capture_not_before, deadline) * 1000
+                    sample_wait_ms += waited
+                    if reuse_capture_schedule:
+                        cache_wait_ms += waited
+                    if self.runtime.active_monotonic() >= deadline:
+                        break
+                    generation = self.runtime.network_recovery_generation
                     frame = self.runtime.capture()
                     captured_at = self.runtime.active_monotonic()
                     fresh_frames += 1
                     source = "scroll_cache_fallback" if reuse_capture_schedule else None
+                if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
+                    discard_scope(reason)
+                    continue  # Do not mix a capture interrupted by recovery with the new full window.
+                next_capture_not_before = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
+                if evidence is not None:
+                    scene_frames_reused += 1
+                slot_ids = None if scope is None else scope.slot_ids
+                scene_ready = self.observe_scene(window, frame, captured_at, generation, screen, evidence,
+                                                 slot_ids=slot_ids)
+                if window.count <= 1:
+                    previous_key, stable = None, 0
+                if window.count == 0:
+                    self.runtime.control.checkpoint()
+                    continue
                 matches = self.detect_actionable_inventory(
                     frame,
                     screen,
                     completed_slot_ids,
                     skipped,
+                    slot_ids=slot_ids,
                 )
                 frames += 1
                 key = tuple((match.slot_id, match.target_id) for match in matches)
@@ -172,27 +395,37 @@ class InventoryScanner:
 
                 self.log_inventory_frame(screen, matches, stable, source=source)
 
-                if stable >= self.runtime.config.timing.stable_frames:
+                self.runtime.control.checkpoint()
+                if self.runtime.active_monotonic() > deadline:
+                    break
+                if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
+                    discard_scope(reason)
+                    continue
+                if (evidence is not None
+                        and not self._evidence_is_current(initial_samples[-1].captured_at,
+                                                         initial_samples[-1].generation, scroll_epoch)):
+                    cached_samples.clear()
+                    window.reset("invalidated_scroll_evidence")
+                    previous_key, stable = None, 0
+                    certified_scroll = False
+                    continue
+                if stable >= self.runtime.config.timing.stable_frames and scene_ready:
                     if reuse_capture_schedule:
                         cache_outcome = "hit" if fresh_frames == 0 else "suffix_fallback"
                         if cached_stable_suffix is None:
                             cached_stable_suffix = stable
                     outcome = "stable"
+                    if screen == "top" and scope is None:
+                        self.reference = FrameSample(frame, captured_at, generation)
                     return matches
                 self.runtime.control.checkpoint()
-                if reuse_capture_schedule:
-                    if not cached_samples and cached_stable_suffix is None:
-                        cached_stable_suffix = stable
-                    next_capture_not_before = (
-                        captured_at + self.runtime.config.timing.poll_interval_ms / 1000
-                    )
-                else:
-                    self.runtime.deps.clock.sleep(self.runtime.config.timing.poll_interval_ms / 1000)
+                if reuse_capture_schedule and not cached_samples and cached_stable_suffix is None:
+                    cached_stable_suffix = stable
             if reuse_capture_schedule:
                 cache_outcome = "timeout"
             raise StopExecution(
                 StopReason.RECOGNITION_TIMEOUT,
-                f"timeout waiting for stable {screen} inventory scan",
+                f"timeout waiting for stable {screen} inventory scan: {window.reason}",
             )
         finally:
             if cache_outcome == "pending":
@@ -202,6 +435,11 @@ class InventoryScanner:
                 mark,
                 "inventory_scan",
                 screen=screen,
+                post_purchase_policy="scoped_followup_v1",
+                scan_scope="full_viewport" if scope is None else "post_purchase_slots",
+                requested_slot_ids="all" if requested_scope is None else ",".join(sorted(requested_scope.slot_ids)),
+                scan_slot_ids="all" if scope is None else ",".join(sorted(scope.slot_ids)),
+                scope_fallback_reason=scope_fallback_reason or "none",
                 frames=frames,
                 stable=stable,
                 outcome=outcome,
@@ -211,8 +449,102 @@ class InventoryScanner:
                 cached_stable_suffix=cached_stable_suffix or 0,
                 fresh_frames=fresh_frames,
                 cache_wait_ms=f"{cache_wait_ms:.3f}",
+                sample_wait_ms=f"{sample_wait_ms:.3f}",
+                poll_schedule="capture_interval",
+                top_continuation_frames=continuation_frames,
+                scene_frames_reused=scene_frames_reused,
+                scene_comparisons_reused=self._scene_comparisons_reused - comparisons_before,
+                scene_ready_frames=window.count,
+                scene_ready_reason=window.reason,
+                scene_maximum_row_change=window.maximum_change,
+                scene_row_regions=format_row_regions(window.pair_rows),
+                scene_pair_row_changes=format_row_changes(window.pair_rows),
+                scene_span_row_changes=format_row_changes(window.span_rows),
             )
 
+
+    def _scope_after_purchase(self, screen: str, matches: tuple[InventoryMatch, ...],
+                              before: _PurchaseContext) -> _PostPurchaseScope | None:
+        slots = sorted((slot for slot in self.runtime.config.slots if slot.screen == screen),
+                       key=lambda slot: slot.order)
+        by_id = {slot.slot_id: slot for slot in slots}
+        # A suffix may only be derived from a correctly ordered, calibrated scan.
+        if not matches or any(
+            item.slot_id not in by_id or
+            (item.slot_order, item.roi, item.buy_point) !=
+            (by_id[item.slot_id].order, by_id[item.slot_id].item_roi, by_id[item.slot_id].buy_point)
+            for item in matches
+        ) or tuple(item.slot_order for item in matches) != tuple(sorted({item.slot_order for item in matches})):
+            return None
+        match = matches[0]
+        if screen == "top" and len(matches) == 1:
+            return None  # The last top target still needs a full, clean scroll reference.
+        if screen == "bottom" and match.slot_order <= max(
+                slot.order for slot in self.runtime.config.slots if slot.screen == "top"):
+            return None
+        remaining = frozenset(slot.slot_id for slot in slots if slot.order > match.slot_order)
+        if any(slot.item_roi.y < self.runtime.config.inventory_readiness.reward_overlay_roi.bottom
+               for slot in slots if slot.slot_id in remaining):
+            return None
+        scope = _PostPurchaseScope(screen, remaining, match.slot_id, replace(before, epoch=before.epoch + 1))
+        # purchase() invalidates once before its own inputs. Any additional
+        # invalidation, recovery or geometry change revokes the earlier scan proof.
+        if (reason := self._scope_invalid_reason(scope)) is not None:
+            self._log_scope_fallback(scope, reason)
+            return None
+        return scope
+
+    def _finish_bottom_purchase(self, scope: _PostPurchaseScope) -> bool:
+        if scope.screen != "bottom" or scope.slot_ids:
+            raise ValueError("Fast purchase completion requires an exhausted bottom viewport")
+        self.runtime.transition(RunState.SCANNING_BOTTOM)
+        mark = self.runtime.performance_mark()
+        deadline = self.runtime.active_monotonic() + self.runtime.config.timing.scan_timeout_ms / 1000
+        next_capture_at = None
+        frames = stable = 0
+        outcome = "interrupted"
+        try:
+            while self.runtime.active_monotonic() <= deadline:
+                self.runtime.control.checkpoint()
+                if (reason := self._scope_invalid_reason(scope)) is not None:
+                    self._log_scope_fallback(scope, reason)
+                    outcome = "fallback"
+                    return False
+                self.wait_for_sample(next_capture_at, deadline)
+                if self.runtime.active_monotonic() >= deadline:
+                    break
+                frame = self.runtime.capture()
+                captured_at = self.runtime.active_monotonic()
+                frames += 1
+                if (reason := self._scope_invalid_reason(scope)) is not None:
+                    self._log_scope_fallback(scope, reason)
+                    outcome = "fallback"
+                    return False
+                ready = self.runtime.vision_call(self.runtime.deps.vision.shop_ready, frame)
+                stable = stable + 1 if ready is not None else 0
+                self.runtime.control.checkpoint()
+                if (reason := self._scope_invalid_reason(scope)) is not None:
+                    self._log_scope_fallback(scope, reason)
+                    outcome = "fallback"
+                    return False
+                if self.runtime.active_monotonic() > deadline:
+                    break
+                if stable >= self.runtime.config.timing.stable_frames:
+                    outcome = "ready"
+                    self.runtime.deps.logger.event(
+                        "bottom_purchase_fast_finish", after_slot=scope.after_slot,
+                        generation=scope.context.generation, stable=stable,
+                    )
+                    return True
+                next_capture_at = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
+            outcome = "timeout"
+            raise StopExecution(StopReason.RECOGNITION_TIMEOUT, "shop controls did not settle after the last bottom purchase")
+        finally:
+            self.runtime.log_performance_stage(
+                mark, "post_purchase_finish", screen="bottom", scan_scope="controls_only",
+                post_purchase_policy="scoped_followup_v1",
+                after_slot=scope.after_slot, frames=frames, stable=stable, outcome=outcome,
+            )
 
     def scan_viewport(
         self,
@@ -222,7 +554,13 @@ class InventoryScanner:
     ) -> frozenset[str]:
         mandatory_targets_found: set[str] = set()
         pending: tuple[InventoryMatch, ...] | None = None
-        if screen == "top" and not completed_slot_ids and self.state.pending_top_scan is not None:
+        scope: _PostPurchaseScope | None = None
+        if screen == "top" and not self.reference_is_valid():
+            # A partial refresh continuation intentionally has no completed reference yet.
+            self.reference = None
+            self.state.pending_top_scan = None
+        if (screen == "top" and not completed_slot_ids and self.state.pending_top_scan is not None
+                and self.reference_is_valid()):
             pending = self.state.pending_top_scan
             self.state.pending_top_scan = None
             self.runtime.transition(RunState.SCANNING_TOP)
@@ -233,6 +571,7 @@ class InventoryScanner:
                 targets=len(pending),
             )
         while True:
+            self.runtime.control.checkpoint()
             matches = pending
             pending = None
             if matches is None:
@@ -240,18 +579,39 @@ class InventoryScanner:
                     screen,
                     completed_slot_ids,
                     initial_samples=initial_samples,
+                    scope=scope,
                 )
                 initial_samples = ()
+                if scope is not None and self._scope_invalid_reason(scope) is not None:
+                    scope = None  # stable_scan already rebuilt a complete window after invalidation.
             if not matches:
+                if screen == "top" and scope is not None:
+                    self.runtime.deps.logger.event("post_purchase_full_reference_required", screen=screen)
+                    scope = None
+                    continue
                 return frozenset(mandatory_targets_found)
             match = matches[0]
             if match.target_id in self.state.mandatory_target_ids:
                 mandatory_targets_found.add(match.target_id)
+            before_purchase = self._purchase_context()
             self.purchase(match)
             completed_slot_ids.add(match.slot_id)
+            scope = self._scope_after_purchase(screen, matches, before_purchase)
+            self.runtime.deps.logger.event(
+                "post_purchase_scan_selected", screen=screen, after_slot=match.slot_id,
+                post_purchase_policy="scoped_followup_v1",
+                scan_scope=("full_viewport" if scope is None else
+                            "post_purchase_slots" if scope.slot_ids else "controls_only"),
+                slot_ids="all" if scope is None else ",".join(sorted(scope.slot_ids)),
+            )
+            if scope is not None and not scope.slot_ids:
+                if self._finish_bottom_purchase(scope):
+                    return frozenset(mandatory_targets_found)
+                scope = None
 
 
     def purchase(self, match: InventoryMatch) -> None:
+        self.invalidate()
         self.runtime.transition(RunState.PURCHASING)
         self.runtime.click(f"buy:{match.target_id}:{match.slot_id}", match.buy_point)
         self.runtime.wait_stable_observation(

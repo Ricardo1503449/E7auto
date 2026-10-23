@@ -8,6 +8,8 @@ from e7auto.runtime.context import RuntimeContext
 from .contracts import ShopVisionPort
 from .state import ShopState
 from .inventory import InventoryScanner
+from .scrolling import FrameSample
+from .readiness import format_row_regions, format_row_changes
 
 _REFRESH_CONFIRM_FAST_CONFIDENCE = 0.99
 
@@ -19,6 +21,7 @@ class RefreshController:
         self.enter_store, self.exit_store = enter_store, exit_store
 
     def invalidate_trusted_balance(self, reason: str) -> None:
+        self.inventory.invalidate()
         previous = self.state.trusted_sky_stone_balance
         self.state.trusted_sky_stone_balance = None
         self.state.pending_top_scan = None
@@ -381,13 +384,30 @@ class RefreshController:
         top_previous_key: tuple[tuple[str, str], ...] | None = None
         top_stable = 0
         top_candidate: tuple[InventoryMatch, ...] | None = None
+        scene_window = self.inventory.new_scene_window()
+        next_capture_at: float | None = None
+        sample_wait_ms = 0.0
+        top_continuation_frames = 0
         skipped: dict[tuple[str, str, str, str], tuple[int, float]] = {}
         frames = 0
         outcome = "timeout"
         try:
             while self.runtime.active_monotonic() <= deadline:
+                sample_wait_ms += self.inventory.wait_for_sample(next_capture_at, deadline) * 1000
+                if self.runtime.active_monotonic() >= deadline:
+                    break
+                generation = self.runtime.network_recovery_generation
                 frame = self.runtime.capture()
+                captured_at = self.runtime.active_monotonic()
+                next_capture_at = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
                 frames += 1
+                if generation != self.runtime.network_recovery_generation:
+                    candidate, stable_count = None, 0
+                    top_previous_key, top_stable, top_candidate = None, 0, None
+                    scene_window.reset("network_recovery")
+                    self.inventory.invalidate()
+                    self.runtime.control.checkpoint()
+                    continue
                 observation = self.runtime.vision_call(
                     self.runtime.deps.vision.sky_stone_balance,
                     frame,
@@ -398,6 +418,8 @@ class RefreshController:
                     top_previous_key = None
                     top_stable = 0
                     top_candidate = None
+                    scene_window.reset()
+                    self.inventory.reference = None
                 else:
                     if observation.value == candidate:
                         stable_count += 1
@@ -415,17 +437,18 @@ class RefreshController:
                     )
 
                     if observation.value == expected:
-                        top_matches = self.inventory.detect_actionable_inventory(
-                            frame,
-                            "top",
-                            set(),
-                            skipped,
-                        )
+                        scene_ready = self.inventory.observe_scene(scene_window, frame, captured_at, generation, "top")
+                        if scene_window.count <= 1:
+                            top_previous_key, top_stable, top_candidate = None, 0, None
+                        top_matches = (self.inventory.detect_actionable_inventory(frame, "top", set(), skipped)
+                                       if scene_window.count else ())
                         top_key = tuple(
                             (match.slot_id, match.target_id)
                             for match in top_matches
                         )
-                        if top_key == top_previous_key:
+                        if not scene_window.count:
+                            top_stable = 0
+                        elif top_key == top_previous_key:
                             top_stable += 1
                         else:
                             top_previous_key = top_key
@@ -436,13 +459,19 @@ class RefreshController:
                             top_stable,
                             source="after_refresh_balance",
                         )
-                        if top_stable >= self.runtime.config.timing.stable_frames:
+                        if top_stable >= self.runtime.config.timing.stable_frames and scene_ready:
                             top_candidate = top_matches
+                            self.inventory.reference = FrameSample(frame, captured_at, generation)
                     else:
                         top_previous_key = None
                         top_stable = 0
                         top_candidate = None
+                        scene_window.reset()
+                        self.inventory.reference = None
 
+                    self.runtime.control.checkpoint()
+                    if self.runtime.active_monotonic() > deadline:
+                        break
                     if stable_count >= self.runtime.config.timing.stable_frames:
                         if observation.value != expected:
                             outcome = "mismatch"
@@ -451,9 +480,12 @@ class RefreshController:
                                 f"expected Sky Stone balance {expected}, observed {observation.value}",
                             )
                         outcome = "stable"
+                        if top_candidate is None:
+                            top_continuation_frames = self.inventory.retain_top_continuation(
+                                scene_window, top_previous_key, top_stable,
+                            )
                         return top_candidate
                 self.runtime.control.checkpoint()
-                self.runtime.deps.clock.sleep(self.runtime.config.timing.poll_interval_ms / 1000)
             raise StopExecution(
                 StopReason.RECOGNITION_TIMEOUT,
                 f"Sky Stone balance did not reach expected value {expected}",
@@ -467,5 +499,13 @@ class RefreshController:
                 balance_stable=stable_count,
                 top_stable=top_stable,
                 top_reused=top_candidate is not None and outcome == "stable",
+                top_continuation_frames=top_continuation_frames,
+                sample_wait_ms=f"{sample_wait_ms:.3f}",
+                poll_schedule="capture_interval",
+                scene_ready_frames=scene_window.count,
+                scene_ready_reason=scene_window.reason,
+                scene_row_regions=format_row_regions(scene_window.pair_rows),
+                scene_pair_row_changes=format_row_changes(scene_window.pair_rows),
+                scene_span_row_changes=format_row_changes(scene_window.span_rows),
                 outcome=outcome,
             )

@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from typing import Protocol
-from e7auto.core.types import Point, Rect
+from e7auto.core.types import Point, Rect, ClientRect
 from e7auto.core.observations import Observation
 
 @dataclass(frozen=True, slots=True)
@@ -25,6 +25,24 @@ class SkyStoneBalanceObservation:
 
 
 @dataclass(frozen=True, slots=True)
+class RowPixelChange:
+    row_id: str
+    bounds: ClientRect
+    changed_fraction: float
+
+
+@dataclass(frozen=True, slots=True)
+class ScrollContentCandidate:
+    candidate_id: int
+    phase_shift_x: float
+    phase_shift_y: float
+    phase_response: float
+    content_scores: tuple[float | None, ...]
+    matching_rows: int
+    quality: float | None
+
+
+@dataclass(frozen=True, slots=True)
 class ScrollMovementObservation:
     mean_absolute_difference: float
     changed_fraction: float
@@ -35,6 +53,12 @@ class ScrollMovementObservation:
     content_verified: bool = False
     content_reason: str = "not_checked"
     content_scores: tuple[float | None, ...] = ()
+    maximum_row_changed_fraction: float = 0.0
+    row_pixel_changes: tuple[RowPixelChange, ...] = ()
+    content_candidates: tuple[ScrollContentCandidate, ...] = ()
+    content_selected_candidate: int | None = None
+    content_runner_up_candidate: int | None = None
+    content_margin: float | None = None
 
 
 class PurchaseOutcome(str, Enum):
@@ -47,6 +71,12 @@ class PurchaseOutcome(str, Enum):
 class ShopVisionPort(Protocol):
     def navigation_menu(self, frame: object) -> Observation | None: ...
     def navigation_tavern(self, frame: object) -> Observation | None: ...
+    def inventory_scene_state(self, frame: object, screen: str, *,
+                              slot_ids: frozenset[str] | None = None) -> str: ...
+
+    def inventory_scene_stability(self, before: object, after: object, screen: str, *,
+                                  slot_ids: frozenset[str] | None = None) -> ScrollMovementObservation: ...
+
     def main_shop_icon(self, frame: object) -> Observation | None: ...
 
     def shop_ready(self, frame: object) -> Observation | None: ...

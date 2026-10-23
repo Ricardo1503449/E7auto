@@ -14,12 +14,13 @@ import win32api
 import win32gui
 
 from e7auto.platform.input import Win32WindowMessageInputService
-from e7auto.core.types import Rect
+from e7auto.core.types import Rect, Size
 from e7auto.configuration.loader import load_config
 from e7auto.platform.windows import Win32WindowService, enable_per_monitor_dpi_awareness
 from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
 from e7auto.resources.templates import TemplateRepository
 from e7auto.features.shop.scroll_vision import measure_inventory_scroll
+from e7auto.vision.frames import CoordinateTransform, FrameView
 from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path, finish_validation_output
 
 ROOT = PROJECT_ROOT
@@ -384,19 +385,25 @@ def _observe_scroll_effect(
     trace: list[dict[str, float | bool]] = []
     latest_frame: np.ndarray | None = None
     latest_movement = None
+    transform = CoordinateTransform(config.baseline_client_size, Size(bounds.width, bounds.height))
+    item_rois = tuple(slot.item_roi for slot in config.slots if slot.screen == "top")
     while True:
         _check_background_state(windows, window, bounds, foreground)
         _assert_cursor_and_foreground(cursor, foreground)
         latest_frame = capture.capture_client(window, bounds)
         latest_movement = measure_inventory_scroll(
-            before,
-            latest_frame,
-            config.rois["inventory_list"],
+            FrameView(before, transform),
+            FrameView(latest_frame, transform),
+            config.rois["inventory_content"],
             config.scroll.difference_threshold,
+            config=config.scroll,
+            item_rois=item_rois,
         )
         passed = (
             latest_movement.phase_shift_y < -config.scroll.minimum_upward_shift_px
             and latest_movement.changed_fraction > config.scroll.minimum_changed_fraction
+            and latest_movement.content_verified
+            and abs(latest_movement.phase_shift_x) <= config.scroll.maximum_horizontal_shift_px
         )
         trace.append(
             {
@@ -593,6 +600,8 @@ def _run_scroll(args: argparse.Namespace) -> tuple[dict[str, object], int]:
         "changed_fraction_passed": (
             movement.changed_fraction > config.scroll.minimum_changed_fraction
         ),
+        "content_verified": movement.content_verified,
+        "horizontal_translation_passed": abs(movement.phase_shift_x) <= config.scroll.maximum_horizontal_shift_px,
         "capture_p95_at_most_50_ms": latency["p95_ms"] <= 50.0,
         "capture_maximum_at_most_100_ms": latency["maximum_ms"] <= 100.0,
     }

@@ -5,8 +5,9 @@ from typing import Any, Literal
 import yaml
 from e7auto.core.types import Point, Rect, Size
 from e7auto.resources.manifest import load_template_manifest
-from e7auto.configuration.models import DisplayConfig, TargetConfig, SlotConfig, TimingConfig, RefreshStrategyConfig, ScrollConfig, LoggingConfig, EntryThresholds, AppConfig, ConfigError
+from e7auto.configuration.models import DisplayConfig, TargetConfig, SlotConfig, TimingConfig, RefreshStrategyConfig, ScrollConfig, LoggingConfig, EntryThresholds, InventoryReadinessConfig, AppConfig, ConfigError
 from e7auto.configuration.schema import COMMON_TEMPLATE_KEYS, _REQUIRED_TEMPLATES, _REQUIRED_ROIS, PENGUIN_CONTROLS, _REQUIRED_POINTS, _EXPECTED_TARGET_POLICY
+from e7auto.configuration.shop_layout import visible_shop_rows
 from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.navigation import load_startup_navigation
 
@@ -337,9 +338,13 @@ def _load_scroll(root, errors):
         _positive_fraction(scroll_raw.get("minimum_content_score"), "scroll.minimum_content_score", errors),
         _positive_number(scroll_raw.get("minimum_content_stddev"), "scroll.minimum_content_stddev", errors),
         _positive_number(scroll_raw.get("content_alignment_tolerance_px"), "scroll.content_alignment_tolerance_px", errors),
+        _positive_int(scroll_raw.get("minimum_content_rows"), "scroll.minimum_content_rows", errors),
+        _positive_fraction(scroll_raw.get("minimum_content_margin"), "scroll.minimum_content_margin", errors),
     )
     if scroll.delta == 0:
         errors.append("scroll.delta must be a non-zero integer")
+    if scroll.minimum_content_rows < 2:
+        errors.append("scroll.minimum_content_rows must require at least two independent rows")
     if isinstance(scroll_raw.get("delta"), bool):
         errors.append("scroll.delta must not be a boolean")
     if scroll.minimum_settle_ms >= scroll.settle_ms:
@@ -360,6 +365,34 @@ def _load_scroll(root, errors):
             "scroll.maximum_pairwise_shift_px must be less than minimum_upward_shift_px"
         )
     return scroll
+
+
+def _load_inventory_readiness(root, baseline, errors):
+    raw = _mapping(root.get("inventory_readiness"), "inventory_readiness", errors)
+    prefix = "inventory_readiness."
+    settings = InventoryReadinessConfig(
+        _positive_int(raw.get("minimum_frames"), prefix + "minimum_frames", errors),
+        _positive_int(raw.get("minimum_stable_ms"), prefix + "minimum_stable_ms", errors),
+        _positive_int(raw.get("difference_threshold"), prefix + "difference_threshold", errors),
+        _positive_fraction(raw.get("maximum_row_changed_fraction"), prefix + "maximum_row_changed_fraction", errors),
+        _point(raw.get("pixel_inset"), prefix + "pixel_inset", errors),
+        _positive_number(raw.get("minimum_band_stddev"), prefix + "minimum_band_stddev", errors),
+        _rect(raw.get("reward_overlay_roi"), prefix + "reward_overlay_roi", errors),
+        _positive_fraction(raw.get("reward_overlay_confidence"), prefix + "reward_overlay_confidence", errors),
+        _positive_int(raw.get("reference_max_age_ms"), prefix + "reference_max_age_ms", errors),
+    )
+    roi = settings.reward_overlay_roi
+    if settings.minimum_frames < 3:
+        errors.append(prefix + "minimum_frames must require at least three fresh frames")
+    if roi.x < 0 or roi.y < 0 or roi.right > baseline.width or roi.bottom > baseline.height:
+        errors.append(prefix + "reward_overlay_roi must fit inside the baseline client")
+    if not isfinite(settings.minimum_band_stddev):
+        errors.append(prefix + "minimum_band_stddev must be finite")
+    if settings.difference_threshold >= 255:
+        errors.append(prefix + "difference_threshold must be less than 255")
+    if settings.maximum_row_changed_fraction >= 1:
+        errors.append(prefix + "maximum_row_changed_fraction must be less than 1")
+    return settings
 
 
 def _load_timing(root, errors):
@@ -525,6 +558,24 @@ def _validate_geometry(baseline_size, rois, points, template_sizes, slots, scrol
         errors.append("scroll.cursor_point must fit inside the baseline client")
     inventory_roi = rois.get("inventory_list")
     content_roi = rois.get("inventory_content")
+    if content_roi is not None:
+        try:
+            visible_shop_rows(tuple(slots), content_roi, "top")
+            visible_shop_rows(tuple(slots), content_roi, "bottom")
+        except ValueError as exc:
+            errors.append(f"slots.viewport_layout: {exc}")
+    top_slots = sorted((slot for slot in slots if slot.screen == "top"), key=lambda slot: slot.item_roi.y)
+    if len(top_slots) < scroll.minimum_content_rows:
+        errors.append("slots must provide scroll.minimum_content_rows top rows")
+    for index, slot in enumerate(top_slots):
+        item = slot.item_roi
+        if content_roi is not None and not (
+            content_roi.x <= item.x < item.right <= content_roi.right
+            and content_roi.y <= item.y < item.bottom <= content_roi.bottom
+        ):
+            errors.append(f"slots.{slot.slot_id}.item_roi must fit inside rois.inventory_content")
+        if index and top_slots[index - 1].item_roi.bottom > item.y:
+            errors.append("top slot item_roi rows must not overlap vertically")
     if content_roi is not None and inventory_roi is not None and not (
         inventory_roi.x <= content_roi.x < content_roi.right <= inventory_roi.right
         and inventory_roi.y <= content_roi.y < content_roi.bottom <= inventory_roi.bottom
@@ -604,6 +655,15 @@ def load_config(
     scroll = _load_scroll(root, errors)
 
     timing = _load_timing(root, errors)
+    inventory_readiness = _load_inventory_readiness(root, baseline_size, errors)
+    inset = inventory_readiness.pixel_inset
+    if (inset.x < 0 or inset.y < 0
+            or any(slot.item_roi.width <= 2 * inset.x or slot.item_roi.height <= 2 * inset.y for slot in slots)):
+        errors.append("inventory_readiness.pixel_inset must leave a nonempty interior in every slot")
+    if inventory_readiness.minimum_stable_ms >= min(timing.scan_timeout_ms, scroll.settle_ms):
+        errors.append("inventory_readiness.minimum_stable_ms must fit inside scan and scroll timeouts")
+    if scroll.minimum_settle_ms + (inventory_readiness.minimum_frames - 1) * scroll.settle_poll_interval_ms > scroll.settle_ms:
+        errors.append("inventory_readiness.minimum_frames must fit inside the scroll timeout")
 
     refresh_strategy = _load_refresh_strategy(root, errors)
 
@@ -656,6 +716,7 @@ def load_config(
         targets=tuple(targets),
         slots=tuple(sorted(slots, key=lambda item: item.order)),
         scroll=scroll,
+        inventory_readiness=inventory_readiness,
         timing=timing,
         refresh_strategy=refresh_strategy,
         default_confidence=default_confidence,

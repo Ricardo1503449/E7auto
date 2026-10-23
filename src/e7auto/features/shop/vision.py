@@ -2,6 +2,7 @@ from __future__ import annotations
 import cv2
 import numpy as np
 from e7auto.configuration.models import AppConfig
+from e7auto.configuration.shop_layout import ViewportRow, visible_shop_rows
 from e7auto.core.types import Rect, ClientRect
 from e7auto.vision.frames import FrameView
 from e7auto.core.ports import Frame
@@ -14,7 +15,7 @@ from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher, _DigitMatch
 from e7auto.vision.network import NetworkVision
 from e7auto.vision.navigation import StartupNavigationVision
-from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
+from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability, _has_content_texture
 
 class ShopVision:
     """Shop detectors composed from shared matching and glyph services."""
@@ -27,6 +28,10 @@ class ShopVision:
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
+        self._viewport_layout_key = None
+        self._viewport_layouts: dict[str, tuple[ViewportRow, ...]] = {}
+        self._scene_geometry = None
+        self._scene_rects: dict[tuple[str, tuple[Rect, ...]], tuple[ClientRect, ...]] = {}
 
     def navigation_menu(self, frame):
         return self._navigation.navigation_menu(frame)
@@ -251,6 +256,7 @@ class ShopVision:
             self._config.rois["inventory_content"],
             self._config.scroll.difference_threshold,
             config=self._config.scroll,
+            item_rois=tuple(slot.item_roi for slot in self._config.slots if slot.screen == "top"),
         )
 
 
@@ -259,13 +265,101 @@ class ShopVision:
         before: Frame,
         after: Frame,
     ) -> ScrollMovementObservation:
+        return self.inventory_scene_stability(before, after, "bottom")
+
+
+    def _visible_rows(self, screen: str) -> tuple[ViewportRow, ...]:
+        key = (self._config.slots, self._config.rois["inventory_content"])
+        if key != self._viewport_layout_key:
+            self._viewport_layouts.clear()
+            self._scene_rects.clear()
+            self._scene_geometry = None
+            self._viewport_layout_key = key
+        if screen not in self._viewport_layouts:
+            self._viewport_layouts[screen] = visible_shop_rows(*key, screen)
+        return self._viewport_layouts[screen]
+
+    def _scene_row_rects(self, view: FrameView, screen: str,
+                         rows: tuple[ViewportRow, ...]) -> tuple[ClientRect, ...]:
+        # Only geometry is retained. Changing size, transform or crop origin
+        # replaces the previous projection; no captured pixels enter this cache.
+        geometry = (view.transform, view.bounds)
+        if geometry != self._scene_geometry:
+            self._scene_rects.clear()
+            self._scene_geometry = geometry
+        key = (screen, tuple(row.roi for row in rows))
+        if key not in self._scene_rects:
+            self._scene_rects[key] = tuple(view.transform.rect(row.roi) for row in rows)
+        return self._scene_rects[key]
+
+    def _readiness_rows(self, screen: str, slot_ids: frozenset[str] | None) -> tuple[ViewportRow, ...]:
+        rows = self._visible_rows(screen)
+        if slot_ids is None:
+            return rows
+        slots = sorted((slot for slot in self._config.slots if slot.screen == screen), key=lambda slot: slot.order)
+        selected = [slot for slot in slots if slot.slot_id in slot_ids]
+        if not selected or len(selected) != len(slot_ids):
+            raise ValueError("Post-purchase readiness requires known, nonempty same-screen slots")
+        if slot_ids != frozenset(slot.slot_id for slot in slots if slot.order >= selected[0].order):
+            raise ValueError("Post-purchase readiness must cover the remaining viewport suffix")
+        first_top_order = min(slot.order for slot in self._config.slots if slot.screen == "top")
+        if selected[0].order <= first_top_order:
+            raise ValueError("Post-purchase readiness cannot exclude the toast guard for the first row")
+        if min(slot.item_roi.y for slot in selected) < self._config.inventory_readiness.reward_overlay_roi.bottom:
+            raise ValueError("Post-purchase readiness must remain below the reward detection region")
+        selected_rois = {slot.item_roi for slot in selected}
+        result = tuple(row for row in rows if row.roi in selected_rois)
+        if len(result) != len(selected):
+            raise ValueError("Post-purchase readiness requires complete visible item rows")
+        return result
+
+    def inventory_scene_stability(self, before: Frame, after: Frame, screen: str, *,
+                                  slot_ids: frozenset[str] | None = None) -> ScrollMovementObservation:
+        rows = self._readiness_rows(screen, slot_ids)
+        roi = self._config.rois["inventory_content"]
+        if slot_ids is not None:
+            left, top = min(row.roi.x for row in rows), min(row.roi.y for row in rows)
+            roi = Rect(left, top, max(row.roi.right for row in rows) - left,
+                       max(row.roi.bottom for row in rows) - top)
         return measure_inventory_scroll_stability(
             before,
             after,
-            self._config.rois["inventory_content"],
+            roi,
             self._config.scroll.difference_threshold,
             self._config.scroll.downsample_factor,
+            item_rois=tuple(row.roi for row in rows),
+            pixel_difference_threshold=self._config.inventory_readiness.difference_threshold,
+            pixel_inset=self._config.inventory_readiness.pixel_inset,
+            item_ids=tuple(row.row_id for row in rows),
         )
+
+
+    def inventory_scene_state(self, frame: Frame, screen: str, *,
+                              slot_ids: frozenset[str] | None = None) -> str:
+        rows = self._readiness_rows(screen, slot_ids)
+        settings = self._config.inventory_readiness
+        if self.shop_ready(frame) is None:
+            return "shop_not_ready"
+        # The toast is above the first normal item's complete icon. Existing item
+        # templates can detect a stationary toast without treating its stillness as readiness.
+        overlay = None
+        for target in (self._targets if slot_ids is None else ()):
+            if overlay is None:
+                view = frame_view(frame).crop(settings.reward_overlay_roi)
+                overlay = FrameView(np.ascontiguousarray(view.raw), view.transform, view.origin)
+            if self.match(overlay, target.template, settings.reward_overlay_roi,
+                          settings.reward_overlay_confidence) is not None:
+                return "reward_overlay"
+        view = frame_view(frame)
+        for rect in self._scene_row_rects(view, screen, rows):
+            gray = cv2.cvtColor(view.crop(rect).raw, cv2.COLOR_BGR2GRAY).astype(np.float32)
+            # Full support in all vertical bands rejects empty/fading or partly
+            # revealed rows; identity/availability is still checked by the scanner.
+            if (gray.shape[0] < 3 or not _has_content_texture(gray, self._config.scroll.minimum_content_stddev)
+                    or any(not _has_content_texture(band, settings.minimum_band_stddev)
+                           for band in np.array_split(gray, 3, axis=0))):
+                return "incomplete_rows"
+        return "ready"
 
 
     def _digit_match_is_safe(self, match: _DigitMatch) -> bool:

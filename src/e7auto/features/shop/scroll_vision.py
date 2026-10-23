@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 from e7auto.configuration.models import ScrollConfig
 from e7auto.core.ports import Frame
-from e7auto.core.types import Rect
-from e7auto.features.shop.contracts import ScrollMovementObservation
+from e7auto.core.types import Point, Rect, ClientPoint, ClientRect
+from e7auto.features.shop.contracts import ScrollContentCandidate, ScrollMovementObservation, RowPixelChange
 from e7auto.vision.frames import FrameView, frame_view
 
 
@@ -95,8 +95,10 @@ def _has_content_texture(block: np.ndarray, minimum: float) -> bool:
 
 
 def _native_content_scores(before: np.ndarray, after: np.ndarray, dx: float, dy: float,
-                           config: ScrollConfig, scale_x: float, scale_y: float) -> tuple[float | None, ...]:
-    """Check four native blocks with a bounded allowance for local raster alignment."""
+                           config: ScrollConfig, scale_x: float, scale_y: float,
+                           item_rects: tuple[ClientRect, ...],
+                           origin: ClientPoint = ClientPoint(0, 0)) -> tuple[float | None, ...]:
+    """Compare complete icon rows, retaining one score per configured source row."""
     if abs(dx / scale_x) > config.maximum_horizontal_shift_px:
         return ()
     height, width = before.shape
@@ -105,67 +107,107 @@ def _native_content_scores(before: np.ndarray, after: np.ndarray, dx: float, dy:
     ix, iy = round(dx), round(dy)
     rx = max(1, ceil(config.content_alignment_tolerance_px * scale_x))
     ry = max(1, ceil(config.content_alignment_tolerance_px * scale_y))
-    left, right = max(0, -ix) + rx, min(width, width - ix) - rx
-    top, bottom = max(0, -iy) + ry, min(height, height - iy) - ry
-    if right - left < 4 or bottom - top < 4:
-        return ()
     scores: list[float | None] = []
-    failed = 0
-    for y0, y1 in ((top, (top + bottom) // 2), ((top + bottom) // 2, bottom)):
-        for x0, x1 in ((left, (left + right) // 2), ((left + right) // 2, right)):
-            reference = before[y0:y1, x0:x1]
-            search = after[y0 + iy - ry:y1 + iy + ry, x0 + ix - rx:x1 + ix + rx]
-            score = None
-            if (_has_content_texture(reference, config.minimum_content_stddev)
-                    and _has_content_texture(search, config.minimum_content_stddev)):
-                _, value, _, (x, _) = cv2.minMaxLoc(cv2.matchTemplate(search, reference, cv2.TM_CCOEFF_NORMED))
-                actual_dx = ix + x - rx
-                if isfinite(value) and abs(actual_dx / scale_x) <= config.maximum_horizontal_shift_px:
-                    score = float(value)
-            scores.append(score)
-            if score is None or score < config.minimum_content_score:
-                failed += 1
-                if failed == 2:
-                    return tuple(scores)
+    for rect in item_rects:
+        x0, y0 = rect.x - origin.x, rect.y - origin.y
+        x1, y1 = rect.right - origin.x, rect.bottom - origin.y
+        left, top, right, bottom = x0 + ix - rx, y0 + iy - ry, x1 + ix + rx, y1 + iy + ry
+        # A partly visible icon or a clipped alignment window is not evidence.
+        if left < 0 or top < 0 or right > width or bottom > height:
+            scores.append(None)
+            continue
+        reference = before[y0:y1, x0:x1]
+        search = after[top:bottom, left:right]
+        score = None
+        if (_has_content_texture(reference, config.minimum_content_stddev)
+                and _has_content_texture(search, config.minimum_content_stddev)):
+            _, value, _, (x, _) = cv2.minMaxLoc(cv2.matchTemplate(search, reference, cv2.TM_CCOEFF_NORMED))
+            actual_dx = ix + x - rx
+            if isfinite(value) and abs(actual_dx / scale_x) <= config.maximum_horizontal_shift_px:
+                score = float(value)
+        scores.append(score)
     return tuple(scores)
 
 
+def _item_rects(frame: FrameView, item_rois: tuple[Rect, ...]) -> tuple[ClientRect, ...]:
+    """Project once using the full client transform; never infer scale from the crop."""
+    rects = []
+    for roi in item_rois:
+        rect = frame.region(roi)
+        if rect.width <= 0 or rect.height <= 0:
+            raise ValueError("Scroll item rows must have positive area")
+        rects.append(rect)
+    ordered = sorted(rects, key=lambda rect: rect.y)
+    if any(first.bottom > second.y for first, second in zip(ordered, ordered[1:])):
+        raise ValueError("Scroll item rows must not overlap vertically")
+    return tuple(rects)
+
+
 def measure_inventory_scroll(before: Frame | FrameView, after: Frame | FrameView, roi: Rect,
-                             difference_threshold: int, *, config: ScrollConfig) -> ScrollMovementObservation:
+                             difference_threshold: int, *, config: ScrollConfig,
+                             item_rois: tuple[Rect, ...]) -> ScrollMovementObservation:
     _validate_pair(before, after)
     if difference_threshold <= 0:
         raise ValueError("Scroll difference threshold must be positive")
     first, second = _content_gray(before, roi), _content_gray(after, roi)
+    content_view = frame_view(before).crop(roi)
+    item_rects = _item_rects(content_view, item_rois)
     difference = cv2.absdiff(first, second)
     transform = frame_view(before).transform
     candidates = _phase_candidates(first, second, 4)
     first_float, second_float = first.astype(np.float32), second.astype(np.float32)
-    reason = "insufficient_matching_content"
-    verified = False
-    chosen = candidates[0] if candidates else (0.0, 0.0, 0.0)
-    scores: tuple[float | None, ...] = ()
+    evaluated: list[ScrollContentCandidate] = []
     tolerance = config.content_alignment_tolerance_px * 2
     # Zero motion is a competing explanation, not assumed upward movement.
-    for candidate in [*candidates, (0.0, 0.0, 0.0)]:
+    for index, candidate in enumerate([*candidates, (0.0, 0.0, 0.0)], start=1):
         dx, dy, _ = candidate
-        current_scores = _native_content_scores(first_float, second_float, dx, dy, config, transform.scale_x, transform.scale_y)
-        if sum(score is not None and score >= config.minimum_content_score for score in current_scores) < 3:
-            continue
-        if not verified:
-            chosen, scores = candidate, current_scores
-            verified, reason = True, "matched"
-        elif (abs(dx - chosen[0]) / transform.scale_x > tolerance
-              or abs(dy - chosen[1]) / transform.scale_y > tolerance):
-            verified, reason = False, "ambiguous_content"
-            break
+        current_scores = _native_content_scores(first_float, second_float, dx, dy, config,
+                                               transform.scale_x, transform.scale_y, item_rects, content_view.origin)
+        supporting_scores = sorted(
+            (score for score in current_scores
+             if score is not None and isfinite(score) and score >= config.minimum_content_score),
+            reverse=True,
+        )
+        # The weakest of the strongest N rows determines multi-row support.
+        quality = (supporting_scores[config.minimum_content_rows - 1]
+                   if len(supporting_scores) >= config.minimum_content_rows else None)
+        evaluated.append(ScrollContentCandidate(
+            index, dx / transform.scale_x, dy / transform.scale_y, candidate[2],
+            current_scores, len(supporting_scores), quality,
+        ))
+
+    qualified = sorted(
+        (candidate for candidate in evaluated if candidate.quality is not None),
+        key=lambda candidate: -1.0 if candidate.quality is None else candidate.quality,
+        reverse=True,
+    )
+    # Keep the primary proposal's rejected evidence when no candidate qualifies.
+    chosen = qualified[0] if qualified else evaluated[0]
+    runner_up = next((candidate for candidate in qualified[1:]
+                      if abs(candidate.phase_shift_x - chosen.phase_shift_x) > tolerance
+                      or abs(candidate.phase_shift_y - chosen.phase_shift_y) > tolerance), None)
+    margin = None
+    if runner_up is not None:
+        assert chosen.quality is not None and runner_up.quality is not None
+        margin = chosen.quality - runner_up.quality
+    verified = bool(qualified) and (margin is None or margin >= config.minimum_content_margin)
+    reason = ("matched" if verified else "ambiguous_content" if qualified else "insufficient_matching_rows")
     return ScrollMovementObservation(
         float(difference.mean()), float(np.mean(difference > difference_threshold)), int(difference.max()),
-        chosen[0] / transform.scale_x, chosen[1] / transform.scale_y, chosen[2], verified, reason, scores,
+        chosen.phase_shift_x, chosen.phase_shift_y, chosen.phase_response, verified, reason, chosen.content_scores,
+        content_candidates=tuple(evaluated),
+        content_selected_candidate=chosen.candidate_id if qualified else None,
+        content_runner_up_candidate=runner_up.candidate_id if runner_up is not None else None,
+        content_margin=margin,
     )
 
 
 def measure_inventory_scroll_stability(before: Frame | FrameView, after: Frame | FrameView, roi: Rect,
-                                      difference_threshold: int, downsample_factor: int) -> ScrollMovementObservation:
+                                      difference_threshold: int, downsample_factor: int, *,
+                                      item_rois: tuple[Rect, ...] = (),
+                                      pixel_difference_threshold: int | None = None,
+                                      pixel_inset: Point = Point(0, 0),
+                                      item_ids: tuple[str, ...] = ()) -> ScrollMovementObservation:
     _validate_pair(before, after)
     if difference_threshold <= 0 or downsample_factor <= 0:
         raise ValueError("Scroll thresholds and downsample factor must be positive")
@@ -178,8 +220,25 @@ def measure_inventory_scroll_stability(before: Frame | FrameView, after: Frame |
     proposals = _phase_candidates(a, b, 1)
     dx, dy, response = proposals[0] if proposals else (0.0, 0.0, 0.0)
     transform = frame_view(before).transform
+    pixel_threshold = difference_threshold if pixel_difference_threshold is None else pixel_difference_threshold
+    row_changes = []
+    if item_ids and len(item_ids) != len(item_rois):
+        raise ValueError("Pixel stability row ids must match the measured regions")
+    for index, item in enumerate(item_rois):
+        core = Rect(item.x + pixel_inset.x, item.y + pixel_inset.y,
+                    item.width - 2 * pixel_inset.x, item.height - 2 * pixel_inset.y)
+        if pixel_inset.x < 0 or pixel_inset.y < 0 or core.width <= 0 or core.height <= 0:
+            raise ValueError("Pixel stability inset must leave a nonempty item interior")
+        first_row, second_row = frame_view(before).crop(core).raw, frame_view(after).crop(core).raw
+        row_difference = np.max(cv2.absdiff(first_row, second_row), axis=2)
+        row_changes.append(RowPixelChange(item_ids[index] if item_ids else f"row_{index + 1}",
+                                          frame_view(before).region(core),
+                                          float(np.mean(row_difference > pixel_threshold))))
     return ScrollMovementObservation(
         float(difference.mean()), float(np.mean(difference > difference_threshold)), int(difference.max()),
         dx * first.shape[1] / width / transform.scale_x,
         dy * first.shape[0] / height / transform.scale_y, response,
+        maximum_row_changed_fraction=max((row.changed_fraction for row in row_changes),
+                                         default=float(np.mean(difference > pixel_threshold))),
+        row_pixel_changes=tuple(row_changes),
     )

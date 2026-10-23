@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import pytest
 
 from tests.automation.support import run_session
 from e7auto.core.types import Point
@@ -45,7 +46,7 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
         "scroll",
         "scroll",
     ]
-    assert clock.sleeps == [0.1, 0.1, 0.2, 0.1, 0.1]
+    assert clock.sleeps == pytest.approx([0.1, 0.1, 0.2, 0.1, 0.1], abs=1e-9, rel=0)
     assert vision.activity == [
         "scan:top",
         "observe_scroll_stability",
@@ -55,6 +56,7 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
     ]
     assert vision.scan_frames[-1] is vision.scroll_stability_after_frames[-1]
     settle = [fields for event, fields in logger.events if event == "scroll_settle_trace"]
+    assert len(settle) == 1
     assert settle == [
         {
             "outcome": "stable",
@@ -69,12 +71,18 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
             "minimum_phase_response": "0.800000",
             "downsample_factor": 4,
             "sample_count": 3,
+            "poll_schedule": "capture_interval",  # This fixture retains a one-frame scene window.
             "stability_comparisons": 2,
             "total_gate_checks": 1,
             "sample_elapsed_ms": "200,300,400",
             "pair_shift_y": "na,0.000,0.000",
             "pair_response": "na,0.950000,0.950000",
             "pair_changed_fraction": "na,0.005000,0.005000",
+            "maximum_row_changed_fraction": "na,0.000000,0.000000",
+            "scene_states": "ready,ready,ready",
+            "row_regions": "na",
+            "pair_row_changes": "na;na;na",
+            "span_row_changes": "na;na;na",
             "stable_counts": "0,1,2",
             "settle_elapsed_ms": 400,
             "early_exit_ms": 400,
@@ -95,8 +103,8 @@ def test_scroll_replays_calibrated_spacing_settle_and_verifies_before_bottom_sca
     assert "fallback_checks" not in verified[0]
     stage = next(fields for event, fields in logger.events
                  if event == "performance_stage" and fields.get("stage") == "scroll_to_bottom")
-    assert stage["capture_count"] == 4
-    assert stage["vision_calls"] == 7  # Three scroll measurements + four existing capture guards.
+    assert stage["capture_count"] == 3  # The verified top frame is handed off, not recaptured.
+    assert stage["vision_calls"] == 9  # Three guards, three scene checks and three measurements.
 
 
 def test_unverified_scroll_never_scans_bottom_or_refreshes() -> None:
@@ -128,7 +136,7 @@ def test_unstable_scroll_times_out_at_maximum_without_full_comparison() -> None:
     assert final.stop_reason is StopReason.SCROLL_VERIFICATION_FAILED
     assert vision.scan_calls == ["top"]
     assert "verify_scroll" not in vision.activity
-    assert clock.sleeps == [0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+    assert clock.sleeps == pytest.approx([0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], abs=1e-9, rel=0)
     settle = [fields for event, fields in logger.events if event == "scroll_settle_trace"]
     assert len(settle) == 1
     assert settle[0]["outcome"] == "timeout"
@@ -148,7 +156,8 @@ def test_bottom_scan_uses_all_three_stable_scroll_frames_without_new_capture() -
     final, _, _, _, _, _, logger = run_session(vision, config=config)
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
-    first, second = vision.scroll_stability_frame_pairs
+    first, second, span = vision.scroll_stability_frame_pairs
+    assert span == (first[0], second[1])
     expected_frames = (first[0], first[1], second[1])
     assert all(
         actual is expected

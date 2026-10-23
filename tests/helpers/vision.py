@@ -89,6 +89,14 @@ class ScriptedVision:
         self.network_retries = deque(network_retries or [])
         self.balance_queries = 0
 
+    def inventory_scene_state(self, frame: object, screen: str, *,
+                              slot_ids: frozenset[str] | None = None) -> str:
+        return "ready"
+
+    def inventory_scene_stability(self, before: object, after: object, screen: str, *,
+                                  slot_ids: frozenset[str] | None = None) -> ScrollMovementObservation:
+        return self.default_scroll_stability
+
     @staticmethod
     def _observation(name: str) -> Observation:
         return Observation(name, 0.99, Rect(0, 0, 10, 10), Point(5, 5))

@@ -418,6 +418,7 @@ def test_inventory_scroll_measurement_reports_calibrated_upward_content_shift() 
         Rect(0, 0, 160, 120),
         difference_threshold=8,
         config=make_config().scroll,
+        item_rois=(Rect(10, 40, 50, 25), Rect(10, 75, 50, 25)),
     )
 
     assert measured.phase_shift_y == pytest.approx(-35.0, abs=0.1)

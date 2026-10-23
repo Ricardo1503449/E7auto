@@ -36,6 +36,7 @@ class ShopFlow:
         return self.runtime.cached_game_frame()
 
     def release_cached_game_frame(self) -> None:
+        self.inventory.invalidate()
         self.runtime.release_cached_game_frame()
 
 
@@ -65,6 +66,7 @@ class ShopFlow:
 
 
     def _scroll_to_bottom(self) -> tuple[FrameSample, ...]:
+        reference = self.inventory.take_scroll_reference()
         mark = self.runtime.performance_mark()
         progress = ScrollProgress()
         outcome = "failed"
@@ -91,12 +93,16 @@ class ShopFlow:
             ),
             recovery_generation=lambda: self.runtime.network_recovery_generation,
             logger=self.runtime.deps.logger,
+            scene_state=lambda frame: self.runtime.vision_call(
+                self.runtime.deps.vision.inventory_scene_state, frame, "bottom"),
         )
         try:
             samples = scroll_to_bottom(
-                self.runtime.config.scroll, self.runtime.config.timing.stable_frames, services, progress
+                self.runtime.config.scroll, self.runtime.config.timing.stable_frames, services, progress,
+                reference=reference, readiness=self.runtime.config.inventory_readiness,
             )
             outcome = "verified"
+            self.inventory.retain_scroll_evidence(samples)
             return samples
         finally:
             self.runtime.log_performance_stage(

@@ -144,14 +144,24 @@ def test_extended_effect_observation_stops_on_first_visible_scroll(
             SimpleNamespace(
                 phase_shift_y=-float(config.scroll.minimum_upward_shift_px + 1),
                 changed_fraction=config.scroll.minimum_changed_fraction + 0.01,
+                content_verified=False,
+                phase_shift_x=0.0,
+            ),
+            SimpleNamespace(
+                phase_shift_y=-float(config.scroll.minimum_upward_shift_px + 1),
+                changed_fraction=config.scroll.minimum_changed_fraction + 0.01,
+                content_verified=True,
+                phase_shift_x=0.0,
             ),
         ]
     )
-    monkeypatch.setattr(
-        validate_background_mode,
-        "measure_inventory_scroll",
-        lambda *_args, **_kwargs: next(observations),
-    )
+    def measure(before, after, roi, threshold, *, config: object, item_rois):
+        assert roi == make_config().rois["inventory_content"]
+        assert before.transform.actual.width == 100
+        assert after.transform.actual.height == 80
+        assert item_rois == tuple(s.item_roi for s in make_config().slots if s.screen == "top")
+        return next(observations)
+    monkeypatch.setattr(validate_background_mode, "measure_inventory_scroll", measure)
 
     class FakeCapture:
         def capture_client(self, _window: object, _bounds: Rect) -> np.ndarray:
@@ -169,7 +179,8 @@ def test_extended_effect_observation_stops_on_first_visible_scroll(
         observation_ms=10000,
     )
 
-    assert len(trace) == 3
+    assert len(trace) == 4
+    assert trace[-2]["passed"] is False
     assert trace[-1]["passed"] is True
     assert movement.phase_shift_y < -config.scroll.minimum_upward_shift_px
 
@@ -204,6 +215,7 @@ def test_scroll_validator_sends_only_calibrated_window_messages(
             SimpleNamespace(
                 phase_shift_x=0.0,
                 phase_shift_y=-float(config.scroll.minimum_upward_shift_px + 1),
+                content_verified=True,
                 phase_response=1.0,
                 changed_fraction=config.scroll.minimum_changed_fraction + 0.01,
                 mean_absolute_difference=10.0,
@@ -246,6 +258,7 @@ def test_scroll_validator_sends_only_calibrated_window_messages(
         lambda *_args, **_kwargs: SimpleNamespace(
             phase_shift_x=0.0,
             phase_shift_y=-float(config.scroll.minimum_upward_shift_px + 1),
+            content_verified=True,
             phase_response=1.0,
             changed_fraction=config.scroll.minimum_changed_fraction + 0.01,
             mean_absolute_difference=10.0,
@@ -338,6 +351,7 @@ def test_wgc_scroll_observation_starts_without_settle_wait(
             SimpleNamespace(
                 phase_shift_x=0.0,
                 phase_shift_y=-float(config.scroll.minimum_upward_shift_px + 1),
+                content_verified=True,
                 phase_response=1.0,
                 changed_fraction=config.scroll.minimum_changed_fraction + 0.01,
                 mean_absolute_difference=10.0,

@@ -149,6 +149,8 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
             "minimum_content_score": .75,
             "minimum_content_stddev": 8.0,
             "content_alignment_tolerance_px": 4.0,
+            "minimum_content_rows": 2,
+            "minimum_content_margin": .05,
         },
         "timing": {"poll_interval_ms": 10, "entry_timeout_ms": 10, "scan_timeout_ms": 10, "dialog_timeout_ms": 10, "purchase_result_timeout_ms": 10, "refresh_timeout_ms": 10, "stable_frames": 1},
         "refresh_strategy": {
@@ -171,7 +173,17 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "overlay": {"offset": {"x": 1, "y": 2}},
         "logging": {"keep_days": 7, "keep_runs": 2},
     }
+    raw["inventory_readiness"] = {"minimum_frames": 3, "minimum_stable_ms": 1, "difference_threshold": 8,
+                                  "pixel_inset": {"x": 0, "y": 0},
+                                  "maximum_row_changed_fraction": .02, "minimum_band_stddev": 5.0,
+                                  "reward_overlay_roi": rect, "reward_overlay_confidence": .9,
+                                  "reference_max_age_ms": 500}
     raw["rois"]["inventory_content"] = {**rect, "width": 5}
+    raw["slots"][0]["item_roi"] = {"x": 0, "y": 0, "width": 5, "height": 4}
+    raw["slots"][1]["item_roi"] = {"x": 0, "y": 0, "width": 5, "height": 4}
+    raw["slots"].insert(1, {"id": "top-2", "screen": "top", "order": 1,
+                            "item_roi": {"x": 0, "y": 5, "width": 5, "height": 4},
+                            "buy_point": {"x": 5, "y": 5}})
     path = tmp_path / "internal.yaml"
     path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     loaded = load_config(path)

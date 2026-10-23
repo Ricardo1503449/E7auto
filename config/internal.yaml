@@ -120,7 +120,7 @@ scroll:
   delta: -120
   repetitions: 6
   interval_ms: 10
-  settle_ms: 800
+  settle_ms: 1000
   minimum_settle_ms: 100
   settle_poll_interval_ms: 100
   stable_observations: 2
@@ -135,6 +135,19 @@ scroll:
   minimum_content_score: 0.75
   minimum_content_stddev: 8.0
   content_alignment_tolerance_px: 4.0
+  minimum_content_rows: 2
+  minimum_content_margin: 0.05
+
+inventory_readiness:
+  minimum_frames: 3
+  minimum_stable_ms: 200
+  difference_threshold: 8
+  maximum_row_changed_fraction: 0.20
+  pixel_inset: {x: 32, y: 24}
+  minimum_band_stddev: 5.0
+  reward_overlay_roi: {x: 960, y: 90, width: 250, height: 215}
+  reward_overlay_confidence: 0.90
+  reference_max_age_ms: 500
 
 startup_navigation:
   navigation_menu:

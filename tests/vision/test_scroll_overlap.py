@@ -6,7 +6,7 @@ import pytest
 from e7auto.configuration.loader import load_config
 from e7auto.core.types import Rect, Size, ClientPoint
 from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
-from e7auto.features.shop.scrolling import ScrollServices, ScrollProgress, scroll_to_bottom
+from e7auto.features.shop.scrolling import FrameSample, ScrollServices, ScrollProgress, scroll_to_bottom
 from e7auto.features.shop.vision import ShopVision
 from e7auto.vision.frames import CoordinateTransform, FrameView
 from tests.helpers import FakeClock, FakeLogger
@@ -18,6 +18,10 @@ def config():
     return load_config(ROOT / 'config/internal.yaml')
 
 
+def top_rows(config):
+    return tuple(slot.item_roi for slot in config.slots if slot.screen == "top")
+
+
 def real_frames(config):
     transform = CoordinateTransform(config.baseline_client_size, Size(1536, 864))
     return {label: FrameView(cv2.imread(str(FIXTURES_DIR / 'shop' / ('scroll_content_' + label + '.png'))),
@@ -27,12 +31,12 @@ def real_frames(config):
 @pytest.mark.parametrize('label', ['first', 'last-3'])
 def test_real_repeated_price_failure_verifies_native_product_content(config, label):
     frames = real_frames(config)
-    result = measure_inventory_scroll(frames['before'], frames[label], config.rois['inventory_content'], 8, config=config.scroll)
+    result = measure_inventory_scroll(frames['before'], frames[label], config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config))
     assert result.content_verified
     assert result.phase_shift_y == pytest.approx(-394, abs=2)
     assert abs(result.phase_shift_x) < 1
     assert result.changed_fraction > config.scroll.minimum_changed_fraction
-    assert sum(s is not None and s >= config.scroll.minimum_content_score for s in result.content_scores) >= 3
+    assert sum(s is not None and s >= config.scroll.minimum_content_score for s in result.content_scores) >= config.scroll.minimum_content_rows
 
 
 @pytest.mark.parametrize('size', [Size(2322, 1306), Size(1920, 1080), Size(1536, 864)])
@@ -44,7 +48,7 @@ def test_previous_real_baseline_sample_and_derived_sizes(config, size):
         if size != config.baseline_client_size:
             raw = cv2.resize(raw, (size.width, size.height), interpolation=cv2.INTER_AREA)
         frames.append(FrameView(raw, CoordinateTransform(config.baseline_client_size, size)))
-    result = measure_inventory_scroll(*frames, config.rois['inventory_content'], 8, config=config.scroll)
+    result = measure_inventory_scroll(*frames, config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config))
     assert result.content_verified
     assert result.phase_shift_y == pytest.approx(-393, abs=3)
     assert result.changed_fraction > config.scroll.minimum_changed_fraction
@@ -52,21 +56,25 @@ def test_previous_real_baseline_sample_and_derived_sizes(config, size):
 
 def test_first_detection_already_at_bottom_passes_the_single_production_path(config):
     frames = real_frames(config)
-    sequence = iter([frames['before'], frames['first'], frames['last-3'], frames['last-3']])
+    sequence = iter([frames['before'], frames['first'], frames['last-3'], frames['last-3'], frames['last-3']])
     clock, logger, progress = FakeClock(), FakeLogger(), ScrollProgress()
     roi = config.rois['inventory_content']
     services = ScrollServices(
         capture=lambda: next(sequence), dispatch_scroll=lambda *_: None,
         checkpoint=lambda: None, sleep=clock.sleep, active_monotonic=clock.monotonic,
-        measure_stability=lambda a, b: measure_inventory_scroll_stability(a, b, roi, 8, 4),
-        measure_movement=lambda a, b: measure_inventory_scroll(a, b, roi, 8, config=config.scroll), logger=logger,
+        measure_stability=ShopVision(config, None).inventory_scroll_stability,
+        measure_movement=lambda a, b: measure_inventory_scroll(a, b, roi, 8, config=config.scroll, item_rois=top_rows(config)), logger=logger, scene_state=lambda _: "ready",
     )
-    result = scroll_to_bottom(config.scroll, 3, services, progress)
+    result = scroll_to_bottom(config.scroll, 3, services, progress, reference=FrameSample(services.capture(), clock.monotonic()), readiness=config.inventory_readiness)
     assert len(result) == 3
     trace = next(fields for event, fields in logger.events if event == 'scroll_settle_trace')
     assert trace['verification_method'] == 'content'
     assert trace['total_gate_checks'] == 1
+    # This sample fits the current row-change limit and already supplies the first stable frame.
     assert trace['sample_count'] == 3
+    assert result[0].frame is frames['first']
+    assert all(float(value) <= config.inventory_readiness.maximum_row_changed_fraction
+               for value in trace['maximum_row_changed_fraction'].split(',') if value != 'na')
     assert not any('fallback' in key or 'cumulative' in key for key in trace)
 
 
@@ -102,19 +110,20 @@ def test_identical_native_pixels_have_zero_shift_on_odd_and_even_grids(shape):
 
 def test_reverse_real_content_keeps_its_actual_direction(config):
     frames = real_frames(config)
-    result = measure_inventory_scroll(frames['last-3'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll)
+    rows = tuple(Rect(r.x, r.y - 394, r.width, r.height) for r in top_rows(config)[2:])
+    result = measure_inventory_scroll(frames['last-3'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll, item_rois=rows)
     assert result.content_verified
     assert result.phase_shift_y > 390
 
 
 def test_stationary_and_unrelated_content_cannot_fabricate_upward_motion(config):
     frames = real_frames(config)
-    stationary = measure_inventory_scroll(frames['before'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll)
+    stationary = measure_inventory_scroll(frames['before'], frames['before'], config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config))
     assert abs(stationary.phase_shift_y) < 1e-4
     assert stationary.changed_fraction == 0
     noise = FrameView(np.random.default_rng(81).integers(0, 256, frames['before'].raw.shape, dtype=np.uint8),
                       frames['before'].transform, frames['before'].origin)
-    unrelated = measure_inventory_scroll(frames['before'], noise, config.rois['inventory_content'], 8, config=config.scroll)
+    unrelated = measure_inventory_scroll(frames['before'], noise, config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config))
     assert not unrelated.content_verified
 
 
@@ -122,7 +131,8 @@ def test_repeated_product_content_is_rejected_as_ambiguous(config):
     row = np.random.default_rng(74).integers(0, 256, (80, 160, 3), dtype=np.uint8)
     before = np.tile(row, (6, 1, 1))
     after = np.roll(before, -40, axis=0)
-    result = measure_inventory_scroll(before, after, Rect(0, 0, 160, 480), 8, config=config.scroll)
+    result = measure_inventory_scroll(before, after, Rect(0, 0, 160, 480), 8, config=config.scroll,
+                                      item_rois=tuple(Rect(10, y, 100, 20) for y in range(50, 451, 80)))
     assert not result.content_verified
     assert result.content_reason == 'ambiguous_content'
 
@@ -132,12 +142,13 @@ def test_final_content_verification_does_not_resize_native_pixels(config, monkey
     def forbidden(*args, **kwargs):
         pytest.fail('Final scroll evidence must use native pixels')
     monkeypatch.setattr(cv2, 'resize', forbidden)
-    assert measure_inventory_scroll(frames['before'], frames['last-3'], config.rois['inventory_content'], 8, config=config.scroll).content_verified
+    assert measure_inventory_scroll(frames['before'], frames['last-3'], config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config)).content_verified
 
 
 def test_flat_content_cannot_verify_a_translation(config):
     blank = np.full((200, 300, 3), 100, np.uint8)
-    result = measure_inventory_scroll(blank, blank, Rect(0, 0, 300, 200), 8, config=config.scroll)
+    result = measure_inventory_scroll(blank, blank, Rect(0, 0, 300, 200), 8, config=config.scroll,
+                                      item_rois=(Rect(10, 20, 100, 50), Rect(10, 100, 100, 50)))
     assert not result.content_verified
 
 
@@ -146,4 +157,4 @@ def test_cropped_frames_must_keep_the_same_full_client_geometry(config):
     wrong = FrameView(frames['last-3'].raw, CoordinateTransform(config.baseline_client_size, Size(1920, 1080)),
                       frames['last-3'].origin)
     with pytest.raises(ValueError, match='client geometry'):
-        measure_inventory_scroll(frames['before'], wrong, config.rois['inventory_content'], 8, config=config.scroll)
+        measure_inventory_scroll(frames['before'], wrong, config.rois['inventory_content'], 8, config=config.scroll, item_rois=top_rows(config))

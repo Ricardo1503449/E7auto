@@ -73,6 +73,8 @@ class ScrollConfig:
     minimum_content_score: float = 0.75
     minimum_content_stddev: float = 8.0
     content_alignment_tolerance_px: float = 4.0
+    minimum_content_rows: int = 2
+    minimum_content_margin: float = 0.05
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,6 +90,19 @@ class LoggingConfig:
 class EntryThresholds:
     color: float
     structure: float
+
+
+@dataclass(frozen=True, slots=True)
+class InventoryReadinessConfig:
+    minimum_frames: int
+    minimum_stable_ms: int
+    difference_threshold: int
+    maximum_row_changed_fraction: float
+    pixel_inset: Point
+    minimum_band_stddev: float
+    reward_overlay_roi: Rect
+    reward_overlay_confidence: float
+    reference_max_age_ms: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +127,7 @@ class AppConfig:
     targets: tuple[TargetConfig, ...]
     slots: tuple[SlotConfig, ...]
     scroll: ScrollConfig
+    inventory_readiness: InventoryReadinessConfig
     timing: TimingConfig
     refresh_strategy: RefreshStrategyConfig
     default_confidence: float

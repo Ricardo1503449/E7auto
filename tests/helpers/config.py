@@ -4,6 +4,7 @@ from pathlib import Path
 
 from e7auto.configuration.models import AppConfig, EntryThresholds, DisplayConfig, LoggingConfig, RefreshStrategyConfig, ScrollConfig, SlotConfig, TargetConfig, TimingConfig
 from e7auto.core.types import Point, Rect, Size
+from e7auto.configuration.models import InventoryReadinessConfig
 
 
 def make_config(
@@ -78,6 +79,7 @@ def make_config(
             0.30,
         ),
         timing=TimingConfig(10, 30, 30, 30, 30, 30, stable_frames),
+        inventory_readiness=InventoryReadinessConfig(1, 0, 8, .02, Point(0, 0), 5.0, Rect(0, 0, 10, 10), .90, 500),
         refresh_strategy=RefreshStrategyConfig((13, 13, 13, 10), (5, 180, 5)),
         default_confidence=0.9,
         anchor_confidence=0.93,

@@ -1,0 +1,83 @@
+{
+  "source_kind": "Real captures, lossless native-pixel client crops. Top views supplied later are not historical per-run before frames. Latest top view has approximately one pixel of vertical layout variation versus the stop capture; do not treat it as an exact paired motion sequence.",
+  "size": [
+    2322,
+    1306
+  ],
+  "records": [
+    {
+      "key": "clean_top",
+      "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-39de0d7a-9ac4-4650-b6b3-9e7374e8a358.png",
+      "source_sha256": "77330787dd8c99220b1c4d8ad52d90e1f2984f1e9c2fcc16d09b27e932d69ee6",
+      "crop": [
+        32,
+        114,
+        2322,
+        1306
+      ],
+      "source_client_bgr_sha256": "d282bac65f90fbfd1d58147a85241d82d619129166aa83234aba8edb35d8832b"
+    },
+    {
+      "key": "reward_overlay",
+      "source": "logs\\run-20261021-160742-306305-4a6bae13d1ba-stop.png",
+      "source_sha256": "036bb09f85915875a5015fb88b2c8bdba9d96ce76aed849215ef078f1dde31c7",
+      "crop": [
+        0,
+        0,
+        2322,
+        1306
+      ],
+      "source_client_bgr_sha256": "d43bd8a9c95b6dcd3a74523c04c311d3dad05bcf6b7065bae81677952dd859c0"
+    },
+    {
+      "key": "clean_bottom",
+      "source": "logs\\run-20261021-152707-001742-667ed32cfc6f-stop.png",
+      "source_sha256": "54b6f6c2f31f3f055414e14a0c41556c1cc7c61978f6383d4780196064d840c5",
+      "crop": [
+        0,
+        0,
+        2322,
+        1306
+      ],
+      "source_client_bgr_sha256": "7a1d0472c320ca9dca41fbdb4a6dfccd2bb02a107f09438602ec049f1547ebed"
+    },
+    {
+      "key": "previous_clean_top",
+      "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-42c16aae-ad45-4ac6-ba9b-4aa54a697a51.png",
+      "source_sha256": "599a777c17f19023599fcae2dc433a76d15c5f40002cccc9fc2e476752e6c5f8",
+      "crop": [
+        54,
+        103,
+        2322,
+        1306
+      ],
+      "source_client_bgr_sha256": "74824b7c228e324f49bf97eb9f2c8e4f4664ae178942aedefb861b09ffba3894"
+    }
+  ],
+  "fixture_sha256": "2d445352b3e1918f7491374630fa3f35eae2c984efa2bddc5363e92d3e74322e",
+  "stored_regions": {
+    "content": [
+      950,
+      90,
+      900,
+      1200
+    ],
+    "button": [
+      105,
+      1125,
+      580,
+      150
+    ]
+  },
+  "canvas": "Tests reconstruct only these native regions in an otherwise zero-filled client canvas; irrelevant pixels are not retained.",
+  "stored_pixel_sha256": {
+    "clean_top_content": "a3a5cfed96f9348c8fc158d19f9b1c0a5d9e79a1f4a2a69438ae42e4f79bc00c",
+    "clean_top_button": "f2a234eac25fffefd82d951ff09329edad8b000e8c19c77d1d42f7d82c76f3ad",
+    "reward_overlay_content": "425ed086cac1bb990e72b87a29ebcf9dd1caccf5a9238754d69e490afad447ec",
+    "reward_overlay_button": "c3b9b30b6c722c4d2b1919cfab7cb9fbae18415f5587d70586ef80ed78032709",
+    "clean_bottom_content": "79c2786b0b316e50e6d879447a01388e6d964e41e79d6ed1a64a048e52071e2a",
+    "clean_bottom_button": "e8b8f9cfc050cf8d89b7fc4595f22c7f77a7618fffceb36c4c5c86ac019946d6",
+    "previous_clean_top_content": "9eccf983275cdf2f896302755b9ace9434669acda5e02f5a4cf999e579b2370e",
+    "previous_clean_top_button": "13822bdad9135446f2ff03bfa7ad256fa9942790ab0249568fb41408fc229ee9"
+  }
+}

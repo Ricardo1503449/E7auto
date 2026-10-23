@@ -39,3 +39,17 @@ def test_confirmation_window_must_fit_the_original_timeout(tmp_path):
     path = configured_file(tmp_path, lambda raw: raw["scroll"].update(stable_observations=8))
     with pytest.raises(ConfigError, match="stable observations must fit"):
         load_config(path)
+
+
+@pytest.mark.parametrize("value", [None, 0, 1, -1, True, 2.5, float("nan"), float("inf"), 5])
+def test_scroll_requires_at_least_two_and_no_more_than_configured_rows(tmp_path, value):
+    path = configured_file(tmp_path, lambda raw: raw["scroll"].update(minimum_content_rows=value))
+    with pytest.raises(ConfigError, match="scroll.minimum_content_rows"):
+        load_config(path)
+
+
+@pytest.mark.parametrize("change", [{"x": 940}, {"y": 200}])
+def test_scroll_rows_must_be_inside_content_and_not_overlap(tmp_path, change):
+    path = configured_file(tmp_path, lambda raw: raw["slots"][1]["item_roi"].update(change))
+    with pytest.raises(ConfigError, match="item_roi"):
+        load_config(path)

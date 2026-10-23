@@ -1,0 +1,70 @@
+{
+  "source_kind": "User supplied later capture of the same inventory before scrolling, paired with two actual stop captures; lossless native BGR crops, not original per-run before frames.",
+  "baseline_size": [
+    2322,
+    1306
+  ],
+  "actual_size": [
+    2322,
+    1306
+  ],
+  "origin": [
+    950,
+    110
+  ],
+  "fixture": "scroll_rows_recent.npz",
+  "fixture_sha256": "faa4ae43f05aef8d2571352df7b8b7e240b0675a86555255299b882dcd748982",
+  "records": [
+    {
+      "key": "before",
+      "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-42c16aae-ad45-4ac6-ba9b-4aa54a697a51.png",
+      "source_sha256": "599a777c17f19023599fcae2dc433a76d15c5f40002cccc9fc2e476752e6c5f8",
+      "source_shape": [
+        1462,
+        2396,
+        3
+      ],
+      "crop": [
+        1004,
+        213,
+        900,
+        1180
+      ],
+      "pixel_sha256": "389e125ca5a2b1ffb1ec2266a49667e121fffc67dc8ef403b8a51ea4b3afc848"
+    },
+    {
+      "key": "after_152637",
+      "source": "logs\\run-20261021-152637-651292-1f19485fbde7-stop.png",
+      "source_sha256": "9ae6a3854185687df76052f6a1273eb91f98080c1c0ed418fb710bd408541fef",
+      "source_shape": [
+        1306,
+        2322,
+        3
+      ],
+      "crop": [
+        950,
+        110,
+        900,
+        1180
+      ],
+      "pixel_sha256": "8ae56f015f16efc5c910ef1815fb5770b0785b8eb143ecad4b264fb660c6a597"
+    },
+    {
+      "key": "after_152707",
+      "source": "logs\\run-20261021-152707-001742-667ed32cfc6f-stop.png",
+      "source_sha256": "54b6f6c2f31f3f055414e14a0c41556c1cc7c61978f6383d4780196064d840c5",
+      "source_shape": [
+        1306,
+        2322,
+        3
+      ],
+      "crop": [
+        950,
+        110,
+        900,
+        1180
+      ],
+      "pixel_sha256": "aa7af20fd595be20eb0fded944e216a53fe1685a87382d01d9e0977d4d3eae85"
+    }
+  ]
+}
