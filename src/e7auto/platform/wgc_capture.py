@@ -4,6 +4,7 @@ import ctypes
 import threading
 import time
 from collections import deque
+from contextlib import contextmanager
 from math import isfinite
 from typing import Callable
 from ctypes import wintypes
@@ -120,7 +121,9 @@ def _create_direct3d_device() -> tuple[object, ctypes.c_void_p, ctypes.c_void_p]
     return projected, native_device, native_context
 
 
-def _copy_software_bitmap(bitmap: SoftwareBitmap) -> np.ndarray:
+@contextmanager
+def _software_bitmap_pixels(bitmap: SoftwareBitmap):
+    """Borrow pixels only while the bitmap buffer and reference remain open."""
     if bitmap.bitmap_pixel_format != BitmapPixelFormat.BGRA8:
         raise BackgroundCaptureError(
             f"unexpected WGC bitmap pixel format: {bitmap.bitmap_pixel_format}"
@@ -139,7 +142,8 @@ def _copy_software_bitmap(bitmap: SoftwareBitmap) -> np.ndarray:
                 + plane.width * 4
             )
             if (
-                plane.width <= 0
+                plane.start_index < 0
+                or plane.width <= 0
                 or plane.height <= 0
                 or plane.stride < plane.width * 4
                 or required > view.nbytes
@@ -147,18 +151,39 @@ def _copy_software_bitmap(bitmap: SoftwareBitmap) -> np.ndarray:
                 raise BackgroundCaptureError(
                     "WGC bitmap plane metadata exceeds its memory buffer"
                 )
-            pixels = np.ndarray(
+            yield np.ndarray(
                 (plane.height, plane.width, 4),
                 dtype=np.uint8,
                 buffer=view,
                 offset=plane.start_index,
                 strides=(plane.stride, 4, 1),
-            ).copy()
+            )
         finally:
             if view is not None:
                 view.release()
             reference.close()
-    return pixels
+
+
+def _copy_software_bitmap(bitmap: SoftwareBitmap) -> np.ndarray:
+    """Keep the full-bitmap helper for standalone capture tools."""
+    with _software_bitmap_pixels(bitmap) as pixels:
+        return pixels.copy(order="C")
+
+
+def _copy_client_bitmap(bitmap: SoftwareBitmap, hwnd: int, expected_client: Rect,
+                        content_size: tuple[int, int]) -> np.ndarray:
+    """Copy only owned client pixels before releasing the borrowed buffer."""
+    with _software_bitmap_pixels(bitmap) as pixels:
+        width, height = content_size
+        if width <= 0 or height <= 0:
+            raise BackgroundCaptureError(f"invalid WGC content size: {content_size}")
+        if width > pixels.shape[1] or height > pixels.shape[0]:
+            raise BackgroundCaptureError(
+                "WGC content size exceeds capture surface: "
+                f"content={content_size} surface={(pixels.shape[1], pixels.shape[0])}"
+            )
+        # Ignore undefined surface padding before resolving the client origin.
+        return _crop_client_frame(pixels[:height, :width], hwnd, expected_client)
 
 
 def _rect_from_tuple(value: tuple[int, int, int, int]) -> Rect:
@@ -186,7 +211,7 @@ def _crop_client_frame(
 ) -> np.ndarray:
     frame_height, frame_width = frame.shape[:2]
     if (frame_width, frame_height) == (expected_client.width, expected_client.height):
-        return np.ascontiguousarray(frame)
+        return frame.copy(order="C")
 
     candidates: list[Rect] = []
     extended = _extended_frame_bounds(hwnd)
@@ -208,7 +233,7 @@ def _crop_client_frame(
             return frame[
                 y : y + expected_client.height,
                 x : x + expected_client.width,
-            ].copy()
+            ].copy(order="C")
     raise BackgroundCaptureError(
         "WGC frame bounds cannot be mapped to the exact game client rectangle"
     )
@@ -737,24 +762,9 @@ class WindowsGraphicsCaptureService:
                             with SoftwareBitmap.create_copy_from_surface_async(
                                 frame.surface
                             ).get() as bitmap:
-                                pixels = _copy_software_bitmap(bitmap)
+                                client = _copy_client_bitmap(bitmap, window.hwnd, bounds, self._content_size)
                         finally:
                             self._attempt_copy_ms += (time.monotonic() - copy_started) * 1000
-                        surface_height, surface_width = pixels.shape[:2]
-                        if (
-                            content_size.width > surface_width
-                            or content_size.height > surface_height
-                        ):
-                            raise BackgroundCaptureError(
-                                "WGC content size exceeds capture surface: "
-                                f"content={self._content_size} "
-                                f"surface={(surface_width, surface_height)}"
-                            )
-                        # The pool/item may include invisible window borders while
-                        # ContentSize matches DWM's visible bounds. Discard undefined
-                        # surface padding BEFORE choosing the client crop's origin.
-                        pixels = pixels[:content_size.height, :content_size.width]
-                        client = _crop_client_frame(pixels, window.hwnd, bounds)
                         if client.shape != (bounds.height, bounds.width, 4):
                             raise BackgroundCaptureError(
                                 f"unexpected WGC client shape: {client.shape}"

@@ -30,6 +30,22 @@
 
 本批文件：src/e7auto/features/shop/contracts.py、inventory.py、vision.py；tests/helpers/vision.py、tests/automation/test_inventory_readiness.py；CHANGELOG.md、docs/design/ARCHITECTURE.md、BEHAVIOR.md、NATIVE_MATCHING.md及本记录。修改前副本在既有商店任务scratch/post-purchase-before。出现新漏购、误购或提前刷新，按本批差异回退，保留此前三项优化。未提交、推送或构建。
 
+## 2026-10-22 截图、场景准备与采样排程三项优化
+
+按用户批准的三项方案同批实施，不再以新增细分计时或原占比门槛作为前置。配置保持1000ms、3帧/200ms、20%变化率、0.75商品分数、0.05领先差值，全部候选、原始像素核验和输入保护保留。
+
+- WGC在锁定的位图缓冲区内校验步长/容量、裁去ContentSize外填充并按原客户区定位复制，输出有独立内存的连续BGRA数组。省去整窗中间数组；完整位图工具接口保留，停止及复制后帧龄核验保持。内部capture_copy_ms现在包含客户区裁剪。
+- ShopVision缓存顶部/底部固定布局和当前几何的行投影；配置或客户区变换、尺寸、原点变化时重建。奖励浮层ROI每次调用只准备一次连续BGR，保留原父帧变换及全局原点，全部目标依次调用原匹配入口。商品行灰度、纹理判定及逐行裁剪越界规则不变，缓存不保存帧或识别结论。
+- 三帧窗口且要求两次稳定观察时，连续两帧通过后的第三次采集对齐max(首帧完成+稳定跨度,第二帧开始+采样间隔)；其他情况保持原排程。已有计算计入等待，仍以原有效时钟和截止时间复核全部条件。
+
+新trace的performance_profile为capture_scene_sampling_v1，排程为stable_window_target或capture_interval，window_aligned_samples记录实际完成的对齐采样数。成功、超时及中断仍只汇总一次。统计工具按批次、场景、客户区尺寸、采样策略、三帧/补采分组，关联成功滚动后首次底部扫描并记录行号。旧日志缺标记时归为unmarked，不推断版本；新增缺失数值不补零。
+
+对比基线为10月22日10:43:52日志：101次滚动全部通过，确认平均529.743ms、P95 547ms、最大765ms，正常三帧100次、五帧1次。该结果来自修改前实测，不作为本批运行验证。用户后续完成至少一轮/50次滚动，比较正常三帧耗时、补采比例、失败原因及底部扫描，并核对首次进入、购买后、刷新后和重进场景。新误判或截图异常回退本批相关改动，不能归因时回退本批三项；保留之前修复。
+
+遵照用户要求，未运行自动化测试、图像回放、统计脚本实跑或游戏操作。仅适配现有WGC测试替身的借用缓冲区/直接客户区复制入口，以及既有滚动日志断言；本批执行语法、配置、差异及目录静态检查。实际提速、其他功能、非基准尺寸、手动停止和网络/截图异常运行行为待实测，不复用旧结果冒充验证。未提交、推送或构建。
+
+本批文件：src/e7auto/platform/wgc_capture.py；src/e7auto/features/shop/vision.py、scrolling.py；scripts/validation/summarize_shop_scroll.py；tests/platform/test_wgc_capture.py、tests/automation/test_scrolling.py；CHANGELOG.md、docs/design/ARCHITECTURE.md、BEHAVIOR.md、NATIVE_MATCHING.md及本记录。修改前副本保存在既有任务scratch/performance-three-before，可按本批差异恢复，不能用Git整文件回退覆盖此前修改。
+
 ## 2026-10-21 滚动分项计时与离线统计（首批实施）
 
 按用户批准的完整计划，本批只实现分项计时和日志统计。保持1000ms上限、3帧/200ms、20%变化率、0.75商品门槛、0.05领先差值及最多四个相位提案加零位移；不实施预处理复用、评分早停或候选数量削减。

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ctypes
 from collections import deque
+from contextlib import nullcontext
 from datetime import timedelta
 from types import SimpleNamespace
 
@@ -151,8 +152,8 @@ def install_fake_wgc(
     )
     monkeypatch.setattr(
         wgc_capture,
-        "_copy_software_bitmap",
-        lambda _bitmap: pixels if pixels is not None else np.ones((4, 6, 4), dtype=np.uint8),
+        "_software_bitmap_pixels",
+        lambda _bitmap: nullcontext(pixels if pixels is not None else np.ones((4, 6, 4), dtype=np.uint8)),
     )
     return frame_pool, apartment_events
 
@@ -580,16 +581,16 @@ def test_running_wait_recovers_after_250ms_with_fresh_post_input_frame(monkeypat
 
 def test_running_copy_expiry_recovers_and_diagnostics_reset_each_call(monkeypatch):
     service, _, clock, _, arrivals = freshness_capture(monkeypatch, [FakeFrame(1000)])
-    original = wgc_capture._copy_software_bitmap
+    original = wgc_capture._copy_client_bitmap
     try:
         take_frame(service)
         copies = []
-        def slow_first_copy(bitmap):
+        def slow_first_copy(bitmap, *args):
             copies.append(1)
             if len(copies) == 1:
                 clock.ms += 219
-            return original(bitmap)
-        monkeypatch.setattr(wgc_capture, '_copy_software_bitmap', slow_first_copy)
+            return original(bitmap, *args)
+        monkeypatch.setattr(wgc_capture, '_copy_client_bitmap', slow_first_copy)
         expired, fresh = FakeFrame(1250), FakeFrame(1489)
         arrivals.extend([(250, expired), (20, fresh)])
         take_frame(service)
@@ -630,15 +631,15 @@ def test_running_rejected_frames_do_not_extend_total_budget(monkeypatch):
 def test_slow_copy_failure_reports_after_copy_expiry(monkeypatch):
     logger = DiagnosticLogger()
     service, pool, clock, _, _ = freshness_capture(monkeypatch, [FakeFrame(1000)], logger=logger)
-    original = wgc_capture._copy_software_bitmap
+    original = wgc_capture._copy_client_bitmap
     try:
         take_frame(service)
         clock.ms += 10
         pool.frames.append(FakeFrame(1010))
-        def stalled_copy(bitmap):
+        def stalled_copy(bitmap, *args):
             clock.ms += 1100
-            return original(bitmap)
-        monkeypatch.setattr(wgc_capture, '_copy_software_bitmap', stalled_copy)
+            return original(bitmap, *args)
+        monkeypatch.setattr(wgc_capture, '_copy_client_bitmap', stalled_copy)
         with pytest.raises(BackgroundCaptureError):
             take_frame(service)
         failure = next(fields for name, fields in logger.events if name == 'wgc_capture_failed')
@@ -674,11 +675,11 @@ def test_running_guard_releases_inflight_frames(monkeypatch, phase):
             clock.ms += 1
             frames.append(FakeFrame(clock.ms))
             pool.frames.extend(frames)
-            original = wgc_capture._copy_software_bitmap
-            def copy_then_stop(bitmap):
+            original = wgc_capture._copy_client_bitmap
+            def copy_then_stop(bitmap, *args):
                 clock.ms = 1100
-                return original(bitmap)
-            monkeypatch.setattr(wgc_capture, '_copy_software_bitmap', copy_then_stop)
+                return original(bitmap, *args)
+            monkeypatch.setattr(wgc_capture, '_copy_client_bitmap', copy_then_stop)
         with pytest.raises(StopExecution) as error:
             take_frame(service)
         assert error.value.reason is StopReason.MANUAL_STOP
@@ -707,9 +708,9 @@ def test_fresh_queued_frame_is_used_without_waiting_for_another_frame(monkeypatc
 def test_old_but_increasing_queued_frames_are_rejected_before_bitmap_copy(monkeypatch):
     old, newer_old, fresh = FakeFrame(1), FakeFrame(2), FakeFrame(20_010)
     service, _, _, waits, arrivals = freshness_capture(monkeypatch, [old, newer_old], now_ms=20_000)
-    original = wgc_capture._copy_software_bitmap
+    original = wgc_capture._copy_client_bitmap
     copies = []
-    monkeypatch.setattr(wgc_capture, "_copy_software_bitmap", lambda bitmap: (copies.append(1), original(bitmap))[1])
+    monkeypatch.setattr(wgc_capture, "_copy_client_bitmap", lambda bitmap, *args: (copies.append(1), original(bitmap, *args))[1])
     arrivals.append((10, fresh))
     try:
         take_frame(service)
@@ -796,13 +797,13 @@ def test_copy_time_can_absorb_future_lead_without_an_extra_wait(monkeypatch):
     logger = DiagnosticLogger()
     frame = FakeFrame(1010)
     service, _, clock, waits, _ = freshness_capture(monkeypatch, [frame], now_ms=1003.2859, logger=logger)
-    original = wgc_capture._copy_software_bitmap
+    original = wgc_capture._copy_client_bitmap
 
-    def copy(bitmap):
+    def copy(bitmap, *args):
         clock.ms += 10
-        return original(bitmap)
+        return original(bitmap, *args)
 
-    monkeypatch.setattr(wgc_capture, "_copy_software_bitmap", copy)
+    monkeypatch.setattr(wgc_capture, "_copy_client_bitmap", copy)
     monkeypatch.setattr(wgc_capture.time, "sleep", lambda _: pytest.fail("Copy already consumed the lead"))
     try:
         take_frame(service)
@@ -823,7 +824,7 @@ def test_copy_time_can_absorb_future_lead_without_an_extra_wait(monkeypatch):
 def test_future_lead_above_tolerance_is_still_rejected_before_copy(monkeypatch, lead_ms):
     frame = FakeFrame(2000)
     service, _, _, _, _ = freshness_capture(monkeypatch, [frame], now_ms=2000 - lead_ms)
-    monkeypatch.setattr(wgc_capture, "_copy_software_bitmap", lambda _: pytest.fail("Excessive future lead"))
+    monkeypatch.setattr(wgc_capture, "_copy_client_bitmap", lambda *_: pytest.fail("Excessive future lead"))
     try:
         with pytest.raises(BackgroundCaptureError, match="fresh WGC frame"):
             take_frame(service)
@@ -922,16 +923,16 @@ def test_catchup_oversleep_does_not_allow_an_expired_frame(monkeypatch):
 def test_copy_that_makes_a_frame_expired_is_discarded(monkeypatch):
     old, fresh = FakeFrame(950), FakeFrame(1061)
     service, _, clock, _, arrivals = freshness_capture(monkeypatch, [old])
-    original = wgc_capture._copy_software_bitmap
+    original = wgc_capture._copy_client_bitmap
     copies = []
 
-    def slow_first_copy(bitmap):
+    def slow_first_copy(bitmap, *args):
         copies.append(1)
         if len(copies) == 1:
             clock.ms += 60
-        return original(bitmap)
+        return original(bitmap, *args)
 
-    monkeypatch.setattr(wgc_capture, "_copy_software_bitmap", slow_first_copy)
+    monkeypatch.setattr(wgc_capture, "_copy_client_bitmap", slow_first_copy)
     arrivals.append((1, fresh))
     try:
         take_frame(service)
