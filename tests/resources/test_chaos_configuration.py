@@ -8,6 +8,7 @@ import yaml
 
 from e7auto.configuration.loader import load_config
 from e7auto.configuration.models import ConfigError
+from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.features.chaos.configuration import with_chaos_config
 from e7auto.features.chaos.lineups import BUDGET_SCENES, DARK_TWINS_SCENES, RecruitmentPolicy, get_lineup
 from e7auto.resources.templates import TemplateRepository
@@ -25,7 +26,7 @@ def installation(tmp_path):
         target.mkdir(parents=True)
         shutil.copyfile(ROOT / "assets/templates" / feature / "manifest.json", target / "manifest.json")
         for entry in json.loads((target / "manifest.json").read_text(encoding="utf8"))["templates"].values():
-            if feature == "common" and not entry["file"].startswith(("network/", "daily_reset/")):
+            if feature == "common" and not entry["file"].startswith(("network/", "daily_reset/", "navigation/")):
                 continue
             destination = target / entry["file"];destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / "assets/templates" / feature / entry["file"], destination)
@@ -357,8 +358,9 @@ def test_vestment_available_subchoice_resource_is_required(installation, damage)
 
 def test_isolated_loading_and_resource_aliases(installation):
     config = load(installation)
-    assert len(config.chaos.scenes) == 270
-    assert len(config.template_paths) == 263
+    assert set(config.template_paths) == {
+        scene.template_key for scene in config.chaos.scenes.values()
+    } | NAVIGATION_TEMPLATE_KEYS
     repository = TemplateRepository(config)
     for names in [("camp_leave", "supply_leave", "shop_leave"), ("elite_choose_reward", "boss_choose_reward"), ("unclaimed_confirm", "shop_leave_confirm"), ("investment_entry", "shop_health_entry")]:
         images = [repository.get(config.chaos.scenes[n].template_key) for n in names]

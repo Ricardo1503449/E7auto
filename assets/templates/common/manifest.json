@@ -156,6 +156,30 @@
         "record": "docs/calibration/registrations/common-buff_effect_title-c53463d099d6-69fa8cc51a1c.json",
         "record_sha256": "69fa8cc51a1c9595511dd3ebcca012e2e485a25b3eec56b62f508fd5eb71f3bd"
       }
+    },
+    "navigation_menu": {
+      "file": "navigation/navigation_menu.png",
+      "sha256": "494bd226729ff7cbf2c64420b8235d1013abfb3e39cd48a1cb351a65c7e1a915",
+      "source": {
+        "record": "docs/calibration/registrations/common-navigation_menu-494bd226729f-6f0ef8afa7d8.json",
+        "record_sha256": "6f0ef8afa7d8f0f6a88719aa151b5eda4517f3d3f8bcbb7047fa1e2297f15566"
+      }
+    },
+    "navigation_tavern": {
+      "file": "navigation/navigation_tavern.png",
+      "sha256": "e9c09b34f56363070caa516a071e9f64a50ba6f3ebb848f2756507dde94adea8",
+      "source": {
+        "record": "docs/calibration/registrations/common-navigation_tavern-e9c09b34f563-08566e10e8b5.json",
+        "record_sha256": "08566e10e8b53b4e6dc680b08db0ca3d9f6f113e9cd4231c7f5ad298a4c58321"
+      }
+    },
+    "navigation_menu_notification": {
+      "file": "navigation/navigation_menu_notification.png",
+      "sha256": "ca5f6e9f7af6824adc002cebaf84f7da0a7468ddd7ece4925b2966d92849e45a",
+      "source": {
+        "record": "docs/calibration/registrations/common-navigation_menu_notification-ca5f6e9f7af6-0b904e48e73f.json",
+        "record_sha256": "0b904e48e73ffcaf7d6a7201a8eb47c8fb8e4e2108ea777acd5399294fd4b3a2"
+      }
     }
   }
 }

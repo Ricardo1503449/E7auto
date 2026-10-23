@@ -7,6 +7,8 @@ from e7auto.core.types import Point, Rect, Size
 from e7auto.resources.manifest import load_template_manifest
 from e7auto.configuration.models import DisplayConfig, TargetConfig, SlotConfig, TimingConfig, RefreshStrategyConfig, ScrollConfig, LoggingConfig, EntryThresholds, AppConfig, ConfigError
 from e7auto.configuration.schema import COMMON_TEMPLATE_KEYS, _REQUIRED_TEMPLATES, _REQUIRED_ROIS, PENGUIN_CONTROLS, _REQUIRED_POINTS, _EXPECTED_TARGET_POLICY
+from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
+from e7auto.configuration.navigation import load_startup_navigation
 
 def _positive_int(value: Any, path: str, errors: list[str]) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
@@ -141,7 +143,7 @@ def _load_templates(root, source_path, baseline_size, template_profile, errors):
             try:
                 registered, sizes = load_template_manifest(
                     template_manifest_paths[profile], (baseline_size.width, baseline_size.height),
-                    keys=(frozenset({"network_connection_abnormal", "network_retry"})
+                    keys=(frozenset({"network_connection_abnormal", "network_retry"}) | NAVIGATION_TEMPLATE_KEYS
                           if template_profile == "chaos" else COMMON_TEMPLATE_KEYS if profile == "common" else None),
                 )
                 if template_paths.keys() & registered.keys():
@@ -151,7 +153,7 @@ def _load_templates(root, source_path, baseline_size, template_profile, errors):
             except ValueError as exc:
                 errors.append(str(exc))
     required_templates = (
-        {"network_connection_abnormal", "network_retry"} if template_profile == "chaos"
+        {"network_connection_abnormal", "network_retry"} | NAVIGATION_TEMPLATE_KEYS if template_profile == "chaos"
         else COMMON_TEMPLATE_KEYS if template_profile == "penguin" else _REQUIRED_TEMPLATES
     )
     selected_templates = required_templates if template_profile != "shop" else set(template_raw)
@@ -591,6 +593,7 @@ def load_config(
     # Production features use the same catalog loader. Explicit path registries
     # remain supported for small standalone/synthetic configurations.
     template_paths, template_manifest_paths, template_sizes = _load_templates(root, source_path, baseline_size, template_profile, errors)
+    startup_navigation = load_startup_navigation(root, baseline_size, template_sizes, errors)
 
     rois, points = _load_coordinates(root, template_profile, errors)
 
@@ -670,4 +673,5 @@ def load_config(
         logging=logging_config,
         template_manifest_paths=template_manifest_paths,
         candidate_cache_mib=candidate_cache_mib,
+        startup_navigation=startup_navigation,
     )

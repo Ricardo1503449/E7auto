@@ -252,7 +252,6 @@ class ChaosFlow:
             destination_name="battle_title",
             destination_detector=lambda frame: self._entry_observation(frame, "battle_title"),
             click_action="chaos_home_battle",
-            timeout_ms=self.settings.timing["entry_timeout_ms"],
         )
         self._act("exploration_card")
         self._act("intro_enter")

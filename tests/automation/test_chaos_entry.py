@@ -38,8 +38,8 @@ def test_visible_home_enters_without_wake(entry):
     assert not input_events(flow, "wake_main_screen_startup")
 
 
-@pytest.mark.parametrize("wakes", [False, True])
-def test_sleep_wakes_once_and_requires_fresh_home_evidence(entry, monkeypatch, wakes):
+@pytest.mark.parametrize("wake_on", [None, 1, 2])
+def test_sleep_wakes_at_most_twice_and_requires_fresh_home_evidence(entry, monkeypatch, wake_on):
     flow, game = entry
     visible, click = game._visible, game.click
     sleeping = True
@@ -51,7 +51,7 @@ def test_sleep_wakes_once_and_requires_fresh_home_evidence(entry, monkeypatch, w
         if point == game.config.points["main_screen_wake"]:
             game.actions.append("wake")
             wake_captures.append(game.captures)
-            sleeping = not wakes
+            sleeping = len(wake_captures) != wake_on
             return
         if game.state == "home":
             entry_captures.append(game.captures)
@@ -60,20 +60,21 @@ def test_sleep_wakes_once_and_requires_fresh_home_evidence(entry, monkeypatch, w
     monkeypatch.setattr(game, "_visible", lambda: [] if sleeping else visible())
     monkeypatch.setattr(game, "click", wake)
     reason = execute_reason(flow)
-    assert wake_captures == [1]
-    assert len(input_events(flow, "wake_main_screen_startup")) == 1
-    if wakes:
+    expected_attempts = wake_on or 2
+    assert wake_captures[0] == 1 and len(wake_captures) == expected_attempts
+    assert [event['attempt'] for event in input_events(flow, "wake_main_screen_startup")] == list(range(1, expected_attempts+1))
+    if wake_on:
         assert reason is StopReason.MANUAL_STOP
-        assert entry_captures == [4]
-        assert game.actions == ["wake", "home_battle", "exploration_card"]
+        assert entry_captures == [wake_captures[-1]+3]
+        assert game.actions == ["wake"] * wake_on + ["home_battle", "exploration_card"]
     else:
         assert reason is StopReason.RECOGNITION_TIMEOUT
-        assert game.actions == ["wake"]
-        assert 10 <= game.clock.now < 10.2
+        assert game.actions == ["wake", "wake"]
+        assert 13 <= game.clock.now < 13.3
 
 
-@pytest.mark.parametrize("misses", [1, 3])
-def test_entry_retries_only_confirmed_home_and_stops_at_three(entry, monkeypatch, misses):
+@pytest.mark.parametrize("misses", [1, 2])
+def test_entry_retries_only_confirmed_home_and_stops_at_two(entry, monkeypatch, misses):
     flow, game = entry
     click = game.click
     attempts = []
@@ -88,12 +89,12 @@ def test_entry_retries_only_confirmed_home_and_stops_at_three(entry, monkeypatch
 
     monkeypatch.setattr(game, "click", delayed_click)
     reason = execute_reason(flow)
-    assert len(attempts) == min(misses + 1, 3)
-    assert all(b - a >= 15 for a, b in zip(attempts, attempts[1:]))
+    assert len(attempts) == min(misses + 1, 2)
+    assert all(5 <= b - a < 6 for a, b in zip(attempts, attempts[1:]))
     assert not input_events(flow, "wake_main_screen_startup")
-    if misses == 3:
+    if misses == 2:
         assert reason is StopReason.RECOGNITION_TIMEOUT
-        assert game.actions == ["home_battle"] * 3
+        assert game.actions == ["home_battle"] * 2
     else:
         assert reason is StopReason.MANUAL_STOP
         assert game.actions == ["home_battle", "home_battle", "exploration_card"]
@@ -109,14 +110,14 @@ def test_late_destination_is_confirmed_without_reclick(entry, monkeypatch):
         if frame["state"] == "battle_menu":
             if entered_at is None:
                 entered_at = game.clock.now
-            if key == "battle_title" and game.clock.now - entered_at < 15.1:
+            if key == "battle_title" and game.clock.now - entered_at < 5.1:
                 return None
         return control(frame, key, region)
 
     monkeypatch.setattr(game, "control", delayed_title)
     assert execute_reason(flow) is StopReason.MANUAL_STOP
     assert game.actions == ["home_battle", "exploration_card"]
-    assert game.clock.now >= 15.1
+    assert game.clock.now >= 5.1
 
 
 def test_unknown_page_after_entry_does_not_authorize_retry(entry, monkeypatch):

@@ -13,6 +13,7 @@ from e7auto.vision.candidates import CandidateCache
 from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher, _DigitMatch
 from e7auto.vision.network import NetworkVision
+from e7auto.vision.navigation import StartupNavigationVision
 from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability
 
 class ShopVision:
@@ -25,6 +26,13 @@ class ShopVision:
         self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
+        self._navigation = StartupNavigationVision(config, self._matcher)
+
+    def navigation_menu(self, frame):
+        return self._navigation.navigation_menu(frame)
+
+    def navigation_tavern(self, frame):
+        return self._navigation.navigation_tavern(frame)
 
     def match(self, frame, template_key: str, roi: Rect, threshold: float) -> Observation | None:
         return self._matcher.match(frame, template_key, roi, threshold)

@@ -91,6 +91,13 @@ class EntryThresholds:
 
 
 @dataclass(frozen=True, slots=True)
+class NavigationTemplate:
+    region: Rect
+    threshold: float
+    structure_threshold: float
+
+
+@dataclass(frozen=True, slots=True)
 class AppConfig:
     source_path: Path
     executable_path: Path
@@ -125,6 +132,7 @@ class AppConfig:
     network_retry_template: str = "network_retry"
     candidate_cache_mib: int = 64
     component_layouts: dict[str, ComponentLayout] = field(default_factory=dict)
+    startup_navigation: dict[str, NavigationTemplate] = field(default_factory=dict)
 
 
 class ConfigError(ValueError):

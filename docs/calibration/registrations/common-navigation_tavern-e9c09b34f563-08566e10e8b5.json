@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "key": "navigation_tavern",
+  "method": "exact source RGB, original antialiasing, one-pixel foreground dilation; exterior and holes transparent",
+  "source_path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-23 164944.png",
+  "source_sha256": "1d552822838415b5631a4ef3fc9d008ea6c1f5cb108c17d039aab45989f1b0e4",
+  "source_size": [
+    2432,
+    1482
+  ],
+  "client_crop": [
+    54,
+    105,
+    2322,
+    1306
+  ],
+  "baseline_client_size": [
+    2322,
+    1306
+  ],
+  "extraction_roi": [
+    1980,
+    1000,
+    140,
+    150
+  ],
+  "crop_client": [
+    2019,
+    1044,
+    53,
+    53
+  ],
+  "crop_source": [
+    2073,
+    1149,
+    53,
+    53
+  ],
+  "mask": {
+    "rule": "min(B,G,R)>95 and max(B,G,R)-min(B,G,R)<80; retain components >=30 pixels",
+    "component_count": 2,
+    "border_radius": 1,
+    "foreground_pixels": 1878,
+    "original_rgb_unchanged": true,
+    "rescaled": false,
+    "center_cleanup": {
+      "candidate_roi": [
+        22,
+        10,
+        8,
+        21
+      ],
+      "source_min_channel_max": 49,
+      "removed_pixels": 16,
+      "basis": "User-reviewed false bridge; original dark background is 46..49, gray antialiasing retained"
+    }
+  },
+  "candidate_path": "D:\\E7auto\\artifacts\\template-candidates\\20261023-181046-60fbe233\\common\\navigation\\navigation_tavern.png",
+  "candidate_sha256": "e9c09b34f56363070caa516a071e9f64a50ba6f3ebb848f2756507dde94adea8",
+  "proposed_runtime": {
+    "roi": [
+      1980,
+      1000,
+      140,
+      150
+    ],
+    "threshold": 0.92,
+    "structure_threshold": 0.8,
+    "anchor": [
+      0.5,
+      0.5
+    ]
+  },
+  "review_status": "approved_by_user_2026-10-23_including_notification_variant",
+  "validation_status": "passed_with_disclosed_synthetic_limitation",
+  "validation": {
+    "report": "D:\\E7auto\\artifacts\\tasks\\common\\20261023-172821-startup-navigation-58c2c1f9\\results\\template_validation.json",
+    "sources": [
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-23 164937.png",
+        "sha256": "38d7ed5f050e85a99f3d3bbd042645af6b0ec3b8bf4bad151df47b724354e0bd",
+        "client_crop": [
+          53,
+          100,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "C:\\Users\\lxy\\Pictures\\Screenshots\\屏幕截图 2026-10-23 164944.png",
+        "sha256": "1d552822838415b5631a4ef3fc9d008ea6c1f5cb108c17d039aab45989f1b0e4",
+        "client_crop": [
+          54,
+          105,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "logs\\run-20261023-153109-299894-3350c2532772-stop.png",
+        "sha256": "06b4ca36c015853f67f79f7aa8bfc7553b512f67c785cbd40ffc170fbc496b6a",
+        "client_crop": [
+          0,
+          0,
+          2322,
+          1306
+        ]
+      },
+      {
+        "path": "logs\\run-20261023-152454-188088-1c44de59a0a5-stop.png",
+        "sha256": "994a9229ac946f448d600c1ac57ae8fa280887682cdbca1e31aa0d80d6233cc7",
+        "client_crop": [
+          0,
+          0,
+          2322,
+          1306
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "key": "navigation_tavern",
+        "source": "164937",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164937",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164937",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164937",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164944",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": 1.0,
+        "structure": 0.9999998211860657,
+        "anchor": [
+          2045,
+          1070
+        ],
+        "anchor_error_px": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164944",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": 0.9844805002212524,
+        "structure": 0.9006440043449402,
+        "anchor": [
+          1354,
+          709
+        ],
+        "anchor_error_px": [
+          0.9043927648579029,
+          0.797856049004622
+        ]
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164944",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": 0.9877580404281616,
+        "structure": 0.9209545850753784,
+        "anchor": [
+          1691,
+          885
+        ],
+        "anchor_error_px": [
+          0.36950904392756456,
+          0.25267993874422245
+        ]
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "164944",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": true,
+        "detected": true,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": 0.9995524883270264,
+        "structure": 0.9971516132354736,
+        "anchor": [
+          2255,
+          1180
+        ],
+        "anchor_error_px": [
+          0.159345391903571,
+          0.3369065849924482
+        ]
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_home",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_home",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_home",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_home",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_shop",
+        "kind": "real_original",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_shop",
+        "kind": "synthetic_resize",
+        "size": [
+          1536,
+          864
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_shop",
+        "kind": "synthetic_resize",
+        "size": [
+          1920,
+          1080
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "real_shop",
+        "kind": "synthetic_resize",
+        "size": [
+          2560,
+          1440
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "missing_handle",
+        "kind": "synthetic_partial_icon",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": true,
+        "passed": false,
+        "cold_warm_equal": true,
+        "color": 0.9568197727203369,
+        "structure": 0.8280937671661377,
+        "anchor": [
+          2045,
+          1070
+        ]
+      },
+      {
+        "key": "navigation_tavern",
+        "source": "dimmed_overlay",
+        "kind": "synthetic_dimming",
+        "size": [
+          2322,
+          1306
+        ],
+        "expected": false,
+        "detected": false,
+        "passed": true,
+        "cold_warm_equal": true,
+        "color": null,
+        "structure": null,
+        "anchor": null
+      }
+    ],
+    "limitations": "Menu has three real positive pages; tavern has only its extraction-source positive. Previous 2026-10-22 screenshot originals no longer exist at their paths and were not tested. Resized/dimmed/partial cases are synthetic. No gameplay input executed. At the user-selected 0.92 color threshold the synthetic missing-handle tavern remains accepted (0.956820 color,0.828094 structure); retained as a known limitation, not counted as passing."
+  }
+}

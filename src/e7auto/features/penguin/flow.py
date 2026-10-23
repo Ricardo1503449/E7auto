@@ -10,7 +10,6 @@ from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.stop_control import StopExecution
 
 T = TypeVar("T")
-_SANCTUARY_ENTRY_TIMEOUT_MS = 10_000
 
 
 from e7auto.configuration.models import AppConfig
@@ -125,7 +124,6 @@ class PenguinFlow:
             destination_name="forest_entry",
             destination_detector=lambda frame: self.runtime.deps.vision.control(frame, "forest_entry"),
             click_action="penguin_sanctuary_entry",
-            timeout_ms=_SANCTUARY_ENTRY_TIMEOUT_MS,
         )
         self._click_control("forest_entry")
         self._click_control("growth_altar")

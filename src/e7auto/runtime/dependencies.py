@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 import time
 
-from e7auto.core.ports import NetworkVisionPort
+from e7auto.core.ports import RuntimeVisionPort
 from typing import Generic, TypeVar
-VisionT = TypeVar("VisionT", bound=NetworkVisionPort)
+VisionT = TypeVar("VisionT", bound=RuntimeVisionPort)
 from e7auto.core.ports import CaptureService, Clock, InputService, OverlayService, RuntimeEnvironment, TextRunLogger, WindowService
 
 

@@ -1,5 +1,10 @@
 """Names required by the existing YAML schema; does not select a runtime feature."""
+NAVIGATION_TEMPLATE_KEYS = frozenset({
+    "navigation_menu", "navigation_menu_notification", "navigation_tavern",
+})
+
 COMMON_TEMPLATE_KEYS = frozenset({
+    *NAVIGATION_TEMPLATE_KEYS,
     *(f"sky_stone_digit_{digit}" for digit in range(10)),
     "sky_stone_digit_0_wide",
     "network_connection_abnormal",
@@ -8,6 +13,7 @@ COMMON_TEMPLATE_KEYS = frozenset({
 
 
 _REQUIRED_TEMPLATES = {
+    *NAVIGATION_TEMPLATE_KEYS,
     "main_shop_icon",
     "shop_refresh_button",
     "shop_exit_icon",

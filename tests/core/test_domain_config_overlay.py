@@ -67,6 +67,7 @@ def test_runtime_snapshot_is_immutable_and_freezes_after_final() -> None:
 
 def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
     template_keys = {
+        "navigation_menu", "navigation_menu_notification", "navigation_tavern",
         "main_shop_icon",
         "shop_refresh_button",
         "shop_exit_icon",
@@ -104,6 +105,9 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         },
         "economy": {"refresh_cost": 3},
         "templates": {key: f"templates/{key}.bin" for key in template_keys},
+        "startup_navigation": {key: {"roi": [0, 0, 10, 10], "threshold": .92,
+                                      "structure_threshold": .8}
+                               for key in ("navigation_menu", "navigation_menu_notification", "navigation_tavern")},
         "rois": {key: rect for key in ("left_icon_column", "shop_refresh_button", "shop_exit_icon", "refresh_confirm_prompt", "refresh_confirm_button", "inventory_list", "confirm_item", "confirm_button", "purchase_result", "sky_stone_icon", "sky_stone_digits")},
         "points": {
             key: {"x": 5, "y": 5}

@@ -37,7 +37,10 @@ class RuntimeContext(Generic[VisionT]):
         self.last_captured_frame: CachedGameFrame | None = None
         self.handling_network = False
         self.network_recovery_generation = 0
-        self.startup_wake_sent = False
+        self.startup_wake_attempts = 0
+        self.startup_last_wake_at: float | None = None
+        self.startup_return_started = False
+        self.startup_return_attempts = {"menu": 0, "tavern": 0}
         self.network_paused_seconds = 0.0
         self.network_status_before_reconnect: OverlayActivityStatus | None = None
         self.capture_count = 0

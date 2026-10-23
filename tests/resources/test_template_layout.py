@@ -32,7 +32,7 @@ def test_penguin_loads_without_any_shop_images(installation):
     config = with_penguin_config(load_config(
         installation / "config/internal.yaml", template_profile="penguin"
     ))
-    assert len(config.template_paths) == 26
+    assert len(config.template_paths) == 29
     assert set(config.template_paths) == COMMON_TEMPLATE_KEYS | {
         key for key in config.template_paths if key.startswith("penguin_")
     }
@@ -46,7 +46,7 @@ def test_shop_loads_without_penguin_assets_or_calibration_docs(installation):
     for path in (installation / "assets/templates/penguin").iterdir():
         path.unlink()
     config = load_config(installation / "config/internal.yaml")
-    assert len(config.template_paths) == 31
+    assert len(config.template_paths) == 34
     assert not any(key.startswith("penguin_") for key in config.template_paths)
     assert TemplateRepository(config).get("main_shop_icon").image.size
 

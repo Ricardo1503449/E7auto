@@ -10,6 +10,7 @@ from e7auto.resources.templates import TemplateRepository
 from e7auto.vision.matching import TemplateMatcher
 from e7auto.vision.candidates import CandidateCache
 from e7auto.vision.components import ComponentMatcher
+from e7auto.vision.navigation import StartupNavigationVision
 from e7auto.vision.frames import frame_view
 from .configuration import ChaosConfig
 from .contracts import AutoState, Detection, MapView, Node
@@ -28,6 +29,7 @@ class ChaosVision:
         self._templates = templates
         self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
+        self._navigation = StartupNavigationVision(config, self._matcher)
         node_shapes = [templates.get(self.settings.scenes["node_"+kind].template_key).image.shape
                        for kind in NODE_KINDS]
         self._node_search_size = max(s[1] for s in node_shapes), max(s[0] for s in node_shapes)
@@ -42,6 +44,12 @@ class ChaosVision:
 
     def prepare_frame(self, frame: object) -> object:
         return self._matcher.prepare_bgr(frame)
+
+    def navigation_menu(self, frame):
+        return self._navigation.navigation_menu(frame)
+
+    def navigation_tavern(self, frame):
+        return self._navigation.navigation_tavern(frame)
 
     def rank_result(self, frame: object) -> tuple[int, int] | None:
         """Read one rank per configured result column, without an arrow template."""

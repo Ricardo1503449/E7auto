@@ -18,6 +18,12 @@ from tests.helpers import FakeClock, FakeInput, make_config, make_dependencies
 
 class PenguinGame:
     """Game-side state changes occur only when a matching input is dispatched."""
+    def navigation_menu(self, frame):
+        return None
+
+    def navigation_tavern(self, frame):
+        return None
+
     def __init__(self, *, price=102, maximum=5100, empty_after=None,
                  missing_result=False, missing_close=False, uncertain=False):
         self.state = "home"
@@ -277,7 +283,7 @@ class DroppedSanctuaryClicks(PenguinGame):
         super().click(point)
 
 
-@pytest.mark.parametrize("drops", [0, 1, 2])
+@pytest.mark.parametrize("drops", [0, 1])
 def test_sanctuary_retries_only_after_fresh_stable_main_confirmation(drops):
     game = DroppedSanctuaryClicks(drops)
     final, _, game = run(game, 1, config=make_config(stable_frames=3))
@@ -287,10 +293,10 @@ def test_sanctuary_retries_only_after_fresh_stable_main_confirmation(drops):
     assert game.reads_at_entry_click == [3] * (drops + 1)
 
 
-def test_sanctuary_stops_after_three_confirmed_dropped_clicks():
+def test_sanctuary_stops_after_two_confirmed_dropped_clicks():
     final, _, game = run(DroppedSanctuaryClicks(99), 1, config=make_config(stable_frames=3))
     assert final.stop_reason == StopReason.RECOGNITION_TIMEOUT
-    assert game.actions == ["sanctuary_entry"] * 3
+    assert game.actions == ["sanctuary_entry"] * 2
     assert final.purchases_completed == 0
 
 
@@ -320,7 +326,9 @@ def test_sanctuary_arrival_retains_independent_forest_preclick_recognition():
                 self.reads_when_clicked = self.forest_reads
             super().click(point)
 
-    final, _, game = run(DelayedSanctuary(), 1, config=make_config(stable_frames=3))
+    config = make_config(stable_frames=3)
+    config = replace(config, timing=replace(config.timing, entry_timeout_ms=5000))
+    final, _, game = run(DelayedSanctuary(), 1, config=config)
     assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
     assert game.actions.count("sanctuary_entry") == 1
     # Keep the independent three-frame pre-click check for the forest entry.
@@ -356,7 +364,7 @@ class AnimatedSanctuary(PenguinGame):
         super().click(point)
 
 
-@pytest.mark.parametrize("delay", [0, 8, 9, 11, 19, 21])
+@pytest.mark.parametrize("delay", [0, 4, 4.9, 5.1, 9, 11])
 def test_sanctuary_long_animation_wait_and_recheck_do_not_repeat_successful_click(delay):
     clock = FakeClock()
     game = AnimatedSanctuary(clock, delay)
@@ -367,15 +375,15 @@ def test_sanctuary_long_animation_wait_and_recheck_do_not_repeat_successful_clic
     ))
     final, _, game = run(game, 1, config=config, clock=clock)
     assert game.actions.count("sanctuary_entry") == 1
-    if delay < 20:
+    if delay < 10:
         assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
         elapsed = game.forest_clicked_at - game.sanctuary_clicked_at
-        assert delay <= elapsed < delay + 1.0  # no fixed 10-second sleep on fast entry
+        assert delay <= elapsed < delay + 1.0  # no fixed five-second sleep on fast entry
     else:
         assert final.stop_reason == StopReason.RECOGNITION_TIMEOUT
         assert game.actions == ["sanctuary_entry"]
         elapsed = clock.monotonic() - game.sanctuary_clicked_at
-        assert 20 <= elapsed < 20.5
+        assert 10 <= elapsed < 10.5
 
 
 def test_manual_stop_interrupts_long_sanctuary_animation_wait():

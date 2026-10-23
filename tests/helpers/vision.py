@@ -22,6 +22,12 @@ def match(target: str, screen: str = "top", slot_order: int = 0) -> InventoryMat
 
 
 class ScriptedVision:
+    def navigation_menu(self, frame):
+        return None
+
+    def navigation_tavern(self, frame):
+        return None
+
     def __init__(
         self,
         *,

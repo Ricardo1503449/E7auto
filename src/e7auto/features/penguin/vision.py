@@ -16,6 +16,7 @@ from e7auto.vision.components import ComponentMatcher
 from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher
 from e7auto.vision.network import NetworkVision
+from e7auto.vision.navigation import StartupNavigationVision
 from e7auto.core.observations import Observation
 
 
@@ -38,6 +39,7 @@ class PenguinVision:
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
+        self._navigation = StartupNavigationVision(config, self._matcher)
         approved = templates.get("penguin_penguin_buy_5100")
         mask = approved.mask.copy()
         r = config.penguin_price_rect
@@ -48,6 +50,12 @@ class PenguinVision:
         # Full 5100 recognition still uses the unmodified approved template.
         self._purchase_body = TemplateData(approved.image, mask)
         self._body_matcher = TemplateMatcher(_PurchaseBodyRepository(self._purchase_body), self._matcher.cache)
+
+    def navigation_menu(self, frame):
+        return self._navigation.navigation_menu(frame)
+
+    def navigation_tavern(self, frame):
+        return self._navigation.navigation_tavern(frame)
 
     def match(self, frame, template_key: str, roi: Rect, threshold: float) -> Observation | None:
         if template_key in self._components.layouts:

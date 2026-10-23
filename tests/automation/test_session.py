@@ -193,7 +193,7 @@ def test_entry_does_not_retry_when_neither_shop_nor_main_is_confirmed() -> None:
     ]
 
 
-def test_entry_stops_after_three_confirmed_dropped_clicks() -> None:
+def test_entry_stops_after_two_confirmed_dropped_clicks() -> None:
     inputs = FakeInput()
     final, _, _, _, _, _, logger = run_session(
         ScriptedVision(ready_visible=False),
@@ -204,11 +204,10 @@ def test_entry_stops_after_three_confirmed_dropped_clicks() -> None:
     assert [action for action, _, _ in inputs.actions if action == "click"] == [
         "click",
         "click",
-        "click",
     ]
     stopped = [fields for event, fields in logger.events if event == "run_stopped"]
     assert stopped[-1]["detail"] == (
-        "shop entry failed after 3 attempts; main screen remains visible"
+        "shop entry failed after 2 attempts; main screen remains visible"
     )
 
 

@@ -9,6 +9,7 @@ from typing import Mapping
 import yaml
 
 from e7auto.configuration.models import AppConfig, ConfigError
+from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.components import load_component_layouts
 from e7auto.configuration.daily_reset import DailyResetSettings, load_daily_reset
 from e7auto.core.types import Rect
@@ -137,7 +138,8 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
         )
         components = load_component_layouts(raw['component_matching'], sizes,
                                             COMPONENT_TEMPLATES, prefix='chaos:')
-        paths = {k: config.template_paths[k] for k in ("network_connection_abnormal", "network_retry")}
+        paths = {k: config.template_paths[k] for k in
+                 {"network_connection_abnormal", "network_retry"} | NAVIGATION_TEMPLATE_KEYS}
         paths.update(registered)
         scenes = {}
         for name, value in bindings.items():

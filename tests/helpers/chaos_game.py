@@ -18,6 +18,12 @@ def chaos_config(lineup_id='dark_twins'):
 
 
 class ChaosGame:
+    def navigation_menu(self, frame):
+        return None
+
+    def navigation_tavern(self, frame):
+        return None
+
     def __init__(self, config, *, network_after=None, wrong_selection=False, unknown_loot=False,
                  multi_knights=False, fail_battle=False, endless_battle=False, stage_one=True,
                  event_type="event_torch", event_reward_key="loot_summon_mark", event_intro_pages=0,
