@@ -4,6 +4,7 @@ from __future__ import annotations
 from math import cos, pi, sin
 
 from .styles import COLORS
+from .widgets import _use_smooth_text
 
 from PySide6.QtCore import QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import QColor, QPainter, QPen, QPolygonF
@@ -13,6 +14,7 @@ from PySide6.QtWidgets import QFrame, QPushButton, QVBoxLayout
 class _NavigationButton(QPushButton):
     def __init__(self, symbol: str, label: str, object_name: str) -> None:
         super().__init__()
+        _use_smooth_text(self)
         self._symbol = symbol
         self._update_available = False
         self.setObjectName(object_name)

@@ -19,6 +19,7 @@ from shiboken6 import isValid
 
 from e7auto import __version__
 from .navigation import _NavigationButton
+from .widgets import _use_smooth_text
 
 
 def _live_window(reference: ReferenceType[QMainWindow]) -> QMainWindow | None:
@@ -154,6 +155,7 @@ class _TitleBar(QWidget):
         layout.addWidget(icon_label)
         layout.addWidget(title)
         version = QLabel(f"v{__version__}")
+        _use_smooth_text(version)
         version.setObjectName("titleBarVersion")
         version.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
         layout.addSpacing(4)
