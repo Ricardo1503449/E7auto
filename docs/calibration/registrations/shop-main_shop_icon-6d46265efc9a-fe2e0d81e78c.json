@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "feature": "shop",
+  "key": "main_shop_icon",
+  "operation": "register",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "reason": "User requested removal of entry captions; shop additionally repairs erroneous notches in question-mark strokes",
+  "method": "Re-extract complete pale-blue question strokes and original one-pixel dark edges from unchanged source RGB; no extra feathering",
+  "previous_template": "assets/templates/shop/main_shop_icon.png",
+  "previous_sha256": "04ab79da676c4be2ca7109983458e9c2efcba2003810c96ed30b11411f129408",
+  "previous_copy": "artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/inputs/assets/templates/shop/main_shop_icon.png",
+  "crop_from_previous": [
+    26,
+    4,
+    77,
+    60
+  ],
+  "output_size": [
+    77,
+    60
+  ],
+  "candidate_sha256": "6d46265efc9a56e778e4df982949affdae5cc44125efd79762d3977534c0ce58",
+  "source_fixture": "tests/fixtures/common/main_entry_samples.npz",
+  "source_fixture_sha256": "89b77d4d9ac5929d6765f984ec636c65f460ecbba161e70067d0347cd01114a5",
+  "validation": {
+    "status": "passed",
+    "positive_samples": 4,
+    "negative_samples": 3,
+    "client_widths": [
+      2322,
+      1920,
+      1536
+    ],
+    "scaled_samples_are_synthetic": true,
+    "runtime_thresholds_changed": false,
+    "runtime_algorithm_changed": false,
+    "candidate_sha256": "6d46265efc9a56e778e4df982949affdae5cc44125efd79762d3977534c0ce58",
+    "evidence": "artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/results/shop-final-recognition.json",
+    "click_semantics": "Existing runtime clicks detected icon center; no coordinate conversion or click-offset changes."
+  },
+  "source_fixture_key": "visible_shop_calibration",
+  "source_roi_in_client": [
+    25,
+    525,
+    165,
+    175
+  ],
+  "source_roi_crop": [
+    39,
+    50,
+    77,
+    60
+  ],
+  "mask": {
+    "max_saturation": 64,
+    "min_value": 120,
+    "min_component_area": 20,
+    "expected_components": 4,
+    "original_dark_outline_radius": 1,
+    "feathering": false,
+    "nonzero_pixels": 1937,
+    "min_green_minus_red": -3
+  }
+}

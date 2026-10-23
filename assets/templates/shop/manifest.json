@@ -7,10 +7,10 @@
   "templates": {
     "main_shop_icon": {
       "file": "main_shop_icon.png",
-      "sha256": "04ab79da676c4be2ca7109983458e9c2efcba2003810c96ed30b11411f129408",
+      "sha256": "fe0aa651bede6c76eede675768cc6f0285fdcb36d02cd6e7c1a08c769ddb7548",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/shop-main_shop_icon-fe0aa651bede-9cd598627dcb.json",
+        "record_sha256": "9cd598627dcb5f03dd932aa2b2e5a12c11461c838c33ff6dc6eecdc2bc37a2d7"
       }
     },
     "shop_refresh_button": {

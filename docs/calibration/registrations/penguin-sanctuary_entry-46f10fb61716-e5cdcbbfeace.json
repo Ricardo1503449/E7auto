@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "feature": "penguin",
+  "key": "sanctuary_entry",
+  "operation": "register",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "reason": "User requested removal of entry captions; shop additionally repairs erroneous notches in question-mark strokes",
+  "method": "Exact original RGBA crop; remove text and transparent outer margin",
+  "previous_template": "assets/templates/penguin/01_sanctuary_entry.png",
+  "previous_sha256": "7ada7c2bd7057e1c11f4e847d3a0037895e5ddea777305aed71b8984794d6f40",
+  "previous_copy": "artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/inputs/assets/templates/penguin/01_sanctuary_entry.png",
+  "crop_from_previous": [
+    10,
+    8,
+    55,
+    63
+  ],
+  "output_size": [
+    55,
+    63
+  ],
+  "candidate_sha256": "46f10fb617161cc8386158bd69752d0b8bf25829707c422b09b071b00fbcc9ce",
+  "source_fixture": "tests/fixtures/common/main_entry_samples.npz",
+  "source_fixture_sha256": "89b77d4d9ac5929d6765f984ec636c65f460ecbba161e70067d0347cd01114a5",
+  "validation": {
+    "status": "passed",
+    "positive_samples": 4,
+    "negative_samples": 3,
+    "client_widths": [
+      2322,
+      1920,
+      1536
+    ],
+    "scaled_samples_are_synthetic": true,
+    "runtime_thresholds_changed": false,
+    "runtime_algorithm_changed": false,
+    "candidate_sha256": "46f10fb617161cc8386158bd69752d0b8bf25829707c422b09b071b00fbcc9ce",
+    "evidence": "artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/results/candidate-recognition.json",
+    "click_semantics": "Existing runtime clicks detected icon center; no coordinate conversion or click-offset changes."
+  },
+  "retained_mask_pixels": 2079,
+  "removed_text_mask_pixels": 672
+}

@@ -104,6 +104,17 @@ def test_real_entry_bgra_capture(entry, samples):
     assert entry[3](bgra) is not None
 
 
+@pytest.mark.parametrize("sample", ["visible_a", "visible_b"])
+def test_recent_entry_icons_without_captions(entry, sample):
+    with np.load(ROOT / "tests/fixtures/common/main_entry_recent.npz", allow_pickle=False) as samples:
+        frame = frame_for(samples[sample])
+    _, key, _, detect = entry
+    result = detect(frame)
+    assert result is not None
+    expected = Point(101, 322) if key == "penguin_sanctuary_entry" else Point(102, 603)
+    assert result.anchor == expected
+
+
 @pytest.mark.parametrize("position", ["top", "middle", "bottom"])
 def test_activity_layout_can_move_either_entry_within_the_column(entry, samples, position):
     vision, key, _, detect = entry
@@ -134,7 +145,7 @@ def test_sanctuary_search_can_be_calibrated_independently_of_template_origin(sam
         config, rois={**config.rois, "left_icon_column": requested},
     ))
     result = PenguinVision(changed, TemplateRepository(changed)).control(frame, "sanctuary_entry")
-    assert result is not None and result.anchor == Point(304, 441)
+    assert result is not None and result.anchor == Point(301, 423)
     assert result.search_region == requested
 
 
@@ -143,14 +154,15 @@ def test_sanctuary_search_includes_all_four_template_fit_boundaries(samples, rig
     config = with_penguin_config(load_config(ROOT / "config/internal.yaml", template_profile="penguin"))
     vision = PenguinVision(config, TemplateRepository(config))
     roi = config.rois["left_icon_column"]
-    # Exact original pixels around the visible sanctuary at (64,284), size80x114.
-    icon = samples["visible_penguin_calibration"][44:158, 64:144]
-    x = roi.right - 80 if right else roi.x
-    y = roi.bottom - 114 if bottom else roi.y
+    # Original castle pixels at client (74,292), with the caption removed.
+    icon = samples["visible_penguin_calibration"][52:115, 74:129]
+    height, width = icon.shape[:2]
+    x = roi.right - width if right else roi.x
+    y = roi.bottom - height if bottom else roi.y
     frame = np.zeros((1306, 2322, 3), dtype=np.uint8)
-    frame[y:y+114, x:x+80] = icon
+    frame[y:y+height, x:x+width] = icon
     result = vision.control(frame, "sanctuary_entry")
-    assert result is not None and result.anchor == Point(x+40, y+57)
+    assert result is not None and result.anchor == Point(x+width//2, y+height//2)
 
 
 class OneTemplate:

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "feature": "shop",
+  "key": "main_shop_icon",
+  "operation": "register",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "status": "user_visual_approved",
+  "reason": "User rejected thin-outline variant; repair only left-question top, right-question top, and right-dot left border on current formal template",
+  "method": "Preserve all current mask pixels; re-extract source stroke components, recover original one-pixel border only in three specified source regions; no recoloring, rescaling or feathering",
+  "previous_template": "assets/templates/shop/main_shop_icon.png",
+  "previous_sha256": "6d46265efc9a56e778e4df982949affdae5cc44125efd79762d3977534c0ce58",
+  "source_fixture": "tests/fixtures/common/main_entry_samples.npz",
+  "source_fixture_key": "visible_shop_calibration",
+  "source_fixture_sha256": "89b77d4d9ac5929d6765f984ec636c65f460ecbba161e70067d0347cd01114a5",
+  "source_roi_in_client": [
+    25,
+    525,
+    165,
+    175
+  ],
+  "source_roi_crop": [
+    39,
+    47,
+    77,
+    63
+  ],
+  "output_size": [
+    77,
+    63
+  ],
+  "candidate_sha256": "fe0aa651bede6c76eede675768cc6f0285fdcb36d02cd6e7c1a08c769ddb7548",
+  "mask": {
+    "max_saturation": 64,
+    "min_value": 120,
+    "min_component_area": 20,
+    "components": 4,
+    "original_border_radius": 1,
+    "nonzero_pixels": 2087,
+    "repairs": {
+      "left_question_top": {
+        "region_relative_to_formal": [
+          10,
+          -3,
+          12,
+          14
+        ],
+        "restored_pixels": 24
+      },
+      "right_question_top": {
+        "region_relative_to_formal": [
+          43,
+          -4,
+          26,
+          12
+        ],
+        "restored_pixels": 76
+      },
+      "right_dot_left": {
+        "region_relative_to_formal": [
+          31,
+          43,
+          12,
+          17
+        ],
+        "restored_pixels": 50
+      }
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "checks": 21,
+    "failures": [],
+    "runtime_thresholds": [
+      0.93,
+      0.8
+    ],
+    "synthetic_widths": [
+      1920,
+      1536
+    ],
+    "evidence": "artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/results/shop-three-edge-repair-review.json"
+  },
+  "approval": {
+    "date": "2026-10-21",
+    "request": "最终采用这一版吧",
+    "image_label": "Repaired candidate",
+    "approved_size": [
+      77,
+      63
+    ],
+    "approved_candidate_sha256": "fe0aa651bede6c76eede675768cc6f0285fdcb36d02cd6e7c1a08c769ddb7548"
+  }
+}

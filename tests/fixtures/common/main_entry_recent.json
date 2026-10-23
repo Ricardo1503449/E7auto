@@ -1,0 +1,23 @@
+{
+  "description": "Unmodified BGR left-column crops; no account header, compositing or scaling.",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": [
+    0,
+    240,
+    210,
+    900
+  ],
+  "samples": {
+    "visible_a": {
+      "source": "logs/run-20261021-111711-666789-c46710b98d4c-stop.png",
+      "source_sha256": "738494190764f2a342fdc6eeda7f6a1e4f69b761670c8d81026bc33d698b8b39"
+    },
+    "visible_b": {
+      "source": "logs/run-20261021-111727-286229-0a713a20e65b-stop.png",
+      "source_sha256": "b793b6272a2123734470892ff62f3881873dded24e68eee161c09a2968114a69"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import json
 from pathlib import Path
 from tests.helpers.paths import ROOT
 from scripts.common.paths import calibration_record_path
@@ -78,51 +79,43 @@ def test_cropped_template_manifest_and_pixels_are_integral() -> None:
 
 
 def test_main_shop_icon_template_has_reproducible_foreground_alpha_mask() -> None:
-    manifest_path = calibration_record_path("main_shop_icon_manifest.yaml")
-    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    output = TEMPLATE_DIR / manifest["output_path"]
-    assert output.is_file()
+    catalog = json.loads((TEMPLATE_DIR / "shop/manifest.json").read_text(encoding="utf-8"))
+    entry = catalog["templates"]["main_shop_icon"]
+    manifest = json.loads((ROOT / entry["source"]["record"]).read_text(encoding="utf-8"))
+    output = TEMPLATE_DIR / "shop" / entry["file"]
     image = read_png(output)
-    assert image.shape == (
-        manifest["output_size"]["height"],
-        manifest["output_size"]["width"],
-        4,
-    )
+    assert image.shape == (manifest["output_size"][1], manifest["output_size"][0], 4)
     alpha = image[:, :, 3]
-    assert alpha.min() == 0 and alpha.max() == 255
-    assert np.count_nonzero((alpha > 0) & (alpha < 255)) == manifest["mask"]["edge_smoothing"]["partially_transparent_pixels"]
-    assert manifest["mask"]["edge_smoothing"]["partially_transparent_pixels"] > 0
-    assert np.count_nonzero(alpha) == manifest["mask"]["foreground_pixels"]
-
-    source = Path(manifest["source_path"])
+    assert set(np.unique(alpha)) == {0, 255}
+    assert np.count_nonzero(alpha) == manifest["mask"]["nonzero_pixels"]
 
     config = replace(make_config(), template_paths={"main_shop_icon": output})
     loaded = TemplateRepository(config).get("main_shop_icon")
     assert loaded.mask is not None
     assert np.array_equal(loaded.mask, alpha)
 
-    if source.is_file():
-        from scripts.calibration.extract_main_shop_icon_template import main_screen_foreground_mask
-
-        original = read_png(source)
-        crop = manifest["crop"]
-        expected = original[crop["y"]:crop["y"] + crop["height"], crop["x"]:crop["x"] + crop["width"]]
-        assert np.array_equal(image[:, :, :3], expected[:, :, :3])
-        client, roi = manifest["client_crop"], manifest["mask"]["glyph_roi"]
-        x, y = client["x"] + roi["x"], client["y"] + roi["y"]
-        mask = main_screen_foreground_mask(original[y:y + roi["height"], x:x + roi["width"]])
-        dx, dy = crop["x"] - x, crop["y"] - y
-        assert np.array_equal(alpha, mask[dy:dy + crop["height"], dx:dx + crop["width"]])
+    from scripts.calibration.extract_main_shop_icon_template import main_screen_foreground_mask
+    with np.load(ROOT / manifest["source_fixture"], allow_pickle=False) as samples:
+        column = samples[manifest["source_fixture_key"]]
+    x, y, width, height = manifest["source_roi_in_client"]
+    original = column[y-240:y-240+height, x:x+width]
+    dx, dy, width, height = manifest["source_roi_crop"]
+    assert np.array_equal(image[:, :, :3], original[dy:dy+height, dx:dx+width])
+    mask = main_screen_foreground_mask(original)
+    assert np.array_equal(alpha, mask[dy:dy+height, dx:dx+width])
 
 
 def test_main_shop_question_strokes_are_solid_but_openings_remain_transparent() -> None:
     image = read_png(TEMPLATE_DIR / template_relative_path("main_shop_icon.png", feature="shop"))
     alpha = image[:, :, 3]
-    assert alpha[37, 74] == 255  # Previously removed pale-blue right stroke.
-    assert alpha[36, 44] == 255  # Previously removed left stroke.
-    assert alpha[22, 70] == 0  # Natural opening of the right question mark.
-    assert alpha[10, 10] == 0  # Exterior wallpaper.
-    assert alpha[65, 60] == 0  # Gap between the icon and its caption.
+    assert alpha[36, 48] == 255  # Original pale-blue right stroke.
+    assert alpha[35, 18] == 255  # Original left stroke.
+    assert alpha[33, 43] == 255  # Restored right-edge notch from source pixels.
+    assert alpha[35, 15] == 255  # Restored left-edge notch from source pixels.
+    assert alpha[21, 44] == 0  # Natural opening of the right question mark.
+    assert alpha[0, 0] == 0  # Exterior wallpaper.
+    assert alpha[46, 40] == 0  # Gap between the right stem and its dot.
+    assert cv2.connectedComponents((alpha > 0).astype(np.uint8), connectivity=8)[0] == 5
 
 
 def test_shop_refresh_template_contains_complete_rounded_button() -> None:

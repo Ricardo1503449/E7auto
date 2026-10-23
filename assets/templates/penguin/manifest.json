@@ -8,16 +8,11 @@
   "templates": {
     "sanctuary_entry": {
       "file": "01_sanctuary_entry.png",
-      "sha256": "7ada7c2bd7057e1c11f4e847d3a0037895e5ddea777305aed71b8984794d6f40",
+      "sha256": "46f10fb617161cc8386158bd69752d0b8bf25829707c422b09b071b00fbcc9ce",
       "label": "圣域入口图标",
       "source": {
-        "approved_candidate": "penguin-template-candidates-v2",
-        "crop": [
-          64,
-          284,
-          80,
-          114
-        ]
+        "record": "docs/calibration/registrations/penguin-sanctuary_entry-46f10fb61716-e5cdcbbfeace.json",
+        "record_sha256": "e5cdcbbfeace23fc88777b41de1d43472e350a82d4a070ea62797e76f2b3e43e"
       }
     },
     "forest_entry": {

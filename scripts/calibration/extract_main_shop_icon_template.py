@@ -24,46 +24,59 @@ BORDER_EXCLUSION = 5
 CROP_PADDING = 3
 MAIN_SCREEN_ROI = (25, 525, 165, 175)
 QUESTION_MARK_ROI = (35, 40, 90, 75)
-STROKE_HOLE_MAX_SATURATION = 32
-STROKE_HOLE_MIN_VALUE = 180
-EDGE_SMOOTHING_SIGMA = 0.65
+ICON_MAX_SATURATION = 64
+ICON_MIN_VALUE = 120
+ICON_MIN_COMPONENT_AREA = 20
+QUESTION_BORDER_REPAIRS = {
+    "left_question_top": (49, 47, 12, 14),
+    "right_question_top": (82, 46, 26, 12),
+    "right_dot_left": (70, 93, 12, 17),
+}
 
 
-def restore_question_mark_strokes(image: np.ndarray, mask: np.ndarray) -> np.ndarray:
-    """Restore pale-blue stroke pixels rejected by the white foreground seed.
-
-    Only enclosed transparent components within the question marks qualify.
-    The natural openings connect to exterior transparency; text counters and
-    exterior wallpaper are never filled.
-    """
-    hsv = cv2.cvtColor(image[:, :, :3], cv2.COLOR_BGR2HSV)
-    count, labels, stats, _ = cv2.connectedComponentsWithStats(
-        (mask == 0).astype(np.uint8), connectivity=8
-    )
+def _question_components(raw: np.ndarray) -> np.ndarray:
     rx, ry, rw, rh = QUESTION_MARK_ROI
-    restored = mask.copy()
-    for component in range(1, count):
-        x, y, width, height, _ = stats[component]
-        if not (rx <= x and ry <= y and x + width <= rx + rw and y + height <= ry + rh):
-            continue
-        pixels = labels == component
-        if np.all(hsv[:, :, 1][pixels] <= STROKE_HOLE_MAX_SATURATION) and np.all(
-            hsv[:, :, 2][pixels] >= STROKE_HOLE_MIN_VALUE
-        ):
-            restored[pixels] = 255
-    return restored
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(raw, connectivity=8)
+    seed = np.zeros(raw.shape, dtype=np.uint8)
+    retained = 0
+    for index in range(1, count):
+        x, y, width, height, area = stats[index]
+        if (area >= ICON_MIN_COMPONENT_AREA and rx < x and ry < y
+                and x+width < rx+rw and y+height < ry+rh):
+            seed[labels == index] = 255
+            retained += 1
+    if retained != 4:
+        raise ValueError('Expected two complete question marks and their two dots')
+    return seed
 
 
 def main_screen_foreground_mask(image: np.ndarray) -> np.ndarray:
-    seed = foreground_mask(image)
+    # Extract the question marks and dots from source RGB; their pale-blue edge
+    # pixels must not be discarded by the old caption-oriented white-only seed.
+    hsv = cv2.cvtColor(image[:, :, :3], cv2.COLOR_BGR2HSV)
     b, g, r = (image[:, :, channel].astype(np.int16) for channel in range(3))
-    outline = (b >= r - 8) & (np.abs(b - g) <= 25) & (np.maximum(np.maximum(b, g), r) < 170)
+    region = np.zeros(image.shape[:2], dtype=np.uint8)
+    rx, ry, rw, rh = QUESTION_MARK_ROI
+    region[ry:ry+rh, rx:rx+rw] = 1
+    raw = ((hsv[:, :, 1] <= ICON_MAX_SATURATION)
+           & (hsv[:, :, 2] >= ICON_MIN_VALUE) & (g >= r - 3)
+           & (region > 0)).astype(np.uint8)
+    seed = _question_components(raw)
+    outline = ((b >= r - 8) & (g >= r - 3) & (np.abs(b - g) <= 25)
+               & (np.maximum(np.maximum(b, g), r) < 170))
     mask = np.where((seed > 0) | ((cv2.dilate(seed, np.ones((3, 3), np.uint8)) > 0)
-                                 & outline), 255, 0).astype(np.uint8)
-    mask = restore_question_mark_strokes(image, mask)
-    # Feather inward only: never expose wallpaper or fill natural glyph openings.
-    softened = cv2.GaussianBlur(mask, (3, 3), EDGE_SMOOTHING_SIGMA, borderType=cv2.BORDER_CONSTANT)
-    return np.where(mask > 0, softened, 0).astype(np.uint8)
+                                 & outline & (region > 0)), 255, 0).astype(np.uint8)
+    # The reviewed source has tinted antialiasing in these three border sections.
+    # Re-extract those strokes from source RGB, then retain their one-pixel border.
+    # Preserve the original colors instead of painting a uniform black outline.
+    raw = ((hsv[:, :, 1] <= ICON_MAX_SATURATION)
+           & (hsv[:, :, 2] >= ICON_MIN_VALUE) & (region > 0)).astype(np.uint8)
+    source_border = cv2.dilate(_question_components(raw), np.ones((3, 3), np.uint8))
+    for x, y, width, height in QUESTION_BORDER_REPAIRS.values():
+        selected = source_border[y:y+height, x:x+width] > 0
+        mask[y:y+height, x:x+width][selected] = 255
+    # Source RGB already includes antialiasing. Preserve it without re-feathering.
+    return mask
 
 
 def find_source(source_dir: Path) -> Path:
@@ -133,10 +146,11 @@ def main() -> int:
         image = original
         mask = foreground_mask(image)
     ys, xs = np.nonzero(mask)
-    x0 = max(0, int(xs.min()) - CROP_PADDING)
-    y0 = max(0, int(ys.min()) - CROP_PADDING)
-    x1 = min(image.shape[1], int(xs.max()) + CROP_PADDING + 1)
-    y1 = min(image.shape[0], int(ys.max()) + CROP_PADDING + 1)
+    padding = 0 if args.source else CROP_PADDING
+    x0 = max(0, int(xs.min()) - padding)
+    y0 = max(0, int(ys.min()) - padding)
+    x1 = min(image.shape[1], int(xs.max()) + padding + 1)
+    y1 = min(image.shape[0], int(ys.max()) + padding + 1)
 
     output_image = np.ascontiguousarray(image[y0:y1, x0:x1].copy())
     output_image[:, :, 3] = mask[y0:y1, x0:x1]
@@ -162,22 +176,21 @@ def main() -> int:
         "output_size": {"width": x1 - x0, "height": y1 - y0},
     }
     if client_crop is not None:
+        manifest["mask"].update(max_saturation=ICON_MAX_SATURATION,
+                                min_value=ICON_MIN_VALUE,
+                                min_component_area=ICON_MIN_COMPONENT_AREA)
+        manifest["mask"].pop("border_exclusion")
         manifest["client_crop"] = dict(zip(("x", "y", "width", "height"), client_crop))
         manifest["mask"]["glyph_roi"] = dict(zip(("x", "y", "width", "height"), MAIN_SCREEN_ROI))
         manifest["mask"]["outline"] = {"radius": 1, "min_blue_minus_red": -8,
+                                      "min_green_minus_red": -3,
                                       "max_blue_green_difference": 25, "max_value_exclusive": 170}
-        manifest["mask"]["question_stroke_repair"] = {
+        manifest["mask"]["question_strokes"] = {
             "roi": dict(zip(("x", "y", "width", "height"), QUESTION_MARK_ROI)),
-            "enclosed_components_only": True,
-            "max_saturation": STROKE_HOLE_MAX_SATURATION,
-            "min_value": STROKE_HOLE_MIN_VALUE,
-        }
-        manifest["mask"]["edge_smoothing"] = {
-            "kernel_size": [3, 3], "sigma": EDGE_SMOOTHING_SIGMA,
-            "inward_only": True,
-            "partially_transparent_pixels": int(np.count_nonzero(
-                (output_image[:, :, 3] > 0) & (output_image[:, :, 3] < 255)
-            )),
+            "source_rgb_reextracted": True, "components": 4,
+            "caption_removed": True, "original_antialiasing_preserved": True,
+            "extra_feathering": False,
+            "source_border_repairs": QUESTION_BORDER_REPAIRS,
         }
     (ensure_candidate_path(manifest_dir / "main_shop_icon_manifest.yaml")).write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
