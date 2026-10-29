@@ -1,19 +1,19 @@
 {
   "pools": {
     "continuous": {
-      "skystone_spent": 17862,
-      "covenant_purchases": 271,
-      "mystic_purchases": 61,
-      "covenant_per_100": 1.5171873250475871,
-      "mystic_per_100": 0.34150711006606205
+      "skystone_spent": 24990,
+      "covenant_purchases": 384,
+      "mystic_purchases": 87,
+      "covenant_per_100": 1.5366146458583434,
+      "mystic_per_100": 0.34813925570228094
     },
     "transfer": {
-      "skystone_spent": 11148,
-      "covenant_purchases": 156,
+      "skystone_spent": 11313,
+      "covenant_purchases": 158,
       "mystic_purchases": 41,
-      "covenant_per_100": 1.3993541442411195,
-      "mystic_per_100": 0.3677789738069609
+      "covenant_per_100": 1.3966233536639265,
+      "mystic_per_100": 0.36241492088747457
     }
   },
-  "updated_at": "2026-10-28T22:19:12.581Z"
+  "updated_at": "2026-10-29T18:59:13.593Z"
 }
