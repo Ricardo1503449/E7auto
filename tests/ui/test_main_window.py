@@ -359,7 +359,7 @@ def test_continuous_refresh_layout_selection_and_small_window_scroll(tmp_path):
         assert scroll.viewport().rect().contains(center)
         assert scroll.horizontalScrollBar().maximum() == 0
         fresh_window = MainWindow(tmp_path)
-        assert not fresh_window._shop_feature_page.continuous_refresh_toggle.isChecked()
+        assert fresh_window._shop_feature_page.continuous_refresh_toggle.isChecked()
         fresh_window.close()
     finally:
         window.close()

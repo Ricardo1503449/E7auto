@@ -59,6 +59,11 @@ Windows桌面发送明确标注的测试通知，等待横幅结束及进程退�
 读取E7auto自身的记录。仅Show成功不能代替通知中心留存验证。
 
 三个功能页共用 `ui/pages/feature.py` 的展示布局及整数校验，业务实现仍独立。
+商店页通过ui/preferences.py的ContinuousRefreshPreferences将“连续刷新”原子保存至
+state/ui_preferences.json的shop_continuous_refresh，并保留其他偏好键；缺失、损坏或
+非布尔值默认关闭。创建页面时先恢复开关再连接切换信号，不因启动读取而重写文件。
+切换成功立即保存，失败阻断信号回滚至上次成功值并使用页面状态提示；其他启动参数
+不随此设置保存。点击启动时仍冻结本次RunRequest，准备/运行禁用及结束后恢复规则保持。
 主窗口样式及公共颜色、字号、间距在 `ui/styles.py`，沿用无悬浮提示规则。
 卡片图片缓存按逻辑尺寸乘DPR生成，源裁剪坐标同步换算为物理像素；缓存键包含
 尺寸和DPR，保留PNG字节和原构图。目录及浏览器打开经 `ui/desktop_actions.py`

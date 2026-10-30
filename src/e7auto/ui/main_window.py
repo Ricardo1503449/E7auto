@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
         self._pages = QStackedWidget()
         self._pages.setObjectName("pageStack")
         self._function_center_page = _FunctionCenterPage(project_root)
-        self._shop_feature_page = _ShopFeaturePage()
+        self._shop_feature_page = _ShopFeaturePage(project_root)
         self._penguin_feature_page = _PenguinFeaturePage()
         self._chaos_feature_page = _ChaosFeaturePage()
         self._about_page = _AboutPage(project_root)

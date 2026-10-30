@@ -69,3 +69,19 @@ class AnnouncementPreferences:
         values = _read_preferences(self._path)
         values["announcement_seen_id"] = announcement_id
         _write_preferences(self._path, values)
+
+
+class ContinuousRefreshPreferences:
+    """Keep the shop refresh mode across application launches."""
+
+    def __init__(self, path: Path) -> None:
+        self._path = path
+
+    def load(self) -> bool:
+        value = _read_preferences(self._path).get("shop_continuous_refresh", False)
+        return value if isinstance(value, bool) else False
+
+    def save(self, enabled: bool) -> None:
+        values = _read_preferences(self._path)
+        values["shop_continuous_refresh"] = enabled
+        _write_preferences(self._path, values)

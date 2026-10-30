@@ -514,3 +514,25 @@ ui/styles.py、tests/ui/test_dialogs.py、tests/ui/test_announcements.py、tests
 没有截图、打开外部程序、操作游戏、运行全套或重复无关弹窗回归；其他缩放与安装包
 未验收，未构建、提交或推送。修改前快照、6项JUnit及原生属性检查数据位于本地证据
 `artifacts/tasks/ui/20261029-144434-about-text-spacing-45d35599`。
+
+## 2026-10-30 连续刷新选择跨启动保存
+
+商店启动前设置中的“连续刷新”切换后立即保存至state/ui_preferences.json的
+shop_continuous_refresh，页面创建时恢复上次选择；选中和取消选中均保存，首次使用、
+状态缺失/损坏或字段不是布尔值时默认关闭。初始化先恢复开关再连接信号，不因读取
+重写文件。写入沿用公共原子替换并保留通知、统计、公告已读及未知键；失败阻断信号
+回滚至上次成功值，使用页面状态区提示，成功重试清除提示。购买友情点数和预算不保存。
+
+实际执行17项直接相关测试，全部通过（5.68秒）：新增12项覆盖7类缺失/无效状态、
+开启/关闭后的窗口重建及独立Python进程恢复、初始化不重写状态、其他偏好前后交错
+保存、原子替换失败时原文件保留/开关回滚及重试；复验原有布局与小窗口1项，以及
+启动参数冻结、worker接收模式和运行期间禁用/结束恢复4项。测试均使用隔离状态，
+没有写入开发者自己的连续刷新选择；worker采用替代流程，没有操作游戏或联网。
+
+目录及源码边界检查通过（problems为空），本次修改及新增文件的Git空白检查通过。
+
+本次修改ui/pages/shop.py、ui/preferences.py、ui/main_window.py、tests/ui/test_main_window.py，
+新增tests/ui/test_shop_preferences.py，并同步使用说明、开发指南和本记录。未运行全套，
+商店识别/购买/转运策略未变且未重测；Windows实屏和安装版跨启动行为未验收，未截图、
+构建、提交或推送。此前其他未提交修改保留。本地快照、JUnit和检查结果位于
+`artifacts/tasks/ui/20261030-145906-continuous-refresh-preference-14ab52d7`。
