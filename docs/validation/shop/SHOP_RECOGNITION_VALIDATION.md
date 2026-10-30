@@ -354,3 +354,8 @@ inventory_readiness配置：minimum_frames=3、minimum_stable_ms=200、differenc
 - 既有源码测试已通过，本轮没有重跑全量或无关测试；本轮没有执行游戏购买。
 
 本机构建证据保存于 `artifacts/release-v1.3.1-20260914-182935/`（不纳入提交）。当前未暂存、提交、推送、创建标签或发布 GitHub Release；dist 和 ZIP 继续保持为本地产物。
+
+
+## 2026-10-23 历史路径定位补充
+
+上文v1.3.1记录中的旧目录 `artifacts/release-v1.3.1-20260914-182935/` 已迁至 `artifacts/releases/v1.3.1/20260916-145543-legacy-release-v1-3-1-20260914-182935-fd5183ca/`。本次对照2026-09-16迁移清单核对11个文件，均仍存在且SHA-256一致。已购买按钮校准记录中的fixture路径同步指向 `tests/fixtures/shop/purchased_button_samples.png`，样本摘要与当年迁移清单一致；未改动样本或模板。本段只补充证据位置，不改写历史识别、构建或验收结论。

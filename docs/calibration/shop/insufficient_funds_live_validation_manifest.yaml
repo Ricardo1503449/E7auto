@@ -2,7 +2,7 @@ schema_version: 1
 validation: insufficient_funds_live_recognition
 status: operator_confirmed_passed
 validated_on: '2026-08-24'
-source_result: logs/insufficient-funds-live-validation.json
+source_result: artifacts/tasks/shop/20261023-213751-archive-legacy-log-evidence-0b5ecae7/results/insufficient-funds-live-validation.json
 source_recorded_status: ok
 process:
   windows_admin: true

@@ -5,9 +5,9 @@
     2322,
     1306
   ],
-  "source_fixture": "tests/fixtures/main_entry_samples.npz",
+  "source_fixture": "tests/fixtures/common/sanctuary_calibration_20260915.npz",
   "source_fixture_sha256": "356399045f47461a38c85a934a17cbd13a6b4622d9f088fd54fd330ca976c4aa",
-  "source_provenance": "tests/fixtures/main_entry_samples.json",
+  "source_provenance": "tests/fixtures/common/sanctuary_calibration_20260915.json",
   "independent_localization_roi": {
     "x": 16,
     "y": 240,

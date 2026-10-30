@@ -7,7 +7,7 @@ client_baseline: {width: 2322, height: 1306}
 observed_client_bounds: {x: 579, y: 491, width: 2322, height: 1306}
 observed_overlay_bounds: {x: 327, y: 346, width: 320, height: 159}
 offset: {x: -252, y: -145}
-source_result: artifacts/overlay-position-calibration-18px.json
+source_result: artifacts/tasks/platform/20260916-145544-legacy-overlay-validation-c6455649/results/overlay-position-calibration-18px.json
 widget: e7auto.ui.StatsOverlay
 overlay_font_size_px: 18
 limitations:

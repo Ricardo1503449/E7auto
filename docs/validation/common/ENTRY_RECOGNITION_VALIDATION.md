@@ -84,3 +84,12 @@
 候选：artifacts/template-candidates/20261021-130900-6c993148/shop/main_shop_icon.png；计划：同目录上级plans/shop-main_shop_icon.json。核对批准摘要、原正式PNG和来源记录后逐项prepare/apply，事务05616470aa124ad6878920ca6de64f5f。新的正式来源为shop-main_shop_icon-fe0aa651bede-9cd598627dcb.json，历史来源保持原字节。
 
 执行证据位于本地任务`artifacts/tasks/common/20261021-120511-icon-only-entry-templates-acf97661/results`中的shop-approved-registration.json及shop-approved-binding-tests.xml。未进行游戏点击/完整流程、安装包重建或Git提交推送。
+
+
+## 2026-10-23 历史圣域校准样本恢复
+
+现存 `main_entry_samples.npz` 的五份样本均为900×210图标列，对应客户区裁剪[0,240,210,900]；旧圣域校准使用[16,240,192,480]。旧记录保存的SHA-256为356399045f47461a38c85a934a17cbd13a6b4622d9f088fd54fd330ca976c4aa，现存大范围样本为89b77d4d9ac5929d6765f984ec636c65f460ecbba161e70067d0347cd01114a5；2026-09-15提交6281738已同时存在这两项不同摘要，目录迁移没有改变现存样本。
+
+逐份从现存数组按x=16、y=0、width=192、height=480提取原始uint8 BGR像素，沿用样本顺序压缩存储后，整个NPZ的SHA-256与旧记录完全一致。恢复文件为 `tests/fixtures/common/sanctuary_calibration_20260915.npz`，同名JSON记录原来源、当前输入摘要、裁剪关系与恢复依据；该JSON是本次恢复说明，不冒充原始来源文件。校准记录现位于 `docs/calibration/penguin/sanctuary_search_manifest.json`，其中样本及来源路径已修正，原SHA-256、观测数据、ROI和历史结论保持。
+
+本次仅验证五份数组与输入子区域逐像素一致、整个恢复文件与历史摘要一致及引用可解析；没有重新运行历史识别、调整当前图标列样本或修改模板、运行配置与识别算法。

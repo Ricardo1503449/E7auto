@@ -79,3 +79,8 @@
 - 输出：`artifacts/releases/v1.3.2/20260916-145543-legacy-release-v1-3-2-a560cb74/release-verification.txt`、`release-verification.exit`；管理员入口为同目录 `verify-release-admin.ps1`。
 
 本轮仅确认本机版本、构建和发布包自检，未补做游戏实机流程或纯净 Windows 验证。本次未创建 Git 提交、标签、推送或 GitHub Release。
+
+
+## 2026-10-23 历史路径定位补充
+
+上文记录的旧目录 `artifacts/release-v1.3.2-1d0a198-20260916/` 已在2026-09-16迁至 `artifacts/releases/v1.3.2/20260916-145544-legacy-release-v1-3-2-1d0a198-20260916-319d0ac8/`。本次对照当年的迁移清单核对9个文件，均仍存在且SHA-256一致。本段仅补充现存证据位置，保留上文当时的构建、验证及发布结论；没有重新构建或验收。

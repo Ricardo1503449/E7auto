@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "description": "Recovered historical sanctuary calibration fixture, byte-identical to the SHA-256 recorded before the directory migration.",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "crop": {
+    "x": 16,
+    "y": 240,
+    "width": 192,
+    "height": 480
+  },
+  "shop_source_client_crop": {
+    "x": 26,
+    "y": 96,
+    "width": 2322,
+    "height": 1306
+  },
+  "samples": {
+    "hidden_192723": {
+      "source": "logs\\run-20260915-192723-312685-059f65c502ec-stop.png",
+      "source_sha256": "31650a03c64d6a4f458822e9b2c2fa3610ef5034a864cf141cf0093274b5d724"
+    },
+    "hidden_192753": {
+      "source": "logs\\run-20260915-192753-478853-abd6129d96d3-stop.png",
+      "source_sha256": "1aa12ce4c9cd4f77a210f39afa17a9e895c2691e5712475a812b0f37e0a758de"
+    },
+    "hidden_193020": {
+      "source": "logs\\run-20260915-193020-619591-1e179aa53bdb-stop.png",
+      "source_sha256": "768519b1221e727e5e614a4f8af254c46e10b69342cee0c2812ccadd8f4b1238"
+    },
+    "visible_penguin_calibration": {
+      "source": "artifacts\\penguin-template-candidates-v2\\context\\source_01.png",
+      "source_sha256": "f1a53ebecd5452e234af4329b5ed874cad287c2bb0d652f9b6e09a2bf21b783a"
+    },
+    "visible_shop_calibration": {
+      "source": "C:\\Users\\lxy\\AppData\\Local\\Temp\\codex-clipboard-713efead-f496-4726-bc3a-dd851974cdc1.png",
+      "source_sha256": "7a24b2502462634a6e451a31a293dab124c2a1d122ac5538da34bd65e3b11803"
+    }
+  },
+  "fixture": "tests/fixtures/common/sanctuary_calibration_20260915.npz",
+  "fixture_sha256": "356399045f47461a38c85a934a17cbd13a6b4622d9f088fd54fd330ca976c4aa",
+  "recovery": {
+    "recorded_on": "2026-10-23",
+    "source_fixture": "tests/fixtures/common/main_entry_samples.npz",
+    "source_fixture_sha256": "89b77d4d9ac5929d6765f984ec636c65f460ecbba161e70067d0347cd01114a5",
+    "source_provenance": "tests/fixtures/common/main_entry_samples.json",
+    "source_provenance_sha256": "d2402f7000182841cae50fcab0fc95c60157829ce562a2d4d4ffa3652cdebad8",
+    "source_crop": {
+      "x": 0,
+      "y": 240,
+      "width": 210,
+      "height": 900
+    },
+    "slice_in_source_array": {
+      "x": 16,
+      "y": 0,
+      "width": 192,
+      "height": 480
+    },
+    "operation": "Copy original uint8 BGR pixels from each larger sample and serialize with numpy.savez_compressed in existing sample order; no scaling or pixel editing.",
+    "historical_record": "docs/calibration/penguin/sanctuary_search_manifest.json",
+    "historical_fixture_path": "tests/fixtures/main_entry_samples.npz",
+    "historical_provenance_path": "tests/fixtures/main_entry_samples.json",
+    "full_archive_matches_recorded_sha256": true,
+    "new_recognition_validation": false
+  }
+}

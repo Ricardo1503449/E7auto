@@ -118,3 +118,8 @@ counts/next_due使用独立连接执行只读查询，不再因查询数量或�
 已按本次网页修改授权更新现有Worker，版本84a4a8b3-4a27-41c0-9f22-9723e036144c，未运行数据库迁移。线上HTML、版本化脚本/dashboard.js?v=d37fbcbe、汇总JSON及SVG均返回200，脚本与已验证bundle逐字一致；JSON时间仍为2026-10-20T11:25:47.476Z，SVG仍显示对应北京时间，未将网页刷新时间写入服务端。已打开的页面须整页重新加载一次才能使用新脚本；本轮没有操作用户浏览器、构建安装包、Git提交或推送。
 
 原始副本、定向测试、打包/部署和线上核验记录保存在本地任务：`artifacts/tasks/shop/20261021-103246-dashboard-refresh-time-3010d873`，文字结果在results，网页/SVG在previews，打包及隔离脚本在scratch。历史记录按当时行为保留。
+
+
+## 2026-10-23 历史任务状态收尾
+
+核对本页2026-10-03至10-04实现、部署和续验记录，以及对应任务results中的最终测试、bundle、部署及线上核验资料后，将 `artifacts/tasks/shop/20261003-213923-anonymous-shop-statistics-3ac414ba/task.json` 从active补记为complete。finished_at记录本次元数据收尾时间；原报告的时间、结果及首轮未执行范围不变，后续工作继续归属各自任务。此次没有重新部署、联网验收、构建或重跑历史测试。

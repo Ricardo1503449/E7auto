@@ -33,3 +33,10 @@
 将GCC15.2.0及Nuitka缓存从根目录`.nuitka-cache`迁至登记的`tools/cache/nuitka`；GCC安装副本登记为`nuitka_gcc`，构建入口通过公共路径函数解析缓存位置。编译器版本、系统PATH、Python环境和运行源码保持不变。没有给旧位置增加豁免或建立联接。
 
 迁移前核对绝对目录边界、目标不存在及无重解析点，在同一磁盘移动目录。用户要求不逐文件核对哈希后已停止相关任务，最终仅核对16,419个文件、2,091,367,588字节一致，以及新位置的GCC15.2.0启动正常。构建顺序相关检查1项通过，PowerShell语法通过；现有1.4.26安装EXE摘要未变。不重建、不重复安装验收，不提交推送；记录见本次路径检查（本地证据：`artifacts/tasks/common/20261020-160844-rebuild-1-4-26-6c7c0df5/results/compiler-path-verification.json`）。
+
+
+## 2026-10-23 历史缓存与受限目录核查
+
+根目录 `.wrangler/cache/cf.json` 是2026-10-04留下的2028字节缓存，已按原字节迁至 `artifacts/tasks/shop/20261023-215109-archive-legacy-wrangler-cache-fd38a57d/results/cf.json`。原路径、SHA-256和修改时间记录于同目录 `migration-manifest.json`，核对一致后仅移除了两个空目录；任务标记archived。未更改工具入口、缓存配置或目录检查规则。
+
+普通沙箱无法读取的四个历史scratch目录，在沙箱外完成了只读清单及摘要核查：分别为4个pytest缓存文件、5个pytest缓存文件、空测试目录和6个快照测试输出文件；没有发现额外错放产物。已有访问权限、原文件和目录均保留。核查报告位于 `artifacts/maintenance/20261023-215108-resolve-legacy-project-evidence-8d9080c8/restricted-directories-audit.json`。
