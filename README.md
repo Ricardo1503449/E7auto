@@ -4,7 +4,7 @@
 
 **[下载安装包](https://github.com/Ricardo1503449/E7auto/releases/latest)** · [使用说明](docs/user/使用说明.md) · [更新日志](CHANGELOG.md)
 
-当前检入源码版本为 `v1.4.27`，可下载版本以发布页为准。
+当前检入源码版本为 `v1.4.28`，可下载版本以发布页为准。
 
 ## 主要功能
 
