@@ -1,11 +1,14 @@
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QLineEdit, QPushButton, QVBoxLayout, QWidget
 
 from e7auto.ui.pages.application import _UpdateResultDialog
 from e7auto.ui.widgets import AppDialog
 from e7auto.ui.styles import MAIN_WINDOW_STYLE
+from e7auto.ui import MainWindow
+from e7auto.ui.announcements import _AnnouncementDialog
+from shiboken6 import delete
 
 
 CASES = [
@@ -138,3 +141,142 @@ def test_future_dialog_subclasses_get_the_same_policy(qt_application):
     QTest.keyClick(dialog.confirm, Qt.Key.Key_Return)
     assert clicks == [True]
     dialog.close()
+
+
+def make_hosted_dialog(parent, kind):
+    if kind == 'announcement':
+        return _AnnouncementDialog(parent)
+    if kind == 'future':
+        dialog = AppDialog(parent)
+        button = QPushButton('确认', dialog)
+        button.clicked.connect(dialog.accept)
+        QVBoxLayout(dialog).addWidget(button)
+        return dialog
+    title, action, notes = {
+        'up_to_date': ('无需更新', None, None),
+        'update_failed': ('检查更新失败', '重试', None),
+        'update_available': ('发现新版本', '更新', '# 更新内容\n\n测试说明'),
+    }[kind]
+    return _UpdateResultDialog(title, '说明', action, parent, notes=notes)
+
+
+@pytest.mark.parametrize('kind', ['announcement', 'up_to_date', 'update_failed', 'update_available', 'future'])
+def test_shared_dialog_blocks_content_but_keeps_title_drag_available(tmp_path, qt_application, monkeypatch, kind):
+    window = MainWindow(tmp_path)
+    window.show()
+    window._show_module_page('shop_refresh')
+    page = window._pages.currentWidget()
+    dialog = make_hosted_dialog(window, kind)
+    dialog.open()
+    qt_application.processEvents()
+    body = window._dialog_backdrop.parentWidget()
+    assert window.isEnabled() and not body.isEnabled()
+    assert dialog.isEnabled() and not dialog.isModal()
+    assert QApplication.activeModalWidget() is None
+    assert window._title_bar.isEnabled() and not window._title_bar.back_button.isEnabled()
+    assert all(button.isEnabled() for button in (window._title_bar._minimize,
+                                               window._title_bar._maximize, window._title_bar._close))
+    if QApplication.platformName() == 'windows':
+        import ctypes
+        assert ctypes.windll.user32.IsWindowEnabled(int(window.winId()))
+
+    window._sidebar.buttons['about'].click()
+    window._title_bar.back_button.click()
+    window._show_section('about')
+    window._show_module_page('chaos')
+    window._launch_run('shop')
+    assert window._pages.currentWidget() is page and window._preparation_thread is None
+    moves = []
+    monkeypatch.setattr(window.windowHandle(), 'startSystemMove', lambda: moves.append(True) or True)
+    QTest.mousePress(window._title_bar, Qt.MouseButton.LeftButton, pos=QPoint(400, 20))
+    QTest.mouseRelease(window._title_bar, Qt.MouseButton.LeftButton, pos=QPoint(400, 20))
+    assert moves == [True]
+    dialog.reject()
+    assert body.isEnabled() and not window._dialog_backdrop.isVisible()
+    window._show_section('about')
+    assert window._pages.currentWidget() is window._about_page
+    window.close()
+
+
+@pytest.mark.parametrize('kind', ['announcement', 'up_to_date', 'update_failed', 'update_available', 'future'])
+def test_shared_dialog_follows_window_move_resize_and_restore(tmp_path, qt_application, kind):
+    window = MainWindow(tmp_path)
+    window.resize(760, 560)
+    window.show()
+    dialog = make_hosted_dialog(window, kind)
+    dialog.open()
+    qt_application.processEvents()
+    previous_window, previous_dialog = window.pos(), dialog.pos()
+    window.move(window.pos() + QPoint(60, 40))
+    qt_application.processEvents()
+    assert ((dialog.pos() - previous_dialog) - (window.pos() - previous_window)).manhattanLength() <= 2
+    for action in (lambda: window.resize(1100, 740), window.showMaximized, window.showNormal,
+                   window.showMinimized, window.showNormal):
+        action()
+        qt_application.processEvents()
+        assert window._dialog_host.active and not window._dialog_backdrop.parentWidget().isEnabled()
+        if not window.isMinimized():
+            assert dialog.isVisible()
+            expected = window.mapToGlobal(window.rect().center())
+            actual = dialog.frameGeometry().center()
+            assert (actual - expected).manhattanLength() <= 2
+    dialog.reject()
+    window.close()
+
+
+def test_shared_host_keeps_content_blocked_until_last_dialog_is_gone(tmp_path, qt_application):
+    window = MainWindow(tmp_path)
+    window.show()
+    first = make_hosted_dialog(window, 'future')
+    first.open()
+    second = make_hosted_dialog(first, 'future')
+    second.open()
+    qt_application.processEvents()
+    body = window._dialog_backdrop.parentWidget()
+    second.reject()
+    assert first.isVisible() and window._dialog_host.active and not body.isEnabled()
+    first.hide()
+    assert not window._dialog_host.active and body.isEnabled()
+    first.open()
+    assert window._dialog_host.active and not body.isEnabled()
+    delete(first)
+    assert not window._dialog_host.active and body.isEnabled()
+    assert not window._dialog_backdrop.isVisible()
+    window.close()
+
+
+def test_shared_host_preserves_previously_disabled_content(tmp_path, qt_application):
+    window = MainWindow(tmp_path)
+    window.show()
+    body = window._dialog_backdrop.parentWidget()
+    body.setEnabled(False)
+    dialog = make_hosted_dialog(window, 'future')
+    dialog.open()
+    dialog.reject()
+    assert not body.isEnabled()
+    window.close()
+
+
+def test_title_bar_escape_and_parent_close_keep_dialog_rejection_guard(tmp_path, qt_application):
+    class GuardedDialog(AppDialog):
+        busy = True
+
+        def reject(self):
+            if not self.busy:
+                super().reject()
+
+    window = MainWindow(tmp_path)
+    window.show()
+    dialog = GuardedDialog(window)
+    dialog.open()
+    qt_application.processEvents()
+    QTest.keyClick(window, Qt.Key.Key_Escape)
+    assert dialog.isVisible() and window._dialog_host.active
+    assert not window.close()
+    assert window.isVisible() and dialog.isVisible()
+    dialog.busy = False
+    QTest.keyClick(window, Qt.Key.Key_Escape)
+    assert not dialog.isVisible() and not window._dialog_host.active and window.isVisible()
+    dialog.open()
+    assert window.close()
+    assert not dialog.isVisible() and not window._dialog_host.active

@@ -188,32 +188,32 @@ def test_check_updates_feedback_retry_and_release_notes(tmp_path, monkeypatch, q
     assert page.update_button._spinner_angle != angle
     assert page.status_label.isHidden()
     page.update_checker.failed.emit("网络失败")
-    assert page.update_button.isEnabled()
+    assert not page.update_button._busy and not page.update_button.isEnabled()
     assert not page.update_button._spinner_timer.isActive()
     dialog = page._update_dialog
-    assert dialog.isVisible() and dialog.isModal()
-    assert window._update_dialog_backdrop.isVisible()
+    assert dialog.isVisible() and not dialog.isModal()
+    assert window._dialog_backdrop.isVisible()
     assert dialog.heading.text() == "检查更新失败" and dialog.message.text() == "网络失败"
     dialog.action_button.click()
-    assert window._update_dialog_backdrop.isHidden()
+    assert window._dialog_backdrop.isHidden()
     assert page.update_button._spinner_timer.isActive()
     page.update_checker.completed.emit(f"v{__version__}", False, "")
     assert page._update_dialog.heading.text() == "无需更新"
-    assert window._update_dialog_backdrop.isVisible()
+    assert window._dialog_backdrop.isVisible()
     assert not page.update_button._spinner_timer.isActive()
     QTest.keyClick(page._update_dialog, Qt.Key.Key_Escape)
     assert page._update_dialog is None
-    assert window._update_dialog_backdrop.isHidden()
+    assert window._dialog_backdrop.isHidden()
     page.update_button.click()
     wait_for(lambda: len(requests) == 3)
     page.update_checker.completed.emit("v9.0.0", True, "## 改进\n\n- 新增侧边栏\n- 调整标题栏\n")
     assert opened == []
     assert page._update_dialog.heading.text() == "发现新版本 v9.0.0"
-    assert window._update_dialog_backdrop.isVisible()
+    assert window._dialog_backdrop.isVisible()
     assert "新增侧边栏" in page._update_dialog.notes_view.toPlainText()
     assert [button.text() for button in page._update_dialog.findChildren(QPushButton)] == ["关闭", "更新"]
     page._update_dialog.close_button.click()
-    assert window._update_dialog_backdrop.isHidden()
+    assert window._dialog_backdrop.isHidden()
     assert opened == []
     assert requests == [True, True, True]
     assert page._update_dialog is None
@@ -233,7 +233,7 @@ def test_window_close_cancels_update_animation_and_result_dialog(tmp_path, monke
         assert page._update_dialog is not None
     window.close()
     assert cancellations == [True]
-    assert window._update_dialog_backdrop.isHidden()
+    assert window._dialog_backdrop.isHidden()
     assert not page.update_button._spinner_timer.isActive()
     assert page.update_button.isEnabled()
     assert page._update_dialog is None
@@ -268,7 +268,7 @@ def test_release_notes_empty_fallback_and_long_content_scroll(tmp_path, qt_appli
     qt_application.processEvents()
     dialog = page._update_dialog
     view = dialog.notes_view
-    backdrop = window._update_dialog_backdrop
+    backdrop = window._dialog_backdrop
     assert backdrop.isVisible()
     assert backdrop.geometry() == backdrop.parentWidget().rect()
     assert backdrop.palette().color(QPalette.ColorRole.Window).getRgb() == (0, 0, 0, 128)

@@ -74,6 +74,17 @@ Enter activates only a focused button, Space retains native button behavior, and
 uses the dialog's existing reject/closing guards. System-driven show events do not reset
 the user's chosen focus. Future dialogs use this same base rather than raw QDialog.
 
+AppDialog.open uses nonblocking, non-modal window presentation. MainWindow owns an
+ui/widgets.AppDialogHost; dialogs discover it through their parent chain and register
+on show, without feature-specific visibility signals. The host disables only appBody
+and drives the shared backdrop; title-bar movement, minimize/maximize and close remain
+available, while page navigation and automation starts stay blocked. Move/resize and
+restore recenter dialogs using their frame geometry, with one coalesced follow-up after
+native geometry changes. Hiding or destroying the last dialog restores the previous
+content-enabled state; overlapping dialogs keep the content locked. Closing the main
+window still respects each dialog's reject guard and the existing installer handoff.
+Dialogs must use the shared open path rather than QDialog.open/exec or WindowModal.
+
 MainWindow owns one ui/updates.UpdateController and injects it into Settings. It owns the
 asynchronous UpdateChecker, a one-shot scheduler, and atomic state/update_status.json cache;
 Settings and the sidebar subscribe to the same availability signal. Only explicit manual

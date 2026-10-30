@@ -35,7 +35,7 @@ QMainWindow[nativeFrame="true"] QWidget#titleBar {
     border-top-right-radius: 0;
 }
 QMainWindow[nativeFrame="true"] QFrame#sidebar { border-bottom-left-radius: 0; }
-QMainWindow[nativeFrame="true"] QFrame#updateDialogBackdrop {
+QMainWindow[nativeFrame="true"] QFrame#dialogBackdrop {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -61,7 +61,7 @@ QWidget#titleBar[windowMaximized="true"] {
 QLabel#titleBarIcon { border-radius: 4px; }
 QLabel#titleBarVersion { color: ${muted}; font-size: 14px; }
 QWidget#appBody { background: transparent; }
-QFrame#updateDialogBackdrop {
+QFrame#dialogBackdrop {
     background: rgba(0, 0, 0, 128);
     border: none;
     border-bottom-left-radius: 11px;
@@ -152,19 +152,19 @@ QLabel#aboutVersion { color: ${muted}; }
 QLabel#applicationHeading { font-size: ${heading_size}px; font-weight: 700; }
 QLabel#aboutTitle { font-size: ${heading_size}px; font-weight: 600; }
 QFrame#settingsDivider { background: #f0f1f3; border: none; }
-QFrame#updateResultCard {
+QFrame#updateResultCard, QFrame#announcementCard {
     background: ${surface};
     border: 1px solid #dfe3e8;
     border-radius: 14px;
 }
-QLabel#updateResultHeading { font-size: ${heading_size}px; font-weight: 600; }
+QLabel#updateResultHeading, QLabel#announcementHeading { font-size: ${heading_size}px; font-weight: 600; }
 QLabel#updateInstallStatus { color: ${text}; font-size: 14px; }
 QProgressBar#updateDownloadProgress {
     border: 1px solid ${border}; border-radius: 5px; background: ${background};
     color: ${text}; text-align: center; min-height: 20px; font-size: 12px;
 }
 QProgressBar#updateDownloadProgress::chunk { background: ${primary}; border-radius: 4px; }
-QLabel#updateResultMessage { color: ${text}; font-size: 16px; }
+QLabel#updateResultMessage, QLabel#announcementMessage { color: ${text}; font-size: 16px; }
 QTextBrowser#updateReleaseNotes {
     background: ${surface};
     color: ${text};
@@ -186,7 +186,7 @@ QTextBrowser#updateReleaseNotes QScrollBar::sub-line:vertical {
 }
 QTextBrowser#updateReleaseNotes QScrollBar::add-page:vertical,
 QTextBrowser#updateReleaseNotes QScrollBar::sub-page:vertical { background: transparent; }
-QPushButton#updateDialogCloseButton, QPushButton#updateDialogActionButton {
+QPushButton#updateDialogCloseButton, QPushButton#updateDialogActionButton, QPushButton#announcementConfirmButton {
     background: ${surface};
     color: ${link};
     border: 1px solid ${link_border};
@@ -197,10 +197,11 @@ QPushButton#updateDialogCloseButton, QPushButton#updateDialogActionButton {
 }
 QPushButton#updateDialogCloseButton:hover { background: #f0f7ff; border-color: #409aff; }
 QPushButton#updateDialogCloseButton:pressed { background: #e3efff; border-color: ${link}; }
-QPushButton#updateDialogActionButton { background: ${accent}; color: ${surface}; border-color: ${accent}; }
-QPushButton#updateDialogActionButton:hover { background: #1267b8; }
+QPushButton#updateDialogActionButton, QPushButton#announcementConfirmButton { background: ${accent}; color: ${surface}; border-color: ${accent}; }
+QPushButton#updateDialogActionButton:hover, QPushButton#announcementConfirmButton:hover { background: #1267b8; }
 QPushButton#updateDialogCloseButton:focus { border-color: ${link}; }
-QPushButton#updateDialogActionButton:focus { border-color: #074b91; }
+QPushButton#updateDialogActionButton:focus, QPushButton#announcementConfirmButton:focus { border-color: #074b91; }
+QPushButton#announcementConfirmButton:pressed { background: #0e599e; }
 QFrame#settingsCard {
     background: ${surface};
     border: 1px solid #d7dade;

@@ -23,6 +23,8 @@ from e7auto.ui.notifications import RunEndNotifier
 from e7auto.ui.updates import UpdateController
 from e7auto.ui.update_install import UpdateInstaller
 from e7auto.ui.shop_reporting import ShopReportingController
+from e7auto.ui.announcements import AnnouncementController
+from e7auto.ui.widgets import AppDialogHost
 
 
 class MainWindow(QMainWindow):
@@ -125,12 +127,14 @@ class MainWindow(QMainWindow):
         shell_layout.addWidget(body, 1)
         self.setCentralWidget(self._shell)
 
-        self._update_dialog_backdrop = QFrame(body)
-        self._update_dialog_backdrop.setObjectName("updateDialogBackdrop")
-        self._update_dialog_backdrop.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self._update_dialog_backdrop.hide()
+        self._dialog_backdrop = QFrame(body)
+        self._dialog_backdrop.setObjectName("dialogBackdrop")
+        self._dialog_backdrop.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self._dialog_backdrop.hide()
         body.installEventFilter(self)
-        self._settings_page.update_dialog_visibility_changed.connect(self._set_update_dialog_visible)
+        self._dialog_host = AppDialogHost(self, body)
+        self._dialog_host.active_changed.connect(self._set_dialog_visible)
+        self._announcement_controller = AnnouncementController(project_root / "state" / "ui_preferences.json", self)
         self._desktop_action_pages = (self._settings_page, self._about_page)
         for page in self._desktop_action_pages:
             page.actions_settled.connect(self._finish_deferred_close)
@@ -198,7 +202,7 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def _show_module_page(self, module_id: str) -> None:
-        if self._is_busy():
+        if self._is_busy() or self._dialog_host.active:
             return
         page = self._module_pages.get(module_id)
         if page is None:
@@ -210,7 +214,7 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def _show_section(self, section: str) -> None:
-        if self._is_busy():
+        if self._is_busy() or self._dialog_host.active:
             self._sidebar.set_current(self._selected_section)
             return
         page = {"home": self._function_center_page, "about": self._about_page,
@@ -255,7 +259,7 @@ class MainWindow(QMainWindow):
         for page in self._module_pages.values():
             page.setEnabled(not busy)
             page.start_button.setText("正在准备…" if preparing and page is self._active_run_page else "启动脚本")
-        self._title_bar.back_button.setEnabled(not busy)
+        self._title_bar.back_button.setEnabled(not busy and not self._dialog_host.active)
         self._sidebar.set_navigation_enabled(not busy)
         if not busy:
             self._on_limit_text_changed("")
@@ -273,7 +277,7 @@ class MainWindow(QMainWindow):
         self._launch_run("chaos")
 
     def _launch_run(self, feature: str) -> None:
-        if self._is_busy() or self._close_requested:
+        if self._is_busy() or self._close_requested or self._dialog_host.active:
             return
         page = {"shop": self._shop_feature_page, "penguin": self._penguin_feature_page,
                 "chaos": self._chaos_feature_page}[feature]
@@ -417,16 +421,17 @@ class MainWindow(QMainWindow):
             self.close()
 
     @Slot(bool)
-    def _set_update_dialog_visible(self, visible: bool) -> None:
-        backdrop = self._update_dialog_backdrop
+    def _set_dialog_visible(self, visible: bool) -> None:
+        backdrop = self._dialog_backdrop
         backdrop.setGeometry(backdrop.parentWidget().rect())
         backdrop.setVisible(visible)
         if visible:
             backdrop.raise_()
+        self._title_bar.back_button.setEnabled(not visible and not self._is_busy())
 
     def eventFilter(self, watched, event: QEvent) -> bool:
         if event.type() == QEvent.Type.Resize and watched.objectName() == "appBody":
-            self._update_dialog_backdrop.setGeometry(watched.rect())
+            self._dialog_backdrop.setGeometry(watched.rect())
         return super().eventFilter(watched, event)
 
     def nativeEvent(self, event_type, message):
@@ -442,6 +447,7 @@ class MainWindow(QMainWindow):
             self._native_frame.attach(int(self.winId()))
         super().showEvent(event)
         self._update_controller.start()
+        self._announcement_controller.start()
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
@@ -466,6 +472,7 @@ class MainWindow(QMainWindow):
         if self._thread is not None:
             event.ignore()
             return
+        self._announcement_controller.cancel()
         self._update_installer.cancel()
         if self._update_installer.launching:
             self._close_requested = True
@@ -487,6 +494,9 @@ class MainWindow(QMainWindow):
             return
         if any(page.has_pending_actions() for page in self._desktop_action_pages):
             self._close_requested = True
+            event.ignore()
+            return
+        if not self._dialog_host.close_dialogs():
             event.ignore()
             return
         self._overlay.close()

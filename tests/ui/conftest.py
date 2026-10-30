@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 
 from tests.helpers.qt import dispose_widgets
 from e7auto.ui.updates import UpdateController
+from e7auto.ui.announcements import AnnouncementController
 
 
 @pytest.fixture(autouse=True)
@@ -13,6 +14,14 @@ def offline_update_startup(monkeypatch):
     """Unrelated UI tests never start background network requests."""
     start = UpdateController.start
     monkeypatch.setattr(UpdateController, "start", lambda self: None)
+    return start
+
+
+@pytest.fixture(autouse=True)
+def no_startup_announcement(monkeypatch):
+    """Unrelated UI tests retain their existing focus and modal state."""
+    start = AnnouncementController.start
+    monkeypatch.setattr(AnnouncementController, "start", lambda self: None)
     return start
 
 

@@ -14,6 +14,7 @@ from ..updates import PROJECT_URL, UpdateController
 from ..desktop_actions import DesktopActionThread
 from ..preferences import NotificationPreferences
 from ..widgets import AppDialog, _ToggleSwitch, _use_smooth_text
+from ..announcements import QQ_GROUP_TEXT
 from ..shop_reporting import ShopReportingController
 
 
@@ -217,7 +218,6 @@ class _UpdateResultDialog(AppDialog):
         self._install_launching = False
         self.setObjectName("updateResultDialog")
         self.setWindowTitle("检查更新")
-        self.setWindowModality(Qt.WindowModality.WindowModal)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setMinimumWidth(min(500, parent.width() - 48))
         outer = QVBoxLayout(self)
@@ -390,7 +390,6 @@ class _ApplicationPage(QWidget):
 
 
 class _SettingsPage(_ApplicationPage):
-    update_dialog_visibility_changed = Signal(bool)
     update_requested = Signal(object)
     update_cancelled = Signal()
     notifications_changed = Signal(bool)
@@ -629,7 +628,6 @@ class _SettingsPage(_ApplicationPage):
             dialog.update_requested.connect(self._request_install)
             dialog.rejected.connect(self.update_cancelled)
         dialog.finished.connect(self._dispose_update_dialog)
-        self.update_dialog_visibility_changed.emit(True)
         dialog.open()
 
     def _request_install(self) -> None:
@@ -664,7 +662,6 @@ class _SettingsPage(_ApplicationPage):
         dialog = self.sender()
         if self._update_dialog is dialog:
             self._update_dialog = None
-            self.update_dialog_visibility_changed.emit(False)
         dialog.deleteLater()
 
     def cancel_pending_actions(self) -> None:
@@ -695,10 +692,22 @@ class _AboutPage(_ApplicationPage):
         version = QLabel(f"v{__version__}")
         version.setObjectName("aboutVersion")
         details.addWidget(version)
-        description = QLabel("《第七史诗》自动化工具\n\n刷新秘密商店、红叶换企鹅、自动卡厄思。")
+        summary = QLabel("《第七史诗》自动化工具")
+        summary.setObjectName("aboutSummary")
+        summary.setWordWrap(True)
+        details.addWidget(summary)
+        description = QLabel("刷新秘密商店、红叶换企鹅、自动卡厄思。")
         description.setObjectName("aboutDescription")
         description.setWordWrap(True)
         details.addWidget(description)
+        group = QLabel(QQ_GROUP_TEXT)
+        group.setObjectName("aboutQQGroup")
+        group.setTextFormat(Qt.TextFormat.PlainText)
+        group.setWordWrap(True)
+        group.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.TextSelectableByKeyboard
+        )
+        details.addWidget(group)
         layout.addLayout(details)
         self.content_layout.addWidget(card)
         root = project_root.resolve()

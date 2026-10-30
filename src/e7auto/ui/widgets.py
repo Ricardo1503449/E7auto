@@ -3,8 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import ceil
 from pathlib import Path
+from weakref import ReferenceType, ref
 
-from PySide6.QtCore import QPointF, QRectF, QSize, Qt
+from PySide6.QtCore import QEvent, QObject, QPointF, QRectF, QSize, Qt, QTimer, Signal, Slot
 from PySide6.QtGui import (
     QColor,
     QFont,
@@ -19,6 +20,7 @@ from PySide6.QtGui import (
     QValidator,
 )
 from PySide6.QtWidgets import QAbstractButton, QDialog, QGraphicsDropShadowEffect, QPushButton, QSizePolicy, QWidget
+from shiboken6 import isValid
 
 
 _MAX_RUN_LIMIT = 2_147_483_647
@@ -31,12 +33,103 @@ def _use_smooth_text(widget: QWidget) -> None:
     widget.setFont(font)
 
 
+class AppDialogHost(QObject):
+    """Block content while keeping the owning window's chrome usable."""
+
+    active_changed = Signal(bool)
+
+    def __init__(self, window: QWidget, content: QWidget) -> None:
+        super().__init__(window)
+        self.setObjectName("appDialogHost")
+        self._content_ref = ref(content)
+        self._dialogs: list[ReferenceType[AppDialog]] = []
+        self._content_was_enabled = True
+        self._position_timer = QTimer(self)
+        self._position_timer.setSingleShot(True)
+        self._position_timer.timeout.connect(self._position_dialogs)
+        window.installEventFilter(self)
+
+    @property
+    def active(self) -> bool:
+        return bool(self._dialogs)
+
+    def register(self, dialog: AppDialog) -> None:
+        if any(reference() is dialog for reference in self._dialogs):
+            return
+        dialog.destroyed.connect(self._prune, Qt.ConnectionType.UniqueConnection)
+        self._set_dialogs([*self._dialogs, ref(dialog)])
+        self._position_dialogs()
+        self._position_timer.start(0)
+
+    def unregister(self, dialog: AppDialog) -> None:
+        self._set_dialogs([reference for reference in self._dialogs if reference() is not dialog])
+
+    @Slot()
+    def _prune(self) -> None:
+        self._set_dialogs([reference for reference in self._dialogs
+                           if reference() is not None and isValid(reference())])
+
+    def _set_dialogs(self, dialogs: list[ReferenceType[AppDialog]]) -> None:
+        was_active = self.active
+        self._dialogs = dialogs
+        if was_active == self.active:
+            return
+        content = self._content_ref()
+        if content is not None and isValid(content):
+            if self.active:
+                self._content_was_enabled = content.isEnabled()
+                content.setEnabled(False)
+            else:
+                content.setEnabled(self._content_was_enabled)
+        self.active_changed.emit(self.active)
+
+    def _position_dialogs(self) -> None:
+        window = self.parent()
+        if window.isMinimized():
+            return
+        center = window.mapToGlobal(window.rect().center())
+        for reference in self._dialogs:
+            dialog = reference()
+            if dialog is not None and isValid(dialog):
+                dialog.move(dialog.pos() + center - dialog.frameGeometry().center())
+
+    def close_dialogs(self) -> bool:
+        for reference in reversed(self._dialogs[:]):
+            dialog = reference()
+            if dialog is not None and isValid(dialog):
+                dialog.reject()
+                if isValid(dialog) and dialog.isVisible():
+                    return False
+        return not self.active
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if self.active:
+            if event.type() in (QEvent.Type.Move, QEvent.Type.Resize, QEvent.Type.WindowStateChange):
+                self._position_dialogs()
+                self._position_timer.start(0)
+            elif event.type() == QEvent.Type.KeyPress and event.key() == Qt.Key.Key_Escape:
+                dialog = self._dialogs[-1]()
+                if dialog is not None and isValid(dialog):
+                    dialog.reject()
+                    event.accept()
+                    return True
+        return super().eventFilter(watched, event)
+
+
 class AppDialog(QDialog):
     """Start on the container; activate buttons only after explicit focus or click."""
 
     def __init__(self, parent: QWidget | None = None, flags: Qt.WindowType = Qt.WindowType.Dialog):
         super().__init__(parent, flags)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self._dialog_host_ref: ReferenceType[AppDialogHost] | None = None
+
+    def open(self) -> None:
+        # QDialog.open() forces window modality, including the custom title bar.
+        self.setWindowModality(Qt.WindowModality.NonModal)
+        self.show()
+        self.raise_()
+        self.activateWindow()
 
     def showEvent(self, event: QShowEvent) -> None:
         if not event.spontaneous():
@@ -45,7 +138,22 @@ class AppDialog(QDialog):
                 button.setDefault(False)
         super().showEvent(event)
         if not event.spontaneous():
+            parent = self.parentWidget()
+            while parent is not None:
+                host = parent.findChild(AppDialogHost, "appDialogHost", Qt.FindChildOption.FindDirectChildrenOnly)
+                if host is not None:
+                    self._dialog_host_ref = ref(host)
+                    host.register(self)
+                    break
+                parent = parent.parentWidget()
             self.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def hideEvent(self, event) -> None:
+        super().hideEvent(event)
+        if not event.spontaneous() and self._dialog_host_ref is not None:
+            host = self._dialog_host_ref()
+            if host is not None and isValid(host):
+                host.unregister(self)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
