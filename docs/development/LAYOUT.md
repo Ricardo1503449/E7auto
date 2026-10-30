@@ -7,7 +7,7 @@
 - `artifacts/`：本地任务和实验输出；除README外不提交。任务按tasks/releases/git/maintenance划分，另保留模板工具专用目录及冻结archive。
 - `docs/`：user使用说明、design当前设计、development开发规范、validation按主题的验证结论、releases按版本的交付结论、calibration来源证据。
 - `tests/`：按被测职责分组；固定样本进入fixtures/<功能>，运行输出不写入测试源码。pytest通过tmp_path或tmp_path_factory分配隔离临时目录，基目录可以是系统临时目录或显式--basetemp；需要纳入任务管理时，使用管理任务中的独立测试子目录。Node/Worker测试使用管理任务中的隔离临时目录，正式验证证据按对应结果/预览分类保存。
-- `build/`：nuitka/<构建ID>和staging/<构建ID>的可再生文件。安装包完成封存并写入dist后，自动清理本次nuitka和staging目录；安装验收按需重建staging，全部验收通过并卸载后再次清理。失败现场和历史目录保留。最终安装EXE在dist，不生成ZIP。
+- `build/`：nuitka/<构建ID>存编译产物；staging/<构建ID>/setup保留已封存、待验收的安装EXE。封存成功后清理本次nuitka，staging保留至安装验收、测试卸载及dist提升成功；构建或验收失败保留现场及原可用安装包。`dist/`只保留最新成功验收的标准安装EXE，提升时清理其直属旧版标准安装EXE，不生成ZIP或备份，不处理其他文件和目录。
 - `.venv/`：Python运行和开发依赖，包括Nuitka。`tools/`：机器规则登记的项目自行管理的非Python工具安装副本、固定缓存及私有工具状态；全部忽略Git，不随E7auto打包。外部Node/npm通过私有配置登记实际路径，不复制进项目；未经明确授权不安装、升级或修改系统PATH。安装清单、锁文件和工具源码仍保存在scripts。
 
 ## 创建新任务和功能
@@ -32,7 +32,7 @@
 
 - 工具通过create_artifact_run或task_result_path创建默认输出。不得自行拼接artifacts根目录下的新任务名。
 - 验证器默认生成任务results，显式指定项目内结果路径时必须指向已有管理任务。明确指定项目外的临时/导出路径仍支持；不自动把用户输入复制到工程。
-- 发布构建自动创建releases/<版本>/<构建ID>，编译目录和临时配置使用同一个ID。日志/构建结果写入对应release任务，成功产物发布到dist。
+- 发布构建自动创建releases/<版本>/<构建ID>，编译目录和临时配置使用同一个ID。日志/构建结果写入对应release任务；封存包先留在本次staging/setup，安装验收成功后才提升到dist并清理旧版标准安装EXE。
 - 同一构建的build-inputs.json、build-artifact.json、release-verification.json和publish-check.json直接放该release任务根目录；发布后的远端响应和上传结果也放本地产物，不写回README或发布清单。docs/releases/<版本>/只在最终提交前集中整理验证结论及限制。
 - 可复用工具写入scripts对应模块；仅本次任务使用的脚本写入scratch。程序实际运行日志和用户状态仍使用logs和state，不属于开发实验结果。
 - Cloudflare配套源码归入scripts/cloudflare，Wrangler/Miniflare安装在登记的tools/cloudflare/shop-stats，npm缓存在tools/cache/npm，授权状态在tools/state/cloudflare。Node/npm使用tools/state/tool-paths.json登记的外部安装，显式参数可覆盖；配置无效直接报错，不隐式切换或更改系统PATH。stage、测试数据库和Wrangler运行输出继续使用所属任务scratch；不在源码目录生成node_modules。对应tests/scripts/cloudflare允许.mjs测试源码，其他测试目录的文件类型规则不变。

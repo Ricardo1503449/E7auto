@@ -9,11 +9,11 @@ C后端编译器由Nuitka检测和选择。当前WinLibs GCC 15.2.0（MinGW-w64 
 安装脚本为 [e7auto.iss](../../scripts/release/e7auto.iss)。简体中文语言文件取自 Inno Setup 官方仓库 `is-6_7_3` 标签的 `Files/Languages/Unofficial/ChineseSimplified.isl`，保留贡献者注释；它属于构建输入，不是程序运行依赖。
 
 - Nuitka 文件：`build/nuitka/<构建ID>/launcher.dist`，成功构建后连同本次编译目录自动清理。
-- 安装编译暂存：`build/staging/<构建ID>/setup`。
-- 唯一分发类型：`dist/E7auto_v<版本>_Setup_x64.exe`。不再生成 ZIP 或将解压目录发布到 dist。
+- 待验收安装包：`build/staging/<构建ID>/setup`，封存成功后保留至验收和dist提升完成。
+- 最终分发目录：`dist/`只保留最新成功验收的`E7auto_v<版本>_Setup_x64.exe`。不生成ZIP、解压目录或安装包备份。
 - 证据：`artifacts/releases/<版本>/<构建ID>/`；安装生命周期验证使用同一 ID 下的 `build/staging` 专用测试目录。
 
-历史 ZIP 和独立目录的清理按用户授权执行，须在新安装包构建及验收成功后核对实际路径再删除。历史验证记录保留，不将旧包伪装为新版本。
+自动清理只匹配dist直属的`E7auto_v<三段数字版本>_Setup_x64.exe`；其他文件、目录、artifacts原始证据、编译缓存及GitHub历史Release不在清理范围内。路径含符号链接或联接时拒绝提升和清理。
 
 ## 安装与用户数据
 
@@ -86,13 +86,23 @@ $releaseRun = '<构建脚本打印的Release record directory>'
 
 preflight同步版本/文档；capture保存编译输入；Nuitka与原生DLL归一化后prepare生成拥有文件清单并冻结完整payload；ISCC编译后seal确认源码/payload未变并记录安装EXE摘要。prepare和seal不代替安装验收。
 
-同版本重建先在本次staging目录生成并封存新包，成功后直接覆盖dist中的同名安装EXE，不额外备份旧包；构建失败时不替换原包。历史备份不自动清理。
+所有构建先在本次staging/setup生成并封存新包。dist中的已验收安装包持续保留，直到新包完成完整或复用模式要求的安装检查、实际编译版自检和测试卸载；随后原子移入dist或替换同名包，再清理其他旧版标准安装EXE。此规则同样适用于同版本重建，构建或验收失败不会提前覆盖可用旧包。较低版本或同版本较早构建不得替换已有的较新已验收安装包。
 
-seal通过且安装EXE成功写入dist后，自动删除本次 `build/nuitka/<构建ID>/` 和 `build/staging/<构建ID>/`。清理前核对目录边界并拒绝符号链接或联接；失败构建保留现场，历史构建目录由用户手动清理。两处清理独立执行，失败时警告并记录build-result.json中的nuitka_cleanup、staging_cleanup及各自的error字段，不把已成功生成的安装包判为构建失败。dist、artifacts/releases及编译缓存保留；后续安装验收使用安装EXE和封存清单，按需重新创建本次staging目录。
+seal通过后只清理本次`build/nuitka/<构建ID>/`；`build/staging/<构建ID>/`标记为retained_until_acceptance，保留待验收包。build-result.json中的installer指向待验收路径。所有清理先核对目录边界并拒绝符号链接或联接；失败构建保留现场，nuitka清理失败单独记录，不删除待验收包或dist中的可用包。
 
-安装验收全部成功、测试安装完整卸载后，再通过相同的目录保护清理本次staging目录。验收失败或未完成时不清理。installer-verification.json记录staging_cleanup及staging_cleanup_error；清理失败单独警告，不覆盖已有验收结果。构建和验收日志均位于artifacts/releases，不随staging删除。
+安装验收全部成功、测试安装完整卸载后，verify_installer先保存绑定本包的验收记录，再调用distribution提升安装包并清理旧包，最后清理本次staging。验收失败或未完成不触发提升；提升或旧包清理失败保留现场、返回失败退出码，installer-verification.json的distribution字段记录错误，不将已完成的安装检查伪写为失败。distribution-result.json单独记录计划、提升及已删除文件；旧包被占用等情况可在解除占用后重新整理，无须重复安装。staging清理失败仍单独记录staging_cleanup和staging_cleanup_error；构建与验收日志保存在artifacts/releases。
 
 verify_release检查实际安装目录的程序版本、资源、运行库、编译版自检、卸载登记和通知身份，再逐文件比对封存payload。编译中间目录不能作为安装验证输入。现有批量Git摘要与按阶段计算哈希优化保留。
+
+对于已有完整验收证据的安装包，可以独立预览或执行dist整理：
+
+```powershell
+.\.venv\Scripts\python.exe -B -m scripts.release.distribution --run-dir $releaseRun --plan
+.\.venv\Scripts\python.exe -B -m scripts.release.distribution --run-dir $releaseRun
+```
+
+该入口不安装程序、不需要管理员权限，依据既有封存摘要、安装验收及编译版自检绑定操作，保留原历史报告。它不代表当前源码已重新构建；最终发布仍须通过workflow check的源码与Git输入一致性检查。验收可以读取本构建staging/setup中的包；发布检查只接受已经提升到dist且摘要一致的包。
+
 
 verify_installer仅在无既有安装的受控管理员环境运行。默认按构建快照与已完成完整验收的范围比较：只有features/vision业务源码、config运行配置、assets/templates模板内容及随包说明可作为免重跑完整生命周期的改动；安装相关输入、编译器、原生依赖、版本和payload文件列表必须一致。其他或未知改动、历史证据缺失/损坏、前次失败、用户指定--full均要求完整验收；发布check会再次核对，不能仅凭报告标记放行。
 

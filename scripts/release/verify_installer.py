@@ -12,6 +12,7 @@ import winreg
 
 from scripts.common.paths import PROJECT_ROOT, build_staging_dir
 from scripts.release import workflow
+from scripts.release.distribution import promote_verified_installer
 from scripts.release.lifecycle import CHECKS, SMOKE_CHECKS, select_plan
 from scripts.release.installer import IDENTITY_KEY, MANIFEST, UNINSTALL_KEY
 
@@ -67,7 +68,8 @@ def cleanup_verified_staging(run: Path, report: dict) -> None:
     report['staging_cleanup'] = 'retained_after_failure'
     report['staging_cleanup_error'] = None
     required = SMOKE_CHECKS if report.get('mode') == 'reuse' else CHECKS
-    if report['problems'] or not all(report['checks'].get(name) is True for name in required):
+    if (report['problems'] or not all(report['checks'].get(name) is True for name in required)
+            or report.get('distribution', {}).get('status', 'published') != 'published'):
         return
     try:
         checked(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
@@ -82,6 +84,14 @@ def cleanup_verified_staging(run: Path, report: dict) -> None:
 
 def finish_report(run: Path, report: dict) -> dict:
     workflow._write(run / 'installer-verification.json', report)
+    report['distribution'] = {'status': 'not_attempted'}
+    required = SMOKE_CHECKS if report.get('mode') == 'reuse' else CHECKS
+    if not report['problems'] and all(report['checks'].get(name) is True for name in required):
+        try:
+            report['distribution'] = promote_verified_installer(run, PROJECT_ROOT)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            report['distribution'] = {'status': 'failed', 'error': str(exc)}
+            print(f'Installer acceptance passed; dist promotion/cleanup failed: {exc}', file=sys.stderr)
     cleanup_verified_staging(run, report)
     workflow._write(run / 'installer-verification.json', report)
     return report
@@ -207,7 +217,7 @@ def main() -> int:
     except (OSError, ValueError) as exc:
         parser.exit(1, f'Installer verification refused: {exc}\n')
     print(json.dumps(report, ensure_ascii=False, indent=2))
-    return int(bool(report.get('problems')))
+    return int(bool(report.get('problems')) or report.get('distribution', {}).get('status') == 'failed')
 
 
 if __name__ == '__main__':

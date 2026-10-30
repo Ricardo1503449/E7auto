@@ -10,7 +10,7 @@ import re
 import subprocess
 import tomllib
 
-from scripts.common.paths import PROJECT_ROOT, release_runs_dir, build_nuitka_dir
+from scripts.common.paths import PROJECT_ROOT, release_runs_dir, build_nuitka_dir, build_staging_dir
 from scripts.release.installer import MANIFEST, installed_files, installer_name, manifest_bytes
 
 
@@ -250,7 +250,25 @@ def seal(run: Path, installer: Path, directory: Path, root: Path = PROJECT_ROOT)
     return result
 
 
-def _artifact(run: Path, root: Path) -> tuple[dict, Path]:
+def _unlinked_path(path: Path, root: Path) -> Path:
+    root, path = root.absolute(), path.absolute()
+    if not path.is_relative_to(root):
+        raise ValueError('Release path is outside the project')
+    current = root
+    for part in ('', *path.relative_to(root).parts):
+        current /= part
+        if current.is_symlink() or current.is_junction():
+            raise ValueError(f'Linked release path: {current}')
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError('Release path escapes the project')
+    return path
+
+
+def _pending_installer(run: Path, name: str, root: Path) -> Path:
+    return _unlinked_path(build_staging_dir(root) / run.name / 'setup' / name, root)
+
+
+def _artifact(run: Path, root: Path, *, published_only: bool = False) -> tuple[dict, Path]:
     artifact = _read(run / ARTIFACT)
     snapshot = _snapshot(run, root)
     expected_name = installer_name(snapshot['version'])
@@ -258,12 +276,16 @@ def _artifact(run: Path, root: Path) -> tuple[dict, Path]:
             or artifact.get("snapshot_sha256") != _file_sha(run / SNAPSHOT)
             or artifact.get("installer_name") != expected_name):
         raise ValueError("Artifact and input snapshot do not match")
-    archive = root / "dist" / expected_name
-    if archive.is_symlink() or not archive.resolve().is_relative_to((root / "dist").resolve()):
-        raise ValueError("Linked release archive")
-    if archive.stat().st_size != artifact["installer_size"] or _file_sha(archive) != artifact["installer_sha256"]:
-        raise ValueError("Release installer changed after build verification")
-    return artifact, archive
+    published = _unlinked_path(root / 'dist' / expected_name, root)
+    candidates = [published] if published_only else [_pending_installer(run, expected_name, root), published]
+    for archive in candidates:
+        if not archive.exists():
+            continue
+        if (not archive.is_file() or archive.stat().st_size != artifact['installer_size']
+                or _file_sha(archive) != artifact['installer_sha256']):
+            raise ValueError('Release installer changed after build verification')
+        return artifact, archive
+    raise FileNotFoundError('Sealed installer is missing from staging and dist')
 
 
 def record_validation(run: Path, report: dict, root: Path = PROJECT_ROOT) -> None:
@@ -283,7 +305,7 @@ def check(run: Path, revision: str = "HEAD", root: Path = PROJECT_ROOT) -> dict:
     snapshot = _snapshot(run, root)
     if preflight(root) != snapshot["version"]:
         raise ValueError("Current version differs from the build snapshot")
-    artifact, archive = _artifact(run, root)
+    artifact, archive = _artifact(run, root, published_only=True)
     _check_inputs(snapshot, root, exact=False)
     commit = _git(root, "rev-parse", "--verify", revision + "^{commit}").decode().strip()
     tree = _git(root, "ls-tree", "-r", "-z", commit, "--", *INPUT_DIRS, *INPUT_FILES, ".gitattributes")
@@ -310,6 +332,16 @@ def check(run: Path, revision: str = "HEAD", root: Path = PROJECT_ROOT) -> dict:
         raise ValueError("Successful compiled release verification is required")
     from scripts.release.lifecycle import validate_report
     validate_report(run, root)
+    distribution = run / 'distribution-result.json'
+    acceptance = _read(run / 'installer-verification.json')
+    if distribution.exists() or 'distribution' in acceptance:
+        state = _read(distribution)
+        if (state.get('status') != 'published' or state.get('installer_sha256') != artifact['installer_sha256']
+                or Path(state.get('installer', '')).absolute() != archive):
+            raise ValueError('Installer promotion or old-package cleanup is incomplete')
+    if any(path != archive and re.fullmatch(r'E7auto_v\d+\.\d+\.\d+_Setup_x64\.exe', path.name)
+           for path in archive.parent.iterdir()):
+        raise ValueError('dist must contain only the latest accepted installer')
     result = {"version": snapshot["version"], "commit": commit, "installer": str(archive),
               "installer_sha256": artifact["installer_sha256"], "installer_size": artifact["installer_size"]}
     _write(run / "publish-check.json", result)

@@ -107,3 +107,24 @@ def test_installer_cleanup_requires_complete_success_and_keeps_acceptance_result
         assert calls[0][-4:] == ['-BuildId', BUILD_ID, '-Area', 'staging']
         assert report['problems'] == []
         assert report['staging_cleanup'] == ('failed' if outcome == 'cleanup_error' else 'removed')
+
+
+@pytest.mark.parametrize('outcome', ['passed', 'failed', 'incomplete', 'promotion_error'])
+def test_finish_report_promotes_only_after_acceptance_and_before_staging_cleanup(tmp_path, monkeypatch, outcome):
+    from scripts.release import verify_installer as verifier
+    calls = []
+    report = {'checks': dict.fromkeys(verifier.CHECKS, True), 'problems': []}
+    if outcome == 'failed': report['problems'] = ['installation failed']
+    if outcome == 'incomplete': report['checks']['empty_root_removed'] = False
+    monkeypatch.setattr(verifier.workflow, '_write', lambda *_: calls.append('write'))
+    def promote(*_):
+        calls.append('promote')
+        if outcome == 'promotion_error': raise PermissionError('locked installer')
+        return {'status': 'published'}
+    monkeypatch.setattr(verifier, 'promote_verified_installer', promote)
+    monkeypatch.setattr(verifier, 'checked', lambda *_: calls.append('cleanup'))
+    verifier.finish_report(tmp_path, report)
+    expected = ['write', 'promote', 'cleanup', 'write'] if outcome == 'passed' else (
+        ['write', 'promote', 'write'] if outcome == 'promotion_error' else ['write', 'write'])
+    assert calls == expected
+    assert report['staging_cleanup'] == ('removed' if outcome == 'passed' else 'retained_after_failure')

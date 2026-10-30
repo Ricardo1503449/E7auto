@@ -40,7 +40,6 @@ $sourceConfig = Join-Path $projectRoot "config\internal.yaml"
 if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
     throw "Missing source configuration: $sourceConfig"
 }
-$distDir = Join-Path $projectRoot "dist"
 $pyproject = Join-Path $projectRoot "pyproject.toml"
 $versionMatch = [regex]::Match(
     [IO.File]::ReadAllText($pyproject),
@@ -66,7 +65,6 @@ $windowsVersion = "{0}.{1}.{2}.0" -f (
     $coreVersionMatch.Groups["patch"].Value
 )
 $setupName = "E7auto_v${version}_Setup_x64.exe"
-$releaseInstaller = Join-Path $distDir $setupName
 $uiAssetDir = Join-Path $projectRoot "assets\ui"
 $appIcon = Join-Path $uiAssetDir "e7auto.ico"
 if (-not (Test-Path -LiteralPath $appIcon -PathType Leaf)) {
@@ -104,7 +102,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve registered Nuitka cache.' }
     & $python -B -m scripts.release.workflow capture --run-dir $runDirectory
     if ($LASTEXITCODE -ne 0) { throw "Unable to capture build inputs" }
-    New-Item -ItemType Directory -Path $distDir -Force | Out-Null
     # Windows PowerShell 5 represents native stderr as ErrorRecord objects,
     # including Nuitka's normal progress messages. Judge failure by exit code.
     $ErrorActionPreference = 'Continue'
@@ -140,7 +137,7 @@ try {
         throw "Nuitka standalone build failed with exit code $compileExit"
     }
 
-    # Retain the payload through sealing; clean this build only after publication.
+    # Retain the payload through sealing; the installer stays in staging until acceptance.
     $compiledRelease = (Resolve-Path -LiteralPath (Join-Path $buildDir "launcher.dist")).Path
     if (-not $compiledRelease.StartsWith([IO.Path]::GetFullPath($buildDir) + '\')) {
         throw 'Compiled payload is outside the configured build directory'
@@ -160,7 +157,6 @@ try {
     if ($installerExit -ne 0) { throw "Inno Setup compilation failed: $installerExit" }
     & $python -B -m scripts.release.workflow seal --run-dir $runDirectory --installer $temporaryInstaller --directory $compiledRelease
     if ($LASTEXITCODE -ne 0) { throw 'Build inputs or payload changed during installer compilation' }
-    Move-Item -LiteralPath $temporaryInstaller -Destination $releaseInstaller -Force
     $buildSucceeded = $true
 }
 finally {
@@ -169,7 +165,8 @@ finally {
         $cleanupResults[$area] = @{ status = 'retained_after_failure'; error = $null }
     }
     if ($buildSucceeded) {
-        foreach ($area in @('nuitka', 'staging')) {
+        $cleanupResults['staging'].status = 'retained_until_acceptance'
+        foreach ($area in @('nuitka')) {
             try {
                 & (Join-Path $PSScriptRoot 'cleanup-build.ps1') -ProjectRoot $projectRoot -BuildId $buildId -Area $area
                 $cleanupResults[$area].status = 'removed'
@@ -185,11 +182,12 @@ finally {
     $record.status = if ($buildSucceeded) { "complete" } else { "failed" }
     $record | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $recordPath -Encoding utf8
     [ordered]@{ succeeded = $buildSucceeded; build_id = $buildId; version = $version;
-        release_directory = $releaseDir; installer = $releaseInstaller;
+        release_directory = $releaseDir; installer = $temporaryInstaller;
         nuitka_cleanup = $cleanupResults['nuitka'].status; nuitka_cleanup_error = $cleanupResults['nuitka'].error;
         staging_cleanup = $cleanupResults['staging'].status; staging_cleanup_error = $cleanupResults['staging'].error;
         inno_version = '6.7.3'; compiler_sha256 = (Get-FileHash -LiteralPath $IsccPath -Algorithm SHA256).Hash.ToLowerInvariant() } |
         ConvertTo-Json | Set-Content -LiteralPath (Join-Path $runDirectory "build-result.json") -Encoding utf8
     Write-Host "Release record directory: $runDirectory"
+    if ($buildSucceeded) { Write-Host "Installer awaiting acceptance: $temporaryInstaller" }
     Pop-Location
 }

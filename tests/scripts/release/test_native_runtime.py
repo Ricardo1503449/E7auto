@@ -37,8 +37,8 @@ def test_sync_refuses_to_modify_existing_project_release():
 
 def test_build_normalizes_runtime_before_publishing():
     script = (ROOT / "scripts/release/build-standalone.ps1").read_text(encoding="utf-8")
-    guard = script.index("Build publication paths are outside")
+    guard = script.index("Compiled payload is outside the configured build directory")
     normalize = script.index("-m scripts.release.native_runtime")
-    remove_previous = script.index("if (Test-Path -LiteralPath $resolvedReleaseDir)")
-    publish = script.index("Move-Item -LiteralPath $compiledRelease")
-    assert guard < normalize < remove_previous < publish
+    prepare = script.index("workflow prepare")
+    seal = script.index("workflow seal")
+    assert guard < normalize < prepare < seal

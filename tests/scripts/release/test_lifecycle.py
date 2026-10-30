@@ -170,6 +170,9 @@ def test_smoke_installs_current_package_and_failure_preserves_scene(tmp_path, mo
     monkeypatch.setattr(verifier, 'registry_exists', lambda _: False)
     monkeypatch.setattr(verifier, 'shell_folder', lambda n: desktop if n == 0x19 else menu)
     monkeypatch.setattr(verifier, 'environment_snapshot', lambda: {'unchanged': True})
+    promotions = []
+    monkeypatch.setattr(verifier, 'promote_verified_installer',
+                        lambda *args: promotions.append(args) or {'status': 'published'})
     commands = []
 
     def checked(command, **kwargs):
@@ -195,9 +198,11 @@ def test_smoke_installs_current_package_and_failure_preserves_scene(tmp_path, mo
     assert sum(c[0] == str(setup) for c in commands) == 1
     assert not any('upgrade-same-version.log' in ' '.join(c) for c in commands)
     if fail_self_check:
+        assert promotions == []
         assert report['problems'] and target.exists()
         assert report['staging_cleanup'] == 'retained_after_failure'
     else:
+        assert promotions == [(run, tmp_path)]
         assert report['problems'] == [] and not target.exists()
         assert report['staging_cleanup'] == 'removed'
         assert set(report['checks']) == set(lifecycle.SMOKE_CHECKS)

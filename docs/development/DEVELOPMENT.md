@@ -281,7 +281,7 @@ $releaseRun = '<构建脚本打印的Release record directory>'
 .\.venv\Scripts\python.exe -B -m scripts.release.workflow check --run-dir $releaseRun --revision HEAD
 ```
 
-构建入口自动检查版本/文档与环境，编译前capture记录输入，prepare冻结Nuitka目录和安装文件清单，ISCC编译后seal检查输入/payload未变并封存安装EXE摘要；安装验收逐文件核对实际安装内容。最后的check还要求最终Git提交包含同一组输入，并存在绑定该安装EXE的成功编译版及安装/升级/卸载验收记录。可以先构建未提交修改，再集中提交；Git行尾转换按实际过滤规则核对，图片字节保持精确匹配。新增或删除输入文件也会使旧包失效。
+构建入口自动检查版本/文档与环境，编译前capture记录输入，prepare冻结Nuitka目录和安装文件清单，ISCC编译后seal检查输入/payload未变并封存安装EXE摘要，待验收包留在本次staging/setup；安装验收逐文件核对实际安装内容，全部通过并卸载测试副本后再提升到dist。dist只保留最新成功验收的标准安装EXE，原子替换同名包并清理直属旧版标准安装EXE；构建或验收失败保留原可用包。最后的check还要求最终Git提交包含同一组输入，并存在绑定该安装EXE的成功编译版及安装/升级/卸载验收记录。可以先构建未提交修改，再集中提交；Git行尾转换按实际过滤规则核对，图片字节保持精确匹配。新增或删除输入文件也会使旧包失效。
 
 输入范围为src/e7auto、assets/templates、assets/ui、scripts/release、scripts/common，以及launcher.py、pyproject.toml、requirements.lock、config/internal.yaml、config/chaos.yaml、随包使用说明和存在时的.gitattributes；不包含未打包的验证记录或tools中的安装、缓存及私有状态。后续构建入口增加新的输入目录时，须同步workflow的输入范围并执行实际受影响的验证；新增依赖不强制专门新增边界测试。检查不自动提交、推送或创建Release，也不替代编译版自检与实机验证；直接绕过工具不在保证范围内。已有v1.3.3包和标签保持原样，缺少新快照的历史构建不补造记录。
 

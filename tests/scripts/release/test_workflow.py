@@ -51,7 +51,7 @@ def project(tmp_path):
     return tmp_path
 
 
-def build(project, *, prepare_payload=True):
+def build(project, *, prepare_payload=True, pending=False):
     run = create_artifact_run("releases", "test", version="1.3.3", root=project)
     workflow.capture(run, project)
     dist = project / "build/nuitka" / run.name / "launcher.dist"
@@ -60,7 +60,7 @@ def build(project, *, prepare_payload=True):
     shutil.copytree(project / "assets", dist / "assets")
     shutil.copytree(project / "config", dist / "config")
     shutil.copyfile(project / "docs/user/使用说明.md", dist / "使用说明.md")
-    archive = project / "dist/E7auto_v1.3.3_Setup_x64.exe"
+    archive = ((project / 'build/staging' / run.name / 'setup') if pending else project / 'dist') / 'E7auto_v1.3.3_Setup_x64.exe'
     archive.parent.mkdir(parents=True, exist_ok=True)
     archive.write_bytes(b"MZsynthetic installer")
     if prepare_payload:
@@ -68,10 +68,12 @@ def build(project, *, prepare_payload=True):
     return run, archive, dist
 
 
-def validated(project):
-    run, archive, dist = build(project)
+def validated(project, *, pending=False, installer_bytes=None):
+    run, archive, dist = build(project, pending=pending)
+    if installer_bytes is not None:
+        archive.write_bytes(installer_bytes)
     workflow.seal(run, archive, dist, project)
-    installed = project / "installed/E7auto"
+    installed = project / 'installed' / (run.name if pending else 'E7auto')
     shutil.copytree(dist, installed)
     workflow.record_validation(run, {"release": str(installed), "installation_verified": True,
         "problems": [], "self_check": {
@@ -277,10 +279,12 @@ def test_records_cannot_be_written_into_unmanaged_directories(project):
 def test_build_freezes_payload_and_seals_before_installer_publication():
     script = (ROOT / "scripts/release/build-standalone.ps1").read_text(encoding="utf-8")
     assert script.index("workflow preflight") < script.index("workflow capture") < script.index("-m nuitka")
-    assert script.index("workflow prepare") < script.index("& $IsccPath /Qp") < script.index("workflow seal") < script.index("Move-Item -LiteralPath $temporaryInstaller")
+    assert script.index("workflow prepare") < script.index("& $IsccPath /Qp") < script.index("workflow seal") < script.index("$buildSucceeded = $true")
     assert "Compress-Archive" not in script and '"dist\\launcher.dist"' not in script
-    assert script.index("Move-Item -LiteralPath $temporaryInstaller") < script.index("$buildSucceeded = $true") < script.index("'cleanup-build.ps1'")
-    assert "if ($buildSucceeded) {\n        foreach ($area in @('nuitka', 'staging')) {" in script
+    assert 'Move-Item' not in script
+    assert "$cleanupResults['staging'].status = 'retained_until_acceptance'" in script
+    assert "foreach ($area in @('nuitka')) {" in script
+    assert 'installer = $temporaryInstaller' in script
     assert "nuitka_cleanup = $cleanupResults['nuitka'].status" in script
     assert "staging_cleanup = $cleanupResults['staging'].status" in script
 
@@ -327,3 +331,177 @@ def test_release_verifier_passes_failed_results_to_the_managed_record(tmp_path, 
     report = json.loads(capsys.readouterr().out)
     assert calls == [(tmp_path / "run", report, tmp_path)]
     assert report["problems"] and report["self_check"] is None
+
+
+def test_pending_package_keeps_old_dist_until_successful_promotion(project):
+    from scripts.release.distribution import promote_verified_installer
+    target = project / 'dist/E7auto_v1.3.3_Setup_x64.exe'
+    target.parent.mkdir()
+    target.write_bytes(b'MZold same-version installer')
+    older = target.parent / 'E7auto_v1.3.2_Setup_x64.exe'
+    older.write_bytes(b'MZolder version')
+    unrelated = target.parent / 'other.exe'
+    unrelated.write_bytes(b'keep unrelated')
+    backup = target.parent / 'backups'
+    backup.mkdir()
+    (backup / older.name).write_bytes(b'keep nested backup')
+    run, pending, _ = validated(project, pending=True)
+    assert target.read_bytes() == b'MZold same-version installer'
+    assert workflow._artifact(run, project)[1] == pending
+    with pytest.raises(ValueError, match='changed after build verification'):
+        workflow.check(run, root=project)
+    result = promote_verified_installer(run, project)
+    assert result['status'] == 'published' and result['removed'] == [str(older)]
+    assert target.read_bytes() == b'MZsynthetic installer' and not pending.exists()
+    assert not older.exists() and unrelated.read_bytes() == b'keep unrelated'
+    assert (backup / older.name).read_bytes() == b'keep nested backup'
+    assert workflow.check(run, root=project)['installer'] == str(target)
+
+
+@pytest.mark.parametrize('failure', ['failed', 'incomplete', 'wrong-binding', 'self-check', 'damaged-installer'])
+def test_distribution_failure_preserves_last_accepted_installer(project, failure):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, _ = validated(project, pending=True)
+    target = project / 'dist/E7auto_v1.3.3_Setup_x64.exe'
+    target.parent.mkdir()
+    target.write_bytes(b'MZkeep old accepted installer')
+    path = run / 'installer-verification.json'
+    report = workflow._read(path)
+    if failure == 'failed': report['problems'] = ['installation failed']
+    elif failure == 'incomplete': report['checks']['empty_root_removed'] = False
+    elif failure == 'wrong-binding': report['installer_sha256'] = '0' * 64
+    elif failure == 'self-check': (run / workflow.VALIDATION).unlink()
+    else: pending.write_bytes(b'MZtampered')
+    workflow._write(path, report)
+    with pytest.raises((ValueError, FileNotFoundError)):
+        promote_verified_installer(run, project)
+    assert target.read_bytes() == b'MZkeep old accepted installer' and pending.exists()
+
+
+def test_sealed_but_unaccepted_package_cannot_enter_dist(project):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, payload = build(project, pending=True)
+    workflow.seal(run, pending, payload, project)
+    with pytest.raises(FileNotFoundError): promote_verified_installer(run, project)
+    assert pending.exists() and not (project / 'dist').exists()
+
+
+def test_distribution_plan_is_read_only_and_existing_package_cleanup_is_idempotent(project):
+    from scripts.release.distribution import promote_verified_installer
+    run, target, _ = validated(project)
+    older = target.parent / 'E7auto_v1.3.2_Setup_x64.exe'
+    older.write_bytes(b'MZold')
+    before = (run / 'installer-verification.json').read_bytes()
+    result = promote_verified_installer(run, project, plan=True)
+    assert result['status'] == 'planned' and older.exists()
+    assert not (run / 'distribution-result.json').exists()
+    promote_verified_installer(run, project)
+    assert not older.exists() and target.exists()
+    assert promote_verified_installer(run, project)['removed'] == []
+    assert (run / 'installer-verification.json').read_bytes() == before
+
+
+def test_older_version_cannot_replace_a_higher_dist_version(project):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, _ = validated(project, pending=True)
+    newer = project / 'dist/E7auto_v1.3.4_Setup_x64.exe'
+    newer.parent.mkdir()
+    newer.write_bytes(b'MZnewer')
+    with pytest.raises(ValueError, match='higher installer version'):
+        promote_verified_installer(run, project)
+    assert newer.read_bytes() == b'MZnewer' and pending.exists()
+
+
+def test_older_same_version_build_cannot_replace_newer_accepted_bytes(project):
+    from scripts.release.distribution import promote_verified_installer
+    old_run, old_pending, _ = validated(project, pending=True, installer_bytes=b'MZold')
+    new_run, _, _ = validated(project, pending=True, installer_bytes=b'MZnew')
+    result = promote_verified_installer(new_run, project)
+    with pytest.raises(ValueError, match='newer accepted build'):
+        promote_verified_installer(old_run, project)
+    assert Path(result['installer']).read_bytes() == b'MZnew' and old_pending.exists()
+
+
+def test_failed_atomic_promotion_keeps_previous_package_and_pending_copy(project, monkeypatch):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, _ = validated(project, pending=True)
+    target = project / 'dist/E7auto_v1.3.3_Setup_x64.exe'
+    target.parent.mkdir()
+    target.write_bytes(b'MZkeep')
+    original = Path.replace
+    def replace(path, destination):
+        if path == pending: raise PermissionError('installer occupied')
+        return original(path, destination)
+    monkeypatch.setattr(Path, 'replace', replace)
+    with pytest.raises(PermissionError): promote_verified_installer(run, project)
+    assert target.read_bytes() == b'MZkeep' and pending.exists()
+    assert workflow._read(run / 'distribution-result.json')['status'] == 'failed'
+
+
+def test_failed_old_package_deletion_can_be_retried_without_reinstalling(project, monkeypatch):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, _ = validated(project, pending=True)
+    older = project / 'dist/E7auto_v1.3.2_Setup_x64.exe'
+    older.parent.mkdir()
+    older.write_bytes(b'MZold')
+    original = Path.unlink
+    def unlink(path, *args, **kwargs):
+        if path == older: raise PermissionError('old installer occupied')
+        return original(path, *args, **kwargs)
+    with monkeypatch.context() as context:
+        context.setattr(Path, 'unlink', unlink)
+        with pytest.raises(PermissionError): promote_verified_installer(run, project)
+    assert not pending.exists() and older.exists()
+    assert workflow._read(run / 'distribution-result.json')['status'] == 'failed'
+    acceptance = workflow._read(run / 'installer-verification.json')
+    acceptance['distribution'] = {'status': 'failed', 'error': 'old installer occupied'}
+    workflow._write(run / 'installer-verification.json', acceptance)
+    with pytest.raises(ValueError, match='cleanup is incomplete'):
+        workflow.check(run, root=project)
+    result = promote_verified_installer(run, project)
+    assert result['status'] == 'published' and not older.exists()
+    assert workflow.check(run, root=project)['installer'] == result['installer']
+
+
+def test_final_publish_check_rejects_reintroduced_old_installer(project):
+    run, target, _ = validated(project)
+    (target.parent / 'E7auto_v1.3.2_Setup_x64.exe').write_bytes(b'MZold')
+    with pytest.raises(ValueError, match='only the latest accepted installer'):
+        workflow.check(run, root=project)
+
+
+@pytest.mark.parametrize('linked', ['pending', 'old'])
+def test_linked_installer_is_rejected_before_dist_changes(project, monkeypatch, linked):
+    from scripts.release.distribution import promote_verified_installer
+    run, pending, _ = validated(project, pending=True)
+    older = project / 'dist/E7auto_v1.3.2_Setup_x64.exe'
+    older.parent.mkdir()
+    older.write_bytes(b'MZkeep')
+    link = pending if linked == 'pending' else older
+    original = Path.is_symlink
+    monkeypatch.setattr(Path, 'is_symlink', lambda path: path == link or original(path))
+    with pytest.raises(ValueError, match='Linked release path'):
+        promote_verified_installer(run, project)
+    assert pending.exists() and older.read_bytes() == b'MZkeep'
+
+
+def test_dist_junction_cannot_redirect_promotion_or_cleanup(project):
+    import os
+    from scripts.release.distribution import promote_verified_installer
+    if os.name != 'nt': pytest.skip('Windows directory junction')
+    run, pending, _ = validated(project, pending=True)
+    outside = project.parent / 'outside-dist'
+    outside.mkdir()
+    marker = outside / 'E7auto_v1.3.2_Setup_x64.exe'
+    marker.write_bytes(b'keep outside')
+    link = project / 'dist'
+    subprocess.run(['powershell.exe', '-NoProfile', '-Command',
+                    'New-Item -ItemType Junction -Path $env:DIST_TEST_LINK -Target $env:DIST_TEST_TARGET | Out-Null'],
+                   env={**os.environ, 'DIST_TEST_LINK': str(link), 'DIST_TEST_TARGET': str(outside)},
+                   check=True, capture_output=True)
+    try:
+        with pytest.raises(ValueError, match='Linked release path'):
+            promote_verified_installer(run, project)
+        assert marker.read_bytes() == b'keep outside' and pending.exists()
+    finally:
+        link.rmdir()
