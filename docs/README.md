@@ -25,6 +25,8 @@
 
 - [Windows安装包与安装/卸载验收](development/INSTALLER.md)
 
+- [v1.4.29 工作区审查、构建与验证](releases/v1.4.29/VALIDATION.md)
+- [v1.4.28 工作区审查与版本验证](releases/v1.4.28/VALIDATION.md)
 - [v1.4.27 版本同步与验证范围](releases/v1.4.27/VALIDATION.md)
 - [v1.4.26 安装包与版本验证](releases/v1.4.26/VALIDATION.md)
 - [v1.4.0 历史构建与开发验证](releases/v1.4.0/VALIDATION.md)
