@@ -165,7 +165,7 @@ def test_filter_unknown_or_unchanged_state_never_authorizes_next_input(make_flow
         game.on_click = lambda g, key: g.attributes.discard('dark') if key == 'filter_icon_dark' else None
     with pytest.raises(StopExecution) as stopped:flow.recruitment.filter('dark')
     assert stopped.value.reason is StopReason.RECOGNITION_TIMEOUT
-    assert game.actions == (['filter_dark', 'filter_icon_dark'] if missing == 'never_changed' else ['filter_dark'])
+    assert game.actions == (['filter_dark', 'filter_icon_dark', 'filter_icon_dark'] if missing == 'never_changed' else ['filter_dark'])
 
 
 def test_filter_recovery_keeps_submitted_toggle_and_builds_fresh_evidence(make_flow, monkeypatch):
@@ -217,7 +217,7 @@ def test_invalid_swap_never_submits_or_clears_pending(make_flow, monkeypatch, in
         return hits+hits if invalid == 'multiple_arrows' and key == 'replace_button' else hits
     monkeypatch.setattr(game, 'controls', many)
     with pytest.raises(StopExecution):flow._swap_teacher()
-    assert game.actions == ['bench_teacher'] and flow.state.pending_teacher
+    assert game.actions == ['bench_teacher'] * (2 if invalid == 'missing_selection' else 1) and flow.state.pending_teacher
 
 
 @pytest.mark.parametrize('size', [(2322, 1306), (1536, 864)])

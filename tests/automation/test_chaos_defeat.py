@@ -118,7 +118,7 @@ def test_failed_recovery_requires_each_destination_without_reclick_or_restart(st
     assert final.stop_reason is StopReason.RECOGNITION_TIMEOUT
     assert final.rounds_completed==0 and game.round_starts==1
     assert final.defeats == 1
-    assert game.actions.count('failed')==1
+    assert game.actions.count('failed') == (2 if stuck == 'failed' else 1)
     assert game.actions.count('journey_close')==(1 if stuck=='lobby' else 0)
 
 

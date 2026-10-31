@@ -27,10 +27,11 @@ class _StartConfirmation:
 class StageSelection:
     def __init__(self, runtime: RuntimeContext[ChaosVisionPort], settings: ChaosSettings,
                  vision: ChaosVisionPort, *, frame: Callable, wait: Callable,
-                 tap: Callable, delay: Callable, lobby_guard: Callable):
+                 tap: Callable, delay: Callable, lobby_guard: Callable, transition: Callable):
         self.runtime, self.settings, self.vision = runtime, settings, vision
         self.frame, self.wait, self.tap = frame, wait, tap
         self.delay, self.lobby_guard = delay, lobby_guard
+        self.transition = transition
         self.target_stage = settings.target_stage
         self.lobby_stage_key = settings.stage_selection["lobby_scenes"][self.target_stage]
         self.stage_entry_key = f"stage_{self.target_stage:02d}"
@@ -134,25 +135,30 @@ class StageSelection:
         self.runtime.deps.logger.event("chaos_stage_checked", target_stage=self.target_stage, already_target=already_target)
         if already_target:
             return
-        point = self.selector_point(start)
         self.invalidate_start()
-        self.runtime.click("chaos_open_stage_selector", point)
-        self.delay(self.settings.timing["action_settle_ms"]/1000)
+        def panel(frame):
+            button = self.vision.control(frame, "stage_confirm")
+            if button is None:
+                return None
+            entry = self.vision.control(frame, self.stage_entry_key)
+            first = entry if self.target_stage == 1 else self.vision.control(frame, "stage_01")
+            selected = self._selection_evidence(frame, entry, button)
+            return button, entry, first, selected
+        def lobby_source(frame):
+            state = self._lobby_start_state(frame)
+            return state[0] if state is not None and not state[1] else None
+        pending = self.transition(start, "stage_selector", panel, source=lobby_source,
+                                  click=lambda current: self.runtime.click("chaos_open_stage_selector", self.selector_point(current)),
+                                  outer_deadline=deadline, reason=StopReason.CHAOS_STAGE_SWITCH_FAILED)
         drags = 0
         while True:
-            def panel(frame):
-                button = self.vision.control(frame, "stage_confirm")
-                if button is None:
-                    return None
-                entry = self.vision.control(frame, self.stage_entry_key)
-                first = entry if self.target_stage == 1 else self.vision.control(frame, "stage_01")
-                selected = self._selection_evidence(frame, entry, button)
-                return button, entry, first, selected
-            _, entry, first, selected = wait("stage_selector", panel)
+            _, entry, first, selected = pending if pending is not None else wait("stage_selector", panel)
+            pending = None
             if entry is not None:
                 if selected is None:
-                    self.tap(entry)
-                    selected = wait("target_stage_selected", self._selected_state)
+                    selected = self.transition(entry, "target_stage_selected", self._selected_state,
+                                               guard=lambda f: self.vision.control(f, "stage_confirm") is not None,
+                                               outer_deadline=deadline, reason=StopReason.CHAOS_STAGE_SWITCH_FAILED)
                 else:
                     self.runtime.deps.logger.event("chaos_confirmed", stage="target_stage_selected")
                 break
@@ -178,7 +184,17 @@ class StageSelection:
             self.runtime.deps.logger.event("chaos_stage_drag_result", completed=completed, completed_drags=drags)
             self.delay(params["settle_ms"]/1000)
             # Always reacquire, including after a partially completed drag or recovery.
-        self.tap(selected[-1])  # Submit once, using the final joint frame's button.
-        wait("lobby_target_stage", lambda f: (state if (state := self._lobby_start_state(f)) is not None and state[1] else None))
+        def selected_source(frame):
+            current = self._selected_state(frame)
+            return None if current is None else current[-1]
+        lobby_seen = False
+        def destination(frame):
+            nonlocal lobby_seen
+            state = self._lobby_start_state(frame)
+            lobby_seen = state is not None
+            return state if state is not None and state[1] else None
+        self.transition(selected[-1], "lobby_target_stage", destination,
+                        source=selected_source, responded=lambda _: lobby_seen,
+                        outer_deadline=deadline, reason=StopReason.CHAOS_STAGE_SWITCH_FAILED)
         self._confirmed_start, self._pending_start = self._pending_start, None
         self.runtime.deps.logger.event("chaos_stage_switched", target_stage=self.target_stage, completed_drags=drags)

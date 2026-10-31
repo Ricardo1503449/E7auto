@@ -1,5 +1,16 @@
 # Architecture
 
+## Bounded retries for reversible clicks
+
+`runtime/action_retry.py` owns intervals, attempt counts, fixed active-time deadlines,
+fresh-source stability and response latches for explicitly opted-in transitions.
+Feature callbacks own page/target identity, partial response, completion and guarded
+input. The mouse driver and ordinary Chaos `_tap` remain single-shot. One reliable
+response disables retries for that invocation, including after network recovery.
+Shared policy lives in `internal.yaml.click_retry` (3000 ms, two total attempts,
+6000 ms minimum stage budget); parent deadlines take precedence. Existing specialized
+retry owners are not wrapped or retuned. See [coverage and validation](../validation/common/CLICK_RETRY_VALIDATION.md).
+
 Chaos supports two fixed lineups, selected in the settings page and captured before
 the worker starts. `features/chaos/lineups.py` defines their identities and contracts;
 `chaos.yaml` binds each lineup's initial recruits, rank priority and later-recruitment
@@ -337,7 +348,7 @@ Non-reference frames use existing phase candidates and configured local centre
 search on each current frame; the ring and optional click share that location.
 There is no three-frame centre acquisition or separate baseline motion class.
 Geometry changes rebuild the detector; recovered waits reset evidence without
-resetting diagnostics. Result-first probing, guarded single clicks, the 15-second
+resetting diagnostics. Result-first probing, guarded input, the 15-second
 wait and all battle/stop/network protections remain shared and unchanged.
 The summary reports reference angle/score/margin, reference rejection count,
 first visibility/active times, centre offset and the remaining OFF evidence.
@@ -352,10 +363,13 @@ the original result-only wait resumes and never probes story controls again.
 Three consecutive fresh FAILED matches unwind the current node or event to the
 round owner through BattleDefeated. A miss or network recovery breaks the evidence;
 suspected failure temporarily blocks result and auto-button actions. The round
-owner clicks the confirmed FAILED location once, requires the journey result,
+owner clicks the confirmed FAILED location, requires the journey result,
 and uses the same guarded journey close/lobby confirmation as normal completion.
+Dismissal and journey close may each retry once after three seconds only while the
+original page and target remain stable; any reliable response latches retries off.
 Only then does it start a fresh RoundState without incrementing rounds_completed.
-A missing destination, manual stop or window error stops without repeating dismissal/close.
+Unknown destinations stop at the fixed deadline; manual stop and window errors
+prevent further input.
 The battle-only failure guard is cleared on story victory evidence, stable battle
 results, and all battle exits (including exceptions).
 Ordinary-node settlement stays in `flow.py`, while direct-loot settlement belongs
@@ -513,7 +527,7 @@ See [development](../development/DEVELOPMENT.md) for extension rules and targete
 5. The game window must be unique. Before any restore/resize, the window monitor's full `Monitor` rectangle must agree with `EnumDisplaySettings(..., ENUM_CURRENT_SETTINGS)` and meet the configured `2560 x 1440` minimum. A restored background window is left inactive; a minimized window is restored with `SW_SHOWNOACTIVATE` and bounded state polling. Startup never requires or requests foreground ownership. The exact `3120 x 2080` reference mode requests the calibrated `2322 x 1306` client; every other supported mode starts at 60% of full monitor width with the same aspect ratio and is uniformly reduced if its DPI-adjusted complete outer window would exceed monitor height.
 6. Every capture/input safety point verifies that the window still exists, is not minimized, has the exact process identity and prepared client rectangle, and remains on the same monitor/mode/DPI. Foreground state is not a production gate; any monitor, mode, geometry, DPI, process, or client change terminates without live resize/recalibration.
 7. Entry clicks occur only after stable template evidence. Every click/wheel dispatch rechecks the window under the input lock, maps configured baseline points once while preserving already-client detection anchors, posts the corresponding window message, and logs success only after the platform call returns. Inventory navigation sends six `-120` messages `10 ms` apart (`scroll.interval_ms`) after the top viewport is exhausted. The five configured inter-message sleeps total `50 ms`, down from `500 ms`; this saves `450 ms` of requested sleep per downward navigation, not a measured 90% reduction in total runtime. Individual dispatches do not await game-side processing. Post-wheel settling starts sampling after `100 ms`, checks downsampled pairwise motion every `100 ms`, requires two consecutive observations within `1 px` with phase response at least `0.80`, and fails closed at the configured `1000 ms` maximum (raised from 800 ms on 2026-10-21 to tolerate observed computation overruns). A stable candidate must also pass the calibrated full-resolution total translation/change gate before bottom scanning; stale visually stable frames do not end settling. The last three temporally separated settle frames then seed bottom recognition; an identical three-frame key completes immediately, while a mismatch retains its longest stable suffix and captures only the missing frames. Navigation does not depend on fixed top/bottom anchors.
-8. Main-screen detection is defined solely by stable recognition of the shop-entry icon. Its alpha-masked template excludes user-dependent wallpaper; no whole-main-screen template is used. After an entry click, the engine waits for stable shop-refresh recognition. On timeout it jointly checks the shop refresh control and main-screen entry icon; only a stable main-screen result permits another entry click, and the bounded sequence stops after two attempts. Strategy-driven exit first requires stable recognition of the calibrated shop-exit control, clicks its calibrated center once, and then requires stable main-screen icon recognition before any wait or re-entry. Normal completion (`budget_complete` or `refresh_strategy_exhausted`) performs the same guarded shop exit and main-screen confirmation before the final stopped snapshot is published; abnormal and manual stops do not add a new exit click.
+8. Main-screen detection is defined solely by stable recognition of the shop-entry icon. Its alpha-masked template excludes user-dependent wallpaper; no whole-main-screen template is used. After an entry click, the engine waits for stable shop-refresh recognition. On timeout it jointly checks the shop refresh control and main-screen entry icon; only a stable main-screen result permits another entry click, and the bounded sequence stops after two attempts. Strategy-driven exit first requires stable recognition of the calibrated shop-exit control, clicks its calibrated center, and then requires stable main-screen icon recognition before any wait or re-entry. Normal completion (`budget_complete` or `refresh_strategy_exhausted`) performs the same guarded shop exit and main-screen confirmation before the final stopped snapshot is published; a still-stable original shop/exit control may authorize one retry after three seconds, while any main-screen response disables further retries. Abnormal and manual stops do not add a new exit click.
 
 ## Capture freshness and diagnostics
 
@@ -683,8 +697,9 @@ Chaos text continuation has a narrow bright-background fallback in features/chao
 Camp and event rank rewards call the same ChaosFlow._rank_up capability. RoundState.next_rank_hero supplies their shared priority. The rank map is assigned old+1 after the expected numeric transition (camp/mushroom) or event_battle_rank_done (battle reward) is confirmed; continue_exploration is only a later click target, never part of rank success. Before leaving the result, chaos_rank_changed records hero, before/after and node kind. Network recovery never reruns the submission. EventContext injects this capability without importing ChaosFlow. Cairn keeps the last confirmed first-card snapshot and requires a different central card before its second close; the ROI and minimum image difference are configured in YAML.
 
 
-HeroRecruitment records the pre-click hero Detection, then confirms selection
-without rescanning the list identity. The target's left-detail name takes priority;
+HeroRecruitment records the pre-click hero Detection. Selection confirmation
+prioritizes the target's left-detail name; absent a response, a retry requires
+fresh stable evidence of the original list identity. During confirmation,
 any other loaded detail-name match vetoes the frame, including ambiguous multiple
 matches. If no detail name matches, a gold border near the original target must
 contain its click anchor. The evidence Detection key distinguishes name from border,

@@ -4,6 +4,7 @@ from e7auto.core.domain import OverlayActivityStatus, RunState, StopReason
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.features.shop.scrolling import FrameSample, ScrollProgress, ScrollServices, scroll_to_bottom
 from e7auto.runtime.context import RuntimeContext
+from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
 from .inventory import InventoryScanner
 from .refresh import RefreshController
 from .state import ShopState
@@ -144,17 +145,18 @@ class ShopFlow:
 
     def _exit_store(self) -> None:
         self.refresh.invalidate_trusted_balance("shop_exit")
-        self.runtime.wait_stable_observation(
+        button = self.runtime.wait_stable_observation(
             "shop_exit_icon",
             self.runtime.deps.vision.shop_exit_icon,
             self.runtime.config.timing.entry_timeout_ms,
         )
-        self.runtime.click("exit_shop", self.runtime.config.points["shop_exit_button"])
-        self.runtime.wait_stable_observation(
-            "main_shop_icon",
-            self.runtime.deps.vision.main_shop_icon,
-            self.runtime.config.timing.entry_timeout_ms,
-        )
+        click_and_wait(self.runtime, name="exit_shop", initial=button,
+                       click=lambda _: self.runtime.click("exit_shop", self.runtime.config.points["shop_exit_button"]),
+                       source=lambda f: self.runtime.deps.vision.shop_exit_icon(f)
+                       if self.runtime.deps.vision.shop_ready(f) is not None else None,
+                       observe=lambda f: Transition(self.runtime.deps.vision.main_shop_icon(f)),
+                       signature=observation_signature, target_signature=observation_signature,
+                       timeout_ms=self.runtime.config.timing.entry_timeout_ms)
 
 
     def _scan_until_stopped(self) -> None:

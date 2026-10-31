@@ -10,6 +10,24 @@ from e7auto.configuration.schema import COMMON_TEMPLATE_KEYS, _REQUIRED_TEMPLATE
 from e7auto.configuration.shop_layout import visible_shop_rows
 from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.navigation import load_startup_navigation
+from e7auto.configuration.models import ClickRetryConfig
+
+
+def _load_click_retry(root, errors):
+    defaults = ClickRetryConfig()
+    raw = root.get("click_retry")
+    if raw is None and "click_retry" not in root:
+        return defaults  # Older standalone configurations use the same bounded policy.
+    raw = _mapping(raw, "click_retry", errors)
+    names = ("interval_ms", "max_attempts", "minimum_timeout_ms")
+    if set(raw) != set(names):
+        errors.append("click_retry requires interval_ms, max_attempts and minimum_timeout_ms")
+    policy = ClickRetryConfig(*(_positive_int(raw.get(name), "click_retry."+name, errors) for name in names))
+    if policy.max_attempts > 2:
+        errors.append("click_retry.max_attempts must not exceed 2")
+    if policy.minimum_timeout_ms < policy.interval_ms * policy.max_attempts:
+        errors.append("click_retry.minimum_timeout_ms must cover all attempt intervals")
+    return policy
 
 def _positive_int(value: Any, path: str, errors: list[str]) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
@@ -655,6 +673,7 @@ def load_config(
     scroll = _load_scroll(root, errors)
 
     timing = _load_timing(root, errors)
+    click_retry = _load_click_retry(root, errors)
     inventory_readiness = _load_inventory_readiness(root, baseline_size, errors)
     inset = inventory_readiness.pixel_inset
     if (inset.x < 0 or inset.y < 0
@@ -735,4 +754,5 @@ def load_config(
         template_manifest_paths=template_manifest_paths,
         candidate_cache_mib=candidate_cache_mib,
         startup_navigation=startup_navigation,
+        click_retry=click_retry,
     )

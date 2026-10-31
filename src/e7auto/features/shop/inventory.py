@@ -7,6 +7,7 @@ from e7auto.runtime.stop_control import StopExecution
 from e7auto.features.shop.scrolling import FrameSample
 
 from e7auto.runtime.context import RuntimeContext
+from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
 from .contracts import ShopVisionPort
 from .state import ShopState
 from .readiness import SceneSampleEvidence, SceneWindow, format_row_regions, format_row_changes
@@ -594,7 +595,7 @@ class InventoryScanner:
             if match.target_id in self.state.mandatory_target_ids:
                 mandatory_targets_found.add(match.target_id)
             before_purchase = self._purchase_context()
-            self.purchase(match)
+            self.purchase(match, screen=screen)
             completed_slot_ids.add(match.slot_id)
             scope = self._scope_after_purchase(screen, matches, before_purchase)
             self.runtime.deps.logger.event(
@@ -610,15 +611,25 @@ class InventoryScanner:
                 scope = None
 
 
-    def purchase(self, match: InventoryMatch) -> None:
+    def purchase(self, match: InventoryMatch, *, screen: str | None = None) -> None:
         self.invalidate()
         self.runtime.transition(RunState.PURCHASING)
-        self.runtime.click(f"buy:{match.target_id}:{match.slot_id}", match.buy_point)
-        self.runtime.wait_stable_observation(
-            f"confirm_dialog:{match.target_id}",
-            lambda frame: self.runtime.deps.vision.confirm_dialog(frame, match.target_id),
-            self.runtime.config.timing.dialog_timeout_ms,
-        )
+        vision = self.runtime.deps.vision
+        screen = screen or next((slot.screen for slot in self.runtime.config.slots if slot.slot_id == match.slot_id), None)
+        def source(frame):
+            if screen is None or vision.shop_ready(frame) is None:
+                return None
+            matches = [current for current in vision.scan_inventory(frame, screen, frozenset({match.target_id}))
+                       if current.target_id == match.target_id and current.slot_id == match.slot_id
+                       and not current.is_purchased]
+            return matches[0] if len(matches) == 1 else None
+        click_and_wait(self.runtime, name=f"buy:{match.target_id}:{match.slot_id}", initial=match,
+                       click=lambda current: self.runtime.click(f"buy:{match.target_id}:{match.slot_id}", current.buy_point),
+                       source=source, observe=lambda f: Transition(vision.confirm_dialog(f, match.target_id)),
+                       signature=observation_signature,
+                       target_signature=lambda current: (current.target_id, current.slot_id,
+                                                          current.roi.x//4, current.roi.y//4),
+                       timeout_ms=self.runtime.config.timing.dialog_timeout_ms)
         self.runtime.click("confirm_purchase", self.runtime.config.points["confirm_button"])
 
         deadline = self.runtime.active_monotonic() + self.runtime.config.timing.purchase_result_timeout_ms / 1000

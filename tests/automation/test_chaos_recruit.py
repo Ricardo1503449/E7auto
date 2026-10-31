@@ -93,7 +93,8 @@ def test_missing_selection_or_button_never_submits(recruitment, monkeypatch, mis
     with pytest.raises(StopExecution) as error:
         flow.recruitment.recruit('twins')
     assert error.value.reason is StopReason.RECOGNITION_TIMEOUT
-    assert game.actions == ['hero_twins'] and not game.recruited
+    expected = 2 if 'selected_name_twins' in missing else 1
+    assert game.actions == ['hero_twins'] * expected and not game.recruited
 
 
 def test_button_and_selection_must_agree_in_three_consecutive_frames(recruitment, monkeypatch):

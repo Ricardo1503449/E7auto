@@ -118,6 +118,26 @@ def run(game, limit=2, stop_after=None, config=None, clock=None, control=None):
     return final, snapshots, game
 
 
+@pytest.mark.parametrize("action", ["forest_entry", "growth_altar", "penguin_buy_102", "quantity_max",
+                                     "reward_close", "altar_close", "forest_back", "sanctuary_back"])
+def test_reversible_actions_retry_one_dropped_click(action):
+    game, clock = PenguinGame(), FakeClock()
+    original = game.click
+    times = []
+    def click(point):
+        if point == game.points[action]:
+            times.append(clock.now)
+            if len(times) == 1:
+                game.actions.append(action)
+                return
+        original(point)
+    game.click = click
+    final, _, game = run(game, 1, clock=clock)
+    assert final.stop_reason is StopReason.PENGUIN_LIMIT_COMPLETE
+    assert len(times) == 2 and times[1]-times[0] >= 3
+    assert game.actions.count("penguin_buy_5100") == 1
+
+
 def test_two_batches_only_set_max_once_and_return_home():
     final, snapshots, game = run(PenguinGame())
     assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE

@@ -124,7 +124,7 @@ def test_selected_loot_checks_marker_and_button_immediately_without_identity_rec
     flow.state = RoundState()
     game.state, game.kind = 'loot', 'elite'
     clicks, samples, button_frames = {}, [], []
-    game.on_click = lambda _game, key: clicks.update({key: game.clock.now})
+    game.on_click = lambda _game, key: clicks.setdefault(key, game.clock.now)
     original = game.control
 
     def detect(frame, key, region=None):
@@ -146,7 +146,7 @@ def test_selected_loot_checks_marker_and_button_immediately_without_identity_rec
         with pytest.raises(StopExecution) as caught:
             flow._choose_loot()
         assert caught.value.reason is StopReason.RECOGNITION_TIMEOUT
-        assert game.actions == ['loot_ominous_crystal']
+        assert game.actions == ['loot_ominous_crystal'] * (2 if condition == 'wrong_card' else 1)
         assert flow.state.reward_stage == 'selecting'
         if condition == 'wrong_card':
             assert button_frames == []

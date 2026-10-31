@@ -132,11 +132,11 @@ def test_startup_clears_saved_exploration_once_and_completes_requested_rounds(co
 
 
 @pytest.mark.parametrize('stuck,actions', [
-    ('lobby_abandon_click', ['lobby_abandon']),
+    ('lobby_abandon_click', ['lobby_abandon', 'lobby_abandon']),
     ('abandon_prompt', ['lobby_abandon']),
     ('abandon_confirm', ['lobby_abandon']),
     ('abandon_confirm_click', ['lobby_abandon', 'abandon_confirm']),
-    ('journey_close_click', ['lobby_abandon', 'abandon_confirm', 'journey_close']),
+    ('journey_close_click', ['lobby_abandon', 'abandon_confirm', 'journey_close', 'journey_close']),
     ('saved_after_close', ['lobby_abandon', 'abandon_confirm', 'journey_close']),
 ])
 def test_missing_or_unresponsive_pages_stop_without_replay(config, stuck, actions):

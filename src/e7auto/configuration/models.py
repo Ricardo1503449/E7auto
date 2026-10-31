@@ -31,6 +31,13 @@ class SlotConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class ClickRetryConfig:
+    interval_ms: int = 3000
+    max_attempts: int = 2
+    minimum_timeout_ms: int = 6000
+
+
+@dataclass(frozen=True, slots=True)
 class TimingConfig:
     poll_interval_ms: int
     entry_timeout_ms: int
@@ -149,6 +156,7 @@ class AppConfig:
     candidate_cache_mib: int = 64
     component_layouts: dict[str, ComponentLayout] = field(default_factory=dict)
     startup_navigation: dict[str, NavigationTemplate] = field(default_factory=dict)
+    click_retry: ClickRetryConfig = field(default_factory=ClickRetryConfig)
 
 
 class ConfigError(ValueError):

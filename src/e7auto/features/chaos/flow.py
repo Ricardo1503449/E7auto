@@ -11,6 +11,7 @@ from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.daily_reset import DailyResetHandler, DailyResetResult
 from e7auto.runtime.dependencies import AutomationDependencies
 from e7auto.runtime.snapshots import SnapshotPublisher
+from e7auto.runtime.action_retry import Transition, click_and_wait
 from e7auto.runtime.stop_control import StopExecution, StopController
 from .configuration import ChaosConfig
 from .contracts import AutoState, Detection, MapView, Node, ChaosVisionPort
@@ -43,10 +44,12 @@ class ChaosFlow:
         self.state: RoundState | None = None
         self.stages = StageSelection(self.runtime, self.settings, self.vision,
                                      frame=self._frame, wait=self._wait, tap=self._tap,
-                                     delay=self._delay, lobby_guard=self._lobby_guard)
+                                     delay=self._delay, lobby_guard=self._lobby_guard,
+                                     transition=self._transition)
         self.recruitment = HeroRecruitment(self.settings, self.vision,
                                           frame=self._frame, wait=self._wait, tap=self._tap,
-                                          act=self._act, control=self._control, first=self._first)
+                                          act=self._act, control=self._control, first=self._first,
+                                          transition=self._transition)
         self._map_handoff: tuple[MapView, RoundState | None, int] | None = None
         self._battle_pending = False
         self._battle_deadline: float | None = None
@@ -180,7 +183,74 @@ class ChaosFlow:
         if self.settings.scenes[key].action is None:
             raise ValueError(f"scene is recognition-only: {key}")
         hit = self._wait(key, lambda f: self.vision.control(f, key) if guard is None or guard(f) else None)
+        if key == "event_rank_enter":
+            return self._transition(hit, "event_rank_page", lambda f: self.vision.control(f, "rank_title"))
+        if key == "event_tablet_continue":
+            return self._transition(hit, "event_forfeit_prompt", lambda f: self.vision.control(f, "unclaimed_prompt"),
+                                    guard=guard)
         self._tap(hit, settle_ms=settle_ms)
+
+    def _transition(self, hit, name, detector, *, source=None, responded=None, guard=None,
+                    settle_ms=None, timeout_ms=None, outer_deadline=None, click=None,
+                    single_success=None, reason=StopReason.RECOGNITION_TIMEOUT):
+        """Only explicit reversible actions opt into retries; _tap stays single-shot."""
+        def original(frame):
+            if guard is not None and not guard(frame):
+                return None
+            hits = self.vision.controls(frame, hit.key)
+            return hits[0] if len(hits) == 1 else None
+        def observe(frame):
+            value = detector(frame)
+            return Transition(value, responded=value is not None or bool(responded and responded(frame)))
+        deadline = self.runtime.active_monotonic() + max(
+            timeout_ms or self.settings.timing["page_timeout_ms"],
+            self.runtime.config.click_retry.minimum_timeout_ms) / 1000
+        if outer_deadline is not None:
+            deadline = min(deadline, outer_deadline)
+        result = click_and_wait(
+            self.runtime, name="chaos_"+hit.key, stage=name, initial=hit,
+            click=click or (lambda current: self._tap(current, settle_ms=0)),
+            source=source or original, observe=observe, signature=self._signature,
+            target_signature=self._signature, capture=self._frame, settle=self._delay,
+            settle_ms=self.settings.timing["action_settle_ms"] if settle_ms is None else settle_ms,
+            timeout_ms=timeout_ms or self.settings.timing["page_timeout_ms"],
+            outer_deadline=deadline, stable_frames=self.settings.timing["stable_frames"],
+            single_success=single_success, reason=reason)
+        if isinstance(result, MapView):
+            self._map_handoff = result, self.state, self.runtime.capture_count
+        self.runtime.deps.logger.event("chaos_confirmed", stage=name)
+        self.runtime.control.checkpoint()
+        if self.runtime.active_monotonic() >= deadline:
+            raise StopExecution(reason, f"chaos timeout: {name}")
+        return result
+
+    def _click_to(self, key, next_key, *, guard=None, watch_date=False):
+        hit = self._wait(key, lambda f: self.vision.control(f, key) if guard is None or guard(f) else None)
+        def destination(frame):
+            if watch_date and self.vision.control(frame, "date_change_title") is not None:
+                raise DateChangePending()
+            return self.vision.control(frame, next_key)
+        return self._transition(hit, next_key, destination, guard=guard)
+
+    def _same_card(self, frame, original, key):
+        hits = self.vision.controls(frame, key, self._card_region(original, key))
+        return hits[0] if len(hits) == 1 else None
+
+    def _select_card(self, card, selected_key, confirm_key, *, settle_ms=None, source=None):
+        region = self._card_region(card, selected_key)
+        selected_seen = False
+        def detector(frame):
+            nonlocal selected_seen
+            selected = self.vision.control(frame, selected_key, region)
+            selected_seen = selected is not None
+            return self.vision.control(frame, confirm_key) if selected_seen else None
+        return self._transition(card, confirm_key, detector,
+                                source=source or (lambda f: self._same_card(f, card, card.key)),
+                                responded=lambda _: selected_seen, settle_ms=settle_ms)
+
+    def _map_destination(self, frame, floor):
+        view = self.vision.map_view(frame)
+        return view if view is not None and view.floor == floor else None
 
     def _first(self, frame, names):
         for key in names:
@@ -230,8 +300,8 @@ class ChaosFlow:
                 self.runtime.publisher.mutate(lambda s: s.with_chaos_defeat())
                 self.runtime.deps.logger.event("chaos_round_failed", floor=self.state.floor,
                                                node_kind=self.state.node_kind)
-                self._tap(defeated.detection)
-                self._control("journey_result")
+                self._transition(defeated.detection, "journey_result",
+                                 lambda f: self.vision.control(f, "journey_result"))
                 self._close_journey()
                 continue  # Failure recovery never consumes the success target.
             # _close_journey confirmed either the unobstructed lobby or reset-home.
@@ -253,8 +323,10 @@ class ChaosFlow:
             destination_detector=lambda frame: self._entry_observation(frame, "battle_title"),
             click_action="chaos_home_battle",
         )
-        self._act("exploration_card")
-        self._act("intro_enter")
+        self._click_to("exploration_card", "intro_enter")
+        self._transition(self._control("intro_enter"), "exploration_lobby",
+                         lambda f: self._first(f, ("date_change_title", "lobby_research")),
+                         single_success=lambda _: True)
         self._prepare_entry_lobby()
         if self._at_home_after_reset:
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'date changed again while reentering exploration')
@@ -296,8 +368,13 @@ class ChaosFlow:
                 return None
             return research, start if start is not None else abandon
 
+        prompt_seen = False
         def confirmation(frame):
+            nonlocal prompt_seen
+            if self.vision.control(frame, 'date_change_title') is not None:
+                raise DateChangePending()
             prompt = self.vision.control(frame, 'abandon_prompt')
+            prompt_seen = prompt is not None
             button = self.vision.control(frame, 'abandon_confirm')
             return (prompt, button) if prompt is not None and button is not None else None
 
@@ -305,10 +382,11 @@ class ChaosFlow:
             _, button = wait('entry_lobby', lobby)
             if button.key == 'start_exploration':
                 return
-            self._tap(button)
+            _, confirmation_button = self._transition(button, 'entry_abandon_confirmation', confirmation,
+                                                       guard=self._lobby_guard,
+                                                       responded=lambda _: prompt_seen)
             self.runtime.deps.logger.event('chaos_saved_exploration', phase='abandon_submitted')
-            _, button = wait('entry_abandon_confirmation', confirmation)
-            self._tap(button)
+            self._tap(confirmation_button)
             wait('entry_abandon_result', lambda f: self.vision.control(f, 'journey_result'))
             self._close_journey()
             if not self._at_home_after_reset:
@@ -337,7 +415,7 @@ class ChaosFlow:
             return
         for _ in range(3):
             try:
-                self._act('exploration_back', self._lobby_guard)
+                self._click_to('exploration_back', 'intro_enter', guard=self._lobby_guard, watch_date=True)
                 break
             except DateChangePending:
                 self._wait_round_lobby(observe_ms=0)
@@ -345,11 +423,8 @@ class ChaosFlow:
                     return
         else:
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'unstable date popup during final lobby exit')
-        self._control("intro_enter")
-        self._act("exploration_back", lambda f: self.vision.control(f, "intro_enter") is not None)
-        self._control("battle_title")
-        self._act("battle_title")
-        self._control("home_battle")
+        self._click_to("exploration_back", "battle_title", guard=lambda f: self.vision.control(f, "intro_enter") is not None)
+        self._click_to("battle_title", "home_battle")
 
     def _start_round(self):
         for _ in range(3):
@@ -367,12 +442,11 @@ class ChaosFlow:
         else:
             raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'unstable lobby confirmation before exploration')
         contract = self._control("contract")
-        self._tap(contract, settle_ms=self.settings.timing["contract_select_settle_ms"])
-        region = self._card_region(contract, "contract_selected")
-        self._act("supply_confirm", lambda f: self.vision.control(f, "contract_selected", region) is not None)
+        button = self._select_card(contract, "contract_selected", "supply_confirm",
+                                   settle_ms=self.settings.timing["contract_select_settle_ms"])
+        self._tap(button)
         for hero in self.settings.heroes:
-            self._act("ticket_"+hero["ticket"])
-            self._control("title_"+hero["ticket"])
+            self._click_to("ticket_"+hero["ticket"], "title_"+hero["ticket"])
             self.recruitment.filter(hero["attribute"])
             if hero['key'] == 'teacher':
                 self.recruitment.recruit('teacher', result_key='recruited_teacher_initial')
@@ -485,9 +559,12 @@ class ChaosFlow:
                 raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, node.kind)
 
     def _swap_teacher(self):
-        self._tap(self._control("bench_teacher"))
+        teacher = self._control("bench_teacher")
+        selected_seen = False
         def replace(frame):
+            nonlocal selected_seen
             selected = self.vision.control(frame, "bench_selected")
+            selected_seen = selected is not None
             if selected is None:
                 return None
             knights = self.vision.controls(frame, "formation_knight")
@@ -501,7 +578,9 @@ class ChaosFlow:
             region = ClientRect(round(knight.anchor.x+dx*t.scale_x), round(knight.anchor.y+dy*t.scale_y), round(w*t.scale_x), round(h*t.scale_y))
             arrows = self.vision.controls(frame, "replace_button", region)
             return (selected, knight, arrows[0]) if len(arrows) == 1 else None
-        _, _, button = self._wait("replace_knight", replace)
+        _, _, button = self._transition(teacher, "replace_knight", replace,
+                                       responded=lambda _: selected_seen,
+                                       guard=lambda f: self.vision.control(f, "start_battle") is not None)
         self._tap(button)
         self._wait("teacher_deployed", lambda f: self.vision.control(f, "bench_arowell") if self.vision.control(f, "bench_teacher") is None else None)
         self.state.pending_teacher = False
@@ -539,9 +618,39 @@ class ChaosFlow:
             anchor = self.vision.auto_anchor()
             if anchor is None:
                 raise StopExecution(StopReason.RECOGNITION_TIMEOUT, 'auto icon has no confirmed anchor')
-            self.runtime.click("chaos_enable_auto", anchor)
-            self.vision.reset_temporal()
-            mode = wait_auto("auto_rotating_or_result", lambda f: observe(f, rotating_only=True))
+            # The motion recognizer still owns fixed-centre/reference confirmation.
+            # Retry only a freshly confirmed STATIC state, never a missing ROTATING hit.
+            static_anchor = None
+            def auto_observation(frame):
+                nonlocal static_anchor
+                value = observe(frame)
+                static_anchor = self.vision.auto_anchor() if value is AutoState.STATIC else None
+                if value is AutoState.STATIC:
+                    return Transition()
+                return Transition(value)
+            def click_auto(point):
+                self.runtime.click("chaos_enable_auto", point)
+                self.vision.reset_temporal()
+                self.vision.begin_auto_recognition(self.runtime.active_monotonic())
+            auto_started, auto_outcome = self.runtime.active_monotonic(), "interrupted"
+            try:
+                mode = click_and_wait(self.runtime, name="chaos_enable_auto", initial=anchor,
+                                      click=click_auto, source=lambda _: static_anchor, observe=auto_observation,
+                                      signature=self._signature,
+                                      target_signature=lambda p: (p.x//4, p.y//4), capture=self._frame,
+                                      timeout_ms=self.settings.timing["page_timeout_ms"],
+                                      outer_deadline=self._battle_deadline,
+                                      single_success=lambda value: value is AutoState.ROTATING or
+                                      (single_signal and isinstance(value, Detection)))
+                auto_outcome = mode.key if isinstance(mode, Detection) else mode.value
+            except StopExecution as exc:
+                auto_outcome = exc.reason.value
+                raise
+            finally:
+                self.runtime.deps.logger.event("chaos_auto_recognition", stage="auto_rotating_or_result",
+                                               outcome=auto_outcome,
+                                               elapsed_ms=round((self.runtime.active_monotonic()-auto_started)*1000, 3),
+                                               **self.vision.auto_recognition_summary())
             if isinstance(mode, Detection):
                 return mode
         self.state.auto_confirmed = True
@@ -850,7 +959,11 @@ class ChaosFlow:
         return False
 
     def _close_journey(self):
-        self._act("journey_close", lambda f: self.vision.control(f, "journey_result") is not None)
+        close = self._wait("journey_close", lambda f: self.vision.control(f, "journey_close")
+                           if self.vision.control(f, "journey_result") is not None else None)
+        self._transition(close, "journey_closed",
+                         lambda f: self.vision.control(f, "date_change_title") or self._lobby_ready(f),
+                         guard=lambda f: self.vision.control(f, "journey_result") is not None)
         self._wait_round_lobby()
 
     def _voucher(self):
@@ -879,8 +992,7 @@ class ChaosFlow:
 
         ticket = self._wait("boss_voucher_or_skip", detect)
         if hero is not None:
-            self._tap(ticket)
-            self._control("title_all")
+            self._transition(ticket, "title_all", lambda f: self.vision.control(f, "title_all"))
             self.recruitment.filter("dark", profession=True if hero == "teacher" else "knight")
             self.recruitment.recruit(hero, result_key="recruited_shadow_rose_all" if hero == "shadow_rose" else None)
             self.state.ranks[hero] = 1
@@ -901,7 +1013,7 @@ class ChaosFlow:
                 self.runtime.active_monotonic()+self.settings.timing["page_timeout_ms"]/1000)
             self._tap(button)
         else:
-            self._act("continue_exploration")
+            button = self._control("continue_exploration")
         def target(frame):
             if allow_unclaimed:
                 prompt = self.vision.control(frame, "unclaimed_prompt")
@@ -918,7 +1030,9 @@ class ChaosFlow:
                 self.runtime.active_monotonic()+self.settings.timing["page_timeout_ms"]/1000,
                 action_key="continue_exploration")
         else:
-            result = self._wait("continue_destination", target)
+            result = self._transition(button, "continue_destination", target,
+                                      responded=lambda f: allow_unclaimed and
+                                      self.vision.control(f, "unclaimed_prompt") is not None)
         if isinstance(result, tuple):
             if self.settings.scenes["unclaimed_confirm"].action is None:
                 raise ValueError("scene is recognition-only: unclaimed_confirm")
@@ -1013,35 +1127,41 @@ class ChaosFlow:
                                            **summary)
         chosen = min(cards, key=lambda h: (self.settings.loot_priorities[h.key], h.bounds.x+h.bounds.width/2))
         self.state.reward_stage = "selecting"
-        self._tap(chosen, settle_ms=0)
-        region = self._card_region(chosen, "loot_selected")
-        def selected(frame):
-            return self.vision.control(frame, "loot_selected", region) is not None
-        self._act("loot_confirm", selected)
+        def source(frame):
+            current = self.vision.loot_cards(frame)
+            if current is None:
+                return None
+            hits = [h for h in current if h.key == chosen.key and
+                    chosen.bounds.x <= h.anchor.x <= chosen.bounds.right]
+            return hits[0] if len(hits) == 1 else None
+        button = self._select_card(chosen, "loot_selected", "loot_confirm", settle_ms=0, source=source)
+        self._tap(button)
         self.state.reward_stage = "submitted"
 
     def _camp(self):
         self._wait("camp", lambda f: self._first(f, ("camp_rank", "camp_rank_done")))
         hero = self.state.next_rank_hero()
         if hero:
-            self._act("camp_rank")
-            self._rank_up(hero)
-            self._control("camp_rank_done")
-        self._act("camp_leave")
-        self._map(self.state.floor)
+            self._click_to("camp_rank", "rank_title")
+            self._rank_up(hero, rank_ready=True)
+        self._transition(self._control("camp_leave"), "camp_left",
+                         lambda f: self._map_destination(f, self.state.floor))
 
-    def _rank_up(self, hero, *, steps=1, battle_reward=False):
+    def _rank_up(self, hero, *, steps=1, battle_reward=False, rank_ready=False):
         """Camp and event ranks use the same confirmed, once-only state update."""
         rank = self.state.ranks[hero]
         if (not 1 <= rank < 5 or type(steps) is not int or not 1 <= steps <= 4
                 or (battle_reward and steps != 1)):
             raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, "invalid rank-up target")
         expected = min(5, rank + steps)
-        self._control("rank_title")
+        if not rank_ready:
+            self._control("rank_title")
         button = self.recruitment.choose(hero, confirm_key='rank_confirm')
         self._tap(button)
         if self.state.node_kind == "rest" and not battle_reward:
-            self._tap(self._camp_rank_result(hero, rank, expected))
+            close = self._camp_rank_result(hero, rank, expected)
+            self._transition(close, "camp_rank_done", lambda f: self.vision.control(f, "camp_rank_done"),
+                             guard=lambda f: self.vision.rank_result(f) == (rank, expected))
             return
         if battle_reward:
             # This separate reward layout has no before/after panel; its known
@@ -1059,7 +1179,12 @@ class ChaosFlow:
         if self.state.node_kind == "event" and not battle_reward:
             self._event_context().close_reward_cards(close_key="rank_close")
         else:
-            self._act("continue_exploration" if battle_reward else "rank_close")
+            key = "continue_exploration" if battle_reward else "rank_close"
+            self._transition(self._control(key), "rank_closed",
+                             lambda f: self.vision.control(f, "text_continue") or self._map_destination(f, self.state.floor),
+                             guard=lambda f: self.vision.control(f, "event_battle_rank_done") is not None
+                             if battle_reward else self.vision.rank_result(f) == (rank, expected),
+                             single_success=lambda hit: isinstance(hit, Detection) and hit.key == "text_continue")
 
     def _camp_rank_result(self, hero, rank, expected):
         """Observe rank progress and close authorization on the same fresh frames."""
@@ -1118,8 +1243,8 @@ class ChaosFlow:
         self._choose_loot()
         self._control("supply_loot_done")
         self.state.reward_stage = "claimed"
-        self._act("supply_leave")
-        self._map(self.state.floor)
+        self._transition(self._control("supply_leave"), "supply_left",
+                         lambda f: self._map_destination(f, self.state.floor))
 
     def _shop_offer(self, identity, button_keys, *, unavailable_identity=None):
         def entry(frame):
@@ -1141,9 +1266,19 @@ class ChaosFlow:
         return self._wait(identity+"_purchase_entry", entry)
 
     def _shop_purchase(self, button, purchase_item, done):
-        self._tap(button)
-        guard = lambda f: self.vision.control(f, "purchase_title") is not None and self.vision.control(f, purchase_item) is not None
-        self._act("purchase_confirm", guard)
+        popup_seen = False
+        def destination(frame):
+            nonlocal popup_seen
+            popup_seen = self.vision.control(frame, "purchase_title") is not None
+            if popup_seen and self.vision.control(frame, purchase_item) is not None:
+                return self.vision.control(frame, "purchase_confirm")
+            return None
+        confirm = self._transition(button, "purchase_confirm", destination,
+                                   responded=lambda _: popup_seen,
+                                   source=lambda f: self._same_card(f, button, button.key)
+                                   if self.vision.control(f, "investment" if purchase_item == "purchase_item"
+                                                          else "health_restore") is not None else None)
+        self._tap(confirm)
         # A completed neighbouring card must never authorize leaving this purchase.
         pad = self.settings.geometry["shop_result_padding"]
         r = button.bounds
@@ -1166,9 +1301,12 @@ class ChaosFlow:
             self.runtime.deps.logger.event("chaos_shop_skipped", item="investment", state=state)
         floor = self.state.floor
         confirmation_sent = False
+        prompt_seen = False
 
         def destination(frame):
+            nonlocal prompt_seen
             prompt = self.vision.control(frame, "shop_leave_prompt")
+            prompt_seen = prompt is not None
             if prompt is not None:
                 # A visible prompt blocks the map, including while closing.
                 if confirmation_sent:
@@ -1178,8 +1316,8 @@ class ChaosFlow:
             view = self.vision.map_view(frame)
             return view if view is not None and view.floor == floor else None
 
-        self._act("shop_leave")
-        result = self._wait("shop_leave_destination", destination)
+        result = self._transition(self._control("shop_leave"), "shop_leave_destination", destination,
+                                  responded=lambda _: prompt_seen)
         if isinstance(result, MapView):
             return
         if self.settings.scenes["shop_leave_confirm"].action is None:

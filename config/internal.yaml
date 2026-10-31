@@ -177,6 +177,11 @@ timing:
   refresh_timeout_ms: 10000
   stable_frames: 3
 
+click_retry:
+  interval_ms: 3000
+  max_attempts: 2
+  minimum_timeout_ms: 6000
+
 vision:
   candidate_cache_mib: 64
   default_confidence: 0.90

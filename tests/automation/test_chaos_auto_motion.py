@@ -56,6 +56,21 @@ def test_rotation_never_clicks_auto_and_logs_one_summary():
     assert abs(record['reference_angle_deg']) >= 10
 
 
+def test_dropped_auto_enable_retries_only_after_fresh_static_confirmation():
+    game, flow = setup_flow('static')
+    original = game.click
+    attempts = []
+    def dropped(window, point):
+        attempts.append(game.clock.now)
+        if len(attempts) == 1:
+            return
+        original(window, point)
+    game.click = dropped
+    flow._ensure_auto(('levelup', 'victory'))
+    assert len(attempts) == 2 and attempts[1]-attempts[0] >= 3
+    assert flow.state.auto_confirmed and game.auto
+
+
 def test_static_three_frames_clicks_once_without_outer_wait_and_reconfirms_rotation():
     game, flow = setup_flow('static')
     clicks = []
