@@ -459,7 +459,8 @@ The flow explicitly begins and ends one loot recognition session. Consecutive
 fresh captures still need three agreeing results. Later captures reverify each
 cached identity's icon and name, rather than repeating discovery. Recovery, missing
 anchors, layout changes and session exit invalidate evidence; a changed cached
-card fails its current frame and is rediscovered on the next capture. Session
+card fails its current frame and clears the whole choice's readiness evidence;
+only that missing identity is rediscovered after fresh readiness confirmation. Session
 cleanup runs before any selection input and on exceptions. One aggregate
 `chaos_loot_recognition` log records outcome, timings and work counts; detectors
 do not write per-frame or per-template logs.
@@ -477,11 +478,25 @@ session exit clears candidates while retaining idle workers for the next reward.
 `cards_wall_ms` measures elapsed batch time, while index/icon/name timings sum
 overlapping worker durations and must not be interpreted as elapsed run time.
 
-Elite/boss reward entry uses timing.loot_entry_settle_ms (1000ms by default);
-supply loot entry independently uses timing.supply_loot_entry_settle_ms (3000ms).
-Each value is the total post-click settle delay, replacing the ordinary action delay. The existing guarded delay keeps network/window/stop checks active;
-recognition starts with a fresh frame afterwards. No animation classifier or index
-ranking changes are involved, and cached evidence still needs three confirmations.
+Supply, elite and first-two-floor boss reward entry use the ordinary 300ms
+action buffer; the former dedicated one/three-second delays are removed.
+Before discovery, `LootReadiness` follows the validated event gate: local gray
+contrast, the weakest icon/full-name component of one identity, a shared physical
+offset and three stable descriptor observations. All three cards must be ready.
+Its YAML settings are independent copies of the event defaults. The name band's
+128x16 grid defines a pixel sampling step; the icon grid is derived from its
+different extent, and component alignment is compared in baseline pixel units.
+Each crop retains the parent transform and global origin. Descriptors only gate
+discovery; original native matching still supplies identity, scores and clicks.
+Already known cards first reverify current pixels, without repeating readiness;
+a failed verification cannot fall through to discovery on that same frame.
+Input, recovery, incomplete content, geometry/layout changes, candidate failure
+and session boundaries clear readiness. Any suspected late level-up also clears
+it before destination confirmation. Only numeric descriptors survive a frame.
+One-shot read-only inspection checks completeness without temporal accumulation.
+The original three identity confirmations follow readiness, sharing the same
+15-second active recognition deadline; matching/logging past it cannot authorize
+selection. The aggregate log adds `readiness_waits` and `readiness_ms`.
 
 `vision/` provides array matching, ROI adaptation, shared glyph matching and network recognition.
 Shop and penguin detectors compose these components, retaining independent color masks, thresholds

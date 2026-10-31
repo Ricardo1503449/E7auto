@@ -13,12 +13,11 @@ from e7auto.resources.templates import TemplateRepository
 
 
 @pytest.mark.parametrize('kind', ['elite', 'boss', 'supply'])
-@pytest.mark.parametrize('battle_ms,supply_ms', [(1000, 3000), (1700, 1500), (1000, 2300)])
-def test_loot_entry_wait_is_configured_total_delay_before_first_identity_query(monkeypatch, kind, battle_ms, supply_ms):
+@pytest.mark.parametrize('settle_ms', [300, 450])
+def test_loot_entry_uses_only_common_click_buffer_before_readiness(monkeypatch, kind, settle_ms):
     config = chaos_config()
     config = replace(config, chaos=replace(config.chaos, timing=dict(
-        config.chaos.timing, loot_entry_settle_ms=battle_ms, supply_loot_entry_settle_ms=supply_ms)))
-    settle_ms = supply_ms if kind == 'supply' else battle_ms
+        config.chaos.timing, action_settle_ms=settle_ms)))
     game = ChaosGame(config)
     flow = ChaosFlow(config, game.dependencies(), StopController(),
                      SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-delay', 1), lambda _: None))
@@ -61,7 +60,7 @@ def test_loot_entry_delay_observes_recovery_and_stop_without_replaying_claim(mon
         pass
     def first_query():
         assert interruption == 'network'
-        assert flow.runtime.active_monotonic()-started[0] == pytest.approx(config.chaos.timing['supply_loot_entry_settle_ms']/1000)
+        assert flow.runtime.active_monotonic()-started[0] == pytest.approx(config.chaos.timing['action_settle_ms']/1000)
         assert flow.runtime.network_recovery_generation == 1
         raise Observed
     monkeypatch.setattr(flow, '_choose_loot', first_query)
@@ -197,7 +196,7 @@ def test_selected_loot_confirmation_keeps_stop_and_recovery_guards(monkeypatch, 
         assert game.actions == ['loot_ominous_crystal', 'network_retry', 'loot_confirm']
 
 
-@pytest.mark.parametrize('stop_frame',[1,3])
+@pytest.mark.parametrize('stop_frame',[3,5])
 def test_manual_stop_during_parallel_image_work_never_dispatches_selection_and_closes_pool(monkeypatch,stop_frame):
     config=chaos_config()
     game=ChaosGame(config)
@@ -225,8 +224,132 @@ def test_manual_stop_during_parallel_image_work_never_dispatches_selection_and_c
         threads=tuple(pool._threads)
         summaries=[fields for event,fields in flow.runtime.deps.logger.events if event=='chaos_loot_recognition']
         assert len(summaries)==1
-        assert summaries[0]['outcome']==('manual_stop' if stop_frame==1 else 'confirmed')
-        assert summaries[0]['card_jobs']==3*stop_frame
+        assert summaries[0]['outcome']=='manual_stop'
+        assert summaries[0]['card_jobs']==3*(stop_frame-2)
     finally:
         flow.release_cached_game_frame()
     assert vision._loot._pool is None and all(not thread.is_alive() for thread in threads)
+
+
+@pytest.mark.parametrize('reward_key', [None, 'elite_choose_reward'])
+def test_slow_final_identity_confirmation_cannot_authorize_input_after_deadline(monkeypatch, reward_key):
+    config = chaos_config()
+    config = replace(config, chaos=replace(config.chaos, timing=dict(config.chaos.timing, page_timeout_ms=400)))
+    game = ChaosGame(config)
+    flow = ChaosFlow(config, game.dependencies(), StopController(),
+                     SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-deadline', 1), lambda _: None))
+    flow.runtime.prepare()
+    flow.state = RoundState()
+    game.state, game.kind = 'loot', 'elite'
+    original, calls = game.loot_cards, []
+    def cards(frame):
+        calls.append(game.captures)
+        value = original(frame)
+        if len(calls) == 3:
+            game.clock.sleep(.4)
+        return value
+    monkeypatch.setattr(game, 'loot_cards', cards)
+    with pytest.raises(StopExecution) as error:
+        flow._choose_loot(reward_key=reward_key)
+    assert error.value.reason is StopReason.CHAOS_UNKNOWN_CONTENT
+    assert game.actions == []
+    summaries = [f for e, f in flow.runtime.deps.logger.events if e == 'chaos_loot_recognition']
+    assert len(summaries) == 1 and summaries[0]['outcome'] == 'chaos_unknown_content'
+
+
+def test_summary_logging_crossing_deadline_cannot_authorize_selection(monkeypatch):
+    config = chaos_config()
+    game = ChaosGame(config)
+    flow = ChaosFlow(config, game.dependencies(), StopController(),
+                     SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-log-deadline', 1), lambda _: None))
+    flow.runtime.prepare()
+    flow.state = RoundState()
+    game.state, game.kind = 'loot', 'elite'
+    original = flow.runtime.deps.logger.event
+    def event(name, **fields):
+        original(name, **fields)
+        if name == 'chaos_loot_recognition':
+            game.clock.sleep(config.chaos.timing['page_timeout_ms']/1000)
+    monkeypatch.setattr(flow.runtime.deps.logger, 'event', event)
+    with pytest.raises(StopExecution) as error:
+        flow._choose_loot()
+    assert error.value.reason is StopReason.CHAOS_UNKNOWN_CONTENT
+    assert game.actions == []
+
+
+def test_input_and_recovery_invalidate_loot_before_next_observation(monkeypatch):
+    config = chaos_config()
+    game = ChaosGame(config)
+    flow = ChaosFlow(config, game.dependencies(), StopController(),
+                     SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-invalidate', 1), lambda _: None))
+    flow.runtime.prepare()
+    flow.state = RoundState()
+    game.state, game.kind = 'supply', 'loot'
+    invalidated = []
+    monkeypatch.setattr(game, 'invalidate_loot_recognition', lambda: invalidated.append((game.state, len(game.actions))))
+    hit = flow._control('supply_get_loot')
+    flow._tap(hit)
+    assert invalidated == [('supply', 0)]
+    flow._recovered(None)
+    assert invalidated == [('supply', 0), ('loot', 1)]
+
+
+def test_partial_upgrade_interrupts_loot_evidence_without_closing_or_replay(monkeypatch):
+    config = chaos_config()
+    game = ChaosGame(config)
+    flow = ChaosFlow(config, game.dependencies(), StopController(),
+                     SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-popup-invalidate', 1), lambda _: None))
+    flow.runtime.prepare()
+    flow.state = RoundState()
+    game.state, game.kind = 'loot', 'elite'
+    original, samples, invalidated = game.control, [], []
+    shown = False
+    def control(frame, key, region=None):
+        nonlocal shown
+        if key == 'levelup' and len(samples) == 2 and not shown:
+            shown = True
+            return game._hit(key, frame)
+        return original(frame, key, region)
+    monkeypatch.setattr(game, 'control', control)
+    monkeypatch.setattr(game, 'invalidate_loot_recognition', lambda: invalidated.append(game.captures))
+    def cards(frame):
+        samples.append(game.captures)
+        return game.loot_cards(frame)
+    found = flow._wait_battle_transition('three_known_loot_cards', cards,
+                                       flow.runtime.active_monotonic()+15,
+                                       action_key='elite_choose_reward')
+    assert found and len(samples) == 5
+    assert len(invalidated) == 1 and samples[1] < invalidated[0] < samples[2]
+    assert game.actions == []
+
+
+def test_manual_stop_during_readiness_does_not_create_workers(monkeypatch):
+    config = chaos_config()
+    game = ChaosGame(config)
+    stop = StopController()
+    vision = ChaosVision(config, TemplateRepository(config))
+    frame = loot_frame(config, vision._templates, ('loot_ominous_crystal', 'loot_old_sword', 'loot_lightning'))
+    for name in ('begin_loot_recognition', 'end_loot_recognition', 'invalidate_loot_recognition', 'close_loot_recognition'):
+        monkeypatch.setattr(game, name, getattr(vision, name))
+    def cards(_):
+        found = vision.loot_cards(frame)
+        if vision._loot.stats['frames'] == 2:
+            stop.request(StopReason.MANUAL_STOP)
+        return found
+    monkeypatch.setattr(game, 'loot_cards', cards)
+    flow = ChaosFlow(config, game.dependencies(), stop,
+                     SnapshotPublisher(RuntimeSnapshot.chaos_run('loot-ready-stop', 1), lambda _: None))
+    flow.runtime.prepare()
+    flow.state = RoundState()
+    game.state, game.kind = 'loot', 'elite'
+    try:
+        with pytest.raises(StopExecution) as error:
+            flow._choose_loot()
+        assert error.value.reason is StopReason.MANUAL_STOP
+        assert game.actions == [] and vision._loot._pool is None
+        summary = [f for e, f in flow.runtime.deps.logger.events if e == 'chaos_loot_recognition']
+        assert len(summary) == 1 and summary[0]['readiness_waits'] == 2
+        assert summary[0]['card_jobs'] == summary[0]['candidates_checked'] == 0
+    finally:
+        flow.release_cached_game_frame()
+        vision.close_event_recognition()

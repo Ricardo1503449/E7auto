@@ -15,6 +15,7 @@ from e7auto.core.observations import MatchGeometry
 from e7auto.vision.matching import TemplateMatcher
 from e7auto.vision.baseline import scores as baseline_scores
 from .contracts import Detection
+from .loot_readiness import LootReadiness
 
 
 @dataclass(frozen=True)
@@ -82,6 +83,7 @@ class LootRecognizer:
         for array in (self.features, self.weights, self.energy):
             array.setflags(write=False)
         self._pool: ThreadPoolExecutor | None = None
+        self.readiness = LootReadiness(settings, templates)
         self.active = False
         self.stats = {}
         self.invalidate()
@@ -90,6 +92,7 @@ class LootRecognizer:
         self.cache = [None, None, None]
         self.layout = None
         self._anchor_cache = None
+        self.readiness.reset()
 
     def begin(self):
         self.active = True
@@ -99,7 +102,8 @@ class LootRecognizer:
                           candidates_checked=0, cache_checks=0, cache_failures=0,
                           name_expansions=0, fallback_cards=0, ambiguous_cards=0,
                           layout_resets=0, last_keys=[], parallel_workers=3,
-                          parallel_batches=0, card_jobs=0, cards_wall_ms=0.)
+                          parallel_batches=0, card_jobs=0, cards_wall_ms=0.,
+                          readiness_waits=0, readiness_ms=0.)
 
     def end(self):
         result = {k: round(v,3) if isinstance(v,float) else v for k,v in self.stats.items()}
@@ -311,12 +315,12 @@ class LootRecognizer:
         if not self.active:
             self.begin()
             try:
-                return self._recognize(frame)
+                return self._recognize(frame, stable=False)
             finally:
                 self.end()
-        return self._recognize(frame)
+        return self._recognize(frame, stable=True)
 
-    def _recognize(self, frame):
+    def _recognize(self, frame, *, stable):
         started = perf_counter()
         self._add('frames')
         try:
@@ -355,20 +359,47 @@ class LootRecognizer:
                 pixels.setflags(write=False)
                 card=type(card)(pixels,card.transform,card.origin)
                 jobs.append((card,anchor.bounds,self.cache[slot]))
-            self._add('parallel_batches')
-            self._add('card_jobs',len(jobs))
-            stamp = perf_counter()
-            try:
-                results = self._evaluate_cards(jobs)
-            finally:
-                self._add('cards_wall_ms',(perf_counter()-stamp)*1000)
-            found = []
-            for slot,(hit,index,stats) in enumerate(results):
-                for key,value in stats.items():
-                    self._add(key,value)
-                self.cache[slot] = index
-                found.append(hit)
+            found = [None]*3
+
+            def evaluate(slots):
+                if not slots:
+                    return False
+                self._add('parallel_batches')
+                self._add('card_jobs', len(slots))
+                stamp = perf_counter()
+                try:
+                    results = self._evaluate_cards([jobs[slot] for slot in slots])
+                finally:
+                    self._add('cards_wall_ms', (perf_counter()-stamp)*1000)
+                failed = False
+                for slot, (hit, index, stats) in zip(slots, results):
+                    for key, value in stats.items():
+                        self._add(key, value)
+                    self.cache[slot], found[slot] = index, hit
+                    failed |= bool(stats.get('cache_failures'))
+                return failed
+
+            cached = [slot for slot, job in enumerate(jobs) if job[2] is not None]
+            missing = [slot for slot, job in enumerate(jobs) if job[2] is None]
+            # As with events, current-pixel cache verification comes first. A
+            # failure breaks this frame; it never falls through to discovery.
+            if evaluate(cached):
+                self.readiness.reset()
+                self.stats['last_keys'] = [h.key if h else None for h in found]
+                return None
+            if missing:
+                stamp = perf_counter()
+                try:
+                    ready = self.readiness.observe(tuple(job[0] for job in jobs), stable=stable)
+                finally:
+                    self._add('readiness_ms', (perf_counter()-stamp)*1000)
+                if not ready:
+                    self._add('readiness_waits')
+                    self.stats['last_keys'] = [h.key if h else None for h in found]
+                    return None
+                evaluate(missing)
             if any(hit is None for hit in found):
+                self.readiness.reset()
                 self.stats['last_keys'] = [h.key if h else None for h in found]
                 return None
             self.stats['last_keys'] = [h.key for h in found]

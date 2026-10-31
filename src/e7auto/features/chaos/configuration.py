@@ -188,7 +188,7 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
                            "contract_select_settle_ms", "event_close_stable_ms", "event_close_retry_ms", "event_close_max_attempts", "event_entry_settle_ms",
                            "event_choice_retry_ms", "event_choice_max_attempts",
                            "map_node_retry_ms", "map_node_max_attempts",
-                           "battle_signal_poll_ms", "battle_result_settle_ms", "loot_entry_settle_ms", "supply_loot_entry_settle_ms",
+                           "battle_signal_poll_ms", "battle_result_settle_ms",
                            "story_timeout_ms", "story_retry_ms", "story_max_attempts"}
         if set(timing) != required_timing or any(type(v) is not int or v <= 0 for v in timing.values()):
             raise ValueError("invalid Chaos timing")
@@ -394,9 +394,23 @@ def _loot_recognition(value, sizes, scenes, identities):
                 "layout_tolerance": (1, 20), "name_foreground_min": (1, 254),
                 "name_channel_spread_max": (1, 255), "name_extra_pixels_max": (0, 50)}
     scores = {"ambiguity_margin", "icon_threshold", "icon_structure", "name_threshold", "name_structure"}
-    expected = set(integers) | scores | {"card_offset", "icon_band", "name_band", "anchor_spacing", "template_regions"}
+    expected = set(integers) | scores | {"card_offset", "icon_band", "name_band", "anchor_spacing", "template_regions", "readiness"}
     if not isinstance(value, dict) or set(value) != expected:
         raise ValueError("invalid loot recognition fields")
+    readiness = value['readiness']
+    if (not isinstance(readiness, dict) or set(readiness) != {
+            'feature_width', 'feature_height', 'contrast_kernel', 'feature_shift',
+            'alignment_tolerance', 'similarity_min', 'contrast_ratio_min', 'feature_change_max'}):
+        raise ValueError('invalid loot readiness settings')
+    for key, low, high in (('feature_width', 32, 256), ('feature_height', 4, 64),
+                           ('contrast_kernel', 3, 31), ('feature_shift', 0, 6), ('alignment_tolerance', 0, 2)):
+        number = readiness[key]
+        if type(number) is not int or not low <= number <= high or (key == 'contrast_kernel' and number % 2 == 0):
+            raise ValueError(f'invalid loot readiness {key}')
+    for key in ('similarity_min', 'contrast_ratio_min', 'feature_change_max'):
+        number = readiness[key]
+        if type(number) not in (int, float) or not isfinite(number) or not 0 < number < 1:
+            raise ValueError(f'invalid loot readiness {key}')
     for key, (low, high) in integers.items():
         if type(value[key]) is not int or not low <= value[key] <= high:
             raise ValueError(f"invalid loot recognition {key}")

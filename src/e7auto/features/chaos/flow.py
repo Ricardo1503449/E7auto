@@ -176,6 +176,7 @@ class ChaosFlow:
         self._map_handoff = None
         self.stages.invalidate_start()
         self.vision.invalidate_event_recognition()
+        self.vision.invalidate_loot_recognition()
         self.runtime.click("chaos_"+hit.key, hit.anchor)
         self._delay((self.settings.timing["action_settle_ms"] if settle_ms is None else settle_ms)/1000)
 
@@ -943,7 +944,7 @@ class ChaosFlow:
             if result.key != reward_key or self.settings.scenes[reward_key].action is None:
                 raise ValueError("battle result is not an actionable reward entry")
             # _fight already supplied three fresh stable frames for this button.
-            self._tap(result, settle_ms=self.settings.timing["loot_entry_settle_ms"])
+            self._tap(result)
             self._choose_loot(reward_key=reward_key)
             self._control(kind+"_claim_complete")
             self.state.reward_stage = "claimed"
@@ -1062,6 +1063,7 @@ class ChaosFlow:
             close = self.vision.control(frame, "levelup_close")
             value, stage = None, name
             if title is not None or close is not None:
+                self.vision.invalidate_loot_recognition()
                 if title is not None and close is not None and not self._battle_levelup_closed:
                     value, stage = (title, close), "levelup_close"
             else:
@@ -1106,6 +1108,7 @@ class ChaosFlow:
     def _choose_loot(self, *, reward_key=None):
         self.vision.begin_loot_recognition()
         started = self.runtime.active_monotonic()
+        deadline = started+self.settings.timing["page_timeout_ms"]/1000
         outcome = "interrupted"
         try:
             if reward_key is None:
@@ -1113,9 +1116,11 @@ class ChaosFlow:
             else:
                 cards = self._wait_battle_transition(
                     "three_known_loot_cards", self.vision.loot_cards,
-                    started+self.settings.timing["page_timeout_ms"]/1000,
-                    action_key=reward_key, retry_settle_ms=self.settings.timing["loot_entry_settle_ms"],
+                    deadline, action_key=reward_key,
                     reason=StopReason.CHAOS_UNKNOWN_CONTENT)
+            self.runtime.control.checkpoint()
+            if self.runtime.active_monotonic() >= deadline:
+                raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, 'chaos timeout: three_known_loot_cards')
             outcome = "confirmed"
         except StopExecution as exc:
             outcome = exc.reason.value
@@ -1125,6 +1130,9 @@ class ChaosFlow:
             self.runtime.deps.logger.event("chaos_loot_recognition", outcome=outcome,
                                            elapsed_ms=round((self.runtime.active_monotonic()-started)*1000,3),
                                            **summary)
+        self.runtime.control.checkpoint()
+        if self.runtime.active_monotonic() >= deadline:
+            raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, 'chaos timeout: three_known_loot_cards')
         chosen = min(cards, key=lambda h: (self.settings.loot_priorities[h.key], h.bounds.x+h.bounds.width/2))
         self.state.reward_stage = "selecting"
         def source(frame):
@@ -1239,7 +1247,7 @@ class ChaosFlow:
         run_event(self._event_context())
 
     def _supply(self):
-        self._act("supply_get_loot", settle_ms=self.settings.timing["supply_loot_entry_settle_ms"])
+        self._act("supply_get_loot")
         self._choose_loot()
         self._control("supply_loot_done")
         self.state.reward_stage = "claimed"

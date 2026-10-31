@@ -55,7 +55,9 @@ class ChaosGame:
     def stage_chosen_one(self):return self.chosen_stage == 1
     @stage_chosen_one.setter
     def stage_chosen_one(self, value):self.chosen_stage = 1 if value else 3
-    def reset_temporal(self):self.invalidate_event_recognition()
+    def reset_temporal(self):
+        self.invalidate_event_recognition()
+        self.invalidate_loot_recognition()
     def begin_event_recognition(self):self._event_candidate = None
     def end_event_recognition(self):self.invalidate_event_recognition();return {}
     def invalidate_event_recognition(self):self._event_candidate = None
@@ -69,6 +71,7 @@ class ChaosGame:
                                           if (hit := self.control(frame, key)) is not None), None)
         return self._event_candidate
     def begin_loot_recognition(self):pass
+    def invalidate_loot_recognition(self):pass
     def end_loot_recognition(self):return {}
     def close_loot_recognition(self):pass
     def prepare_frame(self, frame):return frame

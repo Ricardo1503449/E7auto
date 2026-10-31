@@ -3779,8 +3779,6 @@ timing:
   network_poll_ms: 1000
   action_settle_ms: 300
   contract_select_settle_ms: 100
-  loot_entry_settle_ms: 1000
-  supply_loot_entry_settle_ms: 3000
   event_entry_settle_ms: 4000
   event_choice_retry_ms: 1500
   event_choice_max_attempts: 3
@@ -3974,6 +3972,15 @@ stage_selection:
   timeout_ms: 15000
 
 loot_recognition:
+  readiness:
+    feature_width: 128
+    feature_height: 16
+    contrast_kernel: 9
+    feature_shift: 3
+    alignment_tolerance: 1
+    similarity_min: 0.55
+    contrast_ratio_min: 0.60
+    feature_change_max: 0.025
   top_k: 5
   feature_size: 32
   feature_shift: 1

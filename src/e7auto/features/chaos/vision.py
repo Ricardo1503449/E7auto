@@ -222,6 +222,9 @@ class ChaosVision:
     def end_loot_recognition(self) -> dict:
         return self._loot.end()
 
+    def invalidate_loot_recognition(self) -> None:
+        self._loot.invalidate()
+
     def close_loot_recognition(self) -> None:
         self._loot.close()
 

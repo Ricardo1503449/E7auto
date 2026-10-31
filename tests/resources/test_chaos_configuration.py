@@ -39,7 +39,7 @@ def load(root, *, target_stage=1):
 
 @pytest.mark.parametrize('value', [0, -1, True, 1.5, None])
 @pytest.mark.parametrize('key', ['loot_entry_settle_ms', 'supply_loot_entry_settle_ms'])
-def test_invalid_loot_entry_delay_rejects_start(tmp_path, value, key):
+def test_removed_loot_entry_delay_is_rejected_as_unknown(tmp_path, value, key):
     raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
     raw['timing'][key] = value
     path = tmp_path/'chaos.yaml'
@@ -49,13 +49,47 @@ def test_invalid_loot_entry_delay_rejects_start(tmp_path, value, key):
         with_chaos_config(base, path)
 
 
-def test_missing_supply_loot_entry_delay_rejects_start(tmp_path):
+def test_loot_readiness_replaces_removed_entry_delays():
+    config = with_chaos_config(load_config(ROOT/'config/internal.yaml', template_profile='chaos'))
+    assert not {'loot_entry_settle_ms', 'supply_loot_entry_settle_ms'} & config.chaos.timing.keys()
+    assert config.chaos.loot_recognition['readiness'] == dict(
+        config.chaos.event_recognition['readiness'], feature_width=128, feature_height=16)
+
+
+def test_retired_loot_waits_reject_even_former_valid_values(tmp_path):
     raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
-    del raw['timing']['supply_loot_entry_settle_ms']
+    raw['timing'].update(loot_entry_settle_ms=1000, supply_loot_entry_settle_ms=3000)
     path = tmp_path/'chaos.yaml'
     path.write_text(yaml.safe_dump(raw), encoding='utf8')
     base = load_config(ROOT/'config/internal.yaml', template_profile='chaos')
     with pytest.raises(ConfigError, match='timing'):
+        with_chaos_config(base, path)
+
+
+@pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
+def test_loot_readiness_loads_in_isolation_for_both_lineups(installation, lineup_id):
+    from e7auto.features.chaos.loot_readiness import LootReadiness
+    config = with_chaos_config(load_config(installation/'config/internal.yaml', template_profile='chaos'),
+                               lineup_id=lineup_id)
+    gate = LootReadiness(config.chaos, TemplateRepository(config))
+    assert len(gate.features[0]) == len(gate.features[1]) == 76
+    assert not (installation/'assets/templates/shop').exists()
+    assert not (installation/'assets/templates/penguin').exists()
+
+
+@pytest.mark.parametrize('key', ['feature_width', 'feature_height', 'contrast_kernel', 'feature_shift',
+                                 'alignment_tolerance', 'similarity_min', 'contrast_ratio_min', 'feature_change_max'])
+@pytest.mark.parametrize('value', [None, True, 'missing', float('nan'), -1])
+def test_invalid_loot_readiness_rejects_start(tmp_path, key, value):
+    raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
+    if value == 'missing':
+        del raw['loot_recognition']['readiness'][key]
+    else:
+        raw['loot_recognition']['readiness'][key] = value
+    path = tmp_path/'chaos.yaml'
+    path.write_text(yaml.safe_dump(raw), encoding='utf8')
+    base = load_config(ROOT/'config/internal.yaml', template_profile='chaos')
+    with pytest.raises(ConfigError, match='loot readiness'):
         with_chaos_config(base, path)
 
 

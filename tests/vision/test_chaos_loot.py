@@ -73,10 +73,13 @@ def test_scaled_anchor_fingerprint_and_scene_change(setup, monkeypatch):
 
 
 @pytest.fixture
-def setup():
+def setup(monkeypatch):
     config=chaos_config()
     templates=TemplateRepository(config)
     vision=ChaosVision(config,templates)
+    # These unit tests isolate the established ranking/cache/worker behavior.
+    # Production readiness is exercised in test_chaos_loot_readiness.py.
+    monkeypatch.setattr(vision._loot.readiness, 'observe', lambda *args, **kwargs: True)
     yield vision,config,templates
     vision.close_loot_recognition()
 

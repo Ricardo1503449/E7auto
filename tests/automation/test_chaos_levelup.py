@@ -533,7 +533,7 @@ def test_partial_late_upgrade_blocks_cards_and_reward_replay(controls):
 
 
 def test_late_upgrade_interrupts_two_card_confirmations_and_requires_three_new_frames(monkeypatch):
-    game, flow, _ = late_loot_flow(kind='elite', late_after=1.15)
+    game, flow, _ = late_loot_flow(kind='elite', late_after=.45)
     original, samples = game.loot_cards, []
 
     def cards(frame):
