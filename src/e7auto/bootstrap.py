@@ -18,7 +18,10 @@ NORMAL_COMPLETION = frozenset({
 })
 RUN_POLICY = RunPolicy(
     normal_completion=NORMAL_COMPLETION,
-    expected_stops=NORMAL_COMPLETION | {StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_STOP},
+    expected_stops=NORMAL_COMPLETION | {
+        StopReason.PURCHASE_FUNDS_INSUFFICIENT, StopReason.MANUAL_STOP,
+        StopReason.GAME_WINDOW_NOT_FOUND, StopReason.MULTIPLE_GAME_WINDOWS,
+    },
 )
 
 

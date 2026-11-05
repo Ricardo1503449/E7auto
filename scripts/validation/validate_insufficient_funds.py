@@ -77,7 +77,7 @@ def main() -> int:
 
         windows = Win32WindowService()
         capture = WindowsGraphicsCaptureService()
-        window = windows.locate_unique(str(config.executable_path), config.window_title)
+        window = windows.locate_unique(config.game_clients, config.window_title)
 
         wait_started = time.monotonic()
         wait_deadline = wait_started + args.foreground_wait_seconds

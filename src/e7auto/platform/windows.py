@@ -12,11 +12,7 @@ import win32gui
 import win32process
 
 from e7auto.core.types import Rect, Size
-from e7auto.core.ports import DisplayGeometry, WindowRef, WindowState
-
-
-class WindowLookupError(RuntimeError):
-    pass
+from e7auto.core.ports import DisplayGeometry, GameClient, WindowLookupError, WindowRef, WindowState
 
 
 class WindowOperationError(RuntimeError):
@@ -52,11 +48,12 @@ class Win32WindowService:
     _RESTORE_TIMEOUT_SECONDS = 1.0
     _RESTORE_POLL_SECONDS = 0.02
 
-    def locate_unique(self, executable_path: str, window_title: str) -> WindowRef:
-        matches: list[WindowRef] = []
-        expected_executable = Path(executable_path)
-        expected_path = os.path.normcase(os.path.normpath(executable_path))
-        expected_name = expected_executable.name.casefold()
+    def locate_unique(self, clients: tuple[GameClient, ...], window_title: str) -> WindowRef:
+        matches: dict[int, WindowRef] = {}
+        targets = tuple(
+            (client, Path(client.executable_path), os.path.normcase(os.path.normpath(client.executable_path)))
+            for client in clients
+        )
 
         def callback(hwnd: int, _: object) -> bool:
             if not win32gui.IsWindowVisible(hwnd):
@@ -68,19 +65,21 @@ class Win32WindowService:
             found_path = _process_path(pid)
             if not found_path:
                 return True
-            path_matches = (
-                os.path.normcase(os.path.normpath(found_path)) == expected_path
-                if expected_executable.is_absolute()
-                else Path(found_path).name.casefold() == expected_name
-            )
-            if path_matches:
-                matches.append(WindowRef(hwnd, title, Path(found_path).name, found_path, pid))
+            for client, expected_executable, expected_path in targets:
+                path_matches = (
+                    os.path.normcase(os.path.normpath(found_path)) == expected_path
+                    if expected_executable.is_absolute()
+                    else Path(found_path).name.casefold() == expected_executable.name.casefold()
+                )
+                if path_matches:
+                    matches.setdefault(hwnd, WindowRef(hwnd, title, Path(found_path).name, found_path, pid, client.client_id))
+                    break
             return True
 
         win32gui.EnumWindows(callback, None)
         if len(matches) != 1:
-            raise WindowLookupError(f"Expected exactly one game window, found {len(matches)}")
-        return matches[0]
+            raise WindowLookupError(tuple(matches.values()))
+        return next(iter(matches.values()))
 
     def restore_without_activation(self, window: WindowRef) -> None:
         if not win32gui.IsWindow(window.hwnd):

@@ -15,8 +15,9 @@ import yaml
 from e7auto.app import validate_source_environment
 from e7auto.core.types import Rect, Size
 from e7auto.configuration.models import TargetConfig
+from e7auto.configuration.game import load_game_clients
 from e7auto.platform.windows import Win32WindowService, enable_per_monitor_dpi_awareness
-from e7auto.core.ports import WindowRef, WindowState
+from e7auto.core.ports import GameClient, WindowRef, WindowState
 from e7auto.ui import StatsOverlay
 from scripts.common.paths import PROJECT_ROOT, task_result_path, ensure_task_result_path
 
@@ -27,7 +28,7 @@ CONFIG_PATH = ROOT / "config" / "internal.yaml"
 
 @dataclass(frozen=True, slots=True)
 class PositionCalibrationConfig:
-    executable_path: Path
+    game_clients: tuple[GameClient, ...]
     window_title: str
     baseline_client_size: Size
     targets: tuple[TargetConfig, ...]
@@ -69,20 +70,16 @@ def load_position_calibration_config(
         raise RuntimeError("schema_version must be 1")
 
     game = _mapping(root.get("game"), "game")
-    executable_path = Path(str(game.get("executable_path", "")))
+    errors: list[str] = []
+    clients = load_game_clients(game, errors)
+    if errors:
+        raise RuntimeError("; ".join(errors))
     window_title = game.get("window_title")
     size = _mapping(game.get("baseline_client_size"), "game.baseline_client_size")
     baseline = Size(
         _integer(size.get("width"), "game.baseline_client_size.width"),
         _integer(size.get("height"), "game.baseline_client_size.height"),
     )
-    if (
-        executable_path.suffix.casefold() != ".exe"
-        or (not executable_path.is_absolute() and executable_path.name != str(executable_path))
-    ):
-        raise RuntimeError(
-            "position-calibration executable must be an absolute .exe path or an .exe filename"
-        )
     if not isinstance(window_title, str) or not window_title:
         raise RuntimeError("position-calibration window title is required")
     if baseline != Size(2322, 1306):
@@ -123,7 +120,7 @@ def load_position_calibration_config(
         raise RuntimeError("position-calibration target ids must be unique")
 
     return PositionCalibrationConfig(
-        executable_path,
+        clients,
         window_title,
         baseline,
         tuple(targets),
@@ -313,7 +310,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         config = load_position_calibration_config()
         windows = Win32WindowService()
         game_window = windows.locate_unique(
-            str(config.executable_path),
+            config.game_clients,
             config.window_title,
         )
         state = windows.inspect(game_window)

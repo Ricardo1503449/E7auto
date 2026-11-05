@@ -11,6 +11,7 @@ from e7auto.configuration.shop_layout import visible_shop_rows
 from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.navigation import load_startup_navigation
 from e7auto.configuration.models import ClickRetryConfig
+from e7auto.configuration.game import load_game_clients
 
 
 def _load_click_retry(root, errors):
@@ -96,21 +97,8 @@ def _mapping(value: Any, path: str, errors: list[str]) -> dict[str, Any]:
 
 def _load_game(root, errors):
     game = _mapping(root.get("game"), "game", errors)
-    executable_path_raw = game.get("executable_path")
+    clients = load_game_clients(game, errors)
     window_title = game.get("window_title")
-    if not isinstance(executable_path_raw, str) or not executable_path_raw.strip():
-        errors.append("game.executable_path is required")
-        executable_path = Path("missing.exe")
-    else:
-        executable_path = Path(executable_path_raw)
-        if (
-            executable_path.suffix.casefold() != ".exe"
-            or (not executable_path.is_absolute() and executable_path.name != str(executable_path))
-        ):
-            errors.append(
-                "game.executable_path must be an absolute .exe path or an .exe filename"
-            )
-    process_name = executable_path.name
     if not isinstance(window_title, str) or not window_title.strip():
         errors.append("game.window_title is required")
         window_title = ""
@@ -131,7 +119,7 @@ def _load_game(root, errors):
             "display must use reference_mode 3120x2080, minimum_mode 2560x1440, "
             "and client_width_fraction 0.60"
         )
-    return executable_path, process_name, window_title, baseline_size, display
+    return clients, window_title, baseline_size, display
 
 
 def _load_templates(root, source_path, baseline_size, template_profile, errors):
@@ -685,8 +673,7 @@ def load_config(
         errors.append("calibration_complete must be true after real-machine calibration")
 
     (
-        executable_path,
-        process_name,
+        game_clients,
         window_title,
         baseline_size,
         display,
@@ -775,8 +762,7 @@ def load_config(
         raise ConfigError(errors)
     return AppConfig(
         source_path=source_path,
-        executable_path=executable_path,
-        process_name=process_name,
+        game_clients=game_clients,
         window_title=window_title,
         baseline_client_size=baseline_size,
         display=display,

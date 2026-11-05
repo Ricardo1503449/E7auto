@@ -64,6 +64,15 @@ rank-up events keep their existing no-target stop guard.
 ## Source organization
 
 `app.py` starts the application. `bootstrap.py` selects the feature and assembles production services.
+`game.clients` declares the STOVE and Steam executable targets with one exact window title.
+Configuration normalizes legacy single-executable YAML to the same `GameClient` tuple.
+The window service enumerates all candidates before deciding uniqueness and returns one
+`WindowRef` bound to the actual executable path, process ID and client identity. Zero or
+multiple matches stop before restoration, resizing, capture or input. Candidate details
+are logged only; the existing system notification channel presents a short startup failure
+after worker teardown, respecting the saved notification preference. No feature-page error
+text or target-selection UI is added. Feature flows, templates and matching remain shared.
+
 `ui/` owns Qt presentation, thread adaptation and signals. The worker calls
 `create_production_session` from its `run()` method; WGC imports remain inside that factory.
 

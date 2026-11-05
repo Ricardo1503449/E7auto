@@ -287,7 +287,7 @@ def _base_context(args: argparse.Namespace):
     templates = TemplateRepository(config)
     vision = OpenCvGameVision(config, templates)
     windows = Win32WindowService()
-    window = windows.locate_unique(str(config.executable_path), config.window_title)
+    window = windows.locate_unique(config.game_clients, config.window_title)
     state = windows.inspect(window)
     if (
         not state.exists

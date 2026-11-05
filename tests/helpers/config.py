@@ -4,6 +4,7 @@ from pathlib import Path
 
 from e7auto.configuration.models import AppConfig, EntryThresholds, DisplayConfig, LoggingConfig, RefreshStrategyConfig, ScrollConfig, SlotConfig, TargetConfig, TimingConfig
 from e7auto.core.types import Point, Rect, Size
+from e7auto.core.ports import GameClient
 from e7auto.configuration.models import InventoryReadinessConfig
 
 
@@ -27,8 +28,7 @@ def make_config(
         )
     return AppConfig(
         source_path=Path("synthetic.yaml"),
-        executable_path=Path(r"D:\Games\Fake\Game.exe"),
-        process_name="Game.exe",
+        game_clients=(GameClient("legacy", r"D:\Games\Fake\Game.exe"),),
         window_title="Game Window",
         baseline_client_size=Size(100, 80),
         display=DisplayConfig(Size(400, 400), Size(100, 80), 0.75),

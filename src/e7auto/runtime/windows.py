@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TypeVar
+from dataclasses import asdict
 from e7auto.core.domain import RunState, StopReason
+from e7auto.core.ports import WindowLookupError
 from e7auto.vision.frames import CoordinateTransform, initial_client_size
 from e7auto.runtime.stop_control import StopExecution
 
@@ -22,8 +24,21 @@ def prepare(ctx) -> None:
         )
     try:
         window = ctx.deps.windows.locate_unique(
-            str(ctx.config.executable_path), ctx.config.window_title
+            ctx.config.game_clients, ctx.config.window_title
         )
+    except WindowLookupError as exc:
+        reason = StopReason.MULTIPLE_GAME_WINDOWS if exc.matches else StopReason.GAME_WINDOW_NOT_FOUND
+        try:
+            ctx.deps.logger.event(
+                "game_window_lookup_rejected",
+                match_count=len(exc.matches),
+                window_title=ctx.config.window_title,
+                configured_clients=[asdict(client) for client in ctx.config.game_clients],
+                candidates=[asdict(window) for window in exc.matches],
+            )
+        except Exception:
+            pass  # A diagnostic failure must not replace the startup rejection.
+        raise StopExecution(reason, str(exc)) from exc
     except Exception as exc:
         raise StopExecution(StopReason.WINDOW_ABNORMAL, str(exc)) from exc
     try:
@@ -121,6 +136,10 @@ def prepare(ctx) -> None:
         outer_before_resize=before_resize.outer_bounds,
         outer_after_resize=state.outer_bounds,
         hwnd=window.hwnd,
+        client_id=window.client_id,
+        process_name=window.process_name,
+        executable_path=window.executable_path,
+        process_id=window.process_id,
         client_x=state.client_bounds.x,
         client_y=state.client_bounds.y,
         client_width=state.client_bounds.width,

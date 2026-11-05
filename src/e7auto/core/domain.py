@@ -38,6 +38,8 @@ class StopReason(str, Enum):
     MANUAL_STOP = "manual_stop"
     PURCHASE_FUNDS_INSUFFICIENT = "purchase_funds_insufficient"
     WINDOW_ABNORMAL = "window_abnormal"
+    GAME_WINDOW_NOT_FOUND = "game_window_not_found"
+    MULTIPLE_GAME_WINDOWS = "multiple_game_windows"
     INVALID_DISPLAY_GEOMETRY = "invalid_display_geometry"
     UNSUPPORTED_DISPLAY_RESOLUTION = "unsupported_display_resolution"
     DISPLAY_CHANGED = "display_changed"

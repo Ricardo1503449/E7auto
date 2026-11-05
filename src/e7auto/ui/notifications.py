@@ -22,6 +22,8 @@ _REASONS = {
     StopReason.PENGUIN_FUNDS_COMPLETE: "红叶不足，兑换已结束",
     StopReason.CHAOS_COMPLETE: "已完成设定轮数",
     StopReason.WINDOW_ABNORMAL: "游戏窗口状态异常",
+    StopReason.GAME_WINDOW_NOT_FOUND: "未找到游戏窗口，请启动 STOVE 或 Steam 版游戏后重新开始。",
+    StopReason.MULTIPLE_GAME_WINDOWS: "检测到多个游戏窗口，请只保留一个后重新开始。",
     StopReason.INVALID_DISPLAY_GEOMETRY: "游戏显示区域异常",
     StopReason.UNSUPPORTED_DISPLAY_RESOLUTION: "不支持当前游戏分辨率",
     StopReason.DISPLAY_CHANGED: "游戏显示区域发生变化",
@@ -48,6 +50,8 @@ def completion_message(snapshot: RuntimeSnapshot) -> tuple[str, str] | None:
     reason = snapshot.stop_reason
     if not snapshot.is_final or reason is None or reason == StopReason.MANUAL_STOP:
         return None
+    if reason in {StopReason.GAME_WINDOW_NOT_FOUND, StopReason.MULTIPLE_GAME_WINDOWS}:
+        return "E7auto · 启动失败", _REASONS[reason]
     outcome = "已完成" if reason in _COMPLETED else "已停止" if reason in _EXPECTED else "异常停止"
     name = _FEATURE_NAMES.get(snapshot.feature_id, "脚本")
     if snapshot.feature_id == "chaos":

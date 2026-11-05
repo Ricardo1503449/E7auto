@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from e7auto.core.types import Point, Rect, Size
 from e7auto.core.recognition import ComponentLayout
+from e7auto.core.ports import GameClient
 
 @dataclass(frozen=True, slots=True)
 class DisplayConfig:
@@ -122,8 +123,7 @@ class NavigationTemplate:
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     source_path: Path
-    executable_path: Path
-    process_name: str
+    game_clients: tuple[GameClient, ...]
     window_title: str
     baseline_client_size: Size
     display: DisplayConfig

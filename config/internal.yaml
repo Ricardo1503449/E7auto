@@ -2,7 +2,9 @@ schema_version: 1
 calibration_complete: true
 
 game:
-  executable_path: EpicSeven.exe
+  clients:
+    stove: EpicSeven.exe
+    steam: EpicSeven_Steam.exe
   window_title: 第七史诗
   baseline_client_size: {width: 2322, height: 1306}
 

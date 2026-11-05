@@ -8,7 +8,7 @@ All Python commands below are module entry points run from the project root. Tem
 
 ## Required checklist
 
-1. Confirmed top-level window title: `第七史诗`; confirmed executable name: `EpicSeven.exe`. The validated installation path was `D:\Games\EpicSeven\EpicSeven.exe`, but production lookup accepts any installation directory.
+1. The exact top-level title is `第七史诗`. `game.clients` declares STOVE (`EpicSeven.exe`) and Steam (`EpicSeven_Steam.exe`); production accepts any installation directory and requires exactly one matching window across both clients. The historical STOVE installation path was `D:\Games\EpicSeven\EpicSeven.exe`. Steam window identity and covered login-page capture have been verified; Steam feature recognition and game input remain pending actual use.
 2. Confirmed per-monitor-DPI-aware physical client calibration baseline: `2322 x 1306`. Do not use the 200%-scaled logical result `1161 x 653`. The reference current desktop mode is `3120 x 2080`; the minimum supported current mode is `2560 x 1440`.
 3. Confirm the checked-in fixed refresh-currency cost remains `3`; it is not user-editable.
 4. The `购买金币` insufficient-gold template is extracted from the supplied terminal screenshot after exact in-memory client cropping. The combined Sky Stone gem/plus icon and complete digit set `0-9` are also present under `assets/templates`. Fixed top/bottom navigation-anchor templates are not required.

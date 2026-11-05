@@ -5,7 +5,7 @@ from typing import Callable
 import numpy as np
 
 from e7auto.core.types import Point, Rect, Size
-from e7auto.core.ports import CachedGameFrame, DisplayGeometry, WindowRef, WindowState
+from e7auto.core.ports import CachedGameFrame, DisplayGeometry, GameClient, WindowRef, WindowState
 
 
 class FakeClock:
@@ -55,8 +55,8 @@ class FakeWindowService:
         self.locate_calls = 0
         self.restore_calls = 0
 
-    def locate_unique(self, executable_path: str, window_title: str) -> WindowRef:
-        assert executable_path == r"D:\Games\Fake\Game.exe"
+    def locate_unique(self, clients: tuple[GameClient, ...], window_title: str) -> WindowRef:
+        assert clients == (GameClient("legacy", r"D:\Games\Fake\Game.exe"),)
         assert window_title == "Game Window"
         self.locate_calls += 1
         return self.ref

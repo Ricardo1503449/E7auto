@@ -1,9 +1,8 @@
 """A game-side model: inventory/page changes require valid clicks, not flow calls."""
 from dataclasses import replace
-from pathlib import Path
 
 from e7auto.core.types import Point, Rect, Size
-from e7auto.core.ports import DisplayGeometry
+from e7auto.core.ports import DisplayGeometry, GameClient
 from e7auto.features.chaos.contracts import AutoState, Detection, MapView, Node
 from e7auto.features.chaos.configuration import with_chaos_config
 from e7auto.configuration.loader import load_config
@@ -14,7 +13,7 @@ from e7auto.runtime.dependencies import AutomationDependencies
 
 def chaos_config(lineup_id='dark_twins'):
     config = with_chaos_config(load_config(ROOT / "config/internal.yaml", template_profile="chaos"), lineup_id=lineup_id)
-    return replace(config, executable_path=Path(r"D:\Games\Fake\Game.exe"), process_name="Game.exe", window_title="Game Window")
+    return replace(config, game_clients=(GameClient("legacy", r"D:\Games\Fake\Game.exe"),), window_title="Game Window")
 
 
 class ChaosGame:

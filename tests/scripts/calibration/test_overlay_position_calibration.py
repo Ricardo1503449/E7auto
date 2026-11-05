@@ -12,7 +12,7 @@ from PySide6.QtWidgets import QApplication
 
 from e7auto.core.types import Rect, Size
 from e7auto.configuration.loader import load_config
-from e7auto.core.ports import WindowState
+from e7auto.core.ports import GameClient, WindowState
 from e7auto.ui import StatsOverlay
 from scripts.calibration.calibrate_overlay_position import confirmed_result, load_position_calibration_config, position_calibration_initial_state_is_valid
 from scripts.release.verify_release import verify_template_assets
@@ -28,7 +28,7 @@ def test_position_loader_does_not_relax_production_config_gate() -> None:
     assert production.rois["purchase_result"] == Rect(975, 210, 400, 300)
 
     config = load_position_calibration_config(CONFIG_PATH)
-    assert str(config.executable_path) == "EpicSeven.exe"
+    assert config.game_clients == (GameClient("stove", "EpicSeven.exe"), GameClient("steam", "EpicSeven_Steam.exe"))
     assert config.window_title == "第七史诗"
     assert (config.baseline_client_size.width, config.baseline_client_size.height) == (
         2322,

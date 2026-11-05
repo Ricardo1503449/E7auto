@@ -10,10 +10,37 @@ from tests.automation.support import run_session
 from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.core.types import Point, Rect
 from e7auto.core.domain import RuntimeSnapshot, StopReason
-from e7auto.core.ports import WindowState
+from e7auto.core.ports import WindowLookupError, WindowRef, WindowState
 from e7auto.core.observations import Observation
 from e7auto.features.shop.contracts import PurchaseOutcome, ScrollMovementObservation
 from tests.helpers import FakeClock, FakeInput, FakeOverlay, FakeRuntimeEnvironment, FakeWindowService, ScriptedVision, make_config, match
+
+
+@pytest.mark.parametrize("multiple", [False, True], ids=["not-found", "multiple"])
+def test_game_window_lookup_rejection_prevents_all_window_capture_and_input_actions(monkeypatch, multiple):
+    from dataclasses import asdict
+    from e7auto.bootstrap import AutomationSession
+    from tests.helpers import make_dependencies
+
+    deps, windows, inputs, overlay, logger = make_dependencies(ScriptedVision())
+    matches = (
+        WindowRef(1, "第七史诗", "EpicSeven.exe", r"D:\Games\EpicSeven.exe", 11, "stove"),
+        WindowRef(2, "第七史诗", "EpicSeven_Steam.exe", r"E:\Steam\EpicSeven_Steam.exe", 22, "steam"),
+    ) if multiple else ()
+
+    def reject(clients, title):
+        raise WindowLookupError(matches)
+
+    monkeypatch.setattr(windows, "locate_unique", reject)
+    final = AutomationSession(make_config(), deps, StopController(), lambda value: None).run(0)
+    assert final.stop_reason is (StopReason.MULTIPLE_GAME_WINDOWS if multiple else StopReason.GAME_WINDOW_NOT_FOUND)
+    assert windows.restore_calls == 0 and windows.resize_calls == []
+    assert windows.display_inspections == [] and overlay.calls == []
+    assert deps.capture.calls == 0 and inputs.actions == []
+    assert logger.stop_snapshots == []
+    rejected = [fields for event, fields in logger.events if event == "game_window_lookup_rejected"]
+    assert rejected[0]["candidates"] == [asdict(window) for window in matches]
+    assert deps.capture.closed
 
 
 def test_stop_request_does_not_wait_for_admitted_input_and_blocks_queued_input():

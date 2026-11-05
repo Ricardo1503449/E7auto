@@ -24,7 +24,13 @@ def test_all_terminal_reasons_are_explained_except_manual_stop(reason):
     else:
         assert reason in _REASONS
         assert _REASONS[reason] in result[1]
-        assert "0/5" in result[1]
+        if reason in {StopReason.GAME_WINDOW_NOT_FOUND, StopReason.MULTIPLE_GAME_WINDOWS}:
+            expected = ("检测到多个游戏窗口，请只保留一个后重新开始。"
+                        if reason == StopReason.MULTIPLE_GAME_WINDOWS else
+                        "未找到游戏窗口，请启动 STOVE 或 Steam 版游戏后重新开始。")
+            assert result == ("E7auto · 启动失败", expected)
+        else:
+            assert "0/5" in result[1]
 
 
 @pytest.mark.parametrize("reason,outcome", [
@@ -122,6 +128,9 @@ def test_preferences_preserve_other_keys_and_failed_save_reverts_switch(tmp_path
     (StopReason.RECOGNITION_TIMEOUT, True, 1),
     (StopReason.MANUAL_STOP, True, 0),
     (StopReason.BUDGET_COMPLETE, False, 0),
+    pytest.param(StopReason.MULTIPLE_GAME_WINDOWS, True, 1, id="multiple-enabled"),
+    pytest.param(StopReason.MULTIPLE_GAME_WINDOWS, False, 0, id="multiple-disabled"),
+    pytest.param(StopReason.GAME_WINDOW_NOT_FOUND, True, 1, id="not-found-enabled"),
 ])
 def test_main_window_notifies_once_after_thread_exit(tmp_path, monkeypatch, reason, enabled, expected):
     entered, release = Event(), Event()
@@ -157,6 +166,10 @@ def test_main_window_notifies_once_after_thread_exit(tmp_path, monkeypatch, reas
         wait_for(lambda: not window._is_busy())
         window._on_thread_stopped()
         assert len(calls) == expected
+        if reason in {StopReason.GAME_WINDOW_NOT_FOUND, StopReason.MULTIPLE_GAME_WINDOWS}:
+            assert not window._shop_feature_page.status_label.text()
+            if expected:
+                assert calls == [("E7auto · 启动失败", _REASONS[reason])]
         assert window._pending_run_result is None
     finally:
         release.set()

@@ -8,6 +8,7 @@ import yaml
 
 from e7auto.configuration.models import ConfigError
 from e7auto.core.types import Point, Rect, Size
+from e7auto.core.ports import GameClient
 from e7auto.configuration.loader import load_config
 from e7auto.core.domain import OverlayActivityStatus, RunState, RuntimeSnapshot, StopReason
 from e7auto.logging.run import RunLogManager
@@ -29,6 +30,7 @@ def test_chaos_defeats_accumulate_independently_and_freeze_at_stop() -> None:
 def test_default_configuration_loads_after_completed_calibration() -> None:
     config = load_config(Path("config/internal.yaml"))
 
+    assert config.game_clients == (GameClient("stove", "EpicSeven.exe"), GameClient("steam", "EpicSeven_Steam.exe"))
     assert config.rois["purchase_result"] == Rect(975, 210, 400, 300)
     assert config.template_paths["insufficient_funds"].name == "insufficient_funds.png"
     assert config.display.reference_mode == Size(3120, 2080)
@@ -188,7 +190,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
     path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     loaded = load_config(path)
     assert loaded.refresh_cost == 3
-    assert loaded.process_name == "Game.exe"
+    assert loaded.game_clients == (GameClient("legacy", "Game.exe"),)
     assert loaded.sky_stone_digit_confidence == 0.8
     assert loaded.sky_stone_digit_margin == 0.08
     assert loaded.sky_stone_digits_offset == Point(1, 2)

@@ -37,12 +37,25 @@ class CaptureError(RuntimeError):
 
 
 @dataclass(frozen=True, slots=True)
+class GameClient:
+    client_id: str
+    executable_path: str
+
+
+@dataclass(frozen=True, slots=True)
 class WindowRef:
     hwnd: int
     title: str
     process_name: str
     executable_path: str = ""
     process_id: int = 0
+    client_id: str = ""
+
+
+class WindowLookupError(RuntimeError):
+    def __init__(self, matches: tuple[WindowRef, ...]):
+        self.matches = matches
+        super().__init__(f"Expected exactly one game window, found {len(matches)}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,7 +77,7 @@ class DisplayGeometry:
 
 
 class WindowService(Protocol):
-    def locate_unique(self, executable_path: str, window_title: str) -> WindowRef: ...
+    def locate_unique(self, clients: tuple[GameClient, ...], window_title: str) -> WindowRef: ...
 
     def restore_without_activation(self, window: WindowRef) -> None: ...
 
