@@ -78,6 +78,7 @@ def validated(project, *, pending=False, installer_bytes=None):
     workflow.record_validation(run, {"release": str(installed), "installation_verified": True,
         "problems": [], "self_check": {
         "compiled": True, "version": "1.3.3", "wgc_importable": True,
+        "update_installation_valid": True,
     }}, project)
     from scripts.release.verify_installer import CHECKS
     workflow._write(run / 'installer-verification.json', {
@@ -207,6 +208,30 @@ def test_upload_requires_the_exact_archive_and_successful_compiled_verification(
         workflow.check(run, root=project)
 
 
+@pytest.mark.parametrize('operation', ['publish', 'promote'])
+@pytest.mark.parametrize('value', ['missing', False, None, 1, 'true'])
+def test_update_precheck_must_be_true_before_publish_or_promotion(project, operation, value):
+    from scripts.release.distribution import promote_verified_installer
+    run, archive, _ = validated(project, pending=operation == 'promote')
+    path = run / workflow.VALIDATION
+    record = workflow._read(path)
+    checked = record['report']['self_check']
+    if value == 'missing':
+        checked.pop('update_installation_valid')
+    else:
+        checked['update_installation_valid'] = value
+    workflow._write(path, record)
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match='self-check|compiled release verification'):
+        if operation == 'publish':
+            workflow.check(run, root=project)
+        else:
+            promote_verified_installer(run, project)
+    assert archive.is_file() and path.read_bytes() == before
+    assert not (run / 'publish-check.json').exists()
+    assert not (run / 'distribution-result.json').exists()
+
+
 @pytest.mark.parametrize("config_name", ["internal.yaml", "chaos.yaml"])
 def test_source_mutation_during_build_is_rejected_before_sealing(project, config_name):
     run, archive, dist = build(project)
@@ -305,7 +330,8 @@ def test_final_check_accepts_scoped_reuse_but_requires_new_package_self_check(pr
     installed = project/'installed/new-package'
     shutil.copytree(dist, installed)
     workflow.record_validation(current, {'release': str(installed), 'installation_verified': True,
-        'problems': [], 'self_check': {'compiled': True, 'version': '1.3.3', 'wgc_importable': True}}, project)
+        'problems': [], 'self_check': {'compiled': True, 'version': '1.3.3', 'wgc_importable': True,
+                                     'update_installation_valid': True}}, project)
     plan = lifecycle.select_plan(current, project)
     assert plan['mode'] == 'reuse'
     workflow._write(current/lifecycle.REPORT, {

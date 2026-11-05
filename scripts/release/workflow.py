@@ -328,6 +328,7 @@ def check(run: Path, revision: str = "HEAD", root: Path = PROJECT_ROOT) -> dict:
     if (validation.get("artifact_sha256") != _file_sha(run / ARTIFACT)
             or report.get("problems") != [] or not self_check.get("compiled")
             or self_check.get("version") != snapshot["version"]
+            or self_check.get("update_installation_valid") is not True
             or not self_check.get("wgc_importable") or report.get('installation_verified') is not True):
         raise ValueError("Successful compiled release verification is required")
     from scripts.release.lifecycle import validate_report

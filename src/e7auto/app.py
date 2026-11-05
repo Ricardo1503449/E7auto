@@ -14,6 +14,7 @@ from PySide6.QtWidgets import QApplication
 
 from e7auto import __version__
 from e7auto.platform.installation import application_guard, app_user_model_id
+from e7auto.platform.update_install import validate_installation
 from e7auto.platform.windows import enable_per_monitor_dpi_awareness
 from e7auto.ui import MainWindow
 
@@ -63,6 +64,16 @@ def main() -> int:
         from e7auto.ui.reporting_check import check_reporting_runtime
 
         compiled = bool(getattr(sys, "frozen", False) or "__compiled__" in globals())
+        update_installation_valid = None
+        update_installation_error = ""
+        if compiled:
+            try:
+                validate_installation(root)
+            except (OSError, ValueError, TypeError, IndexError) as exc:
+                update_installation_valid = False
+                update_installation_error = str(exc)
+            else:
+                update_installation_valid = True
         wgc_importable, wgc_import_error = validate_wgc_import()
         config_path = root / "config" / "internal.yaml"
         templates_path = root / "assets" / "templates"
@@ -70,6 +81,8 @@ def main() -> int:
         result = {
             "version": __version__,
             "compiled": compiled,
+            "update_installation_valid": update_installation_valid,
+            "update_installation_error": update_installation_error,
             "machine": platform.machine(),
             "config_present": config_path.is_file(),
             "templates_present": templates_path.is_dir(),
@@ -96,6 +109,7 @@ def main() -> int:
             and not result["venv_bundled"]
             and result["wgc_importable"]
             and result["statistics_runtime_ready"]
+            and (not compiled or result["update_installation_valid"] is True)
             else 2
         )
     enable_per_monitor_dpi_awareness()

@@ -1,5 +1,48 @@
 # 发布流程与构建输入一致性验证
 
+## 2026-10-31 自动更新EXE路径误判修复
+
+原生产校验以`sys.executable`与安装目录中的`E7auto.exe`比较。已有Nuitka 4.1.3
+standalone最小复现表明：Windows实际运行的是`E7auto.exe`，但该Python属性为同目录中
+不存在的`python.exe`，从而触发“当前程序与安装目录不一致，无法自动更新”。v1.4.26至
+v1.4.29保留同一校验逻辑；本结论不代表已经逐个执行历史正式安装包，或确认所有用户
+进程状态的发生比例。原失败复现及历史证据保持原样。
+
+修复使用现有win32api.GetModuleFileName(None)读取Windows实际进程路径，读取失败转为
+可显示的ValueError并拒绝更新。安装登记、清单及链接路径限制保持。编译版自检执行同一
+生产校验，新增update_installation_valid和update_installation_error；失败返回非零，
+源码运行报告null及空字符串。安装验收、dist提升、完整基线复用和最终workflow check
+要求显式布尔true，缺失、false、null、数字1及字符串true均拒绝。非零退出时仍保留自检
+返回的JSON和具体失败原因。历史报告不补填新字段，下次实际安装验收须建立有效新基线。
+
+本轮实际运行六个直接相关测试模块，首轮184项全部通过；补充自检非零退出时的诊断留存
+后，仅重跑受影响验证器的9项，全部通过，其中7项与首轮重叠，最终覆盖186个独立用例。
+覆盖真实生产校验下的下载/启动/清理、虚拟解释器路径、错误进程目录/文件名、原生API
+失败、中文空格目录、登记/清单/链接路径拒绝、自检成功/失败/源码跳过以及各发布门禁。
+
+实际使用项目.venv的Nuitka 4.1.3和登记缓存中的GCC 15.2.0编译生产更新校验，未替换
+Windows路径API或编译版身份判断，只隔离安装登记与清单夹具：正常E7auto.exe在
+sys.executable仍为不存在的python.exe时通过；同一编译文件复制为renamed.exe后正确
+拒绝。两个编译场景均符合预期，原失败复现复用作修复前基线。最初直接启动scratch脚本
+遇到项目工具导入路径错误，改为从项目根目录以runpy启动后完成编译；没有改动依赖。
+工作区目录/源码边界检查、git diff --check及新增测试文件空白检查均通过；编译探针绑定的
+生产源码摘要保持一致，现有正式1.4.29安装EXE摘要未变，暂存区为空。
+
+本轮变更文件：
+
+- 程序：src/e7auto/platform/update_install.py、src/e7auto/app.py。
+- 验收工具：scripts/release/verify_release.py、workflow.py、distribution.py、lifecycle.py。
+- 测试：tests/platform/test_update_install.py、tests/ui/test_update_install.py、tests/helpers/update_install.py，
+  以及tests/scripts/release中的test_version_sync.py、test_workflow.py、test_lifecycle.py、test_update_precheck.py。
+- 文档：docs/development/DEVELOPMENT.md、INSTALLER.md、RELEASE_CHECKLIST.md及本记录。
+
+原始命令、测试输出、JUnit和编译输入摘要保存在
+artifacts/tasks/ui/20261031-192925-installed-update-path-diagnosis-ffc82575/results，新增证据
+以repair-开头；修复后最小探针保留在该任务scratch/compiled-repair。没有构建正式安装包、
+修改系统安装登记或运行游戏；没有运行项目全套。正式安装包的更新入口、覆盖安装、重启
+和缓存清理仍须在后续交付阶段实际验收。本轮版本仍为1.4.29，未提交、推送或发布。
+旧版已被下载前检查拦截的用户，需要手动覆盖安装一次含修复的新版本。
+
 ## 2026-10-24 dist只保留最新已验收安装包
 
 按用户要求直接替换当前AGENTS、目录约定、安装说明、开发指南及发布清单中的旧清理规则。构建封存成功后只清理本次Nuitka输出，待验收EXE保留在build/staging/<构建ID>/setup；完整或复用模式要求的安装检查、实际编译版自检和测试卸载全部通过后，才原子提升到dist并清理其他直属旧版标准安装EXE，随后清理本次staging。构建/验收失败保留原可用包，同版本重建也不提前覆盖。

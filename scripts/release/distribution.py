@@ -22,6 +22,7 @@ def _accepted_record(run: Path, root: Path) -> dict:
     if (validation.get('artifact_sha256') != workflow._file_sha(run / workflow.ARTIFACT)
             or report.get('problems') != [] or report.get('installation_verified') is not True
             or checked.get('compiled') is not True or checked.get('wgc_importable') is not True
+            or checked.get('update_installation_valid') is not True
             or checked.get('version') != snapshot['version']):
         raise ValueError('Successful installed self-check is required before dist promotion')
     return artifact

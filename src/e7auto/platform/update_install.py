@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 import re
 import subprocess
-import sys
 import time
 from threading import Event
 import winreg
@@ -33,7 +32,12 @@ def validate_installation(root: Path) -> None:
     if not is_installed_build():
         raise ValueError("当前为源码运行，请使用安装版执行自动更新。")
     ordinary_path(root)
-    if Path(sys.executable).resolve() != (root / "E7auto.exe").resolve():
+    try:
+        # Nuitka standalone may expose a synthetic python.exe in sys.executable.
+        executable = win32api.GetModuleFileName(None)
+    except (OSError, win32api.error) as exc:
+        raise ValueError("无法读取当前程序路径，无法自动更新。") from exc
+    if Path(executable).resolve() != (root / "E7auto.exe").resolve():
         raise ValueError("当前程序与安装目录不一致，无法自动更新。")
     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, UNINSTALL_KEY, 0,
                         winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:

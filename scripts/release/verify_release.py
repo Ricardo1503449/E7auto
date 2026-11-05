@@ -531,7 +531,7 @@ def main() -> int:
         )
         if completed.returncode != 0:
             problems.append(f"compiled self-check failed: {completed.returncode} {completed.stderr.strip()}")
-        elif not completed.stdout.strip():
+        if not completed.stdout.strip():
             problems.append("compiled self-check produced no JSON output")
         else:
             try:
@@ -542,6 +542,11 @@ def main() -> int:
                 if self_check.get("version") != expected_version:
                     problems.append(
                         "compiled self-check version does not match pyproject.toml"
+                    )
+                if self_check.get("update_installation_valid") is not True:
+                    problems.append(
+                        "compiled self-check did not pass update installation validation: "
+                        + str(self_check.get("update_installation_error") or "missing or invalid result")
                     )
     registration_problems = verify_registration(release, expected_version)
     problems.extend(registration_problems)

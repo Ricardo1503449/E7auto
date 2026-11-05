@@ -35,7 +35,8 @@ def make_run(root, *, full=False):
         write(run/workflow.VALIDATION, {
             'artifact_sha256': workflow._file_sha(run/workflow.ARTIFACT),
             'report': {'problems': [], 'installation_verified': True,
-                       'self_check': {'compiled': True, 'wgc_importable': True, 'version': '1.4.0'}}})
+                       'self_check': {'compiled': True, 'wgc_importable': True, 'version': '1.4.0',
+                                      'update_installation_valid': True}}})
         write(run/lifecycle.REPORT, {'artifact_sha256': workflow._file_sha(run/workflow.ARTIFACT),
                                      'installer_sha256': artifact['installer_sha256'],
                                      'environment': lifecycle.environment_identity(),
@@ -115,6 +116,23 @@ def test_missing_failed_or_corrupt_evidence_and_explicit_full_never_reuse(tmp_pa
     assert lifecycle.select_plan(current, tmp_path)['mode'] == 'full'
     (baseline/lifecycle.REPORT).unlink()
     assert lifecycle.select_plan(current, tmp_path)['mode'] == 'full'
+
+
+@pytest.mark.parametrize('value', ['missing', False, None, 1, 'true'])
+def test_baseline_without_successful_update_precheck_is_not_reused(tmp_path, value):
+    baseline = make_run(tmp_path, full=True)
+    current = make_run(tmp_path)
+    path = baseline / workflow.VALIDATION
+    report = workflow._read(path)
+    checked = report['report']['self_check']
+    if value == 'missing':
+        checked.pop('update_installation_valid')
+    else:
+        checked['update_installation_valid'] = value
+    write(path, report)
+    before = path.read_bytes()
+    assert lifecycle.select_plan(current, tmp_path)['mode'] == 'full'
+    assert path.read_bytes() == before
 
 
 @pytest.mark.parametrize('change', ['reference', 'baseline', 'current_scope', 'missing_smoke', 'missing_reused'])

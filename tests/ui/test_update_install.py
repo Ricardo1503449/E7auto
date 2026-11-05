@@ -1,6 +1,7 @@
 from dataclasses import replace
 import hashlib
 import json
+import sys
 
 import pytest
 from PySide6.QtCore import QIODevice, QUrl
@@ -12,6 +13,7 @@ from e7auto.ui import update_install
 from e7auto.ui.main_window import MainWindow
 from e7auto.ui.updates import PROJECT_URL, ReleaseAsset, release_asset
 from tests.helpers.qt import wait_for
+from tests.helpers.update_install import configure_installed_update
 
 
 DATA = b'MZ' + b'installer test payload' * 10_000
@@ -60,7 +62,7 @@ class DownloadReply(QNetworkReply):
 
 @pytest.fixture
 def downloader(tmp_path, monkeypatch):
-    monkeypatch.setattr(update_install, 'validate_installation', lambda root: None)
+    configure_installed_update(tmp_path, monkeypatch)
     controller = update_install.UpdateInstaller(tmp_path)
     calls, failures, started = [], [], []
     monkeypatch.setattr(update_install, 'launch_update', lambda *args: calls.append(args) or True)
@@ -75,6 +77,36 @@ def install_reply(controller, monkeypatch, reply):
     requests = []
     monkeypatch.setattr(controller._manager, 'get', lambda request: requests.append(request) or reply)
     return requests
+
+
+def test_nuitka_interpreter_path_does_not_block_download(downloader, monkeypatch):
+    controller, calls, failures, started = downloader
+    monkeypatch.setattr(sys, 'executable', str(controller.root / 'python.exe'))
+    requests = install_reply(controller, monkeypatch, DownloadReply())
+    controller.start(asset_for())
+    assert len(requests) == 1 and controller.busy and not failures
+
+
+@pytest.mark.parametrize('invalid', ['executable', 'api', 'registry', 'manifest'])
+def test_failed_production_precheck_never_downloads_or_creates_job(downloader, monkeypatch, invalid):
+    from e7auto.platform import update_install as platform_install
+    controller, calls, failures, started = downloader
+    if invalid == 'executable':
+        monkeypatch.setattr(platform_install.win32api, 'GetModuleFileName',
+                            lambda _module: str(controller.root / 'renamed.exe'))
+    elif invalid == 'api':
+        def fail(_module):
+            raise platform_install.win32api.error(126, 'GetModuleFileName', 'unavailable')
+        monkeypatch.setattr(platform_install.win32api, 'GetModuleFileName', fail)
+    elif invalid == 'registry':
+        monkeypatch.setattr(platform_install.winreg, 'QueryValueEx',
+                            lambda *args: (str(controller.root / 'other'), 1))
+    else:
+        (controller.root / 'install-files.txt').write_text('wrong-product', encoding='utf-8')
+    monkeypatch.setattr(controller._manager, 'get', lambda request: pytest.fail('must not download'))
+    controller.start(asset_for())
+    assert failures and not calls and not started and not controller.busy
+    assert not (controller.root / 'state').exists()
 
 
 def test_verified_native_reply_download_hands_off_exact_file_once(downloader, monkeypatch):

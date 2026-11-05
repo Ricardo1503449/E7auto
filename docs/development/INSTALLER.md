@@ -40,6 +40,10 @@ E7auto_v<版本>_Setup_x64.exe，并要求state=uploaded、完整大小及digest
 失败或取消清理部分下载；本地清理失败显示剩余路径。完整包在安装启动失败时保留供重试，
 启动前再次核验，并核对安装EXE内嵌文件版本与Release版本一致；内容变化时重新下载，不复用损坏包。
 
+当前EXE身份通过Windows的`GetModuleFileName(None)`读取，与安装目录中的`E7auto.exe`
+比较；不使用Nuitka standalone可能指向虚拟`python.exe`的`sys.executable`。读取失败时拒绝
+更新并显示原因，安装登记、拥有文件清单和符号链接/目录联接检查仍须全部通过。
+
 通过ShellExecuteEx以runas启动安装器，使用/SILENT /SP- /NORESTART以及显式禁止关闭其他
 程序的选项；保留安装进度和错误提示，不自动重启Windows。/E7AUTOUPDATE=1与绑定目标版本的
 /E7AUTOUPDATEID启用更新模式。安装器沿用原登记目录，最多等待60秒让旧应用正常退出，
@@ -54,6 +58,10 @@ E7auto_v<版本>_Setup_x64.exe，并要求state=uploaded、完整大小及digest
 
 后续发布的安装器必须同时包含上述更新模式及新版启动处理。现有旧包不会因源码变化
 获得此能力；程序内更新仍只识别更高版本号，同版本重建需手动覆盖。
+
+已发布的v1.4.26至v1.4.29包含旧的EXE身份比较逻辑。正常安装仍可能在下载前出现
+“当前程序与安装目录不一致，无法自动更新”。已经被该检查拦截的用户，需要关闭程序后
+手动运行含修复版本的安装包，覆盖原登记目录一次；新版本无法替换尚未下载时运行的旧校验。
 
 实现依据：[Inno命令行参数](https://jrsoftware.org/ishelp/topic_setupcmdline.htm)、
 [Inno运行条目](https://jrsoftware.org/ishelp/topic_runsection.htm)与
@@ -93,6 +101,12 @@ seal通过后只清理本次`build/nuitka/<构建ID>/`；`build/staging/<构建I
 安装验收全部成功、测试安装完整卸载后，verify_installer先保存绑定本包的验收记录，再调用distribution提升安装包并清理旧包，最后清理本次staging。验收失败或未完成不触发提升；提升或旧包清理失败保留现场、返回失败退出码，installer-verification.json的distribution字段记录错误，不将已完成的安装检查伪写为失败。distribution-result.json单独记录计划、提升及已删除文件；旧包被占用等情况可在解除占用后重新整理，无须重复安装。staging清理失败仍单独记录staging_cleanup和staging_cleanup_error；构建与验收日志保存在artifacts/releases。
 
 verify_release检查实际安装目录的程序版本、资源、运行库、编译版自检、卸载登记和通知身份，再逐文件比对封存payload。编译中间目录不能作为安装验证输入。现有批量Git摘要与按阶段计算哈希优化保留。
+
+`--self-check`及`--self-check-statistics-https`在编译版中执行生产更新预检，输出
+`update_installation_valid`布尔值及`update_installation_error`原因；失败返回非零退出码。
+源码运行不执行安装身份校验，分别输出`null`及空字符串。实际安装验收、dist提升、完整
+验收基线复用及最终`workflow check`都要求该结果严格为`true`；字段缺失或非布尔真值均
+拒绝通过。历史报告保持原样，不补填该字段；缺少有效完整基线时，下次执行完整安装验收。
 
 对于已有完整验收证据的安装包，可以独立预览或执行dist整理：
 

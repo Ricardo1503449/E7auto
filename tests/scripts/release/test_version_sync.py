@@ -7,11 +7,14 @@ import re
 import sys
 import tomllib
 
+import pytest
+
 from e7auto import __version__
 from e7auto import app
 from scripts import verify_environment
 from scripts.release import verify_release
 from tests.helpers.paths import ROOT
+from tests.helpers.update_install import configure_installed_update
 
 
 def _project_version() -> str:
@@ -54,10 +57,51 @@ def test_source_self_check_reports_the_project_version(
     monkeypatch.setattr(app, "validate_source_environment", lambda _root: None)
     monkeypatch.setattr(app, "validate_wgc_import", lambda: (True, ""))
     monkeypatch.setattr(sys, "argv", ["e7auto", "--self-check"])
+    monkeypatch.setattr(app, "validate_installation", lambda _root: pytest.fail('source mode must skip installed validation'))
 
     assert app.main() == 0
     report = json.loads(capsys.readouterr().out)
     assert report["version"] == _project_version()
+    assert report["update_installation_valid"] is None
+    assert report["update_installation_error"] == ""
+
+
+@pytest.mark.parametrize('failure', [None, 'executable', 'api', 'registry', 'manifest'])
+def test_compiled_self_check_runs_the_production_update_precheck(tmp_path, monkeypatch, capsys, failure):
+    from e7auto.platform import update_install
+    from e7auto.ui import reporting_check
+
+    root = tmp_path / '安装 路径'
+    configure_installed_update(root, monkeypatch)
+    (root / 'config').mkdir()
+    (root / 'config/internal.yaml').touch()
+    (root / 'assets/templates').mkdir(parents=True)
+    (root / 'assets/ui').mkdir()
+    for name in ('e7auto.ico', 'e7auto-icon-256.png', 'shop-card-background.png'):
+        (root / 'assets/ui' / name).touch()
+    monkeypatch.setattr(app, 'project_root', lambda: root)
+    monkeypatch.setattr(app, 'validate_wgc_import', lambda: (True, ''))
+    monkeypatch.setattr(reporting_check, 'check_reporting_runtime',
+                        lambda _root, **kwargs: {'statistics_runtime_ready': True})
+    monkeypatch.setattr(sys, 'frozen', True, raising=False)
+    monkeypatch.setattr(sys, 'executable', str(root / 'python.exe'))
+    monkeypatch.setattr(sys, 'argv', ['E7auto.exe', '--self-check'])
+    if failure == 'executable':
+        monkeypatch.setattr(update_install.win32api, 'GetModuleFileName', lambda _module: str(root / 'renamed.exe'))
+    elif failure == 'api':
+        def fail(_module):
+            raise update_install.win32api.error(126, 'GetModuleFileName', 'unavailable')
+        monkeypatch.setattr(update_install.win32api, 'GetModuleFileName', fail)
+    elif failure == 'registry':
+        monkeypatch.setattr(update_install.winreg, 'QueryValueEx', lambda *args: (str(tmp_path), 1))
+    elif failure == 'manifest':
+        (root / 'install-files.txt').write_text('wrong-product', encoding='utf-8')
+
+    assert app.main() == (0 if failure is None else 2)
+    report = json.loads(capsys.readouterr().out)
+    assert report['compiled'] is True
+    assert report['update_installation_valid'] is (failure is None)
+    assert bool(report['update_installation_error']) is (failure is not None)
 
 
 def test_environment_verifier_requires_exact_versions(capsys) -> None:

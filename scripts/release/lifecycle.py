@@ -59,6 +59,7 @@ def _full_report(run: Path, root: Path):
     if (validation.get('artifact_sha256') != workflow._file_sha(run / workflow.ARTIFACT)
             or installed.get('problems') != [] or installed.get('installation_verified') is not True
             or self_check.get('compiled') is not True or self_check.get('wgc_importable') is not True
+            or self_check.get('update_installation_valid') is not True
             or self_check.get('version') != snapshot['version']):
         raise ValueError('Baseline installed self-check is missing or invalid')
     return run, artifact, snapshot

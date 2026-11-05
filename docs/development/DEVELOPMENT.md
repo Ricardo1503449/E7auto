@@ -135,6 +135,12 @@ platform/update_install.py在独立Qt线程内重新验证安装登记、当前E
 不绕过锁。成功后的安装包清理须绑定该次任务和当前版本，保留安装日志/元数据，拒绝路径
 跳转或不匹配包。真实发布需验证新包覆盖、重启、数据保留及清理，源码模拟不能代替安装验收。
 
+更新身份使用已有win32api.GetModuleFileName(None)读取真实进程路径，不将Nuitka standalone的
+sys.executable当作实际EXE身份；原生读取异常转换为可显示的ValueError并拒绝更新。编译版
+--self-check执行同一生产安装校验并报告update_installation_valid/update_installation_error，
+失败返回非零；源码模式跳过并报告null/空字符串。定向测试保留生产校验函数，仅替换Windows
+登记和路径边界；安装/发布工具要求显式布尔true，不能用缺少新检查的历史报告代替。
+
 ## 源码依赖与后续扩展
 
 商店流程显式组装`InventoryScanner`、`RefreshController`及类型化`ShopState`；库存与刷新不再接收整个ShopFlow。刷新仅接收所需库存能力和进出商店回调。卡厄思的`StageSelection`、`HeroRecruitment`接收窄接口回调，战斗、原楼层及恢复状态仍由ChaosFlow管理。配置加载入口调用各职责解析及交叉校验函数，保持原YAML结构和累计错误顺序。
