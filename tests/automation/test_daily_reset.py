@@ -126,6 +126,41 @@ def test_optional_monthly_reward_and_late_destination(config,monthly,buff):
     assert game.clock.now>=2.
 
 
+@pytest.mark.parametrize('missing_third_close', [False, True])
+def test_initial_date_close_uses_only_jointly_confirmed_frames(config, monkeypatch, missing_third_close):
+    game = ResetGame(config, monthly=False);game.state = 'date'
+    flow = prepared(game)
+    original, titles, closes = game.control, [], []
+    def control(frame, key, region=None):
+        hit = original(frame, key, region)
+        if frame['state'] == 'date' and key == 'date_change_title': titles.append(frame)
+        if frame['state'] == 'date' and key == 'date_change_close':
+            closes.append(frame)
+            if missing_third_close and len(closes) == 3:return None
+        return hit
+    monkeypatch.setattr(game, 'control', control)
+    flow._wait_round_lobby()
+    assert len(titles) == len(closes) == (6 if missing_third_close else 3)
+    assert all(a is b for a, b in zip(titles, closes))
+    assert game.actions == ['date_change_close', 'daily_signin_confirm']
+
+
+def test_initial_date_joint_frames_restart_after_network_recovery(config, monkeypatch):
+    game = ResetGame(config, monthly=False);game.state = 'date'
+    flow = prepared(game)
+    original, generations = game.control, []
+    def control(frame, key, region=None):
+        hit = original(frame, key, region)
+        if key == 'date_change_close' and hit is not None:
+            generations.append(flow.runtime.network_recovery_generation)
+            if len(generations) == 2:game.network_remaining = 1
+        return hit
+    monkeypatch.setattr(game, 'control', control)
+    flow._wait_round_lobby()
+    assert generations == [0, 0, 1, 1, 1]
+    assert game.actions.count('date_change_close') == 1
+
+
 def test_normal_lobby_wait_is_bounded_and_does_not_restart_timer(config):
     game=ResetGame(config);game.state='hall'
     flow=prepared(game);flow._wait_round_lobby()
@@ -289,11 +324,13 @@ def test_popup_during_final_lobby_exit_does_not_reenter(config):
 def test_window_change_before_close_prevents_input(config):
     game=ResetGame(config);game.state='date'
     flow=prepared(game)
-    def change(_):
-        if game.captures==4:
+    original = flow.runtime.deps.logger.event
+    def change(name, **fields):
+        original(name, **fields)
+        if name == 'daily_reset_started':
             windows=flow.runtime.deps.windows
             windows.state=replace(windows.state,client_bounds=replace(windows.state.client_bounds,x=1))
-    game.on_capture=change
+    flow.runtime.deps.logger.event=change
     with pytest.raises(StopExecution) as error:flow._wait_round_lobby()
     assert error.value.reason is StopReason.WINDOW_ABNORMAL and game.actions==[]
 

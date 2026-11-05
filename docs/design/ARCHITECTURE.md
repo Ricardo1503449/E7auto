@@ -1,6 +1,32 @@
 # Architecture
 
+## Ordinary template score contract
+
+Ordinary baseline/scaled matching, component proposals and final rechecks use
+`1 - TM_SQDIFF_NORMED` for color and `TM_CCOEFF_NORMED` for enabled structure
+gates at the same placement. Alpha-mask presence does not choose the equation.
+Search backends and action geometry remain separate and unchanged. Existing
+single-gate templates can explicitly retain a null per-template structure gate
+pending real samples; no fallback numeric gate is silently applied. Glyph,
+auto-motion, triangle-geometry and readiness detectors retain their own rules.
+See [validation and limitations](../validation/common/TEMPLATE_SCORING_VALIDATION.md).
+
 ## Bounded retries for reversible clicks
+
+The approved three-frame handoffs use `runtime/confirmation.py`. A confirmation
+is consumed once and is bound to capture count, input generation, network
+generation, transform and window identity; Chaos also binds it to the current
+round. An intervening capture/input/recovery invalidates it. The original guarded
+input still checks stop and window state immediately before dispatch. No matching
+backend, ROI, template, score gate or automatic-battle motion rule changes.
+
+Only the explicitly selected controls participate. Optional companion detectors
+run on the same fresh frames as the existing destination check. A companion is
+handed off only after three consecutive joint matches; otherwise its consumer
+uses its original fresh confirmation. Event `CardWindow` carries the existing
+bounded card snapshots and 600 ms check across result recognition and closing;
+the shop reuses its existing SceneWindow/200 ms gate during entry. See the
+[scope and validation](../validation/common/CONFIRMATION_REUSE_VALIDATION.md).
 
 `runtime/action_retry.py` owns intervals, attempt counts, fixed active-time deadlines,
 fresh-source stability and response latches for explicitly opted-in transitions.
@@ -660,7 +686,15 @@ Text logs include aggregate `performance_stage` records for inventory scans, scr
 
 Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including instant recovery with zero elapsed delay. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
 
-`features/penguin/configuration.py` validates the approved controls; `features/penguin/vision.py` recognizes them using shared matching and digit components. Every dialog needs max/cancel controls and the purchase-button body; the full 5100 template plus separately decoded yellow price digits authorize purchase. Only price-field pixels enter the digit reader. Existing digit shapes are reused with an independent yellow mask and confidence gate. Unknown prices are distinct from a positively decoded non-5100 price. A lower price after max must survive the settling window before normal completion.
+Purchase-result waiting observes the completion title and reward-close control on the same frame.
+Three consecutive joint observations pass the last frame's close observation directly to the existing
+guarded click-and-transition helper, avoiding a second pre-click recognition wait. The stable title
+still counts the batch exactly once even when the close control is delayed or closing fails.
+Recovery resets both stability counters and retains any confirmed count. The result timeout and
+the separate close timeout starting after title confirmation remain unchanged; post-click altar
+confirmation and bounded close retries still use the existing transition helper.
+
+`features/penguin/configuration.py` validates the approved resources; `features/penguin/vision.py` recognizes controls using shared matching and digit components. Every dialog needs max/cancel controls and an amount-excluded purchase-button body. Body localization and yellow price decoding use the same frame; a stable decoded price of 5100 authorizes purchase at that returned frame's body anchor. The original 5100 PNG remains the source for the private body mask; no full-button detector, boolean confirmation or separate 0.96 gate participates. Only price-field pixels enter the digit reader. Existing digit shapes are reused with an independent yellow mask and confidence gate. Unknown prices are distinct from a positively decoded non-5100 price. A lower price after max must survive the settling window before normal completion.
 
 `ui/pages/penguin.py` owns the purchase-limit input, read-only estimated leaf cost (`limit * 5100`, thousands-separated or `—` for invalid input), start button. The estimate reads no game balance. `StatsOverlay` switches between shop statistics and the three penguin lines while retaining drag/collapse. Reconfiguring hides stale labels before deferred Qt deletion. Returning to the function center after a stop hides the overlay; opening a settings page keeps it hidden until the next run positions it. Only one task can run at once.
 

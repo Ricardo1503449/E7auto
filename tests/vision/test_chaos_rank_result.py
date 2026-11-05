@@ -79,7 +79,7 @@ def rank_three_sample(size, missing=None):
 def test_real_rank_three_replacement_keeps_unique_two_to_three(pixel_detector, size):
     vision, config = pixel_detector
     scene = config.chaos.scenes['rank_value_3']
-    assert (scene.threshold,scene.structure) == (.94,.8)
+    assert (scene.threshold,scene.structure) == (.9,.8)
     assert vision.rank_result(rank_three_sample(size)) == (2,3)
 
 

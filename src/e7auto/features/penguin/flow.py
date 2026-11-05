@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from typing import Callable, TypeVar
+from dataclasses import dataclass
 
 from e7auto.core.domain import OverlayActivityStatus, RunState, StopReason
 from e7auto.features.penguin.contracts import PenguinDialog
@@ -9,8 +10,16 @@ from e7auto.core.observations import Observation
 from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
+from e7auto.runtime.confirmation import Confirmation
 
 T = TypeVar("T")
+
+
+@dataclass(frozen=True)
+class _AltarState:
+    kind: str
+    button: Observation
+    close: Observation
 
 
 from e7auto.configuration.models import AppConfig
@@ -27,6 +36,7 @@ class PenguinFlow:
         self.runtime = RuntimeContext(config, dependencies, control, publisher,
                                       discard_interrupted_frames=True)
         self._location = "main"
+        self._confirmed_controls: dict[str, Confirmation[Observation]] = {}
 
     def cached_game_frame(self) -> CachedGameFrame | None:
         return self.runtime.cached_game_frame()
@@ -63,11 +73,17 @@ class PenguinFlow:
         raise StopExecution(reason, f"penguin state timeout: {name}")
 
     def _control_visible(self, name: str, *, timeout_ms: int | None = None) -> Observation:
+        evidence = self._confirmed_controls.pop(name, None)
+        hit = evidence.take(self.runtime) if evidence is not None else None
+        if hit is not None:
+            self.runtime.deps.logger.event("penguin_state_confirmed", stage=name, reused=True)
+            return hit
         return self._wait(name, lambda frame: self.runtime.deps.vision.control(frame, name),
                           signature=lambda obs: obs.object_id, timeout_ms=timeout_ms or self.runtime.config.timing.entry_timeout_ms)
 
-    def _click_control(self, name: str):
-        observation = self._control_visible(name)
+    def _click_control(self, name: str, *, observation: Observation | None = None):
+        if observation is None:
+            observation = self._control_visible(name)
         destinations = {"forest_entry": "growth_altar", "altar_close": "growth_altar",
                         "forest_back": "forest_entry", "sanctuary_back": "sanctuary_entry"}
         vision = self.runtime.deps.vision
@@ -79,6 +95,12 @@ class PenguinFlow:
                                   responded=partial)
             if name in ("growth_altar", "reward_close", "purchase_cancel"):
                 return Transition(self._altar_state(frame))
+            if name in ("altar_close", "forest_back"):
+                # The undimmed page control still proves that the preceding
+                # overlay/page has closed; a background arrow alone cannot.
+                ready = vision.control(frame, destinations[name])
+                back = vision.control(frame, "forest_back" if name == "altar_close" else "sanctuary_back")
+                return Transition((ready, back) if ready is not None and back is not None else None)
             return Transition(vision.control(frame, destinations[name]))
         def source(frame):
             if name == "reward_close" and vision.control(frame, "penguin_complete") is None:
@@ -89,21 +111,76 @@ class PenguinFlow:
             return vision.control(frame, name)
         def signature(value):
             if isinstance(value, PenguinDialog):
-                return value.price, value.full_price_button
+                return value.price
+            if isinstance(value, _AltarState):
+                return value.kind
+            if isinstance(value, tuple):
+                return tuple(observation_signature(hit) for hit in value)
             return value if isinstance(value, str) else observation_signature(value)
-        return click_and_wait(self.runtime, name="penguin_"+name, initial=observation,
+        result = click_and_wait(self.runtime, name="penguin_"+name, initial=observation,
                               click=lambda hit: self.runtime.click("penguin_"+name, hit.anchor),
                               source=source, observe=observe, signature=signature,
                               target_signature=observation_signature,
                               stable_frames=max(2, self.runtime.config.timing.stable_frames),
                               timeout_ms=self.runtime.config.timing.entry_timeout_ms)
+        self._confirmed_controls.clear()
+        def retain(key, hit):
+            self._confirmed_controls[key] = Confirmation.record(self.runtime, hit)
+        if isinstance(result, _AltarState):
+            retain("altar_close", result.close)
+            retain(result.kind, result.button)
+            return result.kind
+        if isinstance(result, tuple):
+            retain(destinations[name], result[0])
+            retain("forest_back" if name == "altar_close" else "sanctuary_back", result[1])
+        elif isinstance(result, Observation):
+            retain(destinations[name], result)
+        return result
 
     def _altar_state(self, frame):
         vision = self.runtime.deps.vision
-        if vision.control(frame, "altar_close") is None:
+        close = vision.control(frame, "altar_close")
+        if close is None:
             return None
-        return next((name for name in ("purchase_currency", "penguin_buy_102")
-                     if vision.control(frame, name) is not None), None)
+        for name in ("purchase_currency", "penguin_buy_102"):
+            hit = vision.control(frame, name)
+            if hit is not None:
+                return _AltarState(name, hit, close)
+        return None
+
+    def _wait_purchase_reward(self) -> Observation:
+        runtime, vision = self.runtime, self.runtime.deps.vision
+        required = max(2, runtime.config.timing.stable_frames)
+        deadline = runtime.active_monotonic() + runtime.config.timing.purchase_result_timeout_ms / 1000
+        generation = runtime.network_recovery_generation
+        title_stable = joint_stable = 0
+        counted = False
+        while runtime.active_monotonic() <= deadline:
+            runtime.control.checkpoint()
+            frame = runtime.capture()
+            if generation != runtime.network_recovery_generation:
+                generation = runtime.network_recovery_generation
+                title_stable = joint_stable = 0
+            title = vision.control(frame, "penguin_complete")
+            close = vision.control(frame, "reward_close") if title is not None else None
+            runtime.control.checkpoint()
+            title_stable = title_stable + 1 if title is not None else 0
+            joint_stable = joint_stable + 1 if close is not None else 0
+            if not counted and title_stable >= required:
+                runtime.deps.logger.event("penguin_state_confirmed", stage="purchase_complete")
+                runtime.publisher.mutate(lambda snapshot: snapshot.with_penguin_purchase())
+                runtime.deps.logger.event("penguin_batch_purchased", quantity=50,
+                                         completed=runtime.publisher.snapshot.purchases_completed)
+                counted = True
+                # Keep the existing close timeout and already confirmed count.
+                deadline = runtime.active_monotonic() + runtime.config.timing.entry_timeout_ms / 1000
+            if close is not None and joint_stable >= required:
+                runtime.deps.logger.event("penguin_state_confirmed", stage="reward_close")
+                return close
+            runtime.deps.clock.sleep(runtime.config.timing.poll_interval_ms / 1000)
+        reason = StopReason.RECOGNITION_TIMEOUT if counted else StopReason.PURCHASE_RESULT_AMBIGUOUS
+        stage = "reward_close" if counted else "purchase_complete"
+        raise StopExecution(reason, f"penguin state timeout: {stage}")
 
     def _maximum(self, original: PenguinDialog) -> PenguinDialog:
         runtime, vision = self.runtime, self.runtime.deps.vision
@@ -128,7 +205,7 @@ class PenguinFlow:
             return dialog.maximum if dialog is not None and dialog.price == original.price else None
         return click_and_wait(runtime, name="penguin_quantity_max", initial=original.maximum,
                               click=click, observe=observe, source=source,
-                              signature=lambda value: (value.price, value.full_price_button),
+                              signature=lambda value: value.price,
                               target_signature=observation_signature,
                               stable_frames=max(2, runtime.config.timing.stable_frames),
                               timeout_ms=round(settle_seconds*1000)+runtime.config.timing.dialog_timeout_ms)
@@ -144,13 +221,14 @@ class PenguinFlow:
         if self.runtime.publisher.snapshot.purchase_limit == 0:
             raise StopExecution(StopReason.PENGUIN_LIMIT_COMPLETE)
         self._status(RunState.ENTERING_SANCTUARY, OverlayActivityStatus.NAVIGATING)
-        self.runtime.enter_with_retry(
+        forest = self.runtime.enter_with_retry(
             entry_name="sanctuary", main=main,
             main_detector=lambda frame: self.runtime.deps.vision.control(frame, "sanctuary_entry"),
             destination_name="forest_entry",
             destination_detector=lambda frame: self.runtime.deps.vision.control(frame, "forest_entry"),
             click_action="penguin_sanctuary_entry",
         )
+        self._confirmed_controls["forest_entry"] = Confirmation.record(self.runtime, forest)
         self._click_control("forest_entry")
         altar = self._click_control("growth_altar")
         self._location = "altar"
@@ -165,17 +243,9 @@ class PenguinFlow:
                 if dialog.price != 5100:
                     self.runtime.deps.logger.event("penguin_maximum_unaffordable", price=dialog.price)
                     raise StopExecution(StopReason.PENGUIN_FUNDS_COMPLETE)
-            if not dialog.full_price_button:
-                raise StopExecution(StopReason.RECOGNITION_TIMEOUT, "full 5100 button not confirmed")
             self.runtime.click("penguin_confirm_purchase", dialog.purchase.anchor)
-            self._wait("purchase_complete", lambda frame: self.runtime.deps.vision.control(frame, "penguin_complete"),
-                       signature=lambda obs: obs.object_id,
-                       timeout_ms=self.runtime.config.timing.purchase_result_timeout_ms,
-                       reason=StopReason.PURCHASE_RESULT_AMBIGUOUS)
-            self.runtime.publisher.mutate(lambda snapshot: snapshot.with_penguin_purchase())
-            self.runtime.deps.logger.event("penguin_batch_purchased", quantity=50,
-                                    completed=self.runtime.publisher.snapshot.purchases_completed)
-            altar = self._click_control("reward_close")
+            close = self._wait_purchase_reward()
+            altar = self._click_control("reward_close", observation=close)
             self._location = "altar"
         raise StopExecution(StopReason.PENGUIN_LIMIT_COMPLETE)
 

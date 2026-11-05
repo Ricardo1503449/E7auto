@@ -33,7 +33,7 @@ def dialog_frame(amount):
 
 @pytest.mark.parametrize("amount", [102, 5100])
 @pytest.mark.parametrize("width", [2322, 1920, 1536])
-def test_real_offline_dialog_price_and_full_button_at_supported_scales(vision, amount, width):
+def test_real_offline_dialog_price_and_body_at_supported_scales(vision, amount, width):
     frame = dialog_frame(amount)
     height = round(width * 1306/2322)
     if width != 2322:
@@ -42,7 +42,7 @@ def test_real_offline_dialog_price_and_full_button_at_supported_scales(vision, a
     result = vision.dialog(frame)
     assert result is not None
     assert result.price == amount
-    assert result.full_price_button is (amount == 5100)
+    assert result.purchase.structure_confidence >= .8
 
 
 def test_missing_price_is_unknown_not_insufficient(vision):
@@ -50,7 +50,26 @@ def test_missing_price_is_unknown_not_insufficient(vision):
     frame[1035:1097, 1170:1380] = (18, 40, 15)
     result = vision.dialog(frame)
     assert result is not None and result.price is None
-    assert not result.full_price_button
+    assert result.purchase is not None
+
+
+def test_dialog_reads_price_without_running_a_full_button_match(vision, monkeypatch):
+    original = vision._matcher.match
+    calls = []
+
+    def match(frame, key, roi, threshold, **kwargs):
+        assert key != 'penguin_penguin_buy_5100'
+        calls.append(key)
+        return original(frame, key, roi, threshold, **kwargs)
+
+    monkeypatch.setattr(vision._matcher, 'match', match)
+    for amount in (102, 5100):
+        calls.clear()
+        result = vision.dialog(dialog_frame(amount))
+        assert result is not None and result.price == amount
+        assert calls == ['penguin_quantity_max', 'penguin_purchase_cancel']
+    with pytest.raises(ValueError, match='not a standalone control'):
+        vision.control(dialog_frame(5100), 'penguin_buy_5100')
 
 
 def test_background_button_cannot_be_mistaken_for_active_dialog(vision):
@@ -106,11 +125,15 @@ def test_sanctuary_uses_explicit_search_rectangle_without_expanding_or_copying_s
     assert result.rois["penguin_forest_entry"] == config.rois["penguin_forest_entry"]
 
 
-@pytest.mark.parametrize("search", [None, Rect(40, 260, 79, 114), Rect(40, 260, 80, 113),
+@pytest.mark.parametrize("search", [None, 'narrow', 'short',
                                     Rect(-1, 260, 128, 162), Rect(2300, 260, 128, 162),
                                     Rect(40, 1250, 128, 162)])
 def test_sanctuary_missing_small_or_outside_search_is_rejected(search):
     config = load_config(ROOT / "config/internal.yaml", template_profile="penguin")
+    if isinstance(search, str):
+        template = TemplateRepository(with_penguin_config(config)).get('penguin_sanctuary_entry')
+        height, width = template.image.shape[:2]
+        search = Rect(40, 260, width-int(search == 'narrow'), height-int(search == 'short'))
     rois = {k: v for k, v in config.rois.items() if k != "left_icon_column"}
     if search is not None:
         rois["left_icon_column"] = search
@@ -124,7 +147,15 @@ def test_approved_templates_have_masks_and_fit_baseline(vision):
     for name, entry in manifest["templates"].items():
         data = vision._templates.get("penguin_"+name)
         assert data.mask is not None and np.any(data.mask == 0) and np.any(data.mask == 255)
-        x, y, w, h = entry["source"]["crop"]
-        assert data.image.shape[:2] == (h, w)
-        assert 0 <= x < x+w <= 2322 and 0 <= y < y+h <= 1306
+        h, w = data.image.shape[:2]
+        assert 0 < w <= 2322 and 0 < h <= 1306
+        source = entry['source']
+        if 'crop' in source:
+            x, y, source_w, source_h = source['crop']
+            assert (source_h, source_w) == (h, w)
+            assert 0 <= x < x+w <= 2322 and 0 <= y < y+h <= 1306
+        else:
+            import hashlib
+            record = ROOT / source['record']
+            assert hashlib.sha256(record.read_bytes()).hexdigest() == source['record_sha256']
     assert vision._templates.get("penguin_reward_close").image.shape[0] == 47

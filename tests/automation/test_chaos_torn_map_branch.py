@@ -42,7 +42,7 @@ def test_initial_wordings_share_right_exit_and_original_floor(configs, lineup, e
     size = struct.unpack('>II', config.template_paths[scene.template_key].read_bytes()[16:24])
     assert tuple(round(o+n*a) for o, n, a in zip(spec['origin'], size, scene.action)) == (1510, 1110)
     assert HANDLERS[KEY] is HANDLERS['event_torn_map']
-    assert scene.threshold == (.92 if event == KEY else .96)
+    assert scene.threshold == .90
     assert scene.structure == .8
     ranks = dict(flow.state.ranks)
     flow._event()

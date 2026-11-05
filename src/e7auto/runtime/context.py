@@ -44,6 +44,7 @@ class RuntimeContext(Generic[VisionT]):
         self.network_paused_seconds = 0.0
         self.network_status_before_reconnect: OverlayActivityStatus | None = None
         self.capture_count = 0
+        self.input_generation = 0
         self.capture_seconds = 0.0
         self.vision_calls = 0
         self.vision_seconds = 0.0

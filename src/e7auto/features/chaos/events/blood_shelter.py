@@ -9,7 +9,7 @@ def run(context: EventContext, event: Detection) -> None:
     hero = context.state.next_rank_hero()
     if hero is None:
         raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, "no supported rank-up target")
-    context.choose(event, next_page=lambda frame: context.vision.control(frame, "prepare_event"))
+    context.choose_battle(event)
     context.state.battle_floor = context.floor
     context.fight("prepare_event", ("event_rank_enter",))
     context.state.reward_stage = "event_rank_received"

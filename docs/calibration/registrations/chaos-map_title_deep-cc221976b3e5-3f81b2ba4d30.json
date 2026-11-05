@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "map_title_deep",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "original": "D:\\E7auto\\assets\\templates\\chaos\\map\\map_title_deep.png",
+  "original_sha256": "b73d61902562faab1bf607a89964ca768044d535dcf59966c291359cd17a6dc4",
+  "editing_basis": "User requested retention of only the original left arrow and the two floor-specific characters. Original 530x75 canvas, all BGR bytes and retained alpha values unchanged. Only alpha outside x=[0,60) and x=[314,407) set to zero; no redraw, dilation or resize.",
+  "retained_rectangles": [
+    [
+      0,
+      0,
+      60,
+      75
+    ],
+    [
+      314,
+      0,
+      93,
+      75
+    ]
+  ],
+  "masked_text": [
+    "彗星神殿：",
+    "区域"
+  ],
+  "candidate_sha256": "cc221976b3e50c1b1480c52982ec4dd11ab5a2f1bd4889908ee5cc87f8bd48d8",
+  "validation": {
+    "report": "D:\\E7auto\\artifacts\\tasks\\common\\20261102-174958-unified-template-scoring-0e5f9457\\results\\map-title-mask-check.json",
+    "report_sha256": "1788f4e6483eacbbd64a87dbd6ca953441ebdaefafc64422c9f4e9046d6cc27f",
+    "template_checks": [
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_start.png",
+        "source_sha256": "7688e3710be533296c6c6d253c3d578bbb0a0d6bc4cd62772ae9f0ecc5d1a199",
+        "sample": "map_start",
+        "floor": 1,
+        "width": 2322,
+        "artificial_resize": false,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.7570957541465759,
+          "structure": 0.3756366968154907,
+          "phase": [
+            0.0,
+            0.0
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_start.png",
+        "source_sha256": "7688e3710be533296c6c6d253c3d578bbb0a0d6bc4cd62772ae9f0ecc5d1a199",
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1920,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.7947909832000732,
+          "structure": 0.393513023853302,
+          "phase": [
+            0.25,
+            0.5
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_start.png",
+        "source_sha256": "7688e3710be533296c6c6d253c3d578bbb0a0d6bc4cd62772ae9f0ecc5d1a199",
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1536,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.8045569658279419,
+          "structure": 0.39510151743888855,
+          "phase": [
+            0.0,
+            0.25
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_two.png",
+        "source_sha256": "7bfd9d6f53d92e8e72ae7fb594d3395195f93333f7945ffdb8d3a587626f65f1",
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 2322,
+        "artificial_resize": false,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.6345853805541992,
+          "structure": 0.3542901873588562,
+          "phase": [
+            0.0,
+            0.0
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_two.png",
+        "source_sha256": "7bfd9d6f53d92e8e72ae7fb594d3395195f93333f7945ffdb8d3a587626f65f1",
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1920,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.6709999442100525,
+          "structure": 0.36931461095809937,
+          "phase": [
+            0.25,
+            0.0
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_two.png",
+        "source_sha256": "7bfd9d6f53d92e8e72ae7fb594d3395195f93333f7945ffdb8d3a587626f65f1",
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1536,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": false,
+        "accepted_at_090_080": false,
+        "accepted_color": null,
+        "best_color_position": {
+          "color": 0.6805198192596436,
+          "structure": 0.3770013451576233,
+          "phase": [
+            0.25,
+            0.0
+          ]
+        },
+        "best_color_passing_structure_080": null,
+        "passed": true,
+        "accepted_structure": null
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_three.png",
+        "source_sha256": "06ea98ef2613e58c456569f19226a985666586ab433a803a6f7a9bf4ddb8bb5d",
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 2322,
+        "artificial_resize": false,
+        "key": "map_title_deep",
+        "expected": true,
+        "accepted_at_090_080": true,
+        "accepted_color": 1.0,
+        "best_color_position": {
+          "color": 1.0,
+          "structure": 0.9999997615814209,
+          "phase": [
+            0.0,
+            0.0
+          ]
+        },
+        "best_color_passing_structure_080": {
+          "color": 1.0,
+          "structure": 0.9999997615814209,
+          "phase": [
+            0.0,
+            0.0
+          ]
+        },
+        "passed": true,
+        "accepted_structure": 0.9999997615814209
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_three.png",
+        "source_sha256": "06ea98ef2613e58c456569f19226a985666586ab433a803a6f7a9bf4ddb8bb5d",
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1920,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": true,
+        "accepted_at_090_080": true,
+        "accepted_color": 0.9866619110107422,
+        "best_color_position": {
+          "color": 0.9991756677627563,
+          "structure": 0.996758222579956,
+          "phase": [
+            0.75,
+            0.75
+          ]
+        },
+        "best_color_passing_structure_080": {
+          "color": 0.9991756677627563,
+          "structure": 0.996758222579956,
+          "phase": [
+            0.75,
+            0.75
+          ]
+        },
+        "passed": true,
+        "accepted_structure": 0.9469749331474304
+      },
+      {
+        "source": "D:\\E7auto\\artifacts\\tasks\\chaos\\20260920-163417-template-review-c51812d6\\inputs\\clients\\map_floor_three.png",
+        "source_sha256": "06ea98ef2613e58c456569f19226a985666586ab433a803a6f7a9bf4ddb8bb5d",
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1536,
+        "artificial_resize": true,
+        "key": "map_title_deep",
+        "expected": true,
+        "accepted_at_090_080": true,
+        "accepted_color": 0.9713296890258789,
+        "best_color_position": {
+          "color": 0.9991401433944702,
+          "structure": 0.9965659379959106,
+          "phase": [
+            0.75,
+            0.5
+          ]
+        },
+        "best_color_passing_structure_080": {
+          "color": 0.9991401433944702,
+          "structure": 0.9965659379959106,
+          "phase": [
+            0.75,
+            0.5
+          ]
+        },
+        "passed": true,
+        "accepted_structure": 0.8830052614212036
+      }
+    ],
+    "actual_map_checks": [
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 2322,
+        "settings": "current_thresholds",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 2322,
+        "settings": "all_titles_090_080",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1920,
+        "settings": "current_thresholds",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1920,
+        "settings": "all_titles_090_080",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1536,
+        "settings": "current_thresholds",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_start",
+        "floor": 1,
+        "width": 1536,
+        "settings": "all_titles_090_080",
+        "observed_floor": 1,
+        "nodes": [
+          "normal"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 2322,
+        "settings": "current_thresholds",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 2322,
+        "settings": "all_titles_090_080",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1920,
+        "settings": "current_thresholds",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1920,
+        "settings": "all_titles_090_080",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1536,
+        "settings": "current_thresholds",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_two",
+        "floor": 2,
+        "width": 1536,
+        "settings": "all_titles_090_080",
+        "observed_floor": 2,
+        "nodes": [
+          "rest"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 2322,
+        "settings": "current_thresholds",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 2322,
+        "settings": "all_titles_090_080",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1920,
+        "settings": "current_thresholds",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1920,
+        "settings": "all_titles_090_080",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1536,
+        "settings": "current_thresholds",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      },
+      {
+        "sample": "map_floor_three",
+        "floor": 3,
+        "width": 1536,
+        "settings": "all_titles_090_080",
+        "observed_floor": 3,
+        "nodes": [
+          "event"
+        ],
+        "passed": true
+      }
+    ],
+    "summary": {
+      "minimum_positive_color": 0.9713296890258789,
+      "minimum_positive_structure": 0.8830052614212036,
+      "highest_wrong_color": {
+        "color": 0.8045569658279419,
+        "structure": 0.39510151743888855,
+        "phase": [
+          0.0,
+          0.25
+        ]
+      },
+      "highest_wrong_color_sample": [
+        "map_start",
+        1536
+      ],
+      "wrong_acceptances": 0
+    },
+    "passed": true,
+    "limitations": [
+      "Three original full-client map captures, one per floor; other sizes are artificial resizes.",
+      "No game input or live multi-frame run. RGB, canvas, ROI and production scoring/search unchanged."
+    ]
+  },
+  "review_status": "approved_by_user_2026-11-03",
+  "approval_basis": "用户明确通过三张遮罩候选并要求替换原模板，三项门槛均采用颜色0.90、结构0.80。",
+  "approved_thresholds": {
+    "color": 0.9,
+    "structure": 0.8
+  }
+}

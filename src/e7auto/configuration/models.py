@@ -157,6 +157,12 @@ class AppConfig:
     component_layouts: dict[str, ComponentLayout] = field(default_factory=dict)
     startup_navigation: dict[str, NavigationTemplate] = field(default_factory=dict)
     click_retry: ClickRetryConfig = field(default_factory=ClickRetryConfig)
+    template_structure_thresholds: dict[str, float | None] = field(default_factory=dict)
+    purchased_button_confidence: float | None = None
+    penguin_control_thresholds: dict[str, float] = field(default_factory=dict)
+    penguin_purchase_body_confidence: float | None = None
+    confirm_button_confidence: float | None = None
+    shop_default_confidence: float | None = None
 
 
 class ConfigError(ValueError):

@@ -12,6 +12,7 @@ from e7auto.runtime.daily_reset import DailyResetHandler, DailyResetResult
 from e7auto.runtime.dependencies import AutomationDependencies
 from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.runtime.action_retry import Transition, click_and_wait
+from e7auto.runtime.confirmation import Confirmation
 from e7auto.runtime.stop_control import StopExecution, StopController
 from .configuration import ChaosConfig
 from .contracts import AutoState, Detection, MapView, Node, ChaosVisionPort
@@ -21,6 +22,7 @@ from .recruitment import HeroRecruitment
 from .lineups import RecruitmentPolicy
 from .events.context import EventContext
 from .events.entry import run as run_event
+from .events.rewards import CardWindow
 
 
 class BattleDefeated(Exception):
@@ -31,6 +33,12 @@ class BattleDefeated(Exception):
 
 
 class ChaosFlow:
+    _REUSABLE_CONTROLS = frozenset({
+        'intro_enter', 'battle_title', 'event_rank_enter', 'rank_title', 'camp_rank',
+        'continue_exploration', 'event_tablet_continue', 'unclaimed_confirm',
+        'journey_close', 'start_battle', 'camp_leave', 'supply_leave', 'shop_leave',
+        'filter_dark', 'filter_light', 'depart_title',
+    })
     def __init__(self, config: ChaosConfig, dependencies: AutomationDependencies[ChaosVisionPort],
                  control: StopController, publisher: SnapshotPublisher):
         self.runtime = RuntimeContext(config, dependencies, control, publisher,
@@ -49,17 +57,22 @@ class ChaosFlow:
         self.recruitment = HeroRecruitment(self.settings, self.vision,
                                           frame=self._frame, wait=self._wait, tap=self._tap,
                                           act=self._act, control=self._control, first=self._first,
-                                          transition=self._transition)
+                                          transition=self._transition, take_confirmed=self._take_confirmed)
         self._map_handoff: tuple[MapView, RoundState | None, int] | None = None
         self._battle_pending = False
         self._battle_deadline: float | None = None
         self._battle_levelup_closed = False
         self._at_home_after_reset = False
+        self._confirmed: dict[str, Confirmation] = {}
+        self._card_handoff: Confirmation | None = None
+        self._event_terminal: Confirmation | None = None
         self.daily_reset = DailyResetHandler(
             self.runtime, self.settings.daily_reset, self._entry_observation,
             lambda frame: self._entry_observation(frame, 'home_battle'))
 
     def _recovered(self, _reason):
+        self._confirmed.clear()
+        self._card_handoff = self._event_terminal = None
         self._map_handoff = None
         self.stages.invalidate_start()
         self.vision.reset_temporal()
@@ -68,6 +81,8 @@ class ChaosFlow:
         return self.runtime.cached_game_frame()
 
     def release_cached_game_frame(self):
+        self._confirmed.clear()
+        self._card_handoff = self._event_terminal = None
         self._map_handoff = None
         self.stages.invalidate_start()
         self.state = None
@@ -87,6 +102,8 @@ class ChaosFlow:
         self.runtime.control.checkpoint()
 
     def _frame(self):
+        self._confirmed.clear()
+        self._card_handoff = self._event_terminal = None
         self._map_handoff = None
         self.stages.invalidate_start()
         self.runtime.control.checkpoint()
@@ -130,15 +147,59 @@ class ChaosFlow:
             return tuple(ChaosFlow._signature(v) for v in value)
         return value
 
+    def _remember(self, value, *, name=None):
+        if name is not None:
+            self._confirmed[name] = Confirmation.record(self.runtime, (self.state, value))
+        elif isinstance(value, Detection):
+            if value.key in self._REUSABLE_CONTROLS or value.key.startswith('hero_'):
+                self._remember(value, name=value.key)
+        elif isinstance(value, tuple):
+            for part in value:
+                self._remember(part)
+
+    def _take_confirmed(self, name):
+        evidence = self._confirmed.pop(name, None)
+        value = evidence.take(self.runtime) if evidence is not None else None
+        return value[1] if value is not None and value[0] is self.state else None
+
+    def _joint_probe(self, detector, handoff=None):
+        previous, stable, generation, last = None, 0, self.runtime.network_recovery_generation, None
+        def observe(frame, value):
+            nonlocal previous, stable, generation, last
+            if generation != self.runtime.network_recovery_generation:
+                previous, stable = None, 0
+                generation = self.runtime.network_recovery_generation
+            last = detector(frame, value) if detector is not None and value is not None else None
+            key = self._signature((value, last)) if last is not None else None
+            stable = stable+1 if key is not None and key == previous else int(key is not None)
+            previous = key
+        def retain():
+            if stable >= self.settings.timing['stable_frames']:
+                self._remember(last)
+                if handoff is not None:
+                    self._remember(last, name=handoff)
+        return observe, retain
+
     def _wait(self, name, detector, *, timeout_ms=None, reason=StopReason.RECOGNITION_TIMEOUT,
-              moving_text=False, single_detection=False, confirmed_auto_state=False):
+              moving_text=False, single_detection=False, confirmed_auto_state=False,
+              alongside=None, handoff=None):
         timeout_ms = timeout_ms or self.settings.timing["page_timeout_ms"]
         deadline = self.runtime.active_monotonic()+timeout_ms/1000
         previous, stable = None, 0
+        observe_joint, retain_joint = self._joint_probe(alongside, handoff)
+        card_window = None
         while self.runtime.active_monotonic() <= deadline:
             sampled_at = self.runtime.active_monotonic()
             generation = self.runtime.network_recovery_generation
-            value = detector(self._frame())
+            frame = self._frame()
+            value = detector(frame)
+            observe_joint(frame, value)
+            if isinstance(value, Detection) and value.key == 'event_reward_close':
+                if card_window is None:
+                    card_window = CardWindow(self.settings, self.vision, value.key)
+                card_window.observe(self.runtime, frame, value)
+            elif card_window is not None:
+                card_window.reset()
             if generation != self.runtime.network_recovery_generation:
                 previous, stable = None, 0
             signature = self._signature(value) if value is not None else None
@@ -150,6 +211,11 @@ class ChaosFlow:
             if value is not None and (text_hit or signal_hit or auto_hit or stable >= self.settings.timing["stable_frames"]):
                 if isinstance(value, MapView):
                     self._map_handoff = value, self.state, self.runtime.capture_count
+                if stable >= self.settings.timing['stable_frames']:
+                    self._remember(value)
+                    retain_joint()
+                    if card_window is not None:
+                        self._card_handoff = Confirmation.record(self.runtime, (self.state, card_window))
                 self.runtime.deps.logger.event("chaos_confirmed", stage=name)
                 return value
             self.runtime.control.checkpoint()
@@ -170,9 +236,15 @@ class ChaosFlow:
             self.runtime.control.checkpoint()
 
     def _control(self, key, **kwargs):
+        hit = self._take_confirmed(key)
+        if hit is not None:
+            self.runtime.deps.logger.event('chaos_confirmed', stage=key, reused=True)
+            return hit
         return self._wait(key, lambda f: self.vision.control(f, key), **kwargs)
 
     def _tap(self, hit, *, settle_ms=None):
+        self._confirmed.clear()
+        self._card_handoff = self._event_terminal = None
         self._map_handoff = None
         self.stages.invalidate_start()
         self.vision.invalidate_event_recognition()
@@ -180,28 +252,33 @@ class ChaosFlow:
         self.runtime.click("chaos_"+hit.key, hit.anchor)
         self._delay((self.settings.timing["action_settle_ms"] if settle_ms is None else settle_ms)/1000)
 
-    def _act(self, key, guard=None, *, settle_ms=None):
+    def _act(self, key, guard=None, *, settle_ms=None, reuse_guarded=False):
         if self.settings.scenes[key].action is None:
             raise ValueError(f"scene is recognition-only: {key}")
-        hit = self._wait(key, lambda f: self.vision.control(f, key) if guard is None or guard(f) else None)
+        hit = self._take_confirmed(key) if guard is None or reuse_guarded else None
+        if hit is None:
+            hit = self._wait(key, lambda f: self.vision.control(f, key) if guard is None or guard(f) else None)
         if key == "event_rank_enter":
-            return self._transition(hit, "event_rank_page", lambda f: self.vision.control(f, "rank_title"))
+            return self._transition(hit, "event_rank_page", lambda f: self.vision.control(f, "rank_title"),
+                                    alongside=self._rank_companion)
         if key == "event_tablet_continue":
             return self._transition(hit, "event_forfeit_prompt", lambda f: self.vision.control(f, "unclaimed_prompt"),
-                                    guard=guard)
+                                    guard=guard, alongside=lambda f, _: self.vision.control(f, 'unclaimed_confirm'))
         self._tap(hit, settle_ms=settle_ms)
 
     def _transition(self, hit, name, detector, *, source=None, responded=None, guard=None,
                     settle_ms=None, timeout_ms=None, outer_deadline=None, click=None,
-                    single_success=None, reason=StopReason.RECOGNITION_TIMEOUT):
+                    single_success=None, reason=StopReason.RECOGNITION_TIMEOUT, alongside=None, handoff=None):
         """Only explicit reversible actions opt into retries; _tap stays single-shot."""
         def original(frame):
             if guard is not None and not guard(frame):
                 return None
             hits = self.vision.controls(frame, hit.key)
             return hits[0] if len(hits) == 1 else None
+        observe_joint, retain_joint = self._joint_probe(alongside, handoff)
         def observe(frame):
             value = detector(frame)
+            observe_joint(frame, value)
             return Transition(value, responded=value is not None or bool(responded and responded(frame)))
         deadline = self.runtime.active_monotonic() + max(
             timeout_ms or self.settings.timing["page_timeout_ms"],
@@ -219,6 +296,9 @@ class ChaosFlow:
             single_success=single_success, reason=reason)
         if isinstance(result, MapView):
             self._map_handoff = result, self.state, self.runtime.capture_count
+        if single_success is None or not single_success(result):
+            self._remember(result)
+            retain_joint()
         self.runtime.deps.logger.event("chaos_confirmed", stage=name)
         self.runtime.control.checkpoint()
         if self.runtime.active_monotonic() >= deadline:
@@ -226,12 +306,20 @@ class ChaosFlow:
         return result
 
     def _click_to(self, key, next_key, *, guard=None, watch_date=False):
-        hit = self._wait(key, lambda f: self.vision.control(f, key) if guard is None or guard(f) else None)
+        hit = self._control(key) if guard is None else self._wait(
+            key, lambda f: self.vision.control(f, key) if guard(f) else None)
         def destination(frame):
             if watch_date and self.vision.control(frame, "date_change_title") is not None:
                 raise DateChangePending()
             return self.vision.control(frame, next_key)
-        return self._transition(hit, next_key, destination, guard=guard)
+        companion = self._rank_companion if next_key == 'rank_title' else (
+            (lambda f, _: self._first(f, ('filter_dark', 'filter_light')))
+            if next_key.startswith('title_') else None)
+        return self._transition(hit, next_key, destination, guard=guard, alongside=companion)
+
+    def _rank_companion(self, frame, _title):
+        hero = self.state.next_rank_hero()
+        return self.vision.control(frame, 'hero_'+hero) if hero is not None else None
 
     def _same_card(self, frame, original, key):
         hits = self.vision.controls(frame, key, self._card_region(original, key))
@@ -302,7 +390,8 @@ class ChaosFlow:
                 self.runtime.deps.logger.event("chaos_round_failed", floor=self.state.floor,
                                                node_kind=self.state.node_kind)
                 self._transition(defeated.detection, "journey_result",
-                                 lambda f: self.vision.control(f, "journey_result"))
+                                 lambda f: self.vision.control(f, "journey_result"),
+                                 alongside=lambda f, _: self.vision.control(f, 'journey_close'))
                 self._close_journey()
                 continue  # Failure recovery never consumes the success target.
             # _close_journey confirmed either the unobstructed lobby or reset-home.
@@ -343,7 +432,7 @@ class ChaosFlow:
         self.stages.invalidate_start()
         self._at_home_after_reset = False
 
-        def wait(name, detector):
+        def wait(name, detector, **kwargs):
             deadline = self.runtime.active_monotonic()+self.settings.timing['page_timeout_ms']/1000
 
             def observe(frame):
@@ -351,7 +440,7 @@ class ChaosFlow:
                     raise DateChangePending()
                 return detector(frame)
 
-            value = self._wait(name, observe)
+            value = self._wait(name, observe, **kwargs)
             # Matching and confirmation logging must not authorize a late input.
             if self.runtime.active_monotonic() > deadline:
                 raise StopExecution(StopReason.RECOGNITION_TIMEOUT, f'chaos timeout: {name}')
@@ -388,7 +477,8 @@ class ChaosFlow:
                                                        responded=lambda _: prompt_seen)
             self.runtime.deps.logger.event('chaos_saved_exploration', phase='abandon_submitted')
             self._tap(confirmation_button)
-            wait('entry_abandon_result', lambda f: self.vision.control(f, 'journey_result'))
+            wait('entry_abandon_result', lambda f: self.vision.control(f, 'journey_result'),
+                 alongside=lambda f, _: self.vision.control(f, 'journey_close'))
             self._close_journey()
             if not self._at_home_after_reset:
                 wait('entry_abandon_cleared', lambda f: lobby(f, cleared=True))
@@ -448,7 +538,7 @@ class ChaosFlow:
         self._tap(button)
         for hero in self.settings.heroes:
             self._click_to("ticket_"+hero["ticket"], "title_"+hero["ticket"])
-            self.recruitment.filter(hero["attribute"])
+            self.recruitment.filter(hero["attribute"], hero=hero['key'])
             if hero['key'] == 'teacher':
                 self.recruitment.recruit('teacher', result_key='recruited_teacher_initial')
             else:
@@ -733,7 +823,7 @@ class ChaosFlow:
     def _fight(self, preparation, result_names):
         """Observe battle completion; the caller owns reward/continue inputs."""
         self._battle_levelup_closed = False
-        self._control(preparation)
+        self._control(preparation, alongside=lambda f, _: self.vision.control(f, 'start_battle'))
         if (self.settings.lineup.recruitment_policy is RecruitmentPolicy.TEACHER_FOR_AROWELL
                 and self.state.pending_teacher):
             if "arowell" in self.state.ranks:
@@ -741,8 +831,10 @@ class ChaosFlow:
             else:
                 # Four remaining heroes are filled automatically by the game.
                 self.state.pending_teacher = False
-        start = self._wait("start_battle", lambda f: self.vision.control(f, "start_battle")
-                           if self.vision.control(f, preparation) is not None else None)
+        start = self._take_confirmed('start_battle')
+        if start is None:
+            start = self._wait("start_battle", lambda f: self.vision.control(f, "start_battle")
+                               if self.vision.control(f, preparation) is not None else None)
         self._battle_pending = True
         self._battle_deadline = self.runtime.active_monotonic()+self.settings.timing["battle_timeout_ms"]/1000
         recovery_generation = self.runtime.network_recovery_generation
@@ -783,7 +875,9 @@ class ChaosFlow:
                 raise StopExecution(StopReason.CHAOS_BATTLE_TIMEOUT)
             # Discard the trigger frame; all actions need fresh stable evidence.
             result = self._wait("battle_result", lambda f: self._first(f, names),
-                                timeout_ms=max(1, round(remaining*1000)), reason=StopReason.CHAOS_BATTLE_TIMEOUT)
+                                timeout_ms=max(1, round(remaining*1000)), reason=StopReason.CHAOS_BATTLE_TIMEOUT,
+                                alongside=lambda f, hit: self.vision.control(f, 'journey_close')
+                                if hit.key == 'journey_result' else None)
             self._battle_pending = False
             return result
 
@@ -960,8 +1054,10 @@ class ChaosFlow:
         return False
 
     def _close_journey(self):
-        close = self._wait("journey_close", lambda f: self.vision.control(f, "journey_close")
-                           if self.vision.control(f, "journey_result") is not None else None)
+        close = self._take_confirmed('journey_close')
+        if close is None:
+            close = self._wait("journey_close", lambda f: self.vision.control(f, "journey_close")
+                               if self.vision.control(f, "journey_result") is not None else None)
         self._transition(close, "journey_closed",
                          lambda f: self.vision.control(f, "date_change_title") or self._lobby_ready(f),
                          guard=lambda f: self.vision.control(f, "journey_result") is not None)
@@ -993,8 +1089,9 @@ class ChaosFlow:
 
         ticket = self._wait("boss_voucher_or_skip", detect)
         if hero is not None:
-            self._transition(ticket, "title_all", lambda f: self.vision.control(f, "title_all"))
-            self.recruitment.filter("dark", profession=True if hero == "teacher" else "knight")
+            self._transition(ticket, "title_all", lambda f: self.vision.control(f, "title_all"),
+                             alongside=lambda f, _: self._first(f, ('filter_dark', 'filter_light')))
+            self.recruitment.filter("dark", profession=True if hero == "teacher" else "knight", hero=hero)
             self.recruitment.recruit(hero, result_key="recruited_shadow_rose_all" if hero == "shadow_rose" else None)
             self.state.ranks[hero] = 1
             self.state.departed_heroes.discard(hero)
@@ -1147,7 +1244,8 @@ class ChaosFlow:
         self.state.reward_stage = "submitted"
 
     def _camp(self):
-        self._wait("camp", lambda f: self._first(f, ("camp_rank", "camp_rank_done")))
+        self._wait("camp", lambda f: self._first(f, ("camp_rank", "camp_rank_done")),
+                   alongside=lambda f, _: self.vision.control(f, 'camp_leave'))
         hero = self.state.next_rank_hero()
         if hero:
             self._click_to("camp_rank", "rank_title")
@@ -1163,24 +1261,31 @@ class ChaosFlow:
             raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, "invalid rank-up target")
         expected = min(5, rank + steps)
         if not rank_ready:
-            self._control("rank_title")
+            self._control("rank_title", alongside=lambda f, _: self.vision.control(f, 'hero_'+hero))
         button = self.recruitment.choose(hero, confirm_key='rank_confirm')
         self._tap(button)
         if self.state.node_kind == "rest" and not battle_reward:
             close = self._camp_rank_result(hero, rank, expected)
             self._transition(close, "camp_rank_done", lambda f: self.vision.control(f, "camp_rank_done"),
-                             guard=lambda f: self.vision.rank_result(f) == (rank, expected))
+                             guard=lambda f: self.vision.rank_result(f) == (rank, expected),
+                             alongside=lambda f, _: self.vision.control(f, 'camp_leave'))
             return
         if battle_reward:
             # This separate reward layout has no before/after panel; its known
             # single-rank flow retains the confirmed completion-card signal.
-            self._control("event_battle_rank_done")
+            self._control("event_battle_rank_done",
+                          alongside=lambda f, _: self.vision.control(f, 'continue_exploration'))
             after = expected
         else:
+            card_window = CardWindow(self.settings, self.vision, 'rank_close')
             def result(frame):
                 observed = self.vision.rank_result(frame)
+                close = self.vision.control(frame, 'rank_close') if observed == (rank, expected) else None
+                card_window.observe(self.runtime, frame, close)
                 return observed if observed == (rank, expected) else None
             _, after = self._wait(f"rank_result_{rank}_to_{expected}", result)
+            if card_window.frames:
+                self._card_handoff = Confirmation.record(self.runtime, (self.state, card_window))
         self.state.ranks[hero] = after
         self.runtime.deps.logger.event("chaos_rank_changed", hero=hero, rank_before=rank,
                                        rank_after=after, node_kind=self.state.node_kind)
@@ -1241,7 +1346,27 @@ class ChaosFlow:
     def _event_context(self):
         return EventContext(self.runtime, self.vision, self.settings, self.state, self.state.floor,
                             self._frame, self._wait, self._tap, self._act, self._fight, self._rank_up,
-                            self.recruitment.depart)
+                            self.recruitment.depart, self._take_card, self._remember_terminal,
+                            self._take_terminal)
+
+    def _take_card(self, close_key):
+        evidence, self._card_handoff = self._card_handoff, None
+        confirmed = evidence.take(self.runtime) if evidence is not None else None
+        window = confirmed[1] if confirmed is not None and confirmed[0] is self.state else None
+        return window if window is not None and window.close_key == close_key else None
+
+    def _remember_terminal(self, result):
+        self._event_terminal = Confirmation.record(self.runtime, (self.state, result))
+        if isinstance(result, MapView):
+            self._map_handoff = result, self.state, self.runtime.capture_count
+
+    def _take_terminal(self):
+        evidence, self._event_terminal = self._event_terminal, None
+        value = evidence.take(self.runtime) if evidence is not None else None
+        if value is None or value[0] is not self.state:
+            return None
+        result = value[1]
+        return result if not isinstance(result, MapView) or result.floor == self.state.floor else None
 
     def _event(self):
         run_event(self._event_context())
@@ -1249,31 +1374,37 @@ class ChaosFlow:
     def _supply(self):
         self._act("supply_get_loot")
         self._choose_loot()
-        self._control("supply_loot_done")
+        self._control("supply_loot_done", alongside=lambda f, _: self.vision.control(f, 'supply_leave'))
         self.state.reward_stage = "claimed"
         self._transition(self._control("supply_leave"), "supply_left",
                          lambda f: self._map_destination(f, self.state.floor))
 
     def _shop_offer(self, identity, button_keys, *, unavailable_identity=None):
-        def entry(frame):
-            if unavailable_identity is not None:
-                unavailable = self.vision.control(frame, unavailable_identity)
-                if unavailable is not None:
-                    return unavailable, None, "unavailable"
-            item = self.vision.control(frame, identity)
-            if item is None:
-                return None
-            cx = item.bounds.x+item.bounds.width/2
-            buttons = [b for key in button_keys for b in self.vision.controls(frame, key)
-                       if abs(b.anchor.x-cx) < self.settings.geometry["shop_entry_max_dx"]*self.runtime.transform.scale_x
-                       and 0 < b.anchor.y-item.bounds.bottom < self.settings.geometry["shop_entry_max_dy"]*self.runtime.transform.scale_y]
-            if len(buttons) != 1:
-                return None
-            button = buttons[0]
-            return item, button, button.key
-        return self._wait(identity+"_purchase_entry", entry)
+        pending = self._take_confirmed('offer:'+identity)
+        if pending is not None:
+            return pending[:3]
+        return self._wait(identity+'_purchase_entry', lambda f: self._shop_offer_state(
+            f, identity, button_keys, unavailable_identity=unavailable_identity),
+            alongside=lambda f, _: self.vision.control(f, 'shop_leave'))
 
-    def _shop_purchase(self, button, purchase_item, done):
+    def _shop_offer_state(self, frame, identity, button_keys, *, unavailable_identity=None):
+        if unavailable_identity is not None:
+            unavailable = self.vision.control(frame, unavailable_identity)
+            if unavailable is not None:
+                return unavailable, None, "unavailable"
+        item = self.vision.control(frame, identity)
+        if item is None:
+            return None
+        cx = item.bounds.x+item.bounds.width/2
+        buttons = [b for key in button_keys for b in self.vision.controls(frame, key)
+                   if abs(b.anchor.x-cx) < self.settings.geometry["shop_entry_max_dx"]*self.runtime.transform.scale_x
+                   and 0 < b.anchor.y-item.bounds.bottom < self.settings.geometry["shop_entry_max_dy"]*self.runtime.transform.scale_y]
+        if len(buttons) != 1:
+            return None
+        button = buttons[0]
+        return item, button, button.key
+
+    def _shop_purchase(self, button, purchase_item, done, *, next_offer=False):
         popup_seen = False
         def destination(frame):
             nonlocal popup_seen
@@ -1292,13 +1423,23 @@ class ChaosFlow:
         r = button.bounds
         px,py = round(pad*self.runtime.transform.scale_x),round(pad*self.runtime.transform.scale_y)
         region = ClientRect(r.x-px,r.y-py,r.width+px*2,r.height+py*2)
-        self._wait(done, lambda f: self.vision.control(f, done, region))
+        def health_offer(frame, _):
+            offer = self._shop_offer_state(frame, 'health_restore', ('shop_health_entry',),
+                                           unavailable_identity='health_restore_unavailable')
+            if offer is None:
+                return None
+            leave = self.vision.control(frame, 'shop_leave') if offer[2] == 'unavailable' else None
+            return (*offer, leave)
+        self._wait(done, lambda f: self.vision.control(f, done, region),
+                   alongside=health_offer if next_offer else
+                   (lambda f, _: self.vision.control(f, 'shop_leave')),
+                   handoff='offer:health_restore' if next_offer else None)
 
     def _shop(self):
         _, button, state = self._shop_offer("investment", ("investment_entry",),
                                           unavailable_identity="investment_insufficient_item")
         if state != "unavailable":
-            self._shop_purchase(button, "purchase_item", "investment_done")
+            self._shop_purchase(button, "purchase_item", "investment_done", next_offer=True)
             _, button, state = self._shop_offer("health_restore", ("shop_health_entry",),
                                               unavailable_identity="health_restore_unavailable")
             if state == "shop_health_entry":

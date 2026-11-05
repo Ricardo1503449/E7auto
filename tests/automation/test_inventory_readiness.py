@@ -74,6 +74,51 @@ def engine(vision, config=None):
     return flow, clock, inputs, logger
 
 
+@pytest.mark.parametrize('incomplete_first', [False, True])
+def test_entry_frames_supply_top_scan_without_repeating_validated_frames(incomplete_first):
+    class Vision(ScriptedVision):
+        scenes = deque(['incomplete_rows'] if incomplete_first else [])
+        def inventory_scene_state(self, frame, screen, *, slot_ids=None):
+            return self.scenes.popleft() if self.scenes else 'ready'
+    config = window_config()
+    config = replace(config, timing=replace(config.timing, poll_interval_ms=100,
+        entry_timeout_ms=1000, scan_timeout_ms=1000),
+        inventory_readiness=replace(config.inventory_readiness, minimum_stable_ms=200))
+    vision = Vision(top=[(), (), ()])
+    flow, clock, _, _ = engine(vision, config)
+    flow._enter_store()
+    before = flow.runtime.capture_count
+    assert flow.inventory.scan_viewport('top', set()) == frozenset()
+    assert flow.runtime.capture_count == before+int(incomplete_first)
+    assert len(vision.scan_frames) == 3
+    assert clock.now >= .4
+    assert flow.inventory.reference.frame is vision.scan_frames[-1]
+
+
+@pytest.mark.parametrize('outcome,ready', [(PurchaseOutcome.SUCCESS_BUTTON, True),
+                                        (PurchaseOutcome.SUCCESS_BUTTON, False),
+                                        (PurchaseOutcome.SUCCESS, True)])
+def test_last_bottom_purchase_shares_only_joint_button_and_shop_evidence(outcome, ready):
+    config = window_config()
+    slots = tuple(replace(slot, slot_id='bottom-6', order=5) if slot.screen == 'bottom' else slot
+                  for slot in config.slots)
+    config = replace(config, slots=slots)
+    item = replace(match('wood', 'bottom'), slot_id='bottom-6', slot_order=5)
+    vision = ScriptedVision(purchase=[outcome]*3, ready_visible=ready)
+    flow, _, _, _ = engine(vision, config)
+    before = flow.inventory._purchase_context()
+    flow.inventory.purchase(item, screen='bottom', followup_matches=(item,))
+    scope = flow.inventory._scope_after_purchase('bottom', (item,), before)
+    assert scope is not None and not scope.slot_ids
+    captures = flow.runtime.capture_count
+    if not ready:
+        with pytest.raises(StopExecution):flow.inventory._finish_bottom_purchase(scope)
+    else:
+        assert flow.inventory._finish_bottom_purchase(scope)
+        assert flow.runtime.capture_count == captures+(0 if outcome is PurchaseOutcome.SUCCESS_BUTTON else 3)
+    assert flow.runtime.publisher.snapshot.targets[0].acquired == 1
+
+
 def test_blank_refresh_animation_cannot_produce_an_empty_scan_or_scroll_reference():
     class Vision(ScriptedVision):
         scenes = deque(["incomplete_rows", "incomplete_rows", "ready", "ready", "ready"])

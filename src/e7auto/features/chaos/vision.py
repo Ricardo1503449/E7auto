@@ -27,7 +27,8 @@ class ChaosVision:
     def __init__(self, config: ChaosConfig, templates: TemplateRepository):
         self.settings = config.chaos
         self._templates = templates
-        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
+        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
+                                        structure_thresholds=config.template_structure_thresholds)
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
         self._navigation = StartupNavigationVision(config, self._matcher)
         node_shapes = [templates.get(self.settings.scenes["node_"+kind].template_key).image.shape
@@ -88,6 +89,8 @@ class ChaosVision:
         return self._locate(frame, "stage_selected", band, limit=12)
 
     def _locate(self, frame: object, key: str, region: Rect | None, *, limit: int) -> tuple[Detection, ...]:
+        if key in self.settings.loot_priorities:
+            raise ValueError(f"loot identity {key} requires loot_cards, not full-template matching")
         view = frame_view(frame)
         scene = self.settings.scenes[key]
         allowed = view.region(scene.region, clip=True)

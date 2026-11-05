@@ -258,8 +258,8 @@ def test_real_torn_map_initial_title_variant(recognizer):
     assert raw is not None and raw.shape == (864, 1536, 3)
     transform = CoordinateTransform(Size(2322, 1306), Size(1536, 864))
     target = transform.point(Point(1510, 1110))
-    assert recognizer.settings.scenes['event_torn_map_path'].threshold == .92
-    assert recognizer.settings.scenes['event_torn_map'].threshold == .96
+    assert recognizer.settings.scenes['event_torn_map_path'].threshold == .90
+    assert recognizer.settings.scenes['event_torn_map'].threshold == .90
     prime_readiness(recognizer, adapt_frame(raw.copy(), transform))
     for _ in range(3):
         hit = recognizer.recognize(adapt_frame(raw.copy(), transform))

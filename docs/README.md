@@ -6,6 +6,7 @@
 - [自动卡厄思运行验证](validation/chaos/RUNTIME_VALIDATION.md)（各批次离线、模拟、实机证据及未覆盖场景）
 - [自动卡厄思阶段拖动与切换](validation/chaos/STAGE_SELECTION_VALIDATION.md)
 - [日期变更共享流程验证](validation/common/DAILY_RESET_VALIDATION.md)（签到、可选登录奖励/增益效果及卡厄思恢复）
+- [三帧联合确认与交接验证](validation/common/CONFIRMATION_REUSE_VALIDATION.md)（商店、企鹅、卡厄思的19组确认优化）
 - [原图匹配与尺寸适配](design/NATIVE_MATCHING.md)及[验证记录](validation/common/NATIVE_MATCHING_VALIDATION.md)
 - [开发指南](development/DEVELOPMENT.md)
 - [目录与产物约定](development/LAYOUT.md)

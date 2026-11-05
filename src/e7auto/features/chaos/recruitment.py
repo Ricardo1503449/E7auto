@@ -10,15 +10,17 @@ from .contracts import ChaosVisionPort
 class HeroRecruitment:
     def __init__(self, settings: ChaosSettings, vision: ChaosVisionPort, *,
                  frame: Callable, wait: Callable, tap: Callable, act: Callable,
-                 control: Callable, first: Callable, transition: Callable | None = None):
+                 control: Callable, first: Callable, transition: Callable | None = None,
+                 take_confirmed: Callable | None = None):
         self.settings, self.vision = settings, vision
         self.frame, self.wait, self.tap = frame, wait, tap
         self.act, self.control, self.first = act, control, first
         self.transition = transition
+        self.take_confirmed = take_confirmed or (lambda _: None)
         self._left_names = tuple(key for key in settings.scenes if key.startswith('selected_name_'))
         self._hero_keys = tuple(key for key in settings.scenes if key.startswith('hero_') and key != 'hero_selected_border')
 
-    def filter(self, attribute, profession=False):
+    def filter(self, attribute, profession=False, *, hero=None):
         # Existing callers use True for thief; restoration explicitly requests knight.
         profession = "thief" if profession is True else profession
         if profession not in (False, "thief", "knight"):
@@ -57,7 +59,9 @@ class HeroRecruitment:
         def observe(frame):
             return decision(frame, read_states(frame))
 
-        opening = self.wait("open_filter", lambda f: self.first(f, ("filter_dark", "filter_light")))
+        opening = self.take_confirmed('filter_dark') or self.take_confirmed('filter_light')
+        if opening is None:
+            opening = self.wait("open_filter", lambda f: self.first(f, ("filter_dark", "filter_light")))
         state = self.transition(opening, "filter_state", observe, responded=any_filter)
         while True:
             _, button, change = state
@@ -66,9 +70,9 @@ class HeroRecruitment:
                     if any_filter(frame):
                         return None
                     button = self.first(frame, ("filter_light", "filter_dark"))
-                    hero = self.first(frame, self._hero_keys)
+                    target = self.vision.control(frame, 'hero_'+hero) if hero is not None else self.first(frame, self._hero_keys)
                     # Button colour alone does not identify an open/closed panel.
-                    return (button, hero) if button is not None and hero is not None else None
+                    return (button, target) if button is not None and target is not None else None
                 self.transition(button, "filter_closed", closed,
                                 source=lambda f: self.first(f, ("filter_light", "filter_dark"))
                                 if read_states(f) is not None else None)
@@ -166,7 +170,10 @@ class HeroRecruitment:
                 return self.vision.control(frame, "hero_"+hero)
             return None
 
-        clicked = self.wait("departure_target", target)
+        title = self.take_confirmed('depart_title')
+        clicked = self.take_confirmed('hero_'+hero) if title is not None else None
+        if clicked is None:
+            clicked = self.wait("departure_target", target)
 
         seen = False
         def response():

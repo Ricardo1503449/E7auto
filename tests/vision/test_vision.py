@@ -39,7 +39,7 @@ def test_locate_all_rejects_color_without_structure_and_preserves_joint_gate(mon
         return np.full((1, 1), .2, np.float32)
     monkeypatch.setattr(cv2, 'matchTemplate', compare)
     assert matcher.locate_all(np.arange(867,dtype=np.uint8).reshape(17,17,3), 'item', Rect(0, 0, 17, 17), .9, .8) == ()
-    assert calls == [cv2.TM_SQDIFF_NORMED]
+    assert calls and set(calls) == {cv2.TM_SQDIFF_NORMED}
 
 
 class ArrayTemplates:
@@ -83,7 +83,7 @@ def test_locate_template_cache_preserves_hits_and_reads_every_new_frame(monkeypa
     cold = matcher.locate_all(frame, "anchor", roi, .99, .9, limit=6)
     assert len(cold) == 3
     generations=matcher.cache.generations
-    assert generations>0
+    assert matcher.cache.live_bytes > 0  # The 1:1 coarse projection is separately cached.
     assert matcher.locate_all(frame.copy(), "anchor", roi, .99, .9, limit=6) == cold
     assert matcher.cache.generations == generations
     assert matcher.locate_all(np.zeros_like(frame), "anchor", roi, .99, .9, limit=6) == ()

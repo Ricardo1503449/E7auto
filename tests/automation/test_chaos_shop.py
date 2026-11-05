@@ -91,6 +91,23 @@ def test_buys_investment_then_health_once_and_returns_to_same_floor(network):
     assert game.state == "map" and game.floor == flow.state.floor == 1
 
 
+@pytest.mark.parametrize('health', ['available', 'dim'])
+def test_completed_purchase_hands_off_the_next_offer_and_leave_button(monkeypatch, health):
+    from collections import Counter
+    game = ShopGame(health=health)
+    original, counts = game.control, Counter()
+    def control(frame, key, region=None):
+        hit = original(frame, key, region)
+        if hit is not None:counts[frame['state'], key] += 1
+        return hit
+    monkeypatch.setattr(game, 'control', control)
+    run_shop(game)
+    identity = 'health_restore' if health == 'available' else 'health_restore_unavailable'
+    assert counts['shop_done', identity] == 3
+    assert counts['health_done' if health == 'available' else 'shop_done', 'shop_leave'] == 3
+    assert game.purchased == (['investment', 'health'] if health == 'available' else ['investment'])
+
+
 def test_dim_investment_leaves_without_any_purchase_or_health_scan():
     game = ShopGame(investment_dark=True)
     original = game.control

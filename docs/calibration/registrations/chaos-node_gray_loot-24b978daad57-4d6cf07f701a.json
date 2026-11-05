@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "feature": "chaos",
+  "key": "node_gray_loot",
+  "operation": "retire",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "previous_filename": "map/node_gray_loot.png",
+  "retirement_reason": "Unused gray-node reference: no production scene or runtime image dependency in either current lineup.",
+  "source_png": "assets/templates/chaos/map/node_gray_loot.png",
+  "source_png_sha256": "24b978daad579f7a3b17ec77ade8f881ab7385007b967222fb0cb8ec3c6a5b94",
+  "previous_registration": {
+    "record": "docs/calibration/registrations/chaos-node_gray_loot-24b978daad57-a5ad9efde8ce.json",
+    "record_sha256": "a5ad9efde8ceee1572ad9f4d32fcccdaf0f083386858ebc6b8e3efbb66db7ccd"
+  },
+  "pixel_policy": "Preserve exact original PNG bytes for the required retirement transaction.",
+  "authorization": "2026-11-04 user requested removal after verifying no current runtime use; keep all three Peini resources unchanged.",
+  "validation": {
+    "kind": "production_config_dependency_check",
+    "lineups": [
+      "dark_twins",
+      "budget"
+    ],
+    "absent_from_runtime": true,
+    "investment_scene_resource": "chaos:shop_health_entry"
+  }
+}

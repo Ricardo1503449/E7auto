@@ -1,5 +1,4 @@
 """Triangle-local node matching preserves geometry, ambiguity and map guards."""
-import json
 from math import floor
 
 import cv2
@@ -135,8 +134,8 @@ def test_unmarked_nodes_do_not_enter_the_available_list(setup):
 def test_gray_node_with_a_triangle_does_not_become_selectable(setup):
     vision,config,templates=setup
     frame=map_frame(config,templates)
-    manifest=json.loads((ROOT/'assets/templates/chaos/manifest.json').read_text(encoding='utf-8'))
-    path=ROOT/'assets/templates/chaos'/manifest['templates']['node_gray_normal']['file']
+    # Raw screenshot crop, independent of the retired gray reference templates.
+    path=ROOT/'tests/fixtures/chaos/map/gray_normal_sample.png'
     gray=cv2.imdecode(np.frombuffer(path.read_bytes(),np.uint8),cv2.IMREAD_UNCHANGED)[:,:,:3]
     frame[500:500+gray.shape[0],700:700+gray.shape[1]]=gray
     paste(frame,config,templates,'node_triangle',740,430)

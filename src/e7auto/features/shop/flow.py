@@ -129,13 +129,19 @@ class ShopFlow:
             main_shop = self.runtime.wait_stable_observation(
                 "main_shop_icon", self.runtime.deps.vision.main_shop_icon, self.runtime.config.timing.entry_timeout_ms,
             )
+        observe_inventory, finish_inventory = self.inventory.entry_probe()
+        def destination(frame):
+            ready = self.runtime.deps.vision.shop_ready(frame)
+            observe_inventory(frame, ready)
+            return ready
         self.runtime.enter_with_retry(
             entry_name="shop", main=main_shop,
             main_detector=self.runtime.deps.vision.main_shop_icon,
             destination_name="shop_refresh_button",
-            destination_detector=self.runtime.deps.vision.shop_ready,
+            destination_detector=destination,
             click_action="open_shop",
         )
+        finish_inventory()
         self.runtime.publisher.mutate(
             lambda snapshot: snapshot.with_overlay_status(
                 OverlayActivityStatus.REFRESHING

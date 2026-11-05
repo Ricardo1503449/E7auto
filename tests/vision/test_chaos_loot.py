@@ -11,6 +11,15 @@ from tests.helpers.chaos_images import loot_frame
 KEYS = ('loot_ominous_crystal','loot_old_sword','loot_lightning')
 
 
+@pytest.mark.parametrize('method', ['control', 'controls'])
+def test_loot_identity_cannot_enter_full_template_control_matching(setup, monkeypatch, method):
+    vision, _, _ = setup
+    monkeypatch.setattr(vision._matcher, 'locate_all',
+                        lambda *args, **kwargs: pytest.fail('must reject before full-template matching'))
+    with pytest.raises(ValueError, match='requires loot_cards'):
+        getattr(vision, method)(object(), KEYS[0])
+
+
 def test_anchor_fingerprint_reuses_only_complete_unchanged_area(setup, monkeypatch):
     vision, config, templates = setup
     frame = loot_frame(config, templates, KEYS)

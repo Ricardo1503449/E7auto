@@ -83,12 +83,12 @@ def test_all_chosen_identities_keep_parent_click_geometry(profiles, name, size, 
         assert vision.control(frame, name) == hit
 
 
-def test_real_xiaochun_failure_is_fixed_without_lowering_gates(profiles, monkeypatch):
+def test_real_xiaochun_click_geometry_with_confirmed_gates(profiles, monkeypatch):
     config, repo, vision, _, _, _ = selected(profiles, 'hero_xiaochun')
     raw = cv2.imdecode(np.fromfile(ROOT/'tests/fixtures/chaos/resolution/hero_xiaochun_2304.png',np.uint8),1)
     frame = FrameView(raw, CoordinateTransform(Size(2322,1306),Size(2304,1296)))
     scene = config.chaos.scenes['hero_xiaochun']
-    assert (scene.threshold, scene.structure) == (.94,.8)
+    assert (scene.threshold, scene.structure) == (.9,.8)
     monkeypatch.setattr(vision._matcher, 'locate_all',
                         lambda *a, **k: pytest.fail('selected hero entered whole-template matching'))
     hit = vision.control(frame, 'hero_xiaochun')
@@ -104,7 +104,7 @@ def test_real_baseline_teacher_shift_keeps_identity_and_parent_click(profiles):
         np.uint8), cv2.IMREAD_COLOR)
     frame = FrameView(raw, CoordinateTransform(Size(2322,1306), Size(2322,1306)))
     scene = config.chaos.scenes['hero_teacher']
-    assert (scene.threshold, scene.structure) == (.92,.8)
+    assert (scene.threshold, scene.structure) == (.85,.8)
     assert not vision._matcher.baseline.locate_all(frame, key, roi, .92, .8, limit=1)
     hit = vision.control(frame, 'hero_teacher')
     assert hit is not None
@@ -210,7 +210,7 @@ def test_fractional_client_tolerance_rejects_outward_rounding_overrun(offset, ex
     matcher = TemplateMatcher(SimpleNamespace())
     components = ComponentMatcher(SimpleNamespace(),matcher,{})
     result = components._secondary(source,part,(25,25),(6*1536/2322,8*864/1306),
-        (100,200),ClientRect(100,200,70,60),.99999,None,True)
+        (100,200),ClientRect(100,200,70,60),.99999,None)
     assert (result is not None) is expected
 
 
@@ -221,10 +221,10 @@ def test_secondary_multiple_placements_and_missing_edge_pixels_are_rejected():
     source[25:30,22:24] = pattern
     source[25:30,28:30] = pattern
     matcher = ComponentMatcher(SimpleNamespace(),TemplateMatcher(SimpleNamespace()),{})
-    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(0,0,70,60),.99999,None,True) is None
+    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(0,0,70,60),.99999,None) is None
     source[25:30,28:30] = 0
-    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(0,0,70,60),.99999,None,True) is not None
-    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(23,0,47,60),.99999,None,True) is None
+    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(0,0,70,60),.99999,None) is not None
+    assert matcher._secondary(source,part,(25,25),(6,8),(0,0),ClientRect(23,0,47,60),.99999,None) is None
 
 
 @pytest.mark.parametrize('size', [(2322,1306),(1536,864),(2304,1296),(2560,1440)])

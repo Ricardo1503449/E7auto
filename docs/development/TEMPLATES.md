@@ -45,6 +45,37 @@ tests/fixtures/       # 可移植的离线回归样本
 
 ## 加载边界
 
+2026-11-04：用户确认裴妮三张历史资源保持原样，继续不启用；七张`node_gray_*`灰态
+参考及旧`buttons/investment_entry.png`经逐项retire登记，从正式PNG及活动清单中删除。
+两套阵容均不加载这八张图片。生产`investment_entry`场景继续绑定`shop_health_entry`，
+地图仍使用可选三角附近的亮态节点，配置、识别门槛及运行逻辑不变。灰态拒绝测试
+改用真实截图裁片，不依赖已退役模板；历史登记记录保留。范围见[评分验证](../validation/common/TEMPLATE_SCORING_VALIDATION.md)。
+
+2026-11-04：用户明确批准将本批缺样本的商店15张模板/21个用途启用为颜色0.85、
+结构0.80，企鹅9张控件模板/9个用途启用为颜色0.90、结构0.80，均标记“待实测验证”。
+商店商品及刷新提示的颜色单独读取`vision.shop_default_confidence`，省略时沿用
+`default_confidence`；共享网络仍读取原`default_confidence: 0.90`。商店锚点和奖励
+浮层分别读取`anchor_confidence: 0.85`及`inventory_readiness.reward_overlay_confidence: 0.85`。
+本批结构逐键配置，模板图片及ROI不变。参数加载和隔离检查通过不代表真实正反例
+识别通过，确认范围及验证限制见[评分验证](../validation/common/TEMPLATE_SCORING_VALIDATION.md)。
+
+2026-11-04：共享启动菜单的无通知点版本颜色由0.92改为0.85，通知点版本由0.96改为
+0.90，结构均保持0.80，三种功能共同使用。两种变体仍授权同一侧栏入口，无通知点版
+未命中才尝试通知点版，不要求分类出通知状态；图片、ROI、动作、入口优先及稳定帧
+规则不变。现存真实页面与遮挡反例的回放结果见[评分验证](../validation/common/TEMPLATE_SCORING_VALIDATION.md)。
+
+2026-11-04：56张事件选项模板的颜色门槛统一为0.90，结构保持0.80，覆盖53个入口身份
+和3个事件内局部选项。本条取代本文件历史记录中这56项的旧颜色数值；PNG/遮罩、ROI、
+索引、选项路线、动作及稳定确认保持。正式应用复用已完成的实际ROI及生产入口离线
+回放，不重复测试；范围与限制见[评分验证](../validation/common/TEMPLATE_SCORING_VALIDATION.md)。
+
+2026-11-03：76个战利品身份的`templates.<身份>`条目只保留资源、区域、动作等绑定，
+不再声明`threshold`或`structure_threshold`；加载器拒绝重新加入这两个无效整图门槛。
+身份场景在内存中明确没有整图门槛，不填默认数值；`control/controls`拒绝对物品身份
+执行整图匹配，统一通过`loot_cards`的图标及完整名称识别。实际门槛只读取
+`loot_recognition.icon_threshold/icon_structure/name_threshold/name_structure`，当前均为
+颜色0.90、结构0.80。重新抽取、选中状态、确认按钮等普通控件继续要求各自的有效门槛。
+
 - 已批准的25张图标/文字或阶数模板经2026-10-17用户明确授权，在基准和非基准尺寸共用运行时分部布局，部件须覆盖当前正式PNG的完整有效遮罩。卡厄思在`config/chaos.yaml`的`component_matching`声明，共享关闭在`config/internal.yaml`的`daily_reset.component_matching`声明，企鹅祭坛关闭在`penguin_component_matching`声明。布局包含primary/secondary两个原模板矩形及`[6,8]`基准单位容差，不能遗漏当前有效遮罩或只保留某一行文字；阶数须同时保留图标与数字，5阶按2026-10-13用户授权移除右侧`(Max)`，不能只保留数字。基准直接使用原始父模板，非基准先投影父模板，再提取同网格视图；分部匹配本身不裁剪正式模板，不产生候选或登记事务。正式PNG裁剪仍执行候选导出、验证及登记。新增批准身份或改变布局仍须验证相应真实正反例、尺度、配对和点击，不能自动扩展到全库。
 
 - 卡厄思阵容资源按 `COMMON_SCENES ∪ lineup.scenes ∪ 当前目标大厅阶段场景` 计算；每队在 `lineups.py` 显式声明专用场景，不能根据途中招募策略推断另一队资源。已知场景集合由公共场景、所有已登记阵容场景及五种大厅阶段绑定组成，未知键仍拒绝。大厅只读取当前目标的数字模板，其余大厅数字缺失或损坏不影响该目标启动；阶段列表01—05及其高亮/确认资源仍按原规则加载。`recruitment_policy` 单独控制途中招募和换人，配置仅接受对应阵容声明的策略；资源保留、缺失或加载与否不能代替策略授权。
@@ -57,6 +88,7 @@ tests/fixtures/       # 可移植的离线回归样本
 - 界面搜索矩形及需要校准的动态区域参数均在YAML维护；两个入口都读取 `rois.left_icon_column`，其他企鹅控件各自读取 `rois.penguin_<控件名>`。清单中的 `source.crop` 不参与运行范围计算，不再自动外扩24像素。
 - 动态区域保留代码计算：`vision.purchased_button_padding` 是已购买按钮围绕当前行购买位置的单侧留边（x水平、y垂直）；`vision.penguin_price_rect` 是购买按钮左上角以内的金额相对矩形，同时用于遮罩排除和金额读取。单个数字分割边界属于识别结果，不配置为固定屏幕坐标。
 - 入口颜色和结构门槛分别读取 `vision.entry_thresholds.shop/penguin`；其他企鹅控件、金额数字门槛也读取配置。允许各功能使用不同的已验证值，PNG不因配置迁移而改变。
+- 已购按钮和购买确认按钮的颜色门槛分别由`vision.purchased_button_confidence`、`vision.confirm_button_confidence`单独配置，旧配置省略时各自沿用`anchor_confidence`。企鹅非入口控件可在`vision.penguin_control_thresholds`按`penguin_<清单键>`覆盖颜色门槛，其余沿用`penguin_control_confidence`；排除金额的弹窗定位单独读取`penguin_purchase_body_confidence`，省略时沿用`penguin_control_confidence`。入口、数字、未知键及已移除的完整5100独立检测键不能放入覆盖表，数值须为`(0,1]`。结构门槛仍由`template_structure_thresholds`独立控制。原5100 PNG与清单保持，仅在内存排除金额后供主体定位；不重新裁图或登记。
 
 ## 清单与来源记录
 
@@ -93,9 +125,9 @@ chaos根目录保留 `manifest.json`，PNG按下表组织；场景引用稳定�
 | 子目录 | 内容 | 当前PNG数 |
 | --- | --- | --- |
 | entry | 主界面入口、阶段及出征补给身份/选中状态 | 18 |
-| buttons | 操作按钮和关闭提示，包括跨场景复用按钮 | 26 |
+| buttons | 操作按钮和关闭提示，包括跨场景复用按钮 | 25 |
 | recruitment | 职业券、筛选、英雄名称及招募结果 | 50 |
-| map | 地图、点亮节点、灰态参考及三角 | 19 |
+| map | 地图、点亮节点及三角 | 12 |
 | battle | 准备、战斗状态及结算标题 | 12 |
 | camp | 修整和升阶状态 | 8 |
 | formation | 候补、站位及替换标识 | 5 |

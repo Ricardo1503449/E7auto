@@ -81,7 +81,6 @@ class Candidate:
     scale: tuple[float,float]
     phase: tuple[float,float]=(0.,0.)
     offset: tuple[float,float]=(0.,0.)
-    color_correlation: bool=False
     cache_key: tuple=()
     parent: Candidate | None=field(default=None,repr=False,compare=False)
     structured: bool=field(init=False)
@@ -238,7 +237,7 @@ class CandidateCache:
         key=(identity,scale,phase,blur,'fixed-grid-v2')
         original_size=(width,height)
         if scale==(1.,1.) and not blur:
-            return Candidate(image,mask,original_size,original_size,scale,color_correlation=mask is None,cache_key=key)
+            return Candidate(image,mask,original_size,original_size,scale,cache_key=key)
         offset=(0.,0.) if scale==(1.,1.) else (1+phase[0],1+phase[1])
         size=original_size if scale==(1.,1.) else (ceil(width*scale[0])+3,ceil(height*scale[1])+3)
         with self._lock:
@@ -261,7 +260,7 @@ class CandidateCache:
                 pixels=cv2.GaussianBlur(pixels,(3,3),0)
             pixels.setflags(write=False)
             if coverage is not None:coverage.setflags(write=False)
-            result=Candidate(pixels,coverage,size,original_size,scale,phase,offset,mask is None,key)
+            result=Candidate(pixels,coverage,size,original_size,scale,phase,offset,cache_key=key)
             self.live_bytes+=result.nbytes
             weakref.finalize(result,self._release,result.nbytes)
             self._items[key]=result;self.generations+=1
@@ -302,7 +301,7 @@ class CandidateCache:
             offset = (parent.offset[0]+rect.x*sx-x, parent.offset[1]+rect.y*sy-y)
             self._reserve((right-x)*(bottom-y)*4)
             result = Candidate(image, mask, (right-x, bottom-y), (rect.width, rect.height),
-                               parent.scale, parent.phase, offset, parent.color_correlation,
+                               parent.scale, parent.phase, offset,
                                key, parent=parent)
             # These arrays are views. The parent stays charged until every view dies.
             self._items[key] = result

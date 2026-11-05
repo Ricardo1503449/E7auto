@@ -1,8 +1,8 @@
 """Validated 1:1 matching, isolated from non-reference-size adaptation.
 
-Preserves the pre-native-migration OpenCV scoring, coarse shortlist and local
-search. Only the result adapter uses the current client-coordinate contract.
-Changes for scaled clients must not alter this implementation implicitly.
+Retains the validated coarse shortlist and local search. The authorized ordinary
+color equation is 1-SQDIFF_NORMED; optional structure is CCOEFF_NORMED at that
+same placement. Scaled-client work must not alter this backend implicitly.
 """
 import cv2
 import numpy as np
@@ -12,16 +12,13 @@ from e7auto.core.types import ClientPoint, ClientRect
 from e7auto.vision.frames import frame_view
 
 
-def scores(source, template, mask, threshold, structure_threshold=None, *, correlation=False):
+def scores(source, template, mask, threshold, structure_threshold=None):
     h, w = template.shape[:2]
     if source.shape[0] < h or source.shape[1] < w:
         return None
-    if correlation:
-        color = cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED, mask=mask)
-    else:
-        difference = cv2.matchTemplate(source, template, cv2.TM_SQDIFF_NORMED, mask=mask)
-        difference = np.nan_to_num(difference, nan=np.inf, posinf=np.inf, neginf=np.inf)
-        color = 1-difference
+    difference = cv2.matchTemplate(source, template, cv2.TM_SQDIFF_NORMED, mask=mask)
+    difference = np.nan_to_num(difference, nan=np.inf, posinf=np.inf, neginf=np.inf)
+    color = 1-difference
     accepted = np.isfinite(color) & (color >= threshold)
     if not np.any(accepted):
         return None
@@ -47,12 +44,11 @@ class BaselineMatcher:
     def __init__(self, templates, cache):
         self.templates, self.cache = templates, cache
 
-    def match(self, frame, key, roi, threshold, structure_threshold=None, *, force_color=False):
+    def match(self, frame, key, roi, threshold, structure_threshold=None):
         view = frame_view(frame).crop(roi)
         data = self.templates.get(key)
         values = scores(np.ascontiguousarray(view.raw), data.image, data.mask,
-                        threshold, structure_threshold,
-                        correlation=data.mask is None and not force_color)
+                        threshold, structure_threshold)
         if values is None:
             return None
         color, structure = values
@@ -93,7 +89,7 @@ class BaselineMatcher:
                 continue
             color, structure = result
             _, score, _, (dx, dy) = cv2.minMaxLoc(color)
-            hit = observation(key, score, float(structure[dy, dx]),
+            hit = observation(key, score, None if structure is None else float(structure[dy, dx]),
                               view.origin.x+x+dx, view.origin.y+y+dy, w, h, view.bounds)
             if any(abs(hit.anchor.x-old.anchor.x) < w*.5 and abs(hit.anchor.y-old.anchor.y) < h*.5 for old in hits):
                 continue

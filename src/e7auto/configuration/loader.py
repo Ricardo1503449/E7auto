@@ -537,6 +537,44 @@ def _load_vision(root, errors):
     return default_confidence, anchor_confidence, entry_thresholds, penguin_control_confidence, penguin_price_digit_confidence, penguin_price_digit_margin, purchased_button_padding, penguin_price_rect, sky_stone_digit_confidence, sky_stone_digit_margin, sky_stone_digits_offset
 
 
+def _load_penguin_control_thresholds(raw, errors):
+    values = _mapping(raw.get('penguin_control_thresholds', {}),
+                      'vision.penguin_control_thresholds', errors)
+    allowed = {f'penguin_{name}' for name in PENGUIN_CONTROLS
+               if name not in {'sanctuary_entry', 'penguin_buy_5100'}}
+    result = {}
+    for key, value in values.items():
+        prefix = f'vision.penguin_control_thresholds.{key}'
+        if key not in allowed:
+            errors.append(prefix + ' is not a supported penguin control')
+        else:
+            result[key] = _positive_fraction(value, prefix, errors)
+    return result
+
+
+def _load_template_structure_thresholds(raw, errors):
+    """Explicit per-template gates; null retains color-only matching."""
+    values = _mapping(raw.get('template_structure_thresholds', {}),
+                      'vision.template_structure_thresholds', errors)
+    allowed = (_REQUIRED_TEMPLATES - NAVIGATION_TEMPLATE_KEYS - {'main_shop_icon'}
+               - {key for key in COMMON_TEMPLATE_KEYS if key.startswith('sky_stone_digit_')})
+    allowed |= {'network_connection_abnormal', 'network_retry'}
+    allowed |= {f'penguin_{name}' for name in PENGUIN_CONTROLS if name != 'sanctuary_entry'}
+    allowed |= {key + suffix for key in _EXPECTED_TARGET_POLICY for suffix in ('', '_confirm', '_purchased')}
+    result = {}
+    for key, value in values.items():
+        prefix = f'vision.template_structure_thresholds.{key}'
+        if key not in allowed:
+            errors.append(prefix + ' is not a supported single-gate template')
+        elif value is None:
+            result[key] = None
+        elif type(value) not in (float, int) or not isfinite(value) or not 0 < value <= 1:
+            errors.append(prefix + ' must be null or in (0, 1]')
+        else:
+            result[key] = float(value)
+    return result
+
+
 def _validate_geometry(baseline_size, rois, points, template_sizes, slots, scroll, purchased_button_padding, errors):
     def point_in_client(point: Point) -> bool:
         return 0 <= point.x < baseline_size.width and 0 <= point.y < baseline_size.height
@@ -701,6 +739,20 @@ def load_config(
     ) = _load_vision(root, errors)
 
     vision_mapping = root.get("vision") if isinstance(root.get("vision"), dict) else {}
+    template_structure_thresholds = _load_template_structure_thresholds(vision_mapping, errors)
+    shop_default_confidence = _positive_fraction(
+        vision_mapping.get('shop_default_confidence', default_confidence),
+        'vision.shop_default_confidence', errors)
+    purchased_button_confidence = _positive_fraction(
+        vision_mapping.get('purchased_button_confidence', anchor_confidence),
+        'vision.purchased_button_confidence', errors)
+    confirm_button_confidence = _positive_fraction(
+        vision_mapping.get('confirm_button_confidence', anchor_confidence),
+        'vision.confirm_button_confidence', errors)
+    penguin_control_thresholds = _load_penguin_control_thresholds(vision_mapping, errors)
+    penguin_purchase_body_confidence = _positive_fraction(
+        vision_mapping.get('penguin_purchase_body_confidence', penguin_control_confidence),
+        'vision.penguin_purchase_body_confidence', errors)
     candidate_cache_mib = _positive_int(vision_mapping.get("candidate_cache_mib", 64),
                                         "vision.candidate_cache_mib", errors)
     overlay_raw = _mapping(root.get("overlay"), "overlay", errors)
@@ -755,4 +807,10 @@ def load_config(
         candidate_cache_mib=candidate_cache_mib,
         startup_navigation=startup_navigation,
         click_retry=click_retry,
+        template_structure_thresholds=template_structure_thresholds,
+        purchased_button_confidence=purchased_button_confidence,
+        confirm_button_confidence=confirm_button_confidence,
+        shop_default_confidence=shop_default_confidence,
+        penguin_control_thresholds=penguin_control_thresholds,
+        penguin_purchase_body_confidence=penguin_purchase_body_confidence,
     )

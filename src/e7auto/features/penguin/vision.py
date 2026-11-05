@@ -35,7 +35,8 @@ class PenguinVision:
     def __init__(self, config: AppConfig, templates: TemplateRepository):
         self._config = config
         self._templates = templates
-        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
+        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
+                                        structure_thresholds=config.template_structure_thresholds)
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
@@ -46,10 +47,11 @@ class PenguinVision:
         mask[r.y:r.bottom, r.x:r.right] = 0
         if not np.any(mask):
             raise ConfigError(["vision.penguin_price_rect removes the entire purchase-button mask"])
-        # Only the amount is excluded for locating a dialog whose price changed.
-        # Full 5100 recognition still uses the unmodified approved template.
+        # Keep the approved PNG; its amount pixels never authorize a purchase.
+        # This private mask locates the body, then current-frame digits read the price.
         self._purchase_body = TemplateData(approved.image, mask)
-        self._body_matcher = TemplateMatcher(_PurchaseBodyRepository(self._purchase_body), self._matcher.cache)
+        self._body_matcher = TemplateMatcher(_PurchaseBodyRepository(self._purchase_body), self._matcher.cache,
+                                             structure_thresholds=config.template_structure_thresholds)
 
     def navigation_menu(self, frame):
         return self._navigation.navigation_menu(frame)
@@ -59,7 +61,7 @@ class PenguinVision:
 
     def match(self, frame, template_key: str, roi: Rect, threshold: float) -> Observation | None:
         if template_key in self._components.layouts:
-            hits = self._components.locate_all(frame, template_key, roi, threshold, limit=1, force_color=False)
+            hits = self._components.locate_all(frame, template_key, roi, threshold, limit=1)
             return hits[0] if hits else None
         return self._matcher.match(frame, template_key, roi, threshold)
 
@@ -69,6 +71,8 @@ class PenguinVision:
                                          structure_threshold=structure_threshold)
 
     def control(self, frame: object, name: str) -> Observation | None:
+        if name == 'penguin_buy_5100':
+            raise ValueError('penguin_buy_5100 is a dialog-body resource, not a standalone control')
         key = f"penguin_{name}"
         if name == "sanctuary_entry":
             thresholds = self._config.entry_thresholds["penguin"]
@@ -76,7 +80,8 @@ class PenguinVision:
                 frame, key, self._config.rois["left_icon_column"], thresholds.color,
                 structure_threshold=thresholds.structure,
             )
-        return self.match(frame, key, self._config.rois[key], self._config.penguin_control_confidence)
+        threshold = self._config.penguin_control_thresholds.get(key, self._config.penguin_control_confidence)
+        return self.match(frame, key, self._config.rois[key], threshold)
 
     def dialog(self, frame: object) -> PenguinDialog | None:
         maximum = self.control(frame, "quantity_max")
@@ -85,7 +90,10 @@ class PenguinVision:
             return None
         key = "penguin_penguin_buy_5100"
         # A private one-entry repository avoids mutating the approved repository.
-        body = self._body_matcher.match(frame, key, self._config.rois[key], self._config.penguin_control_confidence)
+        threshold = self._config.penguin_purchase_body_confidence
+        if threshold is None:
+            threshold = self._config.penguin_control_confidence
+        body = self._body_matcher.match(frame, key, self._config.rois[key], threshold)
         if body is None:
             return None
         height, width = self._purchase_body.image.shape[:2]
@@ -96,8 +104,7 @@ class PenguinVision:
         left,top = round(x+r.x*sx),round(y+r.y*sy)
         price_roi = ClientRect(left,top,round(x+r.right*sx)-left,round(y+r.bottom*sy)-top)
         price = self._price(frame, price_roi)
-        full = self.control(frame, "penguin_buy_5100") is not None
-        return PenguinDialog(price, body, maximum, cancel, full)
+        return PenguinDialog(price, body, maximum, cancel)
 
     def _price(self, frame: object, roi: Rect) -> int | None:
         source = self._matcher.crop(self._matcher.prepare_bgr(frame), roi)

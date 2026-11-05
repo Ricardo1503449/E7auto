@@ -202,12 +202,29 @@ class RefreshController:
                 initial_observation=observation,
             )
 
+        candidate, stable, generation = None, 0, self.runtime.network_recovery_generation
+        def ready_with_balance(frame):
+            nonlocal candidate, stable, generation
+            if generation != self.runtime.network_recovery_generation:
+                candidate, stable = None, 0
+                generation = self.runtime.network_recovery_generation
+                return None  # The frame that triggered recovery cannot contribute.
+            ready = self.runtime.deps.vision.shop_ready(frame)
+            balance = self.runtime.deps.vision.sky_stone_balance(frame) if ready is not None else None
+            if balance is None:
+                candidate, stable = None, 0
+            else:
+                stable = stable+1 if balance.value == candidate else 1
+                candidate = balance.value
+            return ready
         self.runtime.wait_stable_observation(
             "shop_refresh_button:refresh_retry",
-            self.runtime.deps.vision.shop_ready,
+            ready_with_balance,
             self.runtime.config.timing.dialog_timeout_ms,
         )
-        retry_balance = self.read_stable_sky_stone_balance("before_refresh_retry")
+        retry_balance = candidate if stable >= self.runtime.config.timing.stable_frames else self.read_stable_sky_stone_balance("before_refresh_retry")
+        if stable >= self.runtime.config.timing.stable_frames:
+            self.runtime.deps.logger.event('retry_balance_reused', value=retry_balance, stable=stable)
         if retry_balance != before:
             raise StopExecution(
                 StopReason.REFRESH_BALANCE_MISMATCH,

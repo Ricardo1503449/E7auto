@@ -177,6 +177,8 @@ def test_native_proposals_recover_a_glyph_missed_by_half_size_shortlist(setup,mo
     scene=config.chaos.scenes['hero_xiaochun'];matcher=vision._matcher;calls=[];propose=matcher._proposals
     def record(*args,**kwargs):
         calls.append(kwargs.get('native',False))
+        if not kwargs.get('native', False):
+            return []  # Explicitly exercise fallback, independent of template revisions.
         return propose(*args,**kwargs)
     monkeypatch.setattr(matcher,'_proposals',record)
     found=matcher.locate_all(frame,scene.template_key,scene.region,scene.threshold,scene.structure,limit=1)

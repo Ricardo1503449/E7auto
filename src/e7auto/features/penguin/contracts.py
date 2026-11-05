@@ -9,7 +9,6 @@ class PenguinDialog:
     purchase: Observation
     maximum: Observation
     cancel: Observation
-    full_price_button: bool
 
 
 class PenguinVisionPort(Protocol):

@@ -210,7 +210,7 @@ class EventRecognizer:
                 bounds=ClientRect(round(origin_x-candidate.offset[0]),round(origin_y-candidate.offset[1]),w,h)
                 patch=view.crop(bounds,clip=True)
                 if patch.bounds!=bounds:continue
-                scores=self.matcher.scores(patch.raw,candidate,scene.threshold,scene.structure,force_color=True)
+                scores=self.matcher.scores(patch.raw,candidate,scene.threshold,scene.structure)
                 if scores is not None:
                     hit=self.matcher.observation(scene.template_key,scores[0][0,0],float(scores[1][0,0]),
                                                  bounds.x,bounds.y,candidate,view.bounds)

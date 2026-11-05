@@ -17,7 +17,8 @@ T = TypeVar("T")
 def choose(context: EventContext, choice: Detection, *, next_page: Callable[[object], T | None],
            name: str, moving_text: bool = False,
            reason: StopReason = StopReason.RECOGNITION_TIMEOUT,
-           retry_blocked: Callable[[object], bool] | None = None) -> T:
+           retry_blocked: Callable[[object], bool] | None = None,
+           alongside: Callable | None = None) -> T:
     runtime, timing = context.runtime, context.settings.timing
     deadline = runtime.active_monotonic() + timing["page_timeout_ms"] / 1000
     attempts = 1
@@ -77,7 +78,7 @@ def choose(context: EventContext, choice: Detection, *, next_page: Callable[[obj
     remaining_ms = max(1, ceil((deadline - runtime.active_monotonic()) * 1000))
     try:
         return context.wait(name, transition, timeout_ms=remaining_ms,
-                            reason=reason, moving_text=moving_text)
+                            reason=reason, moving_text=moving_text, alongside=alongside)
     except StopExecution as exc:
         if exc.reason == reason and exc.detail == f"chaos timeout: {name}":
             fail("timed out")

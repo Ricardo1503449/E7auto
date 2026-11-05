@@ -209,13 +209,13 @@ def test_exact_location_scores_match_opencv_equations(floating):
     candidate=CandidateCache().get(original,(31/48,21/32)) if floating else original
     rng=np.random.default_rng(19)
     patch=np.clip(candidate.image.astype(np.int16)+rng.integers(-10,11,candidate.image.shape),0,255).astype(np.uint8)
-    scores=TemplateMatcher.scores(patch,candidate,0.,0.,force_color=True)
+    scores=TemplateMatcher.scores(patch,candidate,0.,0.)
     assert scores is not None
     color=1-cv2.matchTemplate(patch,candidate.image,cv2.TM_SQDIFF_NORMED,mask=candidate.mask)[0,0]
     structure=cv2.matchTemplate(patch,candidate.image,cv2.TM_CCOEFF_NORMED,mask=candidate.mask)[0,0]
     assert scores[0][0,0]==pytest.approx(color,abs=2e-6)
     assert scores[1][0,0]==pytest.approx(structure,abs=2e-6)
-    assert TemplateMatcher.scores(np.zeros_like(patch),candidate,.9,.8,force_color=True) is None
+    assert TemplateMatcher.scores(np.zeros_like(patch),candidate,.9,.8) is None
 
 
 @pytest.mark.parametrize('size',[(2322,1306),(1920,1080),(1536,864),(3072,1728)])

@@ -45,6 +45,32 @@ def test_exact_budget_refresh_scans_last_inventory_completely(continuous_refresh
     assert "scroll_top" not in input_actions
 
 
+@pytest.mark.parametrize('balances,queries,changed', [([100,100,100],3,False),
+                                                    ([100,None,100,100,100,100],6,False),
+                                                    ([101,101,101],3,True)])
+def test_refresh_retry_checks_shop_and_unchanged_balance_in_the_same_frames(balances, queries, changed):
+    config = make_config(stable_frames=3)
+    vision = ScriptedVision(balances=balances, refresh_confirm_visible=False)
+    deps, _, inputs, _, logger = make_dependencies(vision)
+    flow = AutomationEngine(config, deps, StopController(), SnapshotPublisher(
+        RuntimeSnapshot.initial('retry-joint', (('wood','wood'),), 3), lambda _: None))
+    flow.runtime.prepare()
+    original = inputs.click
+    def click(window, point):
+        original(window, point)
+        if point == config.points['refresh_button']:vision.refresh_confirm_visible = True
+    inputs.click = click
+    if changed:
+        from e7auto.runtime.stop_control import StopExecution
+        with pytest.raises(StopExecution) as stopped:flow.refresh.wait_for_refresh_confirmation(100)
+        assert stopped.value.reason is StopReason.REFRESH_BALANCE_MISMATCH
+        assert not inputs.actions
+    else:
+        assert flow.refresh.wait_for_refresh_confirmation(100) is not None
+        assert len(inputs.actions) == 1
+    assert vision.balance_queries == queries
+
+
 def test_missing_refresh_confirmation_never_confirms_or_charges() -> None:
     vision = ScriptedVision(
         top=[()],

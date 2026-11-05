@@ -26,15 +26,24 @@ class EventContext:
     fight: Callable[[str, tuple[str, ...]], Detection]
     rank_up: Callable[..., None]
     depart: Callable[[str], None]
+    take_card: Callable[[str], Any]
+    remember_terminal: Callable[[Any], None]
+    take_terminal: Callable[[], Any]
 
     def choose(self, choice: Detection, *, next_page: Callable[[object], Any],
                name: str = "event_choice_result", moving_text: bool = False,
                reason: StopReason = StopReason.RECOGNITION_TIMEOUT,
-               retry_blocked: Callable[[object], bool] | None = None) -> Any:
+               retry_blocked: Callable[[object], bool] | None = None,
+               alongside: Callable | None = None) -> Any:
         """Select only this stage's option and confirm its declared destination."""
         from .choices import choose
         return choose(self, choice, next_page=next_page, name=name,
-                      moving_text=moving_text, reason=reason, retry_blocked=retry_blocked)
+                      moving_text=moving_text, reason=reason, retry_blocked=retry_blocked,
+                      alongside=alongside)
+
+    def choose_battle(self, choice: Detection) -> None:
+        self.choose(choice, next_page=lambda frame: self.vision.control(frame, 'prepare_event'),
+                    alongside=lambda frame, _: self.vision.control(frame, 'start_battle'))
 
     def run_rank_reward(self, event: Detection) -> None:
         """Selected non-experience route: one rank reward, then text/map."""
@@ -48,7 +57,7 @@ class EventContext:
 
     def run_battle_reward(self, event: Detection) -> None:
         """Selected event battle route: direct reward card, then text/map."""
-        self.choose(event, next_page=lambda frame: self.vision.control(frame, "prepare_event"))
+        self.choose_battle(event)
         self.state.battle_floor = self.floor
         self.fight("prepare_event", ("event_reward_close",))
         self.state.reward_stage = "event_received"
@@ -57,13 +66,14 @@ class EventContext:
         self.finish_text_and_map()
 
     def close_reward_cards(self, *, count: int = 1, close_key: str = "event_reward_close",
-                           next_page: Callable[[object], Detection | None] | None = None) -> None:
+                           next_page: Callable[[object], Detection | None] | None = None):
         """Close known event cards with stable evidence and confirmed outcomes."""
         from .rewards import close_reward_cards
-        close_reward_cards(self, count=count, close_key=close_key, next_page=next_page)
+        return close_reward_cards(self, count=count, close_key=close_key, next_page=next_page)
 
     def finish_text_and_map(self, *, choice: Detection | None = None) -> None:
         """Advance only text, then require the map from this event's original floor."""
+        pending = self.take_terminal() if choice is None else None
         while True:
             def next_step(frame):
                 text = self.vision.control(frame, "text_continue")
@@ -74,7 +84,9 @@ class EventContext:
                     return view
                 return None
 
-            if choice is not None:
+            if pending is not None:
+                result, pending = pending, None
+            elif choice is not None:
                 result = self.choose(choice, next_page=next_step, name="event_text_or_map", moving_text=True,
                                      reason=StopReason.CHAOS_UNKNOWN_CONTENT)
                 choice = None

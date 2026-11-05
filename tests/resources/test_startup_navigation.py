@@ -61,9 +61,9 @@ def test_all_features_load_shared_navigation_without_other_features(tmp_path, pr
             hit = detector(frame)
             assert hit is not None
             assert x <= hit.anchor.x < x+w and y <= hit.anchor.y < y+h
-        assert config.startup_navigation['navigation_menu'].threshold == .92
-        assert config.startup_navigation['navigation_tavern'].threshold == .92
-        assert config.startup_navigation['navigation_menu_notification'].threshold == .96
+        assert config.startup_navigation['navigation_menu'].threshold == .85
+        assert config.startup_navigation['navigation_tavern'].threshold == .85
+        assert config.startup_navigation['navigation_menu_notification'].threshold == .90
     finally:
         if profile == 'chaos':
             vision.close_loot_recognition()

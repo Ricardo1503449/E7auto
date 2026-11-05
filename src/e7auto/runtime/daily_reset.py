@@ -6,6 +6,7 @@ from e7auto.configuration.daily_reset import DailyResetSettings
 from e7auto.core.domain import StopReason
 from e7auto.core.observations import Observation
 from e7auto.runtime.stop_control import StopExecution
+from e7auto.runtime.confirmation import Confirmation
 
 Detector = Callable[[object], Observation | None]
 
@@ -46,20 +47,27 @@ class DailyResetHandler:
         deadline = self.runtime.active_monotonic() + self.settings.page_timeout_ms / 1000
         first_ready = None
         previous, stable = None, 0
+        joint_previous, joint_stable = None, 0
         while self.runtime.active_monotonic() <= deadline:
             frame, recovered = self._frame()
             if recovered:
                 previous, stable = None, 0
+                joint_previous, joint_stable = None, 0
                 self._pause()
                 continue
             date = self.observe(frame, 'date_change_title')
+            close = self.observe(frame, 'date_change_close') if date is not None else None
+            joint = (_signature(date), _signature(close)) if date is not None and close is not None else None
+            joint_stable = joint_stable+1 if joint is not None and joint == joint_previous else int(joint is not None)
+            joint_previous = joint
             hit = date if date is not None else ready(frame)
             signature = ('date' if date is not None else 'ready', _signature(hit)) if hit is not None else None
             stable = stable + 1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
             if stable >= self.settings.stable_frames:
                 if date is not None:
-                    self._handle()
+                    initial = Confirmation.record(self.runtime, (date, close)) if joint_stable >= self.settings.stable_frames else None
+                    self._handle(initial=initial)
                     return DailyResetResult.HOME
                 now = self.runtime.active_monotonic()
                 if first_ready is None:
@@ -69,7 +77,7 @@ class DailyResetHandler:
             self._pause()
         self._timeout('return to ready page')
 
-    def _handle(self):
+    def _handle(self, *, initial=None):
         # Each invocation owns its state. Neither a reconnect nor a repeated frame
         # resubmits sign-in confirmation or resets a close attempt budget.
         stage = 'date'
@@ -78,6 +86,15 @@ class DailyResetHandler:
         attempts = dict.fromkeys(('date', 'reward', 'buff'), 0)
         sent_signatures, sent_times = {}, {}
         self.runtime.deps.logger.event('daily_reset_started')
+        confirmed = initial.take(self.runtime) if initial is not None else None
+        if confirmed is not None:
+            if self.runtime.active_monotonic() >= deadline:
+                self._timeout('date')
+            title, button = confirmed
+            self.runtime.click('daily_reset_date_close', button.anchor, attempt=1)
+            attempts['date'] = 1
+            sent_signatures['date'] = ('date', _signature(button), _signature(title))
+            sent_times['date'] = self.runtime.active_monotonic()
         while self.runtime.active_monotonic() <= deadline:
             frame, recovered = self._frame()
             if recovered:

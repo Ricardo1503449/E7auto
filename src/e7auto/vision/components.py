@@ -47,7 +47,7 @@ class ComponentMatcher:
         return (x+left >= region.x and y+top >= region.y
                 and x+right <= region.right and y+bottom <= region.bottom)
 
-    def _proposals(self, prepared, data, rect, scale, threshold, limit, force_color, *, native):
+    def _proposals(self, prepared, data, rect, scale, threshold, limit, *, native):
         factor = .5 if (not native and prepared.source.shape[0]*prepared.source.shape[1] > 120_000
                        and min(rect.width*scale[0], rect.height*scale[1]) > 26) else 1.
         parent = self.matcher.cache.get(data, (scale[0]*factor, scale[1]*factor))
@@ -56,11 +56,7 @@ class ComponentMatcher:
         w, h = part.size
         if h > source.shape[0] or w > source.shape[1]:
             return [], factor
-        correlation = part.color_correlation and not force_color
-        values = cv2.matchTemplate(source, part.image,
-                                  cv2.TM_CCOEFF_NORMED if correlation else cv2.TM_SQDIFF_NORMED,
-                                  mask=part.mask)
-        values = values if correlation else 1-values
+        values = 1-cv2.matchTemplate(source, part.image, cv2.TM_SQDIFF_NORMED, mask=part.mask)
         values = np.nan_to_num(values, nan=-np.inf, posinf=-np.inf, neginf=-np.inf)
         proposals = []
         for _ in range(max(12, limit*3)):
@@ -72,7 +68,7 @@ class ComponentMatcher:
             values[max(0,y-radius):y+radius+1, max(0,x-radius):x+radius+1] = -np.inf
         return proposals, factor
 
-    def _secondary(self, source, part, predicted, tolerance, origin, region, threshold, structure, force_color):
+    def _secondary(self, source, part, predicted, tolerance, origin, region, threshold, structure):
         px, py = predicted
         tx, ty = tolerance
         w, h = part.size
@@ -90,7 +86,7 @@ class ComponentMatcher:
         if structure is not None and not np.any(cv2.meanStdDev(supported_window)[1]):
             return None
         small = (patch.shape[0]-h+1)*(patch.shape[1]-w+1) <= 49
-        scores = self.matcher.scores(patch, part, threshold, structure, force_color=force_color,
+        scores = self.matcher.scores(patch, part, threshold, structure,
                                      prepared=self.matcher.cache.score_data(part) if small else None)
         if scores is None:
             return None
@@ -117,7 +113,8 @@ class ComponentMatcher:
                        and abs(hit.anchor.y-old.anchor.y) < min(hit.bounds.height, old.bounds.height)*.5
                        for old in hits)
 
-    def locate_all(self, frame, key, roi, threshold, structure=None, *, limit=12, force_color=True):
+    def locate_all(self, frame, key, roi, threshold, structure=None, *, limit=12):
+        structure = self.matcher.structure_threshold(key, structure)
         view = frame_view(frame)
         layout = self.layouts[key]
         search = view.crop(roi)
@@ -132,18 +129,18 @@ class ComponentMatcher:
         local = ((prepared.source.shape[0]-primary.size[1]+1)
                  * (prepared.source.shape[1]-primary.size[0]+1) <= 1024)
         proposals, factor = (None, 1.) if local else self._proposals(
-            prepared, data, layout.primary, scale, threshold, limit, force_color, native=False)
+            prepared, data, layout.primary, scale, threshold, limit, native=False)
         hits = self._search(prepared, search.bounds, data, key, layout, scale, proposals,
-                            threshold, structure, limit, force_color)
+                            threshold, structure, limit)
         if not hits and proposals is not None and factor < 1:
             proposals, _ = self._proposals(prepared, data, layout.primary, scale,
-                                           threshold, limit, force_color, native=True)
+                                           threshold, limit, native=True)
             hits = self._search(prepared, search.bounds, data, key, layout, scale, proposals,
-                                threshold, structure, limit, force_color)
+                                threshold, structure, limit)
         return hits
 
     def _search(self, prepared, region, data, key, layout, scale, proposals,
-                threshold, structure, limit, force_color):
+                threshold, structure, limit):
         source, origin = prepared.source, prepared.origin
         hits = []
         tolerance = layout.tolerance[0]*scale[0], layout.tolerance[1]*scale[1]
@@ -166,7 +163,7 @@ class ComponentMatcher:
                 if area.shape[0] < h or area.shape[1] < w:
                     continue
                 small = (area.shape[0]-h+1)*(area.shape[1]-w+1) <= 49
-                values = self.matcher.scores(area, primary, threshold, structure, force_color=force_color,
+                values = self.matcher.scores(area, primary, threshold, structure,
                     prepared=self.matcher.cache.score_data(primary) if small else None)
                 if values is None:
                     continue
@@ -182,7 +179,7 @@ class ComponentMatcher:
                     if (hit is not None and self._distinct(hit, hits)
                             and self._complete(primary_support, origin[0]+px, origin[1]+py, region)):
                         other = self._secondary(source, secondary, (px-po[0]+so[0], py-po[1]+so[1]),
-                            tolerance, origin, region, threshold, structure, force_color)
+                            tolerance, origin, region, threshold, structure)
                         if other is not None:
                             hit = self.matcher.observation(key, min(score, other[0]),
                                 None if shapes is None else min(shape_score, other[1]),

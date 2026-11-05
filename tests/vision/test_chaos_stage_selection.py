@@ -27,6 +27,7 @@ def detector_with_recorded_search(height=146):
     vision=ChaosVision.__new__(ChaosVision)
     vision.settings=SimpleNamespace(scenes={'stage_selected':scene})
     vision._templates=templates;vision._matcher=matcher
+    vision._components=SimpleNamespace(layouts={})
     return vision,calls,region
 
 
@@ -86,6 +87,7 @@ def test_baseline_stage_deduplicates_before_filtering_containing_borders():
     vision.settings=SimpleNamespace(scenes={'stage_selected':scene})
     vision._templates=SimpleNamespace(get=lambda _:template)
     vision._matcher=TemplateMatcher(vision._templates)
+    vision._components=SimpleNamespace(layouts={})
     entry=Detection('stage_03',1.,Rect(37,48,4,5),Point(39,50))
     button=Detection('stage_confirm',1.,Rect(1,90,10,10),Point(6,95))
     vision.control=lambda frame,key: {'stage_03':entry,'stage_confirm':button}.get(key)

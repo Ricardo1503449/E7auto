@@ -306,7 +306,7 @@ templates:
       feature: chaos
       key: event_bone_throne
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8633641807294502
@@ -319,7 +319,7 @@ templates:
       feature: chaos
       key: event_sharp_teeth
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8761726078799249
@@ -332,7 +332,7 @@ templates:
       feature: chaos
       key: event_collapsed_stairs
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8818263205013429
@@ -345,7 +345,7 @@ templates:
       feature: chaos
       key: event_broken_cage
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.5121813031161473
@@ -358,7 +358,7 @@ templates:
       feature: chaos
       key: event_red_phantom
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.13793103448275862
@@ -371,7 +371,7 @@ templates:
       feature: chaos
       key: depart_title
     search_roi: title
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -382,7 +382,7 @@ templates:
       feature: chaos
       key: depart_confirm
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.49429037520391517
@@ -395,7 +395,7 @@ templates:
       feature: chaos
       key: depart_missing
     search_roi: depart_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -406,7 +406,7 @@ templates:
       feature: chaos
       key: filter_icon_knight_filter
     search_roi: filter_knight_state
-    threshold: 0.948
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.49122807017543857
@@ -419,7 +419,7 @@ templates:
       feature: chaos
       key: filter_knight_selected
     search_roi: filter_knight_state
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -430,7 +430,7 @@ templates:
       feature: chaos
       key: recruited_shadow_rose_all
     search_roi: ticket_reward
-    threshold: 0.945
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -441,7 +441,7 @@ templates:
       feature: chaos
       key: event_broken_candlestick
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8870179250407387
@@ -454,8 +454,6 @@ templates:
       feature: chaos
       key: loot_statue_watcher
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -465,8 +463,6 @@ templates:
       feature: chaos
       key: loot_glowing_stone
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -476,8 +472,6 @@ templates:
       feature: chaos
       key: loot_watcher_breastplate
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -487,8 +481,6 @@ templates:
       feature: chaos
       key: loot_painting_road_to_sky_gate
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -498,8 +490,6 @@ templates:
       feature: chaos
       key: loot_statue_blind_saint
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -509,8 +499,6 @@ templates:
       feature: chaos
       key: loot_tablet_spirit_king_invitation
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -520,8 +508,6 @@ templates:
       feature: chaos
       key: loot_painting_flame_hymn
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -531,8 +517,6 @@ templates:
       feature: chaos
       key: loot_summoning_ritual_disk
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -542,8 +526,6 @@ templates:
       feature: chaos
       key: loot_beacon_ring
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -553,8 +535,6 @@ templates:
       feature: chaos
       key: loot_painting_suppression_night
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -564,8 +544,6 @@ templates:
       feature: chaos
       key: loot_temple_investigation_badge
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -575,8 +553,6 @@ templates:
       feature: chaos
       key: loot_sealed_letter
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -586,8 +562,6 @@ templates:
       feature: chaos
       key: loot_alchemy_flask
     search_roi: loot_cards
-    threshold: 0.9
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -598,13 +572,13 @@ templates:
       key: loot_reroll_anchor
     search_roi: loot_reroll
     threshold: 0.45
-    structure_threshold: 0.82
+    structure_threshold: 0.8
   home_battle:
     resource:
       feature: chaos
       key: home_battle
     search_roi: home_battle
-    threshold: 0.968
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -617,7 +591,7 @@ templates:
       feature: chaos
       key: battle_title
     search_roi: title
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.12
@@ -630,7 +604,7 @@ templates:
       feature: chaos
       key: exploration_card
     search_roi: exploration_card
-    threshold: 0.95
+    threshold: 0.9
     structure_threshold: 0.8
     # Preserve the card-centre click after the exact text crop at (68, 7).
     action:
@@ -647,7 +621,7 @@ templates:
       feature: chaos
       key: exploration_back
     search_roi: title
-    threshold: 0.952
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.1
@@ -660,7 +634,7 @@ templates:
       feature: chaos
       key: intro_enter
     search_roi: intro_enter
-    threshold: 0.968
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -673,7 +647,7 @@ templates:
       feature: chaos
       key: lobby_research
     search_roi: research
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -684,7 +658,7 @@ templates:
       feature: chaos
       key: lobby_abandon
     search_roi: lobby_abandon
-    threshold: 0.9
+    threshold: 0.85
     structure_threshold: 0.8
     action: [0.5, 0.5]
     priority: null
@@ -695,7 +669,7 @@ templates:
       feature: chaos
       key: abandon_prompt
     search_roi: abandon_prompt
-    threshold: 0.9
+    threshold: 0.85
     structure_threshold: 0.8
     action: null
     priority: null
@@ -706,7 +680,7 @@ templates:
       feature: chaos
       key: unclaimed_confirm
     search_roi: confirm
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: [0.5, 0.5]
     priority: null
@@ -717,7 +691,7 @@ templates:
       feature: chaos
       key: start_exploration
     search_roi: bottom_right
-    threshold: 0.966
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -730,7 +704,7 @@ templates:
       feature: chaos
       key: stage_one
     search_roi: lobby_stage_text
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -741,7 +715,7 @@ templates:
       feature: chaos
       key: contract
     search_roi: supply_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -754,7 +728,7 @@ templates:
       feature: chaos
       key: contract_selected
     search_roi: supply_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -765,7 +739,7 @@ templates:
       feature: chaos
       key: supply_confirm
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -778,7 +752,7 @@ templates:
       feature: chaos
       key: ticket_thief
     search_roi: tickets
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -792,7 +766,7 @@ templates:
       feature: chaos
       key: title_thief
     search_roi: title
-    threshold: 0.964
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -803,7 +777,7 @@ templates:
       feature: chaos
       key: ticket_soul
     search_roi: tickets
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -817,7 +791,7 @@ templates:
       feature: chaos
       key: title_soul
     search_roi: title
-    threshold: 0.964
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -828,7 +802,7 @@ templates:
       feature: chaos
       key: ticket_warrior
     search_roi: tickets
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -842,7 +816,7 @@ templates:
       feature: chaos
       key: title_warrior
     search_roi: title
-    threshold: 0.964
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -853,7 +827,7 @@ templates:
       feature: chaos
       key: ticket_knight
     search_roi: tickets
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -867,7 +841,7 @@ templates:
       feature: chaos
       key: title_knight
     search_roi: title
-    threshold: 0.963
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -878,7 +852,7 @@ templates:
       feature: chaos
       key: ticket_all
     search_roi: ticket_reward
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -892,7 +866,7 @@ templates:
       feature: chaos
       key: title_all
     search_roi: title
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -903,7 +877,7 @@ templates:
       feature: chaos
       key: filter_light
     search_roi: filter_button
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -916,7 +890,7 @@ templates:
       feature: chaos
       key: filter_dark
     search_roi: filter_button
-    threshold: 0.91
+    threshold: 0.85
     structure_threshold: 0.8
     action:
     - 0.5
@@ -929,7 +903,7 @@ templates:
       feature: chaos
       key: filter_icon_dark
     search_roi: filter_panel
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -942,7 +916,7 @@ templates:
       feature: chaos
       key: filter_icon_light
     search_roi: filter_panel
-    threshold: 0.967
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -955,7 +929,7 @@ templates:
       feature: chaos
       key: filter_icon_thief_filter
     search_roi: filter_panel
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -968,7 +942,7 @@ templates:
       feature: chaos
       key: filter_icon_fire
     search_roi: filter_panel
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -981,7 +955,7 @@ templates:
       feature: chaos
       key: filter_fire_selected
     search_roi: filter_fire_state
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -992,7 +966,7 @@ templates:
       feature: chaos
       key: filter_icon_water
     search_roi: filter_panel
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1005,7 +979,7 @@ templates:
       feature: chaos
       key: filter_water_selected
     search_roi: filter_water_state
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1016,7 +990,7 @@ templates:
       feature: chaos
       key: filter_dark_selected
     search_roi: filter_dark_state
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1027,7 +1001,7 @@ templates:
       feature: chaos
       key: filter_light_selected
     search_roi: filter_light_state
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1038,7 +1012,7 @@ templates:
       feature: chaos
       key: filter_thief_selected
     search_roi: filter_thief_state
-    threshold: 0.961
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1049,7 +1023,7 @@ templates:
       feature: chaos
       key: hero_twins
     search_roi: hero_list
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1062,7 +1036,7 @@ templates:
       feature: chaos
       key: recruited_twins
     search_roi: recruit_results
-    threshold: 0.952
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1073,7 +1047,7 @@ templates:
       feature: chaos
       key: selected_name_twins
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1084,7 +1058,7 @@ templates:
       feature: chaos
       key: hero_ivanna
     search_roi: hero_list
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1097,7 +1071,7 @@ templates:
       feature: chaos
       key: recruited_ivanna
     search_roi: recruit_results
-    threshold: 0.959
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1108,7 +1082,7 @@ templates:
       feature: chaos
       key: selected_name_ivanna
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1119,7 +1093,7 @@ templates:
       feature: chaos
       key: hero_xiaochun
     search_roi: hero_list
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1132,7 +1106,7 @@ templates:
       feature: chaos
       key: recruited_xiaochun
     search_roi: recruit_results
-    threshold: 0.963
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1143,7 +1117,7 @@ templates:
       feature: chaos
       key: selected_name_xiaochun
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1154,7 +1128,7 @@ templates:
       feature: chaos
       key: hero_arowell
     search_roi: hero_list
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1167,7 +1141,7 @@ templates:
       feature: chaos
       key: recruited_arowell
     search_roi: recruit_results
-    threshold: 0.961
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1178,7 +1152,7 @@ templates:
       feature: chaos
       key: selected_name_arowell
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1189,7 +1163,7 @@ templates:
       feature: chaos
       key: selected_name_teacher
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1200,7 +1174,7 @@ templates:
       feature: chaos
       key: recruited_teacher_initial
     search_roi: recruit_results
-    threshold: 0.959
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1211,7 +1185,7 @@ templates:
       feature: chaos
       key: hero_shadow_rose
     search_roi: hero_list
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1224,7 +1198,7 @@ templates:
       feature: chaos
       key: selected_name_shadow_rose
     search_roi: hero_detail_name
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1235,7 +1209,7 @@ templates:
       feature: chaos
       key: recruited_shadow_rose
     search_roi: recruit_results
-    threshold: 0.959
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1246,7 +1220,7 @@ templates:
       feature: chaos
       key: hero_teacher
     search_roi: hero_list
-    threshold: 0.92
+    threshold: 0.85
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1259,7 +1233,7 @@ templates:
       feature: chaos
       key: recruited_teacher
     search_roi: ticket_reward
-    threshold: 0.93
+    threshold: 0.85
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1270,7 +1244,7 @@ templates:
       feature: chaos
       key: hero_selected_border
     search_roi: hero_list
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1281,7 +1255,7 @@ templates:
       feature: chaos
       key: recruit_confirm
     search_roi: bottom_right
-    threshold: 0.967
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1294,7 +1268,7 @@ templates:
       feature: chaos
       key: recruit_enter
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1307,7 +1281,7 @@ templates:
       feature: chaos
       key: map_hero
     search_roi: map_hero
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1318,7 +1292,7 @@ templates:
       feature: chaos
       key: map_title_outer
     search_roi: title
-    threshold: 0.964
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1329,7 +1303,7 @@ templates:
       feature: chaos
       key: map_title_center
     search_roi: title
-    threshold: 0.963
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1340,7 +1314,7 @@ templates:
       feature: chaos
       key: map_title_deep
     search_roi: title
-    threshold: 0.963
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1351,7 +1325,7 @@ templates:
       feature: chaos
       key: node_normal
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1364,7 +1338,7 @@ templates:
       feature: chaos
       key: node_event
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1377,7 +1351,7 @@ templates:
       feature: chaos
       key: node_rest
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1390,7 +1364,7 @@ templates:
       feature: chaos
       key: node_shop
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1403,7 +1377,7 @@ templates:
       feature: chaos
       key: node_boss
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1416,7 +1390,7 @@ templates:
       feature: chaos
       key: node_elite
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1429,7 +1403,7 @@ templates:
       feature: chaos
       key: node_loot
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1442,7 +1416,7 @@ templates:
       feature: chaos
       key: node_triangle
     search_roi: map
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1453,7 +1427,7 @@ templates:
       feature: chaos
       key: node_enter
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1466,7 +1440,7 @@ templates:
       feature: chaos
       key: prepare_normal
     search_roi: title
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1477,7 +1451,7 @@ templates:
       feature: chaos
       key: prepare_elite
     search_roi: title
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1488,7 +1462,7 @@ templates:
       feature: chaos
       key: prepare_boss
     search_roi: title
-    threshold: 0.969
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1499,7 +1473,7 @@ templates:
       feature: chaos
       key: start_battle
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1523,7 +1497,7 @@ templates:
       feature: chaos
       key: levelup
     search_roi: levelup
-    threshold: 0.958
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1534,7 +1508,7 @@ templates:
       feature: chaos
       key: levelup_close
     search_roi: levelup_close
-    threshold: 0.959
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1547,7 +1521,7 @@ templates:
       feature: chaos
       key: victory
     search_roi: victory
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1558,7 +1532,7 @@ templates:
       feature: chaos
       key: failed
     search_roi: failed
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: [0.5, 0.5]
     priority: null
@@ -1569,7 +1543,7 @@ templates:
       feature: chaos
       key: continue_exploration
     search_roi: bottom_center
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1582,7 +1556,7 @@ templates:
       feature: chaos
       key: elite_choose_reward
     search_roi: elite_reward
-    threshold: 0.962
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1595,7 +1569,7 @@ templates:
       feature: chaos
       key: elite_choose_reward
     search_roi: boss_reward
-    threshold: 0.962
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1608,7 +1582,7 @@ templates:
       feature: chaos
       key: elite_claim_complete
     search_roi: elite_claim
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1619,7 +1593,7 @@ templates:
       feature: chaos
       key: boss_claim_complete
     search_roi: boss_claim
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1630,7 +1604,7 @@ templates:
       feature: chaos
       key: unclaimed_prompt
     search_roi: reward_leave_text
-    threshold: 0.954
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1641,7 +1615,7 @@ templates:
       feature: chaos
       key: unclaimed_confirm
     search_roi: confirm
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1654,7 +1628,7 @@ templates:
       feature: chaos
       key: journey_result
     search_roi: run_title
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1665,7 +1639,7 @@ templates:
       feature: chaos
       key: journey_close
     search_roi: result_close
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1678,7 +1652,7 @@ templates:
       feature: chaos
       key: camp_rank
     search_roi: camp_action
-    threshold: 0.957
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1691,7 +1665,7 @@ templates:
       feature: chaos
       key: camp_rank_done
     search_roi: camp_action
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1702,7 +1676,7 @@ templates:
       feature: chaos
       key: rank_title
     search_roi: title
-    threshold: 0.967
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1713,7 +1687,7 @@ templates:
       feature: chaos
       key: rank_confirm
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1726,7 +1700,7 @@ templates:
       feature: chaos
       key: event_grimoire
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.5189944134078213
@@ -1739,7 +1713,7 @@ templates:
       feature: chaos
       key: rank_value_1
     search_roi: rank_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1750,7 +1724,7 @@ templates:
       feature: chaos
       key: rank_value_2
     search_roi: rank_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1761,7 +1735,7 @@ templates:
       feature: chaos
       key: rank_value_3
     search_roi: rank_result
-    threshold: 0.94
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1772,7 +1746,7 @@ templates:
       feature: chaos
       key: rank_value_4
     search_roi: rank_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1783,7 +1757,7 @@ templates:
       feature: chaos
       key: rank_value_5
     search_roi: rank_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1794,7 +1768,7 @@ templates:
       feature: chaos
       key: rank_close
     search_roi: result_close
-    threshold: 0.92
+    threshold: 0.85
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1807,7 +1781,7 @@ templates:
       feature: chaos
       key: shop_leave
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1820,7 +1794,7 @@ templates:
       feature: chaos
       key: bench_teacher
     search_roi: bench
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1833,7 +1807,7 @@ templates:
       feature: chaos
       key: bench_arowell
     search_roi: bench
-    threshold: 0.93
+    threshold: 0.85
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1844,7 +1818,7 @@ templates:
       feature: chaos
       key: bench_selected
     search_roi: bench
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1855,7 +1829,7 @@ templates:
       feature: chaos
       key: formation_knight
     search_roi: formation
-    threshold: 0.954
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -1866,7 +1840,7 @@ templates:
       feature: chaos
       key: replace_button
     search_roi: formation
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1885,7 +1859,7 @@ templates:
       feature: chaos
       key: event_torch
     search_roi: event_options
-    threshold: 0.966
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9166666666666666
@@ -1898,7 +1872,7 @@ templates:
       feature: chaos
       key: event_mimic
     search_roi: event_options
-    threshold: 0.966
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.961038961038961
@@ -1911,7 +1885,7 @@ templates:
       feature: chaos
       key: text_continue
     search_roi: text_continue
-    threshold: 0.89
+    threshold: 0.85
     structure_threshold: 0.8
     action:
     - 0.5
@@ -1924,8 +1898,6 @@ templates:
       feature: chaos
       key: loot_ominous_crystal
     search_roi: loot_cards
-    threshold: 0.968
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -1937,8 +1909,6 @@ templates:
       feature: chaos
       key: loot_old_sword
     search_roi: loot_cards
-    threshold: 0.961
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -1950,8 +1920,6 @@ templates:
       feature: chaos
       key: loot_lightning
     search_roi: loot_cards
-    threshold: 0.968
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -1963,8 +1931,6 @@ templates:
       feature: chaos
       key: loot_dimension_core
     search_roi: loot_cards
-    threshold: 0.93
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -1976,8 +1942,6 @@ templates:
       feature: chaos
       key: loot_priest_ring
     search_roi: loot_cards
-    threshold: 0.93
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -1989,8 +1953,6 @@ templates:
       feature: chaos
       key: loot_star_shard
     search_roi: loot_cards
-    threshold: 0.968
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2002,8 +1964,6 @@ templates:
       feature: chaos
       key: loot_confession
     search_roi: loot_cards
-    threshold: 0.963
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2015,8 +1975,6 @@ templates:
       feature: chaos
       key: loot_sky_gate
     search_roi: loot_cards
-    threshold: 0.968
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2028,8 +1986,6 @@ templates:
       feature: chaos
       key: loot_painting_guard
     search_roi: loot_cards
-    threshold: 0.97
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2041,8 +1997,6 @@ templates:
       feature: chaos
       key: loot_painting_fire
     search_roi: loot_cards
-    threshold: 0.97
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2054,8 +2008,6 @@ templates:
       feature: chaos
       key: loot_painting_mez
     search_roi: loot_cards
-    threshold: 0.97
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2067,8 +2019,6 @@ templates:
       feature: chaos
       key: loot_automaton_heart
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2080,8 +2030,6 @@ templates:
       feature: chaos
       key: loot_sun_shield
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2093,8 +2041,6 @@ templates:
       feature: chaos
       key: loot_dimension_pouch
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2106,8 +2052,6 @@ templates:
       feature: chaos
       key: loot_painting_panorama
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2119,8 +2063,6 @@ templates:
       feature: chaos
       key: loot_painting_sanctuary
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2132,8 +2074,6 @@ templates:
       feature: chaos
       key: loot_painting_blind_war
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2145,8 +2085,6 @@ templates:
       feature: chaos
       key: loot_statue_two_faces
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2158,8 +2096,6 @@ templates:
       feature: chaos
       key: loot_tablet_persecution
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2171,8 +2107,6 @@ templates:
       feature: chaos
       key: loot_chalice_offering
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2184,8 +2118,6 @@ templates:
       feature: chaos
       key: loot_chalice_redemption
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2197,8 +2129,6 @@ templates:
       feature: chaos
       key: loot_ancient_key
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2210,8 +2140,6 @@ templates:
       feature: chaos
       key: loot_world_tree_leaf
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2223,8 +2151,6 @@ templates:
       feature: chaos
       key: loot_star_book
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2236,8 +2162,6 @@ templates:
       feature: chaos
       key: loot_beast_scale
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2249,8 +2173,6 @@ templates:
       feature: chaos
       key: loot_statue_gazer
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2262,8 +2184,6 @@ templates:
       feature: chaos
       key: loot_tablet_prosperity
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2275,8 +2195,6 @@ templates:
       feature: chaos
       key: loot_painting_cosmos
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2288,8 +2206,6 @@ templates:
       feature: chaos
       key: loot_painting_apostasy
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2301,8 +2217,6 @@ templates:
       feature: chaos
       key: loot_chalice_silent
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2314,8 +2228,6 @@ templates:
       feature: chaos
       key: loot_painting_silent_agreement
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2327,8 +2239,6 @@ templates:
       feature: chaos
       key: loot_painting_forgotten_legend
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2340,8 +2250,6 @@ templates:
       feature: chaos
       key: loot_statue_sleeping_priest
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2353,8 +2261,6 @@ templates:
       feature: chaos
       key: loot_tablet_dusk_stars
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2366,8 +2272,6 @@ templates:
       feature: chaos
       key: loot_priest_unfinished_record
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2379,8 +2283,6 @@ templates:
       feature: chaos
       key: loot_old_shield
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2392,8 +2294,6 @@ templates:
       feature: chaos
       key: loot_twin_star_ring
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2405,8 +2305,6 @@ templates:
       feature: chaos
       key: loot_summon_mark
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2418,8 +2316,6 @@ templates:
       feature: chaos
       key: loot_dice_hero
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2431,8 +2327,6 @@ templates:
       feature: chaos
       key: loot_tablet_sleeping_forest
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action:
     - 0.5
     - 0.43
@@ -2444,7 +2338,7 @@ templates:
       feature: chaos
       key: loot_selected
     search_roi: loot_cards
-    threshold: 0.966
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2455,7 +2349,7 @@ templates:
       feature: chaos
       key: loot_confirm
     search_roi: bottom_center
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2468,7 +2362,7 @@ templates:
       feature: chaos
       key: supply_get_loot
     search_roi: supply_action
-    threshold: 0.966
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2481,7 +2375,7 @@ templates:
       feature: chaos
       key: supply_loot_done
     search_roi: supply_action
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2492,7 +2386,7 @@ templates:
       feature: chaos
       key: shop_leave
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2505,7 +2399,7 @@ templates:
       feature: chaos
       key: investment_insufficient_item
     search_roi: shop_cards
-    threshold: 0.968
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2516,7 +2410,7 @@ templates:
       feature: chaos
       key: health_restore
     search_roi: shop_cards
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2527,7 +2421,7 @@ templates:
       feature: chaos
       key: shop_health_entry
     search_roi: shop_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2540,7 +2434,7 @@ templates:
       feature: chaos
       key: health_restore_unavailable
     search_roi: shop_cards
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2551,7 +2445,7 @@ templates:
       feature: chaos
       key: purchase_health_restore
     search_roi: buy_item
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2562,7 +2456,7 @@ templates:
       feature: chaos
       key: health_restore_done
     search_roi: shop_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2573,7 +2467,7 @@ templates:
       feature: chaos
       key: investment
     search_roi: shop_cards
-    threshold: 0.968
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2584,7 +2478,7 @@ templates:
       feature: chaos
       key: shop_health_entry
     search_roi: shop_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2597,7 +2491,7 @@ templates:
       feature: chaos
       key: purchase_title
     search_roi: purchase_title_search
-    threshold: 0.965
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2608,7 +2502,7 @@ templates:
       feature: chaos
       key: purchase_item
     search_roi: buy_item
-    threshold: 0.968
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2619,7 +2513,7 @@ templates:
       feature: chaos
       key: purchase_confirm
     search_roi: buy_button
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2632,7 +2526,7 @@ templates:
       feature: chaos
       key: investment_done
     search_roi: shop_cards
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2643,7 +2537,7 @@ templates:
       feature: chaos
       key: shop_leave
     search_roi: bottom_right
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2656,7 +2550,7 @@ templates:
       feature: chaos
       key: shop_leave_prompt
     search_roi: shop_leave_text
-    threshold: 0.95
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2667,7 +2561,7 @@ templates:
       feature: chaos
       key: unclaimed_confirm
     search_roi: confirm
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2680,7 +2574,7 @@ templates:
       feature: common
       key: network_connection_abnormal
     search_roi: network_error
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2691,7 +2585,7 @@ templates:
       feature: common
       key: network_retry
     search_roi: network_retry
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2702,7 +2596,7 @@ templates:
       feature: chaos
       key: stage_three
     search_roi: lobby_stage_text
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2737,7 +2631,7 @@ templates:
       feature: chaos
       key: story_skip
     search_roi: story_skip
-    threshold: 0.93
+    threshold: 0.85
     structure_threshold: 0.8
     action: [0.5, 0.5303030303030303]
     action_offset: [24, 0]
@@ -2746,7 +2640,7 @@ templates:
       feature: chaos
       key: story_skip_prompt
     search_roi: story_skip_prompt
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
   story_skip_confirm:
@@ -2754,7 +2648,7 @@ templates:
       feature: chaos
       key: unclaimed_confirm
     search_roi: confirm
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action: [0.5, 0.5]
   stage_two:
@@ -2762,7 +2656,7 @@ templates:
       feature: chaos
       key: stage_two
     search_roi: lobby_stage_text
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2773,7 +2667,7 @@ templates:
       feature: chaos
       key: stage_four
     search_roi: lobby_stage_text
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2784,7 +2678,7 @@ templates:
       feature: chaos
       key: stage_five
     search_roi: lobby_stage_text
-    threshold: 0.93
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2839,7 +2733,7 @@ templates:
       feature: chaos
       key: stage_confirm
     search_roi: bottom_center
-    threshold: 0.97
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2852,7 +2746,7 @@ templates:
       feature: chaos
       key: event_trap
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.17973231357552583
@@ -2865,7 +2759,7 @@ templates:
       feature: chaos
       key: prepare_event
     search_roi: title
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -2876,7 +2770,7 @@ templates:
       feature: chaos
       key: rank_close
     search_roi: result_close
-    threshold: 0.92
+    threshold: 0.85
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2889,7 +2783,7 @@ templates:
       feature: chaos
       key: event_tablet
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8594249201277955
@@ -2902,7 +2796,7 @@ templates:
       feature: chaos
       key: event_tablet_continue
     search_roi: bottom_center
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -2915,7 +2809,7 @@ templates:
       feature: chaos
       key: event_vestment
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.09769484083424808
@@ -2928,7 +2822,7 @@ templates:
       feature: chaos
       key: event_vestment_with_loot
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.10035005834305717
@@ -2941,7 +2835,7 @@ templates:
       feature: chaos
       key: event_vestment_no_loot
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.10029154518950437
@@ -2954,7 +2848,7 @@ templates:
       feature: chaos
       key: event_golem
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8867735470941884
@@ -2967,7 +2861,7 @@ templates:
       feature: chaos
       key: event_giant_eye
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8602320675105485
@@ -2980,7 +2874,7 @@ templates:
       feature: chaos
       key: event_prison
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.13318284424379231
@@ -2993,7 +2887,7 @@ templates:
       feature: chaos
       key: event_cage
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.10788149804359978
@@ -3006,7 +2900,7 @@ templates:
       feature: chaos
       key: event_altar
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9530892448512586
@@ -3019,7 +2913,7 @@ templates:
       feature: chaos
       key: event_sword
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.10021668472372698
@@ -3032,7 +2926,7 @@ templates:
       feature: chaos
       key: event_cairn
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.26737967914438504
@@ -3045,7 +2939,7 @@ templates:
       feature: chaos
       key: event_mushroom
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.13955928646379853
@@ -3058,7 +2952,7 @@ templates:
       feature: chaos
       key: event_backpack
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.27110694183864914, 0.125]
     priority: null
@@ -3069,7 +2963,7 @@ templates:
       feature: chaos
       key: event_spirit_door
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.7462057335581788, 0.125]
     priority: null
@@ -3080,7 +2974,7 @@ templates:
       feature: chaos
       key: event_ghost
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.75, 0.125]
     priority: null
@@ -3091,7 +2985,7 @@ templates:
       feature: chaos
       key: event_erased_records
     search_roi: event_options
-    threshold: 0.95
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.8965724594107035, 0.125]
     priority: null
@@ -3102,7 +2996,7 @@ templates:
       feature: chaos
       key: event_fairy_dance
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.7719298245614035, 0.13291139240506328]
     priority: null
@@ -3113,7 +3007,7 @@ templates:
       feature: chaos
       key: event_blue_flame_altar
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.7758620689655172, 0.13291139240506328]
     priority: null
@@ -3124,7 +3018,7 @@ templates:
       feature: chaos
       key: event_broken_mask
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.4871373836891078, 0.13291139240506328]
     priority: null
@@ -3135,7 +3029,7 @@ templates:
       feature: chaos
       key: event_ancient_corridor
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action: [0.20293847566574838, 0.1337579617834395]
     priority: null
@@ -3146,7 +3040,7 @@ templates:
       feature: chaos
       key: event_angry_inscription
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8263305322128851
@@ -3159,7 +3053,7 @@ templates:
       feature: chaos
       key: event_ancient_stele
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.7429305912596401
@@ -3172,7 +3066,7 @@ templates:
       feature: chaos
       key: event_blood_meteorite
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9533560864618885
@@ -3185,7 +3079,7 @@ templates:
       feature: chaos
       key: event_windy_cliff
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8525021949078139
@@ -3198,7 +3092,7 @@ templates:
       feature: chaos
       key: event_forked_path
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.2283464566929134
@@ -3211,7 +3105,7 @@ templates:
       feature: chaos
       key: event_starlight_flower
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.1089820359281437
@@ -3224,7 +3118,7 @@ templates:
       feature: chaos
       key: event_grieving_woman
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.5044713308784851
@@ -3237,7 +3131,7 @@ templates:
       feature: chaos
       key: event_withered_garden
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9055982436882547
@@ -3250,7 +3144,7 @@ templates:
       feature: chaos
       key: event_prayer_room
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8694362017804155
@@ -3263,7 +3157,7 @@ templates:
       feature: chaos
       key: event_golden_patterns
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.5276732939279957
@@ -3276,7 +3170,7 @@ templates:
       feature: chaos
       key: event_clear_pond_low_health
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.21243523316062177
@@ -3286,7 +3180,7 @@ templates:
       feature: chaos
       key: event_clear_pond
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8169257340241797
@@ -3299,7 +3193,7 @@ templates:
       feature: chaos
       key: event_warning_sign_low_health
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9069264069264069
@@ -3309,7 +3203,7 @@ templates:
       feature: chaos
       key: event_warning_sign
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9069264069264069
@@ -3322,7 +3216,7 @@ templates:
       feature: chaos
       key: event_mysterious_footprints
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.9192399049881235
@@ -3335,7 +3229,7 @@ templates:
       feature: chaos
       key: event_old_armory
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.5255562236921226
@@ -3348,7 +3242,7 @@ templates:
       feature: chaos
       key: event_old_armory_left
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.1829393627954779
@@ -3361,7 +3255,7 @@ templates:
       feature: chaos
       key: event_blood_circle
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.48131868131868133
@@ -3374,7 +3268,7 @@ templates:
       feature: chaos
       key: event_rank_enter
     search_roi: event_rank_entry
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -3387,7 +3281,7 @@ templates:
       feature: chaos
       key: event_library
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.15171755725190839
@@ -3400,7 +3294,7 @@ templates:
       feature: chaos
       key: event_flame
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.09347826086956522
@@ -3413,7 +3307,7 @@ templates:
       feature: chaos
       key: event_torn_map
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8174342105263158
@@ -3426,7 +3320,7 @@ templates:
       feature: chaos
       key: event_torn_map_path
     search_roi: event_options
-    threshold: 0.92
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8174342105263158
@@ -3439,7 +3333,7 @@ templates:
       feature: chaos
       key: event_mural
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8960612691466083
@@ -3452,7 +3346,7 @@ templates:
       feature: chaos
       key: event_blood_shelter
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.10185706246482837
@@ -3465,7 +3359,7 @@ templates:
       feature: chaos
       key: event_passage
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.513095238095238
@@ -3478,7 +3372,7 @@ templates:
       feature: chaos
       key: event_observatory
     search_roi: event_options
-    threshold: 0.96
+    threshold: 0.90
     structure_threshold: 0.8
     action:
     - 0.8550474547023296
@@ -3491,7 +3385,7 @@ templates:
       feature: chaos
       key: event_recruit_enter
     search_roi: event_rank_entry
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action:
     - 0.5
@@ -3504,7 +3398,7 @@ templates:
       feature: chaos
       key: event_battle_rank_done
     search_roi: event_battle_rank_result
-    threshold: 0.96
+    threshold: 0.9
     structure_threshold: 0.8
     action: null
     priority: null
@@ -3515,8 +3409,6 @@ templates:
       feature: chaos
       key: loot_moon_charm
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3526,8 +3418,6 @@ templates:
       feature: chaos
       key: loot_shrine_fragment
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3537,8 +3427,6 @@ templates:
       feature: chaos
       key: loot_statue_star_child
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -3548,8 +3436,6 @@ templates:
       feature: chaos
       key: loot_tablet_comet_prophecy
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3559,8 +3445,6 @@ templates:
       feature: chaos
       key: loot_tablet_silver_oath
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3570,8 +3454,6 @@ templates:
       feature: chaos
       key: loot_chalice_dark_communion
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3581,8 +3463,6 @@ templates:
       feature: chaos
       key: loot_painting_star_mineral
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -3592,8 +3472,6 @@ templates:
       feature: chaos
       key: loot_time_sand
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3603,8 +3481,6 @@ templates:
       feature: chaos
       key: loot_painting_ruins_below
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3614,8 +3490,6 @@ templates:
       feature: chaos
       key: loot_dice_fate
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 0
     deferred: false
@@ -3625,8 +3499,6 @@ templates:
       feature: chaos
       key: loot_transcendence_crystal
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3636,8 +3508,6 @@ templates:
       feature: chaos
       key: loot_statue_whisperer
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3647,8 +3517,6 @@ templates:
       feature: chaos
       key: loot_statue_lost_light
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3658,8 +3526,6 @@ templates:
       feature: chaos
       key: loot_statue_guardian_judgment
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3669,8 +3535,6 @@ templates:
       feature: chaos
       key: loot_statue_prayer
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3680,8 +3544,6 @@ templates:
       feature: chaos
       key: loot_chalice_seal_hymn
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3691,8 +3553,6 @@ templates:
       feature: chaos
       key: loot_tablet_comet_altar
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3702,8 +3562,6 @@ templates:
       feature: chaos
       key: loot_starlight_bottle
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3713,8 +3571,6 @@ templates:
       feature: chaos
       key: loot_dimension_crystal_pillar
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3724,8 +3580,6 @@ templates:
       feature: chaos
       key: loot_dice_revival
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false
@@ -3735,8 +3589,6 @@ templates:
       feature: chaos
       key: loot_dead_compass
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3746,8 +3598,6 @@ templates:
       feature: chaos
       key: loot_tablet_flame_record
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 2
     deferred: false
@@ -3757,8 +3607,6 @@ templates:
       feature: chaos
       key: loot_guardian_claw
     search_roi: loot_cards
-    threshold: 0.94
-    structure_threshold: 0.8
     action: null
     priority: 1
     deferred: false

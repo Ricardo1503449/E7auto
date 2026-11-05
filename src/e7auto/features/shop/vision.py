@@ -21,10 +21,13 @@ class ShopVision:
     """Shop detectors composed from shared matching and glyph services."""
     def __init__(self, config: AppConfig, templates: TemplateRepository):
         self._config = config
+        self._shop_default_confidence = (config.default_confidence if config.shop_default_confidence is None
+                                         else config.shop_default_confidence)
         self._templates = templates
         self._targets = config.targets
         self._targets_by_id = {target.target_id: target for target in config.targets}
-        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024))
+        self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
+                                        structure_thresholds=config.template_structure_thresholds)
         self._digits = DigitMatcher(templates, config.template_paths)
         self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
@@ -87,7 +90,7 @@ class ShopVision:
             frame,
             "refresh_confirm_prompt",
             self._config.rois["refresh_confirm_prompt"],
-            self._config.default_confidence,
+            self._shop_default_confidence,
         )
         if prompt is None:
             return None
@@ -113,15 +116,18 @@ class ShopVision:
             frame,
             target.confirm_template,
             self._config.rois["confirm_item"],
-            self._config.default_confidence,
+            self._shop_default_confidence,
         )
         if identity is None:
             return None
+        threshold = self._config.confirm_button_confidence
+        if threshold is None:
+            threshold = self._config.anchor_confidence
         button = self.match(
             frame,
             "confirm_button",
             self._config.rois["confirm_button"],
-            self._config.anchor_confidence,
+            threshold,
         )
         if button is None:
             return None
@@ -148,7 +154,7 @@ class ShopVision:
             frame,
             target.purchased_template,
             item_roi,
-            self._config.default_confidence,
+            self._shop_default_confidence,
         )
         if success is not None:
             return PurchaseOutcome.SUCCESS
@@ -176,7 +182,10 @@ class ShopVision:
         baseline = self._config.baseline_client_size
         if roi.x < 0 or roi.y < 0 or roi.right > baseline.width or roi.bottom > baseline.height:
             return None
-        return self.match(frame, "purchased_button", roi, self._config.anchor_confidence)
+        threshold = self._config.purchased_button_confidence
+        if threshold is None:
+            threshold = self._config.anchor_confidence
+        return self.match(frame, "purchased_button", roi, threshold)
 
 
     def scan_inventory(
@@ -208,13 +217,13 @@ class ShopVision:
                     bgr_frame,
                     target.template,
                     slot.item_roi,
-                    self._config.default_confidence,
+                    self._shop_default_confidence,
                 )
                 purchased = self._matcher.match_bgr(
                     bgr_frame,
                     target.purchased_template,
                     slot.item_roi,
-                    self._config.default_confidence,
+                    self._shop_default_confidence,
                 )
                 if available is None and purchased is None:
                     continue

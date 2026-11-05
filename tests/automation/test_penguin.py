@@ -60,7 +60,7 @@ class PenguinGame:
             return None
         return PenguinDialog(None if self.uncertain else self.price,
                              self.obs("penguin_buy_5100"), self.obs("quantity_max"),
-                             self.obs("purchase_cancel"), self.price == 5100)
+                             self.obs("purchase_cancel"))
 
     def network_connection_error(self, frame):
         return self.obs("sanctuary_entry") if self.network else None
@@ -138,6 +138,26 @@ def test_reversible_actions_retry_one_dropped_click(action):
     assert game.actions.count("penguin_buy_5100") == 1
 
 
+def test_all_penguin_navigation_and_altar_handoffs_use_three_frames():
+    from collections import Counter
+    class Game(PenguinGame):
+        def __init__(self):
+            super().__init__()
+            self.reads = Counter()
+        def control(self, frame, name):
+            hit = super().control(frame, name)
+            if hit is not None:
+                self.reads[self.state, len(self.actions), name] += 1
+                count = self.reads[self.state, len(self.actions), name]
+                self.points[name] = Point(hit.anchor.x, 20+count)
+                hit = replace(hit, anchor=self.points[name])
+            return hit
+    game = Game()
+    final, _, _ = run(game, 2, config=make_config(stable_frames=3))
+    assert final.purchases_completed == 2 and game.state == 'home'
+    assert game.reads and set(game.reads.values()) == {3}
+
+
 def test_two_batches_only_set_max_once_and_return_home():
     final, snapshots, game = run(PenguinGame())
     assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
@@ -147,6 +167,57 @@ def test_two_batches_only_set_max_once_and_return_home():
     assert game.actions.count("penguin_buy_5100") == 2
     assert game.actions[-3:] == ["altar_close", "forest_back", "sanctuary_back"]
     assert game.state == "home"
+
+
+def test_purchase_uses_body_anchor_from_the_last_stable_price_frame():
+    class MovingButtonGame(PenguinGame):
+        detections = 0
+        submitted = None
+
+        def dialog(self, frame):
+            if self.state == 'dialog' and self.price == 5100:
+                self.detections += 1
+                self.points['penguin_buy_5100'] = Point(50+self.detections, 40)
+            return super().dialog(frame)
+
+        def click(self, point):
+            if self.state == 'dialog' and point == self.points['penguin_buy_5100']:
+                self.submitted = point
+            super().click(point)
+
+    game = MovingButtonGame()
+    initial = game.points['penguin_buy_5100']
+    final, _, game = run(game, 1, config=make_config(stable_frames=3))
+    assert final.stop_reason is StopReason.PENGUIN_LIMIT_COMPLETE
+    assert game.detections >= 3
+    assert game.submitted == game.points['penguin_buy_5100'] != initial
+    assert game.actions.count('penguin_buy_5100') == 1
+
+
+def test_price_requires_consecutive_stable_5100_frames_before_purchase():
+    class UnstablePriceGame(PenguinGame):
+        reads = 0
+        reads_at_purchase = None
+        after_max = False
+
+        def dialog(self, frame):
+            if self.state == 'dialog' and self.after_max:
+                values = [5100, 102, 5100, 5100, 5100]
+                self.price = values[min(self.reads, len(values)-1)]
+                self.reads += 1
+            return super().dialog(frame)
+
+        def click(self, point):
+            if point == self.points['penguin_buy_5100']:
+                self.reads_at_purchase = self.reads
+            super().click(point)
+            if self.actions[-1] == 'quantity_max':
+                self.after_max = True
+
+    final, _, game = run(UnstablePriceGame(), 1, config=make_config(stable_frames=3))
+    assert final.stop_reason is StopReason.PENGUIN_LIMIT_COMPLETE
+    assert game.reads_at_purchase == 5
+    assert game.actions.count('penguin_buy_5100') == 1
 
 
 @pytest.mark.parametrize("limit", [0, 1, 3])
@@ -196,6 +267,46 @@ def test_success_count_survives_close_failure_without_recounting():
     assert final.stop_reason == StopReason.RECOGNITION_TIMEOUT
     assert final.purchases_completed == 1
     assert game.actions.count("penguin_buy_5100") == 1
+
+
+@pytest.mark.parametrize('samples', [
+    [(True, True)] * 3,
+    [(True, False)] * 3 + [(False, True)] * 3 + [(True, True)] * 3,
+    [(True, True)] * 2 + [(True, False)] + [(True, True)] * 3,
+    [(True, True)] * 2 + [(False, True)] + [(True, True)] * 3,
+], ids=['together', 'separate_frames', 'close_gap', 'title_gap'])
+def test_reward_confirmation_shares_frames_and_clicks_the_last_close_anchor(samples):
+    class ResultGame(PenguinGame):
+        def __init__(self):
+            super().__init__()
+            self.result_frames = []
+            self.closed_at = None
+
+        def control(self, frame, name):
+            if self.state == 'result' and name in {'penguin_complete', 'reward_close'}:
+                if name == 'penguin_complete':
+                    self.result_frames.append(frame)
+                else:
+                    assert frame is self.result_frames[-1]
+                    self.points['reward_close'] = Point(200 + len(self.result_frames), 30)
+                present = samples[len(self.result_frames)-1][0 if name == 'penguin_complete' else 1]
+                return self.obs(name) if present else None
+            return super().control(frame, name)
+
+        def click(self, point):
+            if point == self.points['reward_close']:
+                self.closed_at = point
+            super().click(point)
+
+    config = make_config(stable_frames=3)
+    config = replace(config, timing=replace(config.timing, purchase_result_timeout_ms=5000,
+                                            entry_timeout_ms=5000))
+    final, _, game = run(ResultGame(), 1, config=config)
+    assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
+    assert final.purchases_completed == 1
+    assert len(game.result_frames) == len(samples)
+    assert game.closed_at == Point(200 + len(samples), 30)
+    assert game.actions.count('reward_close') == game.actions.count('penguin_buy_5100') == 1
 
 
 @pytest.mark.parametrize("stop_after", range(1, 14))
@@ -328,7 +439,7 @@ def test_sanctuary_unknown_page_after_click_does_not_authorize_retry():
     assert game.actions == ["sanctuary_entry"]
 
 
-def test_sanctuary_arrival_retains_independent_forest_preclick_recognition():
+def test_sanctuary_arrival_reuses_forest_confirmation_without_another_window():
     class DelayedSanctuary(PenguinGame):
         forest_reads = 0
         reads_when_clicked = None
@@ -351,9 +462,7 @@ def test_sanctuary_arrival_retains_independent_forest_preclick_recognition():
     final, _, game = run(DelayedSanctuary(), 1, config=config)
     assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
     assert game.actions.count("sanctuary_entry") == 1
-    # Keep the independent three-frame pre-click check for the forest entry.
-    # Only the main-screen sanctuary icon skips its former duplicate check.
-    assert game.reads_when_clicked == 11  # five missing + three arrival + three pre-click
+    assert game.reads_when_clicked == 8  # five missing + three arrival frames
 
 
 def test_manual_stop_during_sanctuary_retry_prevents_third_click():
@@ -420,7 +529,9 @@ def test_manual_stop_interrupts_long_sanctuary_animation_wait():
     control = StopController()
     clock.callback = lambda: control.request(StopReason.MANUAL_STOP)
     game = AnimatedSanctuary(clock, 20)
-    final, _, game = run(game, 1, clock=clock, control=control)
+    config = make_config()
+    config = replace(config, timing=replace(config.timing, entry_timeout_ms=5000))
+    final, _, game = run(game, 1, clock=clock, control=control, config=config)
     assert final.stop_reason == StopReason.MANUAL_STOP
     assert game.actions == ["sanctuary_entry"]
     assert clock.monotonic() < 2.1
@@ -459,6 +570,48 @@ class ReconnectingPenguinGame(PenguinGame):
             self.triggers.pop(0)
             self.network = True
             self.ready_at = self.clock.monotonic() + self.recovery_seconds
+
+
+@pytest.mark.parametrize('after_count', [False, True])
+def test_joint_reward_confirmation_restarts_after_recovery_without_recounting(after_count):
+    class ResultRecoveryGame(ReconnectingPenguinGame):
+        def __init__(self, clock):
+            super().__init__(clock, [])
+            self.result_samples = 0
+            self.recovered = False
+
+        def control(self, frame, name):
+            if self.state == 'result':
+                if name == 'penguin_complete':
+                    self.result_samples += 1
+                if name == 'reward_close' and not self.recovered:
+                    if self.result_samples == (3 if after_count else 2):
+                        self.network = True
+                        self.ready_at = self.clock.monotonic() + self.recovery_seconds
+                    if after_count:
+                        return None
+            return super().control(frame, name)
+
+        def click(self, point):
+            retry = self.network and point == Point(50, 40)
+            super().click(point)
+            if retry:
+                self.recovered = True
+
+    clock = FakeClock()
+    config = make_config(stable_frames=3)
+    config = replace(config, timing=replace(config.timing, purchase_result_timeout_ms=5000,
+                                            entry_timeout_ms=5000))
+    final, snapshots, game = run(ResultRecoveryGame(clock), 1, config=config, clock=clock)
+    assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
+    assert final.purchases_completed == 1
+    assert game.result_samples == (6 if after_count else 5)
+    assert game.actions.count('network_retry') == game.actions.count('penguin_buy_5100') == 1
+    assert game.actions.count('reward_close') == 1
+    reconnect = next(i for i, snapshot in enumerate(snapshots)
+                     if snapshot.overlay_status == OverlayActivityStatus.RECONNECTING)
+    assert snapshots[reconnect-1].purchases_completed == snapshots[reconnect+1].purchases_completed == int(after_count)
+    assert clock.monotonic() >= 12
 
 
 @pytest.mark.parametrize("trigger,status", [

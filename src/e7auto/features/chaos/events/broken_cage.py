@@ -4,7 +4,7 @@ from .context import EventContext
 
 
 def run(context: EventContext, event: Detection) -> None:
-    context.choose(event, next_page=lambda frame: context.vision.control(frame, "prepare_event"))
+    context.choose_battle(event)
     context.state.battle_floor = context.floor
     context.fight("prepare_event", ("event_reward_close",))
     context.state.reward_stage = "event_received"

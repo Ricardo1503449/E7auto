@@ -73,6 +73,24 @@ def voucher(game, flow, floor=2):
     game.state,game.kind='claimed','boss';flow._voucher()
 
 
+@pytest.mark.parametrize('lineup', ['dark_twins', 'budget'])
+def test_departure_title_and_target_share_the_preclick_frames(configs, monkeypatch, lineup):
+    game, flow, _ = setup(configs, lineup)
+    target = 'hero_'+flow.settings.lineup.departure_hero
+    original, titles, heroes = game.control, [], []
+    def control(frame, key, region=None):
+        hit = original(frame, key, region)
+        if frame['state'] == 'depart_select' and not frame['selected']:
+            if key == 'depart_title':titles.append(frame)
+            if key == target:heroes.append(frame)
+        return hit
+    monkeypatch.setattr(game, 'control', control)
+    flow._event()
+    assert len(titles) == len(heroes) == 3
+    assert all(a is b for a, b in zip(titles, heroes))
+    assert game.actions.count(target) == game.actions.count('depart_confirm') == 1
+
+
 @pytest.mark.parametrize('lineup',['dark_twins','budget'])
 @pytest.mark.parametrize('floor',[1,2,3])
 def test_departure_confirms_target_missing_two_distinct_cards_and_map(configs,lineup,floor):

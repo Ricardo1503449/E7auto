@@ -37,6 +37,42 @@ def load(root, *, target_stage=1):
     return with_chaos_config(load_config(root / "config/internal.yaml", template_profile="chaos"), target_stage=target_stage)
 
 
+@pytest.mark.parametrize('lineup_id', ['dark_twins', 'budget'])
+def test_loot_identities_load_without_full_template_thresholds(lineup_id):
+    raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
+    config = with_chaos_config(load_config(ROOT/'config/internal.yaml', template_profile='chaos'),
+                               lineup_id=lineup_id)
+    assert len(config.chaos.available_loot) == 76
+    for key in config.chaos.available_loot:
+        assert not {'threshold', 'structure_threshold'} & raw['templates'][key].keys()
+        scene = config.chaos.scenes[key]
+        assert scene.threshold is None and scene.structure is None
+    assert all(config.chaos.loot_recognition[key] == expected for key, expected in (
+        ('icon_threshold', .90), ('icon_structure', .80), ('name_threshold', .90), ('name_structure', .80)))
+
+
+@pytest.mark.parametrize('field,value', [('threshold', .94), ('structure_threshold', .80)])
+def test_loot_identity_rejects_obsolete_full_template_thresholds(tmp_path, field, value):
+    raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
+    raw['templates']['loot_old_sword'][field] = value
+    path = tmp_path/'chaos.yaml'
+    path.write_text(yaml.safe_dump(raw), encoding='utf8')
+    base = load_config(ROOT/'config/internal.yaml', template_profile='chaos')
+    with pytest.raises(ConfigError, match='loot identity must not declare full-template thresholds'):
+        with_chaos_config(base, path)
+
+
+@pytest.mark.parametrize('field', ['threshold', 'structure_threshold'])
+def test_ordinary_scene_still_requires_each_full_template_threshold(tmp_path, field):
+    raw = yaml.safe_load((ROOT/'config/chaos.yaml').read_text(encoding='utf8'))
+    del raw['templates']['loot_confirm'][field]
+    path = tmp_path/'chaos.yaml'
+    path.write_text(yaml.safe_dump(raw), encoding='utf8')
+    base = load_config(ROOT/'config/internal.yaml', template_profile='chaos')
+    with pytest.raises(ConfigError, match=field):
+        with_chaos_config(base, path)
+
+
 @pytest.mark.parametrize('value', [0, -1, True, 1.5, None])
 @pytest.mark.parametrize('key', ['loot_entry_settle_ms', 'supply_loot_entry_settle_ms'])
 def test_removed_loot_entry_delay_is_rejected_as_unknown(tmp_path, value, key):
@@ -338,7 +374,9 @@ def test_shop_health_resources_are_required(installation, damage, key):
 
 
 def test_investment_entry_uses_shared_button_without_old_numbered_template(installation):
-    image_path(installation, 'chaos', 'investment_entry').unlink()
+    catalog = json.loads((installation/'assets/templates/chaos/manifest.json').read_text(encoding='utf8'))
+    assert 'investment_entry' not in catalog['templates']
+    assert not (installation/'assets/templates/chaos/buttons/investment_entry.png').exists()
     config = load(installation)
     assert config.chaos.scenes['investment_entry'].template_key == 'chaos:shop_health_entry'
     assert config.chaos.scenes['investment_entry'].template_key == config.chaos.scenes['shop_health_entry'].template_key
@@ -758,8 +796,13 @@ def test_invalid_bindings_fail_closed(installation, change):
 
 
 def test_gray_reference_does_not_become_a_runtime_dependency(installation):
-    image_path(installation,'chaos','node_gray_boss').unlink()
-    assert "node_gray_boss" not in load(installation).chaos.scenes
+    catalog = json.loads((installation/'assets/templates/chaos/manifest.json').read_text(encoding='utf8'))
+    keys = {'node_gray_'+kind for kind in ('normal', 'event', 'loot', 'rest', 'shop', 'elite', 'boss')}
+    assert not keys & catalog['templates'].keys()
+    assert all(not (installation/'assets/templates/chaos/map'/f'{key}.png').exists() for key in keys)
+    config = load(installation)
+    assert not keys & config.chaos.scenes.keys()
+    assert not {'chaos:'+key for key in keys} & config.template_paths.keys()
 
 
 @pytest.mark.parametrize('key',['stage_01','stage_02','stage_03','stage_04','stage_05','stage_selected','stage_confirm'])

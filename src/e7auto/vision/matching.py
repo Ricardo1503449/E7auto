@@ -59,8 +59,9 @@ class SearchPreparation:
 
 class TemplateMatcher:
     """Match scaled immutable templates directly against captured client pixels."""
-    def __init__(self, templates, cache=None):
+    def __init__(self, templates, cache=None, *, structure_thresholds=None):
         self._templates = templates
+        self.structure_thresholds = dict(structure_thresholds or {})
         self.cache = cache if cache is not None else CandidateCache()
         self.baseline = BaselineMatcher(templates, self.cache)
 
@@ -85,12 +86,11 @@ class TemplateMatcher:
             yield self.cache.get(data,scale,phase=phase)
 
     @staticmethod
-    def scores(source, candidate, threshold, structure_threshold=None, *, force_color=False,prepared=None):
+    def scores(source, candidate, threshold, structure_threshold=None, *,prepared=None):
         template, mask = candidate.image,candidate.mask
         h,w = template.shape[:2]
         if source.shape[0]<h or source.shape[1]<w:
             return None
-        correlation=getattr(candidate,"color_correlation",mask is None) and not force_color
         structured=getattr(candidate,'structured',None)
         if structured is None:
             pixels=template.reshape(-1,3) if mask is None else template[mask>0]
@@ -99,9 +99,8 @@ class TemplateMatcher:
             return None
         rows,columns=source.shape[0]-h+1,source.shape[1]-w+1
         if rows*columns<=49:
-            return TemplateMatcher._small_scores(source,candidate,threshold,structure_threshold,correlation,prepared)
-        color = (1-cv2.matchTemplate(source,template,cv2.TM_SQDIFF_NORMED,mask=mask)
-                 if not correlation else cv2.matchTemplate(source,template,cv2.TM_CCOEFF_NORMED,mask=mask))
+            return TemplateMatcher._small_scores(source,candidate,threshold,structure_threshold,prepared)
+        color = 1-cv2.matchTemplate(source,template,cv2.TM_SQDIFF_NORMED,mask=mask)
         accepted = np.isfinite(color)&(color>=threshold)
         structure = None
         if structure_threshold is not None:
@@ -118,7 +117,7 @@ class TemplateMatcher:
         return np.where(accepted,color,-np.inf),structure
 
     @staticmethod
-    def _small_scores(source,candidate,threshold,structure_threshold,correlation,prepared=None):
+    def _small_scores(source,candidate,threshold,structure_threshold,prepared=None):
         t,mask=candidate.image,candidate.mask
         h,w=t.shape[:2];rows,columns=source.shape[0]-h+1,source.shape[1]-w+1
         prepared=ScoreData(candidate) if prepared is None else prepared
@@ -138,8 +137,8 @@ class TemplateMatcher:
             with np.errstate(invalid='ignore',divide='ignore'):
                 scores=1-(observed_energy+energy-2*cross)/denominator
             accepted=np.isfinite(scores)&(scores>=threshold)
-            if structure_threshold is not None or correlation:
-                if not correlation and not np.any(accepted):continue
+            if structure_threshold is not None:
+                if not np.any(accepted):continue
                 means=np.einsum('n,pnc->pc',weights,values)/weights.sum()
                 weighted_values=np.einsum('n,pnc->pc',squared,values)
                 observed_variance=observed_energy-2*np.einsum('pc,pc->p',means,weighted_values)+(means*means).sum(axis=1)*squared.sum()
@@ -147,7 +146,6 @@ class TemplateMatcher:
                 with np.errstate(invalid='ignore',divide='ignore'):
                     structures=numerator/np.sqrt(variance*np.maximum(observed_variance,0))
                 structures[observed_variance<=np.maximum(observed_energy,1)*1e-12]=-np.inf
-                if correlation:scores=structures;accepted=np.isfinite(scores)&(scores>=threshold)
                 if structure_threshold is not None:accepted&=np.isfinite(structures)&(structures>=structure_threshold)
             else:
                 structures=np.full(len(positions),-np.inf)
@@ -166,18 +164,22 @@ class TemplateMatcher:
         return Observation(key,min(1.,float(score)),bounds,anchor,region,structure,
                            (*candidate.size,round(candidate.phase[0]*4),round(candidate.phase[1]*4)),geometry)
 
-    def match(self,frame,template_key,roi,threshold):
-        return self.match_bgr(frame,template_key,roi,threshold)
+    def structure_threshold(self, key, explicit=None):
+        return self.structure_thresholds.get(key) if explicit is None else explicit
+
+    def match(self,frame,template_key,roi,threshold,*,structure_threshold=None):
+        return self.match_bgr(frame,template_key,roi,threshold,structure_threshold=structure_threshold)
 
     def recheck(self,frame,evidence,threshold,structure_threshold):
         """Re-evaluate current pixels at a previous placement; never reuse scores."""
+        structure_threshold = self.structure_threshold(evidence.object_id, structure_threshold)
         view=frame_view(frame)
         scale=(view.transform.scale_x,view.transform.scale_y)
         g=evidence.geometry
         if g is None or evidence.candidate_id is None or (g.scale_x,g.scale_y)!=scale:return None
         if view.transform.is_identity:
             return self.baseline.match(view,evidence.object_id,evidence.bounds,threshold,
-                                       structure_threshold,force_color=True)
+                                       structure_threshold)
         phase=tuple(v/4 for v in evidence.candidate_id[-2:])
         self.cache.geometry(view.transform)
         candidate=self.cache.get(self._templates.get(evidence.object_id),scale,phase=phase)
@@ -195,29 +197,32 @@ class TemplateMatcher:
                 pixels[y:y+patch.shape[0],x:x+patch.shape[1]]=patch.raw
                 ignored[y:y+patch.shape[0],x:x+patch.shape[1]]=False
             if candidate.mask is None or np.any(candidate.mask[ignored]>0):return None
-        scores=self.scores(pixels,candidate,threshold,structure_threshold,force_color=True,
+        scores=self.scores(pixels,candidate,threshold,structure_threshold,
                            prepared=self.cache.score_data(candidate))
         if scores is None:return None
-        return self.observation(evidence.object_id,scores[0][0,0],float(scores[1][0,0]),
+        return self.observation(evidence.object_id,scores[0][0,0],
+                                None if scores[1] is None else float(scores[1][0,0]),
                                 bounds.x,bounds.y,candidate,view.bounds)
 
     def match_entry(self,frame,template_key,roi,threshold,*,structure_threshold):
         return self.match_bgr(frame,template_key,roi,threshold,structure_threshold=structure_threshold)
 
     def match_bgr(self,bgr_frame,template_key,roi,threshold,*,structure_threshold=None):
+        structure_threshold = self.structure_threshold(template_key, structure_threshold)
         if frame_view(bgr_frame).transform.is_identity:
             return self.baseline.match(bgr_frame,template_key,roi,threshold,structure_threshold)
-        hits=self._search(bgr_frame,template_key,roi,threshold,structure_threshold,limit=1,force_color=False)
+        hits=self._search(bgr_frame,template_key,roi,threshold,structure_threshold,limit=1)
         return hits[0] if hits else None
 
     def locate_all(self,frame,template_key,roi,threshold,structure_threshold,*,limit=12,cancelled=None,exhaustive=False,preparation=None):
+        structure_threshold = self.structure_threshold(template_key, structure_threshold)
         if frame_view(frame).transform.is_identity:
             return self.baseline.locate_all(frame,template_key,roi,threshold,structure_threshold,
                                            limit=limit,cancelled=cancelled)
         return self._search(frame,template_key,roi,threshold,structure_threshold,limit=limit,
-                            force_color=True,cancelled=cancelled,exhaustive=exhaustive,preparation=preparation)
+                            cancelled=cancelled,exhaustive=exhaustive,preparation=preparation)
 
-    def _proposals(self,source,data,scale,threshold,limit,force_color,*,native=False,prepared_region=None):
+    def _proposals(self,source,data,scale,threshold,limit,*,native=False,prepared_region=None):
         # One broad native/coarse color query proposes locations. It cannot authorize
         # a detection; every proposal is verified on original pixels with both gates.
         factor=.5 if not native and source.shape[0]*source.shape[1]>120_000 and min(data.image.shape[:2])*min(scale)>26 else 1.
@@ -227,9 +232,7 @@ class TemplateMatcher:
         w,h=candidate.size
         if h>small.shape[0] or w>small.shape[1]:
             return []
-        correlation=candidate.color_correlation and not force_color
-        scores=cv2.matchTemplate(small,candidate.image,cv2.TM_CCOEFF_NORMED if correlation else cv2.TM_SQDIFF_NORMED,mask=candidate.mask)
-        scores=scores if correlation else 1-scores
+        scores=1-cv2.matchTemplate(small,candidate.image,cv2.TM_SQDIFF_NORMED,mask=candidate.mask)
         scores=np.nan_to_num(scores,nan=-np.inf,posinf=-np.inf,neginf=-np.inf)
         locations=[]
         for _ in range(max(12,limit*3)):
@@ -242,7 +245,7 @@ class TemplateMatcher:
             scores[max(0,y-radius):y+radius+1,max(0,x-radius):x+radius+1]=-np.inf
         return locations
 
-    def _search(self,frame,key,roi,threshold,structure_threshold,*,limit,force_color,cancelled=None,exhaustive=False,native_proposals=False,preparation=None,prepared_region=None):
+    def _search(self,frame,key,roi,threshold,structure_threshold,*,limit,cancelled=None,exhaustive=False,native_proposals=False,preparation=None,prepared_region=None):
         view=frame_view(frame).crop(roi)
         data=self._templates.get(key)
         if prepared_region is None:
@@ -257,7 +260,7 @@ class TemplateMatcher:
         # proposal gate. Exhaustive is an offline same-algorithm search oracle.
         first=self.cache.get(data,scale)
         local=(source.shape[0]-first.size[1]+1)*(source.shape[1]-first.size[0]+1)<=1024
-        proposals=None if exhaustive or local or (scale==(1.,1.) and (source.shape[0]*source.shape[1]<=120_000 or min(data.image.shape[:2])<=26)) else self._proposals(source,data,scale,threshold,limit,force_color,native=native_proposals,prepared_region=prepared_region)
+        proposals=None if exhaustive or local or (scale==(1.,1.) and (source.shape[0]*source.shape[1]<=120_000 or min(data.image.shape[:2])<=26)) else self._proposals(source,data,scale,threshold,limit,native=native_proposals,prepared_region=prepared_region)
         content_width,content_height=first.content_size
         hits=[]
         def covered(point):
@@ -279,7 +282,7 @@ class TemplateMatcher:
             for ox,oy,area in regions:
                 if area.shape[0]>=h and area.shape[1]>=w and (area.shape[0]-h+1)*(area.shape[1]-w+1)<=49 and prepared is None:
                     prepared=self.cache.score_data(candidate)
-                values=self.scores(area,candidate,threshold,structure_threshold,force_color=force_color,prepared=prepared)
+                values=self.scores(area,candidate,threshold,structure_threshold,prepared=prepared)
                 if values is None:continue
                 color,structure=values
                 for _ in range(max(5,limit*3)):
@@ -299,7 +302,7 @@ class TemplateMatcher:
                 and (cancelled is None or not cancelled.is_set())):
             # A half-size proposal can hide small glyphs. Retry proposal generation
             # once at native scale, retaining the same candidates and final gates.
-            return self._search(frame,key,roi,threshold,structure_threshold,limit=limit,force_color=force_color,
+            return self._search(frame,key,roi,threshold,structure_threshold,limit=limit,
                                 cancelled=cancelled,native_proposals=True,prepared_region=prepared_region)
         hits.sort(key=lambda hit:(-hit.confidence,hit.bounds.y,hit.bounds.x,hit.candidate_id))
         distinct=[]

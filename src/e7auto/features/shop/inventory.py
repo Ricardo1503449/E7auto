@@ -8,6 +8,7 @@ from e7auto.features.shop.scrolling import FrameSample
 
 from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
+from e7auto.runtime.confirmation import Confirmation
 from .contracts import ShopVisionPort
 from .state import ShopState
 from .readiness import SceneSampleEvidence, SceneWindow, format_row_regions, format_row_changes
@@ -46,14 +47,65 @@ class InventoryScanner:
         self._scroll_samples: tuple[FrameSample, ...] = ()
         self._scroll_epoch = -1
         self._scene_comparisons_reused = 0
+        self._purchase_finish: Confirmation | None = None
+        self._pending_top_source = 'after_refresh_balance'
 
     def invalidate(self) -> None:
+        self._purchase_finish = None
+        self._pending_top_source = 'after_refresh_balance'
         self.reference = None
         self.state.pending_top_scan = None
         self._evidence_epoch += 1
         self._top_continuation = None
         self._scroll_samples = ()
         self._scroll_epoch = -1
+
+    def entry_probe(self):
+        """Accumulate the existing top scan while navigation confirms the shop."""
+        window = self.new_scene_window()
+        previous, stable, matches = None, 0, ()
+        context = None
+        last_capture = -1
+        skipped = {}
+
+        def observe(frame, ready):
+            nonlocal previous, stable, matches, context, last_capture
+            current = (self.runtime.input_generation, self.runtime.network_recovery_generation,
+                       self._evidence_epoch, self.runtime.transform)
+            interrupted = context is not None and current[1] != context[1]
+            if current != context or ready is None:
+                window.reset('entry_context_changed')
+                previous, stable, matches = None, 0, ()
+            context = current
+            last_capture = self.runtime.capture_count
+            if ready is None or interrupted:
+                return
+            captured_at = self.runtime.active_monotonic()
+            self.observe_scene(window, frame, captured_at, current[1], 'top')
+            if window.count <= 1:
+                previous, stable = None, 0
+            if not window.count:
+                return
+            matches = self.detect_actionable_inventory(frame, 'top', set(), skipped)
+            key = tuple((match.slot_id, match.target_id) for match in matches)
+            stable = stable+1 if key == previous else 1
+            previous = key
+
+        def finish():
+            current = (self.runtime.input_generation, self.runtime.network_recovery_generation,
+                       self._evidence_epoch, self.runtime.transform)
+            if (context != current or last_capture != self.runtime.capture_count or window.previous is None
+                    or not self._evidence_is_current(window.previous_at, window.generation, self._evidence_epoch)):
+                return
+            self.retain_top_continuation(window, previous, stable)
+            if window.ready and stable >= self.runtime.config.timing.stable_frames:
+                self.reference = FrameSample(window.previous, window.previous_at, window.generation)
+                self.state.pending_top_scan = matches
+                self._pending_top_source = 'shop_entry'
+            self.log_inventory_skip_summaries(skipped)
+            self.runtime.deps.logger.event('entry_inventory_overlap', frames=window.count,
+                                          stable=stable, ready=self.state.pending_top_scan is not None)
+        return observe, finish
 
     def _purchase_context(self) -> _PurchaseContext:
         return _PurchaseContext(
@@ -498,6 +550,13 @@ class InventoryScanner:
     def _finish_bottom_purchase(self, scope: _PostPurchaseScope) -> bool:
         if scope.screen != "bottom" or scope.slot_ids:
             raise ValueError("Fast purchase completion requires an exhausted bottom viewport")
+        evidence, self._purchase_finish = self._purchase_finish, None
+        confirmed = evidence.take(self.runtime) if evidence is not None else None
+        if confirmed == scope and self._scope_invalid_reason(scope) is None:
+            self.runtime.deps.logger.event('bottom_purchase_fast_finish', after_slot=scope.after_slot,
+                                          generation=scope.context.generation,
+                                          stable=self.runtime.config.timing.stable_frames, reused=True)
+            return True
         self.runtime.transition(RunState.SCANNING_BOTTOM)
         mark = self.runtime.performance_mark()
         deadline = self.runtime.active_monotonic() + self.runtime.config.timing.scan_timeout_ms / 1000
@@ -568,7 +627,7 @@ class InventoryScanner:
             self.runtime.deps.logger.event(
                 "inventory_scan_reused",
                 screen="top",
-                source="after_refresh_balance",
+                source=self._pending_top_source,
                 targets=len(pending),
             )
         while True:
@@ -595,7 +654,7 @@ class InventoryScanner:
             if match.target_id in self.state.mandatory_target_ids:
                 mandatory_targets_found.add(match.target_id)
             before_purchase = self._purchase_context()
-            self.purchase(match, screen=screen)
+            self.purchase(match, screen=screen, followup_matches=matches)
             completed_slot_ids.add(match.slot_id)
             scope = self._scope_after_purchase(screen, matches, before_purchase)
             self.runtime.deps.logger.event(
@@ -611,11 +670,16 @@ class InventoryScanner:
                 scope = None
 
 
-    def purchase(self, match: InventoryMatch, *, screen: str | None = None) -> None:
+    def purchase(self, match: InventoryMatch, *, screen: str | None = None,
+                 followup_matches: tuple[InventoryMatch, ...] = ()) -> None:
+        before = self._purchase_context()
         self.invalidate()
         self.runtime.transition(RunState.PURCHASING)
         vision = self.runtime.deps.vision
         screen = screen or next((slot.screen for slot in self.runtime.config.slots if slot.slot_id == match.slot_id), None)
+        finish_scope = self._scope_after_purchase(screen, followup_matches, before) if screen == 'bottom' and followup_matches else None
+        if finish_scope is not None and finish_scope.slot_ids:
+            finish_scope = None
         def source(frame):
             if screen is None or vision.shop_ready(frame) is None:
                 return None
@@ -635,10 +699,16 @@ class InventoryScanner:
         deadline = self.runtime.active_monotonic() + self.runtime.config.timing.purchase_result_timeout_ms / 1000
         insufficient_stable = 0
         button_stable = 0
+        joint_stable = 0
         while self.runtime.active_monotonic() <= deadline:
+            generation = self.runtime.network_recovery_generation
+            frame = self.runtime.capture()
+            if generation != self.runtime.network_recovery_generation:
+                insufficient_stable = button_stable = joint_stable = 0
+                continue
             outcome = self.runtime.vision_call(
                 self.runtime.deps.vision.purchase_outcome,
-                self.runtime.capture(),
+                frame,
                 match.target_id,
                 match.roi,
             )
@@ -650,6 +720,12 @@ class InventoryScanner:
                 button_stable += 1
             else:
                 button_stable = 0
+            if (finish_scope is not None and outcome is PurchaseOutcome.SUCCESS_BUTTON
+                    and self._scope_invalid_reason(finish_scope) is None
+                    and self.runtime.vision_call(vision.shop_ready, frame) is not None):
+                joint_stable += 1
+            else:
+                joint_stable = 0
             self.runtime.deps.logger.event(
                 "purchase_result",
                 target=match.target_id,
@@ -665,6 +741,8 @@ class InventoryScanner:
                 outcome is PurchaseOutcome.SUCCESS_BUTTON
                 and button_stable >= self.runtime.config.timing.stable_frames
             ):
+                if joint_stable >= self.runtime.config.timing.stable_frames:
+                    self._purchase_finish = Confirmation.record(self.runtime, finish_scope)
                 updated = self.runtime.publisher.mutate(
                     lambda snapshot: snapshot.with_incremented_target(match.target_id)
                 )

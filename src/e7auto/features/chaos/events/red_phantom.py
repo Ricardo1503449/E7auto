@@ -9,7 +9,8 @@ def run(context: EventContext, event: Detection) -> None:
     hero = context.settings.lineup.departure_hero
     if hero not in context.state.ranks:
         raise StopExecution(StopReason.CHAOS_UNKNOWN_CONTENT, "departure target is not in the roster")
-    context.choose(event, next_page=lambda frame: context.vision.control(frame, "depart_title"))
+    context.choose(event, next_page=lambda frame: context.vision.control(frame, "depart_title"),
+                   alongside=lambda frame, _: context.vision.control(frame, 'hero_'+hero))
     context.depart(hero)
     context.state.record_departure(hero)
     context.runtime.deps.logger.event("chaos_hero_departed", hero=hero, floor=context.floor)

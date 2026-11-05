@@ -36,8 +36,8 @@ event_sharp_teeth event_collapsed_stairs event_bone_throne
 class Scene:
     template_key: str
     region: Rect
-    threshold: float
-    structure: float
+    threshold: float | None
+    structure: float | None
     action: tuple[float, float] | None
     relative_offset: tuple[int, int, int, int] | None = None
     action_offset: tuple[int, int] = (0, 0)
@@ -150,9 +150,14 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
             region = regions[value["search_roi"]]
             if key in sizes and (sizes[key][0] > region.width or sizes[key][1] > region.height):
                 raise ValueError(f"scene region cannot contain template: {name}")
-            scores = [value["threshold"], value["structure_threshold"]]
-            if any(type(v) not in (int, float) or not isfinite(v) or not 0 < v <= 1 for v in scores):
-                raise ValueError(f"invalid thresholds: {name}")
+            if name in LOOT_IDENTITIES:
+                if {"threshold", "structure_threshold"} & value.keys():
+                    raise ValueError(f"loot identity must not declare full-template thresholds: {name}")
+                scores = [None, None]
+            else:
+                scores = [value["threshold"], value["structure_threshold"]]
+                if any(type(v) not in (int, float) or not isfinite(v) or not 0 < v <= 1 for v in scores):
+                    raise ValueError(f"invalid thresholds: {name}")
             action = value.get("action")
             if action is not None and (not isinstance(action, list) or len(action) != 2 or any(type(v) not in (int, float) or not isfinite(v) or not 0 <= v <= 1 for v in action)):
                 raise ValueError(f"invalid click anchor: {name}")

@@ -431,26 +431,26 @@
     },
     "map_title_outer": {
       "file": "map/map_title_outer.png",
-      "sha256": "74c4b6bfd535fb197803ee65f78559e8f0bde61fa706eca467c34da3cbac4877",
+      "sha256": "fcba8cba03034d7551b41953893c01f23fa63dc31a6c4d6262f0070c1859252e",
       "source": {
-        "record": "docs/calibration/registrations/chaos-map_title_outer-74c4b6bfd535-5a1aaeb31e80.json",
-        "record_sha256": "5a1aaeb31e80cb09f3381e93b0ec1f8d00f562e8bd03c64f57f21c3e0345a72e"
+        "record": "docs/calibration/registrations/chaos-map_title_outer-fcba8cba0303-60850c60101c.json",
+        "record_sha256": "60850c60101cd2d1ffa421befcf51abcc91a8429e0564dc1f0f111751b16a28a"
       }
     },
     "map_title_center": {
       "file": "map/map_title_center.png",
-      "sha256": "67744c06a5171e8bc68c74e35553081654db927658e057aa2b9401fb3192e5a1",
+      "sha256": "51e0945e6589fc5da991f62ff07573c963059b85b59a2feda0d816fbcb3266b4",
       "source": {
-        "record": "docs/calibration/registrations/chaos-map_title_center-67744c06a517-4d22d8b29014.json",
-        "record_sha256": "4d22d8b29014a2846a3a4ec63c19eb647d7db48c613803e2626e4261b400b6bd"
+        "record": "docs/calibration/registrations/chaos-map_title_center-51e0945e6589-7ecc8322c024.json",
+        "record_sha256": "7ecc8322c0247c049fc9c5c4fe09151437d17f3077ed24f70373a95fa6e042e4"
       }
     },
     "map_title_deep": {
       "file": "map/map_title_deep.png",
-      "sha256": "b73d61902562faab1bf607a89964ca768044d535dcf59966c291359cd17a6dc4",
+      "sha256": "cc221976b3e50c1b1480c52982ec4dd11ab5a2f1bd4889908ee5cc87f8bd48d8",
       "source": {
-        "record": "docs/calibration/registrations/chaos-map_title_deep-b73d61902562-f102e0ae15cc.json",
-        "record_sha256": "f102e0ae15cc3f5ac41a1eaf2c6053a7f6211904160a7e5039d9a7b73915dde6"
+        "record": "docs/calibration/registrations/chaos-map_title_deep-cc221976b3e5-3f81b2ba4d30.json",
+        "record_sha256": "3f81b2ba4d30a657aeca789073c7b0e32f829c96f62c8ef9dad384e874662d98"
       }
     },
     "node_normal": {
@@ -515,62 +515,6 @@
       "source": {
         "record": "docs/calibration/registrations/chaos-node_triangle-f478d424e7fa-dc4b449a930c.json",
         "record_sha256": "dc4b449a930c79b75066ee63503223fd8b6771fe11660ad36600028dedafc9fd"
-      }
-    },
-    "node_gray_normal": {
-      "file": "map/node_gray_normal.png",
-      "sha256": "e8e051b0409e7f66d5f285d2b5aae6f42314e7776219b2a5899e32f367c281ca",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_normal-e8e051b0409e-923dbe1b621d.json",
-        "record_sha256": "923dbe1b621dee4548abaa4cfd565a410c3f9c489c586639d05b99cae94ef97c"
-      }
-    },
-    "node_gray_event": {
-      "file": "map/node_gray_event.png",
-      "sha256": "cbb33fefdb4d732660f474ebd57cbcc86d7f5a91d981d83cdffa71875e45891b",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_event-cbb33fefdb4d-60ee3da79b7f.json",
-        "record_sha256": "60ee3da79b7fdf9738768f274542c9db2d28ecced952072819cef560a96a1f45"
-      }
-    },
-    "node_gray_loot": {
-      "file": "map/node_gray_loot.png",
-      "sha256": "24b978daad579f7a3b17ec77ade8f881ab7385007b967222fb0cb8ec3c6a5b94",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_loot-24b978daad57-a5ad9efde8ce.json",
-        "record_sha256": "a5ad9efde8ceee1572ad9f4d32fcccdaf0f083386858ebc6b8e3efbb66db7ccd"
-      }
-    },
-    "node_gray_rest": {
-      "file": "map/node_gray_rest.png",
-      "sha256": "cd77118b9f39fbbc8755144d62d2d5893f02c225c6b0239aa89cebd5025e05aa",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_rest-cd77118b9f39-ae3c1834f315.json",
-        "record_sha256": "ae3c1834f315fad4fd7c86e7003128cdea40ef1720f1097072f02ec8974fa601"
-      }
-    },
-    "node_gray_shop": {
-      "file": "map/node_gray_shop.png",
-      "sha256": "8154b19e16bd46e2d306aee2ac9889d2488eb56f624cd38de39e0bae5f844486",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_shop-8154b19e16bd-01cd04419c3e.json",
-        "record_sha256": "01cd04419c3e677bd8690d1219be8c01f9c300e5e325c99674c7b8f9fff0f347"
-      }
-    },
-    "node_gray_elite": {
-      "file": "map/node_gray_elite.png",
-      "sha256": "eabe7b78776d7651e4cb219d9c60571cfaede15fff595822d0fabc59fa9188f6",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_elite-eabe7b78776d-8e7d300de10e.json",
-        "record_sha256": "8e7d300de10e3226a6928943862ba53ee0cd7117d2a1bf449f04a0ca23132f62"
-      }
-    },
-    "node_gray_boss": {
-      "file": "map/node_gray_boss.png",
-      "sha256": "cd99571773524699acaa58cf07ef09ae6ee1fab7e594281190b56335104c6ff1",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-node_gray_boss-cd9957177352-6bf93687cb67.json",
-        "record_sha256": "6bf93687cb67167c172f2ac51a1df46214154f49a1d785eeadbb826c25edee0f"
       }
     },
     "node_enter": {
@@ -947,14 +891,6 @@
       "source": {
         "record": "docs/calibration/registrations/chaos-investment-19e65f701f96-50af0e1d87c3.json",
         "record_sha256": "50af0e1d87c307c8e6675d9560eebb2001ca7115362cd636af458b464c6a036f"
-      }
-    },
-    "investment_entry": {
-      "file": "buttons/investment_entry.png",
-      "sha256": "961d55df33b2e2e8e3e5c5daac06ef7169ed1a1f25f8fc50ff88a63b3876d005",
-      "source": {
-        "record": "docs/calibration/registrations/chaos-investment_entry-961d55df33b2-6717fd262260.json",
-        "record_sha256": "6717fd262260f97d706342b54946b2e0db790202f86f0d63cf669d889faa198e"
       }
     },
     "purchase_title": {
@@ -2349,6 +2285,70 @@
       "source": {
         "record": "docs/calibration/registrations/chaos-rank_45-b13fa430b0dc-e8da5be7bac3.json",
         "record_sha256": "e8da5be7bac34576fad53f4806b3c367ffebd3e4d1473b2e363314e3674deced"
+      }
+    },
+    "node_gray_normal": {
+      "file": "map/node_gray_normal.png",
+      "sha256": "e8e051b0409e7f66d5f285d2b5aae6f42314e7776219b2a5899e32f367c281ca",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_normal-e8e051b0409e-5ccb68625086.json",
+        "record_sha256": "5ccb68625086feb44d99a3a90551186c866fcee441c92713c3e8fa8abe218d7c"
+      }
+    },
+    "node_gray_event": {
+      "file": "map/node_gray_event.png",
+      "sha256": "cbb33fefdb4d732660f474ebd57cbcc86d7f5a91d981d83cdffa71875e45891b",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_event-cbb33fefdb4d-bec4ed2ff618.json",
+        "record_sha256": "bec4ed2ff6189d2cf6ed588b9d40ae6c471d33aafd6ab5bb29b3b8b0fde3a675"
+      }
+    },
+    "node_gray_loot": {
+      "file": "map/node_gray_loot.png",
+      "sha256": "24b978daad579f7a3b17ec77ade8f881ab7385007b967222fb0cb8ec3c6a5b94",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_loot-24b978daad57-4d6cf07f701a.json",
+        "record_sha256": "4d6cf07f701a989d02879134df406c9624c6497d98eb409da7db12353f059608"
+      }
+    },
+    "node_gray_rest": {
+      "file": "map/node_gray_rest.png",
+      "sha256": "cd77118b9f39fbbc8755144d62d2d5893f02c225c6b0239aa89cebd5025e05aa",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_rest-cd77118b9f39-58f42223d59c.json",
+        "record_sha256": "58f42223d59c1e76c6e0685355bbf8fc441b8b8224cc5cdbde7e0ee6a7f80117"
+      }
+    },
+    "node_gray_shop": {
+      "file": "map/node_gray_shop.png",
+      "sha256": "8154b19e16bd46e2d306aee2ac9889d2488eb56f624cd38de39e0bae5f844486",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_shop-8154b19e16bd-03fd9a847cb2.json",
+        "record_sha256": "03fd9a847cb2ce4052f0f46d8b310dea8c71a63bb9046d307755ca498c3dd92f"
+      }
+    },
+    "node_gray_elite": {
+      "file": "map/node_gray_elite.png",
+      "sha256": "eabe7b78776d7651e4cb219d9c60571cfaede15fff595822d0fabc59fa9188f6",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_elite-eabe7b78776d-fb986dcad556.json",
+        "record_sha256": "fb986dcad55688afd077898ed66c5eea9d4ff2c4c17e22e91945c4b6c59edb9d"
+      }
+    },
+    "node_gray_boss": {
+      "file": "map/node_gray_boss.png",
+      "sha256": "cd99571773524699acaa58cf07ef09ae6ee1fab7e594281190b56335104c6ff1",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-node_gray_boss-cd9957177352-48f4e820ce51.json",
+        "record_sha256": "48f4e820ce51e4e1c14c4eeddcd125864bf352061096c8c138e22489e04176c3"
+      }
+    },
+    "investment_entry": {
+      "file": "buttons/investment_entry.png",
+      "sha256": "961d55df33b2e2e8e3e5c5daac06ef7169ed1a1f25f8fc50ff88a63b3876d005",
+      "source": {
+        "record": "docs/calibration/registrations/chaos-investment_entry-961d55df33b2-2e142e9ea62f.json",
+        "record_sha256": "2e142e9ea62f596514504db85be2c8120b1c3962028dcbd8bea3966b635dea16"
       }
     }
   }

@@ -175,10 +175,10 @@ class LootRecognizer:
         cx,cy=(area.shape[1]-w)//2,(area.shape[0]-h)//2
         # The geometric reference is only a proposal; current pixels must pass
         # both unchanged gates before it can avoid the padded local search.
-        exact=TemplateMatcher.scores(area[cy:cy+h,cx:cx+w],part,color_min,structure_min,force_color=True)
+        exact=TemplateMatcher.scores(area[cy:cy+h,cx:cx+w],part,color_min,structure_min)
         if exact is not None:
             return x+cx,y+cy,min(1.,float(exact[0][0,0]))
-        scores=TemplateMatcher.scores(area,part,color_min,structure_min,force_color=True)
+        scores=TemplateMatcher.scores(area,part,color_min,structure_min)
         if scores is None:
             return None
         _,score,_,point = cv2.minMaxLoc(scores[0])

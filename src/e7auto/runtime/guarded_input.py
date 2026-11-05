@@ -21,6 +21,7 @@ def dispatch_input(
     def guarded() -> None:
         ctx.ensure_window(full_display_check=True)
         assert ctx.window is not None
+        ctx.input_generation += 1
         try:
             callback(ctx.window, client_point)
         except StopExecution:
