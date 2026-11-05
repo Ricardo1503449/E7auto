@@ -1,3 +1,3 @@
 """E7auto application package."""
 
-__version__ = "1.4.29"
+__version__ = "1.5.0"
