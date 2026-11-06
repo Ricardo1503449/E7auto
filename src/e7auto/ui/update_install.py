@@ -7,18 +7,26 @@ from pathlib import Path
 from threading import Event
 from urllib.parse import urlsplit
 import uuid
+import time
 
 from PySide6.QtCore import QObject, QThread, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from e7auto import __version__
 from e7auto.platform.update_install import launch_update, ordinary_path, validate_installation
-from e7auto.ui.updates import PROJECT_URL, ReleaseAsset, _version_parts
+from e7auto.ui.updates import PROJECT_URL, ReleaseAsset, _version_parts, UpdateChecker
+from e7auto.core.update_feed import download_urls
 
 
 def allowed_download_url(url: str) -> bool:
     try:
         parsed = urlsplit(url)
+        if parsed.hostname in {'gh-proxy.org', 'gh-proxy.com'}:
+            inner = parsed.path.removeprefix('/')
+            return (parsed.scheme == 'https' and parsed.port in (None, 443)
+                    and not parsed.username and not parsed.password and not parsed.fragment and not parsed.query
+                    and inner.startswith(PROJECT_URL + '/releases/download/')
+                    and allowed_download_url(inner))
         return (parsed.scheme == 'https' and parsed.port in (None, 443)
                 and not parsed.username and not parsed.password and not parsed.fragment
                 and parsed.hostname in {'github.com', 'release-assets.githubusercontent.com',
@@ -54,7 +62,7 @@ class UpdateInstaller(QObject):
     install_started = Signal()
     finished = Signal()
 
-    def __init__(self, root: Path, parent: QObject | None = None):
+    def __init__(self, root: Path, parent: QObject | None = None, *, diagnostic=None):
         super().__init__(parent)
         self.root = root
         self.busy = False
@@ -67,6 +75,12 @@ class UpdateInstaller(QObject):
         self._partial: Path | None = None
         self._received = 0
         self._redirects = 0
+        self._sources = ()
+        self._source_index = 0
+        self._source_cooldowns = {}
+        self._reply_slots = None
+        self._download_path = None
+        self.diagnostic = diagnostic or (lambda event, **fields: None)
         self._checksum = hashlib.sha256()
         self._deadline = QTimer(self)
         self._deadline.setSingleShot(True)
@@ -97,6 +111,10 @@ class UpdateInstaller(QObject):
             if self._verified is not None and self._verified[0] == asset and self._verified[1].is_file():
                 self._launch(self._verified[1])
                 return
+            self._sources = tuple(url for url in download_urls(asset)
+                                  if self._source_cooldowns.get(urlsplit(url).hostname, 0) <= time.time())
+            if not self._sources:
+                raise ValueError('下载来源仍在等待期内，请稍后重试或打开发布页面。')
             directory = self.root / 'state' / 'updates' / f'{asset.version}-{uuid.uuid4().hex}'
             ordinary_path(directory)
             directory.mkdir(parents=True, exist_ok=False)
@@ -104,16 +122,40 @@ class UpdateInstaller(QObject):
                 'version': asset.version, 'name': asset.name, 'size': asset.size,
                 'sha256': asset.sha256,
             }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-            self._partial = directory / (asset.name + '.part')
-            self._stream = self._partial.open('xb')
-            self._received = self._redirects = 0
-            self._checksum = hashlib.sha256()
-            self.status.emit('正在下载安装包…')
-            self.progress.emit(0, asset.size)
+            self._download_path = directory / (asset.name + '.part')
+            self._source_index = 0
             self._deadline.start()
-            self._request(asset.url)
+            self._begin_source()
         except (OSError, ValueError, TypeError, IndexError) as exc:
             self._fail(str(exc))
+
+    def _begin_source(self) -> None:
+        issue = self._discard_partial()
+        if issue:
+            self._fail(issue)
+            return
+        try:
+            self._partial = self._download_path
+            self._stream = self._partial.open('xb')
+        except OSError as exc:
+            self._fail(str(exc))
+            return
+        self._received = self._redirects = 0
+        self._checksum = hashlib.sha256()
+        self.status.emit('正在下载安装包…' if self._source_index == 0 else '正在切换下载来源，重新下载安装包…')
+        self.progress.emit(0, self._asset.size)
+        if self.busy:  # A synchronous cancellation from a status/progress listener wins.
+            self.diagnostic('update_download_source', source=self._sources[self._source_index])
+            self._request(self._sources[self._source_index])
+
+    def _source_failed(self, message: str) -> None:
+        self.diagnostic('update_download_source_failed', source=self._sources[self._source_index], reason=message)
+        self._release_reply()
+        if self.busy and self._deadline.isActive() and self._source_index + 1 < len(self._sources):
+            self._source_index += 1
+            self._begin_source()
+        else:
+            self._fail(message)
 
     def _request(self, url: str) -> None:
         request = QNetworkRequest(QUrl(url))
@@ -124,8 +166,18 @@ class UpdateInstaller(QObject):
         request.setTransferTimeout(30_000)
         self._reply = self._manager.get(request)
         self._reply.setReadBufferSize(1024 * 1024)
-        self._reply.readyRead.connect(self._read)
-        self._reply.finished.connect(self._download_finished)
+        reply = self._reply
+        self._reply_slots = (lambda: self._read() if self._reply is reply else None,
+                             lambda: self._download_finished() if self._reply is reply else None)
+        reply.readyRead.connect(self._reply_slots[0])
+        reply.finished.connect(self._reply_slots[1])
+
+    def _record_wait(self, reply, code):
+        deadline = UpdateChecker._rate_limit_deadline(reply, code)
+        if deadline:
+            source = urlsplit(self._sources[self._source_index]).hostname
+            self._source_cooldowns[source] = deadline
+            self.diagnostic('update_download_wait', source=source, until=deadline)
 
     def _download_timed_out(self) -> None:
         self._fail('下载超时，请检查网络后重试。')
@@ -137,7 +189,8 @@ class UpdateInstaller(QObject):
         code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if code != 200:
             if code is not None and code >= 400:
-                self._fail(f'下载失败，请检查网络后重试。（HTTP {code}）')
+                self._record_wait(reply, code)
+                self._source_failed(f'下载失败，请检查网络后重试。（HTTP {code}）')
             elif code in (301, 302, 303, 307, 308):
                 reply.readAll()  # Do not let a redirect body fill the bounded read buffer.
             return
@@ -153,7 +206,9 @@ class UpdateInstaller(QObject):
                     raise OSError('安装包写入不完整。')
                 self._checksum.update(block)
             self.progress.emit(self._received, asset.size)
-        except (OSError, ValueError) as exc:
+        except ValueError as exc:
+            self._source_failed(str(exc))
+        except OSError as exc:
             self._fail(str(exc))
 
     def _download_finished(self) -> None:
@@ -165,17 +220,18 @@ class UpdateInstaller(QObject):
             target = reply.attribute(QNetworkRequest.Attribute.RedirectionTargetAttribute)
             url = reply.url().resolved(target).toString() if isinstance(target, QUrl) else ''
             if not allowed_download_url(url) or self._redirects >= 5:
-                self._fail('下载地址跳转无效，已停止更新。')
+                self._source_failed('下载地址跳转无效，已停止更新。')
                 return
             self._redirects += 1
             self._release_reply()
             self._request(url)
             return
         if code != 200 or reply.error() != QNetworkReply.NetworkError.NoError:
-            self._fail(f'下载失败，请检查网络后重试。（HTTP {code or "无响应"}）')
+            self._record_wait(reply, code)
+            self._source_failed(f'下载失败，请检查网络后重试。（HTTP {code or "无响应"}）')
             return
         self._read()
-        if self._reply is None:
+        if self._reply is not reply:
             return
         try:
             if self._received != asset.size or self._checksum.hexdigest() != asset.sha256:
@@ -189,7 +245,9 @@ class UpdateInstaller(QObject):
             self._deadline.stop()
             self._release_reply()
             self._launch(path)
-        except (OSError, ValueError) as exc:
+        except ValueError as exc:
+            self._source_failed(str(exc))
+        except OSError as exc:
             self._fail(str(exc))
 
     def _launch(self, path: Path) -> None:
@@ -229,8 +287,9 @@ class UpdateInstaller(QObject):
     def _release_reply(self) -> None:
         reply, self._reply = self._reply, None
         if reply is not None:
-            reply.readyRead.disconnect(self._read)
-            reply.finished.disconnect(self._download_finished)
+            slots, self._reply_slots = self._reply_slots, None
+            reply.readyRead.disconnect(slots[0])
+            reply.finished.disconnect(slots[1])
             if not reply.isFinished():
                 reply.abort()
             reply.deleteLater()

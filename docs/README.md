@@ -25,6 +25,8 @@
 新版本的验证记录在最终提交前集中整理；构建与上传的阶段状态留在本地产物，公开下载状态以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准。历史版本记录保留原有验收事实。
 
 - [Windows安装包与安装/卸载验收](development/INSTALLER.md)
+- [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
+- [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
 - [v1.5.0 工作区审查、构建与验证](releases/v1.5.0/VALIDATION.md)
 - [v1.4.29 工作区审查、构建与验证](releases/v1.4.29/VALIDATION.md)

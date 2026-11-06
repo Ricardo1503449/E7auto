@@ -60,6 +60,12 @@ class DownloadReply(QNetworkReply):
         self.finished.emit()
 
 
+@pytest.fixture(autouse=True)
+def single_download_source(monkeypatch):
+    # Existing installer guards run against one source; failover is covered separately.
+    monkeypatch.setattr(update_install, "download_urls", lambda asset: (asset.url,))
+
+
 @pytest.fixture
 def downloader(tmp_path, monkeypatch):
     configure_installed_update(tmp_path, monkeypatch)

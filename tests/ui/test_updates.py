@@ -4,7 +4,17 @@ import pytest
 from PySide6.QtNetwork import QNetworkReply
 
 from e7auto import __version__
-from e7auto.ui.updates import LATEST_RELEASE_API, UpdateChecker, UpdateController, release_details
+from e7auto.ui.updates import UpdateChecker, UpdateController, release_details
+from e7auto.core.update_feed import FEED_URLS
+from tests.helpers.updates import FeedReply as FakeReply, feed, verify_test_signature
+
+LATEST_RELEASE_API = FEED_URLS[0]
+
+@pytest.fixture(autouse=True)
+def single_feed_source(monkeypatch):
+    # These existing lifecycle cases isolate one source; multi-source behavior has dedicated cases.
+    monkeypatch.setattr(UpdateChecker, "SOURCE_URLS", (FEED_URLS[0],))
+    monkeypatch.setattr("e7auto.ui.updates.verify_signature", verify_test_signature)
 
 
 @pytest.mark.parametrize("tag, newer", [("v1.3.4", False), ("v1.4.0", False), ("v1.4.1", True), ("v1.10.0", True)])
@@ -34,32 +44,8 @@ def test_release_details_rejects_invalid_notes_type():
         release_details(json.dumps(data).encode())
 
 
-class FakeReply(QNetworkReply):
-    """Stub transport while retaining Qt's native response-header API."""
-
-    def __init__(self, payload=b"", status=200, headers=None):
-        super().__init__()
-        self.payload, self.status = payload, status
-        self.aborted = False
-        for name, value in (headers or {}).items():
-            self.setRawHeader(name, value)
-
-    def attribute(self, _attribute):
-        return self.status
-
-    def error(self):
-        return QNetworkReply.NetworkError.OperationCanceledError if self.aborted or self.status != 200 else QNetworkReply.NetworkError.NoError
-
-    def readAll(self):
-        return self.payload
-
-    def abort(self):
-        self.aborted = True
-        self.finished.emit()
-
-
 @pytest.mark.parametrize("status, payload, succeeds", [
-    (200, b'{"tag_name":"v9.0.0","draft":false,"prerelease":false,"body":"## Changes"}', True),
+    (200, feed(), True),
     (200, b"invalid JSON", False), (404, b"", False), (403, b"", False),
 ])
 def test_async_checker_single_request_completion_and_retry(monkeypatch, status, payload, succeeds):
@@ -78,11 +64,11 @@ def test_async_checker_single_request_completion_and_retry(monkeypatch, status, 
     assert bool(failures) is not succeeds
     if succeeds:
         assert results == [("v9.0.0", True, "## Changes")]
-    assert checker._reply is None and not checker._timeout.isActive()
+    assert not checker._replies and not checker._timeout.isActive()
     next_reply = FakeReply()
     monkeypatch.setattr(checker._manager, "get", lambda request: next_reply)
     checker.check()
-    assert checker._reply is next_reply
+    assert next_reply in checker._replies.values()
     checker.cancel()
 
 
@@ -98,7 +84,7 @@ def test_check_timeout_and_window_close_release_reply(monkeypatch, cancel):
         checker.cancel()
     else:
         checker._timeout.timeout.emit()
-    assert reply.aborted and checker._reply is None
+    assert reply.aborted and not checker._replies
     assert not checker._timeout.isActive()
     assert bool(failures) is not cancel
 
@@ -276,7 +262,7 @@ def test_rate_limit_blocks_manual_requests_until_reset_and_persists(tmp_path, mo
     controller.checker.failed.emit("限流")
     assert controller.next_check_at == now[0] + 8 * 60 * 60
     controller.check(manual=True)
-    assert len(requests) == 1 and "GitHub 暂时限制请求" in failures[-1]
+    assert len(requests) == 1 and "此前的等待期" in failures[-1]
     restored = UpdateController(controller._cache_path, clock=lambda: now[0])
     monkeypatch.setattr(restored.checker, "check", lambda: requests.append(now[0]))
     restored.check(manual=True)
@@ -339,20 +325,20 @@ def test_actual_checker_rate_limit_reaches_controller_and_resets_after_success(
     try:
         controller.check(manual=manual)
         reply.finished.emit()
-        assert not controller.checking and controller.checker._reply is None
+        assert not controller.checking and not controller.checker._replies
         assert not controller.checker._timeout.isActive()
         assert controller.retry_not_before == controller.next_check_at == now[0] + 4000
         assert controller._auto_timer.isActive()
         assert controller._auto_timer.interval() == 4_000_000
         cached = json.loads(controller._cache_path.read_text(encoding="utf-8"))
         assert cached["retry_not_before"] == cached["next_check_at"] == now[0] + 4000
-        message = "GitHub 暂时限制请求，请在约 67 分钟后重试。"
+        message = controller._rate_limit_message(now[0], cached=False)
         assert failures == ([message] if manual else [])
         controller.check(manual=True)
-        assert requests == [True] and failures[-1] == message
+        assert requests == [True] and "此前的等待期" in failures[-1]
         assert not controller.checking
         now[0] += 4000
-        success = FakeReply(b'{"tag_name":"v9.0.0","draft":false,"prerelease":false}')
+        success = FakeReply(feed())
         monkeypatch.setattr(controller.checker._manager, "get", lambda request: requests.append(True) or success)
         controller.check(manual=True)
         assert requests == [True, True] and controller.checking
@@ -376,32 +362,27 @@ def test_controller_cancels_real_pending_reply_or_reports_timeout(tmp_path, monk
         controller.cancel()
     else:
         controller.checker._timeout.timeout.emit()
-    assert reply.aborted and controller.checker._reply is None
+    assert reply.aborted and not controller.checker._replies
     assert not controller._checking and not controller.checker._timeout.isActive()
     assert bool(failures) is (operation == "timeout")
     assert controller.latest_version is None
     controller.cancel()
 
 
-def test_release_asset_is_delivered_with_notes_and_cleared_on_next_check(tmp_path, monkeypatch):
-    name = 'E7auto_v9.0.0_Setup_x64.exe'
-    item = {'name': name, 'size': 123, 'state': 'uploaded', 'digest': 'sha256:' + 'a' * 64,
-            'browser_download_url': f'https://github.com/Ricardo1503449/E7auto/releases/download/v9.0.0/{name}'}
-    payload = json.dumps({'tag_name': 'v9.0.0', 'draft': False, 'prerelease': False,
-                          'body': '同一次响应的日志', 'assets': [item]}).encode()
+def test_release_asset_is_delivered_with_notes_and_older_feed_preserves_reminder(tmp_path, monkeypatch):
     controller = UpdateController(tmp_path / 'update_status.json')
-    reply = FakeReply(payload)
+    reply = FakeReply(feed(notes='same response notes'))
     monkeypatch.setattr(controller.checker._manager, 'get', lambda request: reply)
     results = []
     controller.completed.connect(lambda *args: results.append((args, controller.asset)))
     controller.check(manual=True)
-    reply.finished.emit()
-    assert results[0][0] == ('v9.0.0', True, '同一次响应的日志')
-    assert results[0][1].sha256 == 'a' * 64 and results[0][1].name == name
-    next_reply = FakeReply(b'{"tag_name":"v1.4.0","draft":false,"prerelease":false}')
+    reply.complete()
+    assert results[0][0] == ('v9.0.0', True, 'same response notes')
+    assert results[0][1].sha256 == 'a' * 64
+    controller.checked_at -= 61
+    next_reply = FakeReply(feed('v1.4.0'))
     monkeypatch.setattr(controller.checker._manager, 'get', lambda request: next_reply)
     controller.check(manual=True)
-    assert controller.checker.asset is None
-    next_reply.finished.emit()
-    assert controller.asset is None and not controller.available
+    next_reply.complete()
+    assert controller.asset is None and controller.available and controller.latest_version == 'v9.0.0'
     controller.cancel()

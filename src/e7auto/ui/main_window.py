@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         self._chaos_feature_page = _ChaosFeaturePage()
         self._about_page = _AboutPage(project_root)
         self._update_controller = UpdateController(project_root / "state" / "update_status.json", self)
-        self._update_installer = UpdateInstaller(project_root, self)
+        self._update_installer = UpdateInstaller(project_root, self, diagnostic=self._update_controller.log_event)
         self._reporting_controller = ShopReportingController(project_root, self)
         self._reporting_controller.finished.connect(self._finish_deferred_close)
         settings_navigation = self._sidebar.buttons["settings"]

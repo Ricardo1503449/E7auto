@@ -131,28 +131,28 @@ content-enabled state; overlapping dialogs keep the content locked. Closing the 
 window still respects each dialog's reject guard and the existing installer handoff.
 Dialogs must use the shared open path rather than QDialog.open/exec or WindowModal.
 
-MainWindow owns one ui/updates.UpdateController and injects it into Settings. It owns the
-asynchronous UpdateChecker, a one-shot scheduler, and atomic state/update_status.json cache;
-Settings and the sidebar subscribe to the same availability signal. Only explicit manual
-requests emit dialog results; a manual request can join an automatic request already in flight.
-First show starts a one-second delay once, successful checks remain fresh for six hours,
-and automatic failures back off through 30 minutes, one/two/four/six hours. GitHub rate-limit
-headers set a persisted lower bound for both automatic and manual requests. Network failures
-preserve confirmed releases. Availability is recomputed against the running version instead
-of caching a badge flag, and viewing notes never acknowledges an update. Window close cancels
-the controller and queued settings actions; late results cannot change state or open dialogs.
-Reminder dots are Qt logical-pixel painting, anchored to the gear and update title, with
-accessible descriptions and no tooltips. No automation or recognition layer depends on them.
+MainWindow owns one UpdateController shared by Settings and navigation. Each logical check
+reads the signed updates-branch manifest through a fixed accelerator and official Raw URL,
+with a ten-second deadline and bounded responses. Only manual checks emit dialogs; callers
+join the same logical check. Verified sources select the higher release, while conflicting
+same-version installer identities fail closed. Old reminder state cannot authorize an install.
 
-The same successful release response supplies an immutable ReleaseAsset (version, exact
-Windows installer name/URL, size and GitHub SHA-256); this execution metadata is not restored
-from the reminder cache. Manual update dialogs bind their displayed notes to that asset.
-MainWindow owns ui/update_install.UpdateInstaller, which streams a bounded, cancellable
-download into state/updates/<version>-<job ID>, verifies size/digest, and starts a worker
-for the platform/update_install Windows handoff. Only explicit user action starts it.
-HTTPS redirects are restricted to GitHub asset hosts; no auth token, TLS bypass or new
-dependency is used. Updating shares the existing busy guard and normal asynchronous close.
-Setup launch failure leaves the app open; successful launch closes only after worker teardown.
+The pure core update-feed contract binds repository, version, release commit, notes and one
+installer identity. The Windows adapter verifies detached RSA-SHA256 CMS signatures and pins
+the publisher certificate. The private signing identity remains DPAPI-protected in registered
+developer state. No REST API credential or additional Python dependency is bundled.
+
+The controller keeps the six-hour automatic schedule and failure backoff, reuses successful
+in-process results for sixty seconds, and persists source-specific query waits atomically.
+Schema 1 reminders migrate without their obsolete API wait. A completed request from an old
+source cannot finish a later source. Diagnostic run logs use existing retention defaults.
+
+UpdateInstaller downloads the same immutable ReleaseAsset through the accelerator and official
+file URL in order. Each source is tried at most once, with clean partial bytes/hash/progress,
+restricted HTTPS redirects and the existing transfer/total deadlines. Network, HTTP and integrity
+failures permit fallback; disk errors, cancellation and overall timeout stop the operation.
+The same size/digest/PE-version/installation checks still guard the Windows handoff. Only an
+explicit user action downloads and installs. See [delivery protocol](../development/UPDATE_DELIVERY.md).
 
 The existing installer owns replacement and user-data preservation. Its explicit update mode
 waits at most 60 seconds for the running mutex without terminating a process, then follows

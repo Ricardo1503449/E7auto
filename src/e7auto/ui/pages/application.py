@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+from datetime import datetime
+import math
 
 from ..styles import COLORS, HEADING_SIZE, PAGE_MARGINS
 
@@ -211,6 +213,7 @@ class _ReleaseNotesView(QTextBrowser):
 
 class _UpdateResultDialog(AppDialog):
     update_requested = Signal()
+    release_page_requested = Signal()
 
     def __init__(self, title: str, message: str, action: str | None, parent: QWidget,
                  *, notes: str | None = None) -> None:
@@ -262,6 +265,14 @@ class _UpdateResultDialog(AppDialog):
         layout.addWidget(self.download_progress, 3, 0)
         buttons = QHBoxLayout()
         buttons.setSpacing(12)
+        if title == "检查更新失败":
+            self.release_button = QPushButton("发布页面")
+            self.release_button.setObjectName("updateDialogReleaseButton")
+            _use_smooth_text(self.release_button)
+            self.release_button.setMinimumSize(88, 40)
+            self.release_button.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.release_button.clicked.connect(self.release_page_requested)
+            buttons.addWidget(self.release_button)
         buttons.addStretch(1)
         self.close_button = QPushButton("关闭")
         _use_smooth_text(self.close_button)
@@ -608,12 +619,26 @@ class _SettingsPage(_ApplicationPage):
         self.update_button.set_busy(False)
         title = f"发现新版本 {version}" if available else "无需更新"
         message = f"当前版本：v{__version__}\n最新正式版：{version}"
+        checked_at = self._update_controller.checked_at
+        if checked_at:
+            message += "\n检查时间：" + datetime.fromtimestamp(checked_at).strftime("%Y-%m-%d %H:%M")
         self._show_update_result(title, message, "更新" if available else None,
                                  notes=notes if available else None, asset=self._update_controller.asset)
+        if available and checked_at:
+            self._update_dialog.set_install_status("下载后自动安装并重启，保留用户设置和记录。\n检查时间："
+                + datetime.fromtimestamp(checked_at).strftime("%Y-%m-%d %H:%M"))
 
     def _update_failed(self, message: str) -> None:
         self.update_button.set_busy(False)
         self._show_update_result("检查更新失败", message, "重试")
+        delay = self._update_controller.retry_not_before - self._update_controller._clock()
+        if delay > 0:
+            dialog = self._update_dialog
+            dialog.action_button.setEnabled(False)
+            dialog._retry_timer = QTimer(dialog)
+            dialog._retry_timer.setSingleShot(True)
+            dialog._retry_timer.timeout.connect(lambda: dialog.action_button.setEnabled(True))
+            dialog._retry_timer.start(math.ceil(min(delay, 2_147_483) * 1000))
 
     def _show_update_result(self, title: str, message: str, action: str | None,
                             *, notes: str | None = None, asset=None) -> None:
@@ -621,6 +646,7 @@ class _SettingsPage(_ApplicationPage):
             self._update_dialog.reject()
         dialog = _UpdateResultDialog(title, message, action, self.window(), notes=notes)
         self._update_dialog = dialog
+        dialog.release_page_requested.connect(lambda: self._open_target(self.github_button, PROJECT_URL + '/releases/latest'))
         if action == "重试":
             dialog.accepted.connect(self._check_updates)
         elif action == "更新":

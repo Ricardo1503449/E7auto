@@ -186,7 +186,7 @@ QTextBrowser#updateReleaseNotes QScrollBar::sub-line:vertical {
 }
 QTextBrowser#updateReleaseNotes QScrollBar::add-page:vertical,
 QTextBrowser#updateReleaseNotes QScrollBar::sub-page:vertical { background: transparent; }
-QPushButton#updateDialogCloseButton, QPushButton#updateDialogActionButton, QPushButton#announcementConfirmButton {
+QPushButton#updateDialogCloseButton, QPushButton#updateDialogReleaseButton, QPushButton#updateDialogActionButton, QPushButton#announcementConfirmButton {
     background: ${surface};
     color: ${link};
     border: 1px solid ${link_border};
@@ -195,11 +195,12 @@ QPushButton#updateDialogCloseButton, QPushButton#updateDialogActionButton, QPush
     font-family: ${font_family};
     font-size: 16px;
 }
-QPushButton#updateDialogCloseButton:hover { background: #f0f7ff; border-color: #409aff; }
-QPushButton#updateDialogCloseButton:pressed { background: #e3efff; border-color: ${link}; }
+QPushButton#updateDialogCloseButton:hover, QPushButton#updateDialogReleaseButton:hover { background: #f0f7ff; border-color: #409aff; }
+QPushButton#updateDialogCloseButton:pressed, QPushButton#updateDialogReleaseButton:pressed { background: #e3efff; border-color: ${link}; }
 QPushButton#updateDialogActionButton, QPushButton#announcementConfirmButton { background: ${accent}; color: ${surface}; border-color: ${accent}; }
 QPushButton#updateDialogActionButton:hover, QPushButton#announcementConfirmButton:hover { background: #1267b8; }
-QPushButton#updateDialogCloseButton:focus { border-color: ${link}; }
+QPushButton#updateDialogCloseButton:focus, QPushButton#updateDialogReleaseButton:focus { border-color: ${link}; }
+QPushButton#updateDialogActionButton:disabled { background: #e5e7eb; color: #68717b; border-color: #d1d5db; }
 QPushButton#updateDialogActionButton:focus, QPushButton#announcementConfirmButton:focus { border-color: #074b91; }
 QPushButton#announcementConfirmButton:pressed { background: #0e599e; }
 QFrame#settingsCard {

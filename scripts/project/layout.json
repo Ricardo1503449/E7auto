@@ -22,7 +22,7 @@
       }
     },
     "caches": {"npm": "cache/npm", "nuitka": "cache/nuitka"},
-    "states": {"cloudflare": "state/cloudflare", "tool_paths": "state/tool-paths.json"}
+    "states": {"cloudflare": "state/cloudflare", "tool_paths": "state/tool-paths.json", "release_signing": "state/releases"}
   },
   "features": [
     "shop",

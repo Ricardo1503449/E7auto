@@ -64,6 +64,13 @@ def main() -> int:
         from e7auto.ui.reporting_check import check_reporting_runtime
 
         compiled = bool(getattr(sys, "frozen", False) or "__compiled__" in globals())
+        from e7auto.platform.update_signing import self_check as check_update_signing
+        try:
+            update_signature_ready = check_update_signing()
+            update_signature_error = ""
+        except (OSError, ValueError) as exc:
+            update_signature_ready = False
+            update_signature_error = str(exc)
         update_installation_valid = None
         update_installation_error = ""
         if compiled:
@@ -81,6 +88,8 @@ def main() -> int:
         result = {
             "version": __version__,
             "compiled": compiled,
+            "update_signature_ready": update_signature_ready,
+            "update_signature_error": update_signature_error,
             "update_installation_valid": update_installation_valid,
             "update_installation_error": update_installation_error,
             "machine": platform.machine(),
@@ -109,6 +118,7 @@ def main() -> int:
             and not result["venv_bundled"]
             and result["wgc_importable"]
             and result["statistics_runtime_ready"]
+            and result["update_signature_ready"]
             and (not compiled or result["update_installation_valid"] is True)
             else 2
         )

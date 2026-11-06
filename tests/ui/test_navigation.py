@@ -204,6 +204,7 @@ def test_check_updates_feedback_retry_and_release_notes(tmp_path, monkeypatch, q
     QTest.keyClick(page._update_dialog, Qt.Key.Key_Escape)
     assert page._update_dialog is None
     assert window._dialog_backdrop.isHidden()
+    window._update_controller.checked_at -= 61  # This check deliberately bypasses the new 60-second result cache.
     page.update_button.click()
     wait_for(lambda: len(requests) == 3)
     page.update_checker.completed.emit("v9.0.0", True, "## 改进\n\n- 新增侧边栏\n- 调整标题栏\n")

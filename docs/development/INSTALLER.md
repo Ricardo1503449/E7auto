@@ -33,12 +33,18 @@ C后端编译器由Nuitka检测和选择。当前WinLibs GCC 15.2.0（MinGW-w64 
 
 ## 程序内更新
 
-安装版的更新弹窗提供“更新”按钮，选择同一次GitHub最新正式Release响应中的唯一
-E7auto_v<版本>_Setup_x64.exe，并要求state=uploaded、完整大小及digest=sha256:<摘要>。
-下载保存到安装根目录state/updates/<版本>-<32位任务ID>/，使用.part文件逐块写入；
-只在大小和摘要吻合后改为EXE。源码、未登记安装目录、错误路径或缺少摘要时拒绝自动安装。
-失败或取消清理部分下载；本地清理失败显示剩余路径。完整包在安装启动失败时保留供重试，
-启动前再次核验，并核对安装EXE内嵌文件版本与Release版本一致；内容变化时重新下载，不复用损坏包。
+安装版的更新弹窗提供“更新”按钮，版本、说明、唯一安装包的官方地址、大小及SHA-256
+来自同一份验签通过的静态清单；客户端不再查询GitHub REST API。清单位于独立updates
+分支，查询同时尝试第三方加速和官方Raw来源，下载先加速后官方，Release仍只上传EXE。
+协议、签名私钥和发布工具见[更新分发](UPDATE_DELIVERY.md)。
+
+下载保存到安装根目录state/updates/<版本>-<32位任务ID>/，使用.part逐块写入；只有大小
+和摘要吻合才改为EXE。换源清空本任务部分下载并保持安装包身份，取消立即停止；源码、
+未登记目录、错误路径或无有效签名清单时拒绝自动安装。完整包在安装启动失败时保留供
+重试，启动前再次核验摘要及PE内嵌版本；内容变化时重新下载。
+
+编译版须包含win32crypt.pyd，--self-check实际验证固定签名样本并报告
+update_signature_ready和update_signature_error，失败返回非零；保留Qt/WGC同进程检查。
 
 当前EXE身份通过Windows的`GetModuleFileName(None)`读取，与安装目录中的`E7auto.exe`
 比较；不使用Nuitka standalone可能指向虚拟`python.exe`的`sys.executable`。读取失败时拒绝

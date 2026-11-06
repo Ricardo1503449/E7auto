@@ -5,30 +5,22 @@ import json
 import math
 import re
 import time
-from dataclasses import dataclass
+import uuid
 from datetime import timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Callable
 
 from PySide6.QtCore import QObject, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
+from e7auto.core.update_feed import (FEED_URLS, MAX_FEED_BYTES, PROJECT_URL, ReleaseAsset,
+                                   decode_feed, version_parts)
+from e7auto.platform.update_signing import verify_signature
+from e7auto.configuration.models import LoggingConfig
+from e7auto.logging.run import RunLogManager
+
 from e7auto import __version__
-
-PROJECT_URL = "https://github.com/Ricardo1503449/E7auto"
-LATEST_RELEASE_API = "https://api.github.com/repos/Ricardo1503449/E7auto/releases/latest"
-
-
-@dataclass(frozen=True)
-class ReleaseAsset:
-    version: str
-    name: str
-    url: str
-    size: int
-    sha256: str
-
 
 def release_asset(payload: bytes, version: str) -> ReleaseAsset | None:
     """Only the named, uploaded Windows installer with a GitHub digest is eligible."""
@@ -51,10 +43,7 @@ def release_asset(payload: bytes, version: str) -> ReleaseAsset | None:
 
 
 def _version_parts(tag: str) -> tuple[int, int, int]:
-    match = re.fullmatch(r"v?(\d+)\.(\d+)\.(\d+)", tag) if isinstance(tag, str) else None
-    if match is None:
-        raise ValueError("无法识别发布版本号")
-    return tuple(map(int, match.groups()))
+    return version_parts(tag)
 
 
 def release_details(payload: bytes) -> tuple[str, bool, str]:
@@ -75,74 +64,167 @@ def release_details(payload: bytes) -> tuple[str, bool, str]:
 class UpdateChecker(QObject):
     completed = Signal(str, bool, str)
     failed = Signal(str)
+    cooldowns_changed = Signal()
+    SOURCE_URLS = FEED_URLS
 
-    def __init__(self, parent: QObject | None = None) -> None:
+    def __init__(self, parent=None):
         super().__init__(parent)
         self._manager = QNetworkAccessManager(self)
-        self._reply: QNetworkReply | None = None
+        self._replies = {}
+        self._buffers = {}
+        self._slots = {}
+        self._redirects = {}
+        self._valid = []
+        self._active = False
+        self.source_cooldowns = {}
         self.retry_not_before = 0.0
-        self.asset: ReleaseAsset | None = None
+        self.asset = None
+        self.diagnostic = lambda event, **fields: None
         self._timeout = QTimer(self)
         self._timeout.setSingleShot(True)
         self._timeout.setInterval(10_000)
         self._timeout.timeout.connect(self._abort)
 
-    def check(self) -> None:
-        if self._reply is not None:
+    def check(self):
+        if self._active:
             return
-        self.retry_not_before = 0.0
+        self._active = True
+        self._valid = []
         self.asset = None
-        request = QNetworkRequest(QUrl(LATEST_RELEASE_API))
-        request.setRawHeader(b"Accept", b"application/vnd.github+json")
-        request.setRawHeader(b"User-Agent", f"E7auto/{__version__}".encode("ascii"))
+        now = time.time()
+        self.retry_not_before = 0.0
+        for source in self.SOURCE_URLS:
+            if self.source_cooldowns.get(source, 0) > now:
+                self.diagnostic('update_source_wait', source=source, until=self.source_cooldowns[source])
+                continue
+            self._redirects[source] = 0
+            self._request(source, source)
+        if self._replies:
+            self._timeout.start()
+        else:
+            self._finish_check()
+
+    def _request(self, source, url):
+        request = QNetworkRequest(QUrl(url))
+        request.setRawHeader(b'Accept', b'application/json')
+        request.setRawHeader(b'User-Agent', f'E7auto/{__version__}'.encode('ascii'))
+        request.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute,
+                             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
         request.setTransferTimeout(10_000)
-        self._reply = self._manager.get(request)
-        self._reply.finished.connect(self._finished)
-        self._timeout.start()
+        reply = self._manager.get(request)
+        reply.setReadBufferSize(MAX_FEED_BYTES + 1)
+        self._replies[source] = reply
+        self._buffers[source] = bytearray()
+        read_slot = lambda: self._read(source) if self._replies.get(source) is reply else None
+        finished_slot = lambda: self._finished(source) if self._replies.get(source) is reply else None
+        self._slots[source] = (read_slot, finished_slot)
+        reply.readyRead.connect(read_slot)
+        reply.finished.connect(finished_slot)
 
-    def _abort(self) -> None:
-        if self._reply is not None:
-            self._reply.abort()
-
-    def cancel(self) -> None:
-        self._timeout.stop()
-        if self._reply is not None:
-            reply, self._reply = self._reply, None
-            reply.finished.disconnect(self._finished)
-            reply.abort()
-            reply.deleteLater()
-
-    def _finished(self) -> None:
-        reply, self._reply = self._reply, None
-        self._timeout.stop()
+    def _read(self, source):
+        reply = self._replies.get(source)
         if reply is None:
             return
-        try:
-            status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-            self.retry_not_before = self._rate_limit_deadline(reply, status)
-            if status == 404:
-                self.failed.emit("暂未找到正式发布版本，请稍后重试。")
-            elif reply.error() != QNetworkReply.NetworkError.NoError:
-                self.failed.emit("检查失败，请检查网络后重试，或打开 GitHub 项目查看发布页面。")
-            else:
-                try:
-                    payload = bytes(reply.readAll())
-                    version, available, notes = release_details(payload)
-                    self.asset = release_asset(payload, version) if available else None
-                except (ValueError, UnicodeError):
-                    self.failed.emit("无法读取最新版本信息，请稍后重试。")
-                else:
-                    self.completed.emit(version, available, notes)
-        finally:
+        data = bytes(reply.read(MAX_FEED_BYTES + 1 - len(self._buffers[source])))
+        self._buffers[source].extend(data)
+        if len(self._buffers[source]) > MAX_FEED_BYTES:
+            self.diagnostic('update_source_rejected', source=source, reason='response_too_large')
+            self._drop(source)
+            if not self._replies:
+                self._finish_check()
+
+    def _drop(self, source):
+        reply = self._replies.pop(source, None)
+        self._buffers.pop(source, None)
+        slots = self._slots.pop(source, None)
+        if reply is not None:
+            try:
+                reply.readyRead.disconnect(slots[0])
+                reply.finished.disconnect(slots[1])
+            except (RuntimeError, TypeError):
+                pass
+            if not reply.isFinished():
+                reply.abort()
             reply.deleteLater()
 
+    def _finished(self, source):
+        reply = self._replies.get(source)
+        if reply is None:
+            return
+        status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+        deadline = self._rate_limit_deadline(reply, status)
+        headers = {name: bytes(reply.rawHeader(name)).decode('ascii', errors='replace')[:128]
+                   for name in ('Retry-After', 'X-RateLimit-Remaining', 'X-RateLimit-Reset')}
+        self.diagnostic('update_source_response', source=source, http=status, wait_until=deadline, **headers)
+        if deadline:
+            self.source_cooldowns[source] = deadline
+            self.cooldowns_changed.emit()
+        if status in (301, 302, 303, 307, 308):
+            target = reply.attribute(QNetworkRequest.Attribute.RedirectionTargetAttribute)
+            url = reply.url().resolved(target).toString() if isinstance(target, QUrl) else ''
+            allowed = (*FEED_URLS, FEED_URLS[0].replace('://gh-proxy.org/', '://gh-proxy.com/', 1))
+            if url in allowed and self._redirects[source] < 5:
+                self._redirects[source] += 1
+                self._drop(source)
+                self._request(source, url)
+                return
+        try:
+            self._read(source)
+            if source not in self._replies:
+                return
+            if status != 200 or reply.error() != QNetworkReply.NetworkError.NoError:
+                raise ValueError(f'HTTP {status}')
+            release = decode_feed(bytes(self._buffers[source]), verify_signature)
+            self._valid.append((source, release))
+            self.source_cooldowns.pop(source, None)
+            self.cooldowns_changed.emit()
+        except (ValueError, TypeError, UnicodeError, OverflowError) as exc:
+            self.diagnostic('update_source_rejected', source=source, reason=str(exc))
+        finally:
+            self._drop(source)
+        if not self._replies:
+            self._finish_check()
+
+    def _finish_check(self):
+        if not self._active:
+            return
+        self._active = False
+        self._timeout.stop()
+        now = time.time()
+        waits = [self.source_cooldowns.get(source, 0) for source in self.SOURCE_URLS]
+        self.retry_not_before = min(waits) if waits and all(value > now for value in waits) else 0.0
+        if not self._valid:
+            self.failed.emit('检查失败，请检查网络后重试，或打开 GitHub 项目查看发布页面。')
+            return
+        candidates = [release for source, release in self._valid]
+        if any(a.version == b.version and a.asset != b.asset for a in candidates for b in candidates):
+            self.failed.emit('更新来源提供的同版本安装包信息不一致，已停止更新，请稍后重试。')
+            return
+        _, release = max(self._valid, key=lambda item: (version_parts(item[1].version),
+                                                        item[0] == self.SOURCE_URLS[-1]))
+        available = version_parts(release.version) > version_parts(__version__)
+        self.asset = release.asset if available else None
+        self.completed.emit(release.version, available, release.notes)
+
+    def _abort(self):
+        for source in list(self._replies):
+            self.diagnostic('update_source_timeout', source=source)
+            self._drop(source)
+        self._finish_check()
+
+    def cancel(self):
+        self._active = False
+        self._timeout.stop()
+        for source in list(self._replies):
+            self._drop(source)
+
     @staticmethod
-    def _rate_limit_deadline(reply: QNetworkReply, status: int | None) -> float:
+    def _rate_limit_deadline(reply, status):
         if status not in (403, 429):
             return 0.0
         now = time.time()
-        retry = bytes(reply.rawHeader("Retry-After")).decode("ascii", errors="ignore").strip()
-        remaining = bytes(reply.rawHeader("X-RateLimit-Remaining")).strip()
+        retry = bytes(reply.rawHeader('Retry-After')).decode('ascii', errors='ignore').strip()
+        remaining = bytes(reply.rawHeader('X-RateLimit-Remaining')).strip()
         deadlines = []
         if retry:
             try:
@@ -157,65 +239,66 @@ class UpdateChecker(QObject):
                     deadlines.append(date.timestamp())
                 except (ValueError, TypeError, OverflowError):
                     pass
-        if remaining == b"0":
+        if remaining == b'0':
             try:
-                reset = float(bytes(reply.rawHeader("X-RateLimit-Reset")))
+                reset = float(bytes(reply.rawHeader('X-RateLimit-Reset')))
                 if math.isfinite(reset):
                     deadlines.append(reset)
             except ValueError:
                 pass
-        if deadlines or status == 429 or remaining == b"0" or retry:
-            return max([now + 60, *deadlines])
-        return 0.0
+        return max([now + 60, *deadlines]) if deadlines or status == 429 or remaining == b'0' or retry else 0.0
 
 
 class UpdateController(QObject):
-    """Own one request; only explicitly requested checks produce dialogs."""
-
-    availability_changed = Signal(bool)
     completed = Signal(str, bool, str)
     failed = Signal(str)
+    availability_changed = Signal(bool)
     _CHECK_INTERVAL = 6 * 60 * 60
-    _RETRY_DELAYS = (30 * 60, 60 * 60, 2 * 60 * 60, 4 * 60 * 60, 6 * 60 * 60)
+    _RETRY_DELAYS = (1800, 3600, 7200, 14400, 21600)
 
-    def __init__(self, cache_path: Path, parent: QObject | None = None, *,
-                 clock: Callable[[], float] = time.time) -> None:
+    def __init__(self, cache_path: Path, parent=None, *, clock=time.time):
         super().__init__(parent)
-        self._cache_path = cache_path
-        self._clock = clock
-        self.latest_version: str | None = None
-        self.asset: ReleaseAsset | None = None
-        self.notes = ""
-        self.checked_at = 0.0
-        self.next_check_at = 0.0
-        self.retry_not_before = 0.0
+        self._cache_path, self._clock = cache_path, clock
+        self.latest_version, self.notes, self.asset = None, '', None
+        self.checked_at = self.next_check_at = self.retry_not_before = 0.0
         self._failure_count = 0
-        self._checking = False
-        self._manual = False
-        self._started = False
-        self._closed = False
-        self._load_cache()
+        self._checking = self._manual = self._started = self._closed = False
+        self._fresh_result = False
+        self._logger = None
         self.checker = UpdateChecker(self)
+        self.checker.diagnostic = self.log_event
+        self._load_cache()
+        self.checker.cooldowns_changed.connect(self._save_cache)
         self.checker.completed.connect(self._completed)
         self.checker.failed.connect(self._failed)
         self._auto_timer = QTimer(self)
         self._auto_timer.setSingleShot(True)
         self._auto_timer.timeout.connect(self._check_automatically)
 
-    @property
-    def available(self) -> bool:
-        return self.latest_version is not None and _version_parts(self.latest_version) > _version_parts(__version__)
+    def log_event(self, event, **fields):
+        if self._closed:
+            return
+        try:
+            if self._logger is None:
+                self._logger = RunLogManager(self._cache_path.parent.parent / 'logs', LoggingConfig()).start('updates-' + uuid.uuid4().hex)
+            self._logger.event(event, **fields)
+        except Exception:
+            pass  # Diagnostics never block update checks, downloads, or window teardown.
 
     @property
-    def checking(self) -> bool:
+    def available(self):
+        return self.latest_version is not None and version_parts(self.latest_version) > version_parts(__version__)
+
+    @property
+    def checking(self):
         return self._checking
 
-    def start(self) -> None:
+    def start(self):
         if not self._started and not self._closed:
             self._started = True
             self._auto_timer.start(1000)
 
-    def check(self, *, manual: bool = False) -> None:
+    def check(self, *, manual=False):
         if self._closed:
             return
         self._manual = self._manual or manual
@@ -225,38 +308,37 @@ class UpdateController(QObject):
         if now < self.retry_not_before:
             self._manual = False
             self._schedule()
+            self.log_event('update_cached_wait', manual=manual, until=self.retry_not_before)
             if manual:
                 self.failed.emit(self._rate_limit_message(now))
             return
+        if manual and self._fresh_result and 0 <= now - self.checked_at < 60:
+            self._manual = False
+            self.log_event('update_recent_result', checked_at=self.checked_at)
+            self.completed.emit(self.latest_version, self.available, self.notes)
+            return
         self._auto_timer.stop()
         self._checking = True
+        self.log_event('update_check_started', manual=manual)
         self.checker.check()
 
-    def cancel(self) -> None:
-        if self._closed:
-            return
-        self._closed = True
-        self._auto_timer.stop()
-        self._checking = self._manual = False
-        self.checker.cancel()
+    def _check_automatically(self):
+        if not self._closed:
+            if self._clock() < max(self.next_check_at, self.retry_not_before):
+                self._schedule()
+            else:
+                self.check()
 
-    def _check_automatically(self) -> None:
-        if self._closed:
-            return
-        if self._clock() < max(self.next_check_at, self.retry_not_before):
-            self._schedule()
-        else:
-            self.check()
-
-    def _schedule(self) -> None:
+    def _schedule(self):
         if self._started and not self._closed:
             delay = max(self.next_check_at, self.retry_not_before) - self._clock()
-            # Qt timer intervals are signed 32-bit milliseconds.
-            interval = math.ceil(min(max(delay, 0.001), 2_147_483.647) * 1000)
-            self._auto_timer.start(interval)
+            self._auto_timer.start(math.ceil(min(max(delay, .001), 2_147_483.647) * 1000))
 
-    def _completed(self, version: str, available: bool, notes: str) -> None:
+    def _completed(self, version, available, notes):
         if self._closed or not self._checking:
+            return
+        if self.latest_version and version_parts(version) < version_parts(self.latest_version):
+            self._failed('更新来源尚未同步，保留上次已确认的版本，请稍后重试。')
             return
         manual = self._manual
         self._checking = self._manual = False
@@ -266,18 +348,19 @@ class UpdateController(QObject):
         self.next_check_at = self.checked_at + self._CHECK_INTERVAL
         self.retry_not_before = 0.0
         self._failure_count = 0
+        self._fresh_result = True
         self._save_cache()
         self._schedule()
         self.availability_changed.emit(self.available)
         if manual:
             self.completed.emit(version, self.available, notes)
 
-    def _failed(self, message: str) -> None:
+    def _failed(self, message):
         if self._closed or not self._checking:
             return
-        now = self._clock()
-        manual = self._manual
-        self._checking = self._manual = False
+        now, manual = self._clock(), self._manual
+        self._checking = self._manual = self._fresh_result = False
+        self.asset = None
         delay = self._RETRY_DELAYS[min(self._failure_count, len(self._RETRY_DELAYS) - 1)]
         self._failure_count = min(self._failure_count + 1, len(self._RETRY_DELAYS))
         self.retry_not_before = self.checker.retry_not_before
@@ -285,45 +368,49 @@ class UpdateController(QObject):
         self._save_cache()
         self._schedule()
         if manual:
-            self.failed.emit(self._rate_limit_message(now) if self.retry_not_before > now else message)
+            self.failed.emit(self._rate_limit_message(now, cached=False) if self.retry_not_before > now else message)
 
-    def _rate_limit_message(self, now: float) -> str:
-        minutes = math.ceil((self.retry_not_before - now) / 60)
-        return f"GitHub 暂时限制请求，请在约 {minutes} 分钟后重试。"
+    def _rate_limit_message(self, now, *, cached=True):
+        minutes = max(1, math.ceil((self.retry_not_before - now) / 60))
+        origin = '更新来源仍在此前的等待期内' if cached else '本次请求收到更新来源的限流响应'
+        return f'{origin}，请在约 {minutes} 分钟后重试，或打开 GitHub 项目发布页面。'
 
-    def _load_cache(self) -> None:
+    def _load_cache(self):
         try:
-            raw = json.loads(self._cache_path.read_text(encoding="utf-8"))
-            if not isinstance(raw, dict) or raw.get("schema_version") != 1:
+            raw = json.loads(self._cache_path.read_text(encoding='utf-8'))
+            if not isinstance(raw, dict) or raw.get('schema_version') not in (1, 2):
                 return
-            version, notes = raw.get("latest_version"), raw["notes"]
+            version, notes = raw.get('latest_version'), raw['notes']
             if version is not None:
-                _version_parts(version)
+                version_parts(version)
             if not isinstance(notes, str):
                 return
-            dates = [raw[key] for key in ("checked_at", "next_check_at", "retry_not_before")]
+            dates = [raw[key] for key in ('checked_at', 'next_check_at', 'retry_not_before')]
             if any(type(value) not in (int, float) or not math.isfinite(value) or value < 0 for value in dates):
                 return
-            failures = raw["failure_count"]
+            failures = raw['failure_count']
             if type(failures) is not int or not 0 <= failures <= len(self._RETRY_DELAYS):
                 return
-            self.latest_version, self.notes = version, notes
-            self.checked_at, self.next_check_at, self.retry_not_before = dates
-            self._failure_count = failures
+            cooldowns = raw.get('source_cooldowns', {})
+            if not isinstance(cooldowns, dict) or any(key not in self.checker.SOURCE_URLS or type(value) not in (int, float) or not math.isfinite(value) or value < 0 for key, value in cooldowns.items()):
+                return
+            self.latest_version, self.notes, self.checked_at = version, notes, dates[0]
+            if raw['schema_version'] == 2:
+                self.next_check_at, self.retry_not_before, self._failure_count = dates[1], dates[2], failures
+                self.checker.source_cooldowns = cooldowns
         except (OSError, ValueError, TypeError, KeyError, OverflowError):
             pass
 
-    def _save_cache(self) -> None:
-        values = {
-            "schema_version": 1, "latest_version": self.latest_version, "notes": self.notes,
-            "checked_at": self.checked_at, "next_check_at": self.next_check_at,
-            "retry_not_before": self.retry_not_before, "failure_count": self._failure_count,
-        }
+    def _save_cache(self):
+        values = {'schema_version': 2, 'latest_version': self.latest_version, 'notes': self.notes,
+                  'checked_at': self.checked_at, 'next_check_at': self.next_check_at,
+                  'retry_not_before': self.retry_not_before, 'failure_count': self._failure_count,
+                  'source_cooldowns': self.checker.source_cooldowns}
         temporary = None
         try:
             self._cache_path.parent.mkdir(parents=True, exist_ok=True)
-            with NamedTemporaryFile(mode="w", encoding="utf-8", dir=self._cache_path.parent,
-                                    prefix="update_status-", suffix=".tmp", delete=False) as stream:
+            with NamedTemporaryFile(mode='w', encoding='utf-8', dir=self._cache_path.parent,
+                                    prefix='update_status-', suffix='.tmp', delete=False) as stream:
                 temporary = Path(stream.name)
                 json.dump(values, stream, ensure_ascii=False, indent=2)
             temporary.replace(self._cache_path)
@@ -335,3 +422,16 @@ class UpdateController(QObject):
                     temporary.unlink(missing_ok=True)
                 except OSError:
                     pass
+
+    def cancel(self):
+        if not self._closed:
+            self._closed = True
+            self._auto_timer.stop()
+            self._checking = self._manual = False
+            self.checker.cancel()
+            if self._logger is not None:
+                try:
+                    self._logger.close()
+                except Exception:
+                    pass
+                self._logger = None

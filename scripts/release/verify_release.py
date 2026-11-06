@@ -40,6 +40,7 @@ FORBIDDEN_RELEASE_GLOBS = (
 )
 REQUIRED_RELEASE_FILES = (
     "winrt/_winrt_windows_foundation.pyd",
+    "win32crypt.pyd",
 )
 
 
