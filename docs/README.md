@@ -28,6 +28,7 @@
 - [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
 - [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
+- [v1.5.1 工作区审查、构建与验证](releases/v1.5.1/VALIDATION.md)
 - [v1.5.0 工作区审查、构建与验证](releases/v1.5.0/VALIDATION.md)
 - [v1.4.29 工作区审查、构建与验证](releases/v1.4.29/VALIDATION.md)
 - [v1.4.28 工作区审查与版本验证](releases/v1.4.28/VALIDATION.md)
