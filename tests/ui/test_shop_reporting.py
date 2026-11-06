@@ -151,6 +151,42 @@ def test_errors_or_mismatched_ack_keep_record_and_classify_retry(tmp_path,qt_app
         uploader.stop(); uploader.deleteLater(); qt_application.processEvents()
 
 
+def test_retired_endpoint_404_preserves_record_and_resumes_after_restart(
+        tmp_path,qt_application,local_proxy_only,server,monkeypatch):
+    from types import SimpleNamespace
+    from e7auto.ui import shop_reporting
+
+    endpoint,state = server
+    state['code'] = 404
+    path = tmp_path/'q.sqlite3'
+    queue = ReportQueue(path)
+    report = enqueue(queue)
+    old = ShopReportUploader(queue,endpoint)
+    old.start()
+    try:
+        wait_for(lambda: len(state['requests']) == 1 and old._reply is None)
+        assert queue.counts() == (1,0)
+        assert queue.next_due(time.time()) is None
+    finally:
+        old.stop(); old.deleteLater(); qt_application.processEvents()
+
+    restored = ReportQueue(path)
+    due = time.time()+3600
+    assert restored.next_due(due).report == report
+    state['code'] = 201
+    new = ShopReportUploader(restored,endpoint.replace('127.0.0.1','localhost'))
+    new.start()
+    try:
+        assert len(state['requests']) == 1  # The persisted backoff still applies.
+        monkeypatch.setattr(shop_reporting,'time',SimpleNamespace(time=lambda: due))
+        new.pump()
+        wait_for(lambda: restored.counts() == (0,0))
+        assert [body for body,_ in state['requests']] == [report.payload(),report.payload()]
+        assert state['requests'][0][1]['Host'] != state['requests'][1][1]['Host']
+    finally:
+        new.stop(); new.deleteLater(); qt_application.processEvents()
+
+
 def test_manual_retry_after_transient_failure_succeeds(tmp_path,qt_application,local_proxy_only,server):
     endpoint,state = server
     state['code'] = 503

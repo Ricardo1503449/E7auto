@@ -64,7 +64,7 @@ points:
 
 statistics:
   # 首次部署后填写真实 HTTPS 服务根地址；留空时仅本地保存，不发送请求。
-  api_base_url: "https://e7auto-shop-stats.e7auto-stats.workers.dev"
+  api_base_url: "https://stats.e7helper.com"
 
 targets:
   - id: covenant_bookmark

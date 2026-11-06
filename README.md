@@ -31,9 +31,9 @@
 分别展示默认转运与连续刷新的累计统计，数据来自成功上传的匿名记录，不代表游戏官方概率。统计默认开启，可在设置中关闭。
 
 <!-- shop-statistics:start -->
-[![刷商店社区统计](https://e7auto-shop-stats.e7auto-stats.workers.dev/stats.svg)](https://e7auto-shop-stats.e7auto-stats.workers.dev/stats)
+[![刷商店社区统计](https://stats.e7helper.com/stats.svg)](https://stats.e7helper.com/stats)
 
-[近实时详情](https://e7auto-shop-stats.e7auto-stats.workers.dev/stats) · [每日快照](https://github.com/Ricardo1503449/E7auto/tree/stats)
+[近实时详情](https://stats.e7helper.com/stats) · [每日快照](https://github.com/Ricardo1503449/E7auto/tree/stats)
 <!-- shop-statistics:end -->
 
 每日快照保留最近365天的历史JSON，图表只保留最新一份；配置方式见[工作流说明](docs/development/SHOP_STATISTICS.md#github每日快照)。

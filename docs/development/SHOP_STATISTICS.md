@@ -54,6 +54,14 @@ $env:SHOP_STATS_NODE = $statsPaths.node
 
 配置工具只改统计地址和README标记块，不重写游戏几何/YAML；初始地址为空时只保存本地记录。默认域名不保证中国大陆直连，需分别记录无代理、系统代理及雷神实际模式下的连接结果。加速游戏成功不作为统计连接成功的证据；不向生产池写人工测试计数。
 
+## 自定义域名与旧入口退役
+
+当前生产根地址为`https://stats.e7helper.com`。`wrangler.jsonc`以Custom Domain绑定现有Worker，并设置`workers_dev: false`关闭旧生产入口；`preview_urls: true`保留原有预览状态。只更新入口设置时不重新发布Worker代码或迁移D1，历史汇总及已接收run_id继续使用原数据库。
+
+关闭旧入口前，先确认新地址可用，并将GitHub仓库变量`SHOP_STATS_API_URL`切换到新根地址、读取核对。关闭后检查旧汇总GET和旧上传POST均返回404，新汇总GET仍返回200；不向生产池写入模拟计数。
+
+旧版遇到404会保留pending记录并退避重试。覆盖升级保留state；客户端使用新地址、统计开启且自动化空闲时，退避到期后自动补传，也可点击“重新上传”立即重试。卸载会清理state，不能用卸载重装代替保留队列的覆盖升级。本地最多10000条，满后保留旧记录并跳过新轮次记录。
+
 ## GitHub每日快照
 
 实现由[工作流](../../.github/workflows/shop-statistics.yml)、[快照生成器](../../scripts/cloudflare/shop_stats/snapshot.py)和[分支发布器](../../scripts/cloudflare/shop_stats/publish.py)组成。工作流在GitHub托管的Ubuntu运行器上使用Python 3.12和Node.js 24执行，不需要保持开发电脑开机，不运行游戏或E7auto客户端，也不需要安装Wrangler或连接D1管理接口。
@@ -77,7 +85,7 @@ $env:SHOP_STATS_NODE = $statsPaths.node
 以下步骤会配置远端并产生统计提交，须先获得对应授权；文档核对或本地测试不代表已经启用。
 
 1. 将工作流及它依赖的scripts模块提交、推送到目标仓库的默认分支。不能只上传YAML：snapshot.py、publish.py、render.mjs、views.mjs、scripts.common.paths及包入口都必须可导入。定时任务使用默认分支，手动触发也要求工作流已存在于默认分支。[GitHub触发规则](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
-2. 在仓库`Settings → Secrets and variables → Actions → Variables`新增**仓库变量**`SHOP_STATS_API_URL`，值为真实HTTPS服务根地址，例如`https://e7auto-shop-stats.e7auto-stats.workers.dev`，不附加`/v1/shop-stats`。只在本机config中填写地址不会配置GitHub变量；变量缺失或为空时整个snapshot作业跳过。[变量配置](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables)
+2. 在仓库`Settings → Secrets and variables → Actions → Variables`新增**仓库变量**`SHOP_STATS_API_URL`，值为真实HTTPS服务根地址，当前为`https://stats.e7helper.com`，不附加`/v1/shop-stats`。只在本机config中填写地址不会配置GitHub变量；变量缺失或为空时整个snapshot作业跳过。[变量配置](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables)
 3. 确认仓库允许GitHub Actions及checkout/setup-python/setup-node，保留工作流声明的`contents: write`。发布步骤使用GitHub为本次作业提供的`GITHUB_TOKEN`，不需要个人长期令牌或Cloudflare管理密钥。组织策略、分支保护或ruleset若拒绝创建/更新stats，应先由维护者审查权限，不改为强制推送。[令牌权限](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token)
 4. 在`Actions → Shop community statistics snapshot → Run workflow`选择默认分支，手动运行一次。[手动运行说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
 5. 核对任务成功、stats分支实际提交与发布器输出一致，且当次四个文件齐全；latest与当天history的JSON内容一致，范围内旧JSON保留、过期JSON和每日SVG移除，没有新增源码或逐次上报明细。比较必须使用本次快照的数据，不能要求它与之后又收到上报的实时接口完全相等。首次成功后，README中的每日快照链接才有对应分支可访问。

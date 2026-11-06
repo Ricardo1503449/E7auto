@@ -123,3 +123,13 @@ counts/next_due使用独立连接执行只读查询，不再因查询数量或�
 ## 2026-10-23 历史任务状态收尾
 
 核对本页2026-10-03至10-04实现、部署和续验记录，以及对应任务results中的最终测试、bundle、部署及线上核验资料后，将 `artifacts/tasks/shop/20261003-213923-anonymous-shop-statistics-3ac414ba/task.json` 从active补记为complete。finished_at记录本次元数据收尾时间；原报告的时间、结果及首轮未执行范围不变，后续工作继续归属各自任务。此次没有重新部署、联网验收、构建或重跑历史测试。
+
+## 2026-11-06 自定义域名切换与旧生产入口关闭
+
+用户已绑定并实测`https://stats.e7helper.com`免VPN请求返回200，源码配置和README已切换到该根地址。本轮按用户明确授权，将GitHub仓库变量SHOP_STATS_API_URL从旧workers.dev地址改为新根地址并回读确认，再通过Cloudflare API关闭旧生产入口。API状态为enabled=false，previews_enabled=true，预览状态保持原样；源码Wrangler配置同步记录。没有重新发布Worker代码、迁移或删除D1，前后DB绑定均为5bfd13fa-6173-40b7-b8fd-048846df9a1d。
+
+控制面关闭后的首次立即探测尚收到旧GET 200、空正文POST 400；之后最终核验旧汇总GET及旧上传POST均为404，新汇总GET为200且包含有效pools。未向生产池提交有效模拟记录；首次与最终探测分别保留，未覆盖初始结果。GitHub变量已生效，但本轮没有手动触发每日快照工作流。
+
+新增且仅运行`test_retired_endpoint_404_preserves_record_and_resumes_after_restart`一项直接相关用例，通过（1.16秒）：真实本地HTTP 404保留pending及退避，重新打开同一SQLite后记录和UUID不变，更换端点主机名、退避到期后自动上传，只有有效201确认才删除。首次运行在系统临时目录准备阶段遇到权限错误，改用本任务内全新隔离目录后通过；未运行其他既有用例或全套测试。覆盖升级保留state的结论来自现有安装规则和脚本核对，本轮没有构建或实际安装、升级，也未操作用户真实待传队列或游戏。
+
+操作及验证证据位于`artifacts/tasks/shop/20261106-002115-retire-workers-dev-087fe429/results/`：retirement.json记录初始状态、D1绑定和变量回读，retirement-verification.json记录最终HTTP状态，retirement-test.log记录本地定向用例。此前用户的免VPN结果按未变的新域名复用，不将当前工具网络解释为新的大陆直连验证。
