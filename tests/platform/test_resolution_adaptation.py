@@ -29,6 +29,7 @@ def test_reference_path_is_identity_and_non_reference_target_uses_width_fraction
 
     assert initial_client_size(reference, reference, baseline, 0.60) == baseline
     assert initial_client_size(Size(2560, 1440), reference, baseline, 0.60) == Size(1536, 864)
+    assert initial_client_size(Size(1920, 1080), reference, baseline, 0.60) == Size(1152, 648)
     assert adapt_frame(frame, transform) is frame
 
 
@@ -131,11 +132,11 @@ def test_height_cap_preserves_aspect_and_fits_complete_outer_window(
     assert next_height + 40 > 1080
 
 
-@pytest.mark.parametrize("mode", [Size(2559, 1440), Size(2560, 1439), Size(1440, 2560)])
+@pytest.mark.parametrize("mode", [Size(1919, 1080), Size(1920, 1079), Size(1080, 1920)])
 def test_undersized_display_stops_before_window_mutation_or_input(mode: Size) -> None:
     config = replace(
         make_config(),
-        display=DisplayConfig(Size(3120, 2080), Size(2560, 1440), 0.60),
+        display=DisplayConfig(Size(3120, 2080), Size(1920, 1080), 0.60),
     )
     windows = FakeWindowService(
         display_geometry=DisplayGeometry(
@@ -159,30 +160,49 @@ def test_undersized_display_stops_before_window_mutation_or_input(mode: Size) ->
     assert inputs.actions == []
 
 
-def test_exact_minimum_display_proceeds_with_60_percent_client() -> None:
+@pytest.mark.parametrize(("mode", "expected_client", "dpi"), [
+    pytest.param(Size(1920, 1080), Size(1152, 648), 96, id="1080p-100-percent"),
+    pytest.param(Size(1920, 1080), Size(1152, 648), 120, id="1080p-125-percent"),
+    pytest.param(Size(1920, 1080), Size(1152, 648), 144, id="1080p-150-percent"),
+    pytest.param(Size(2560, 1440), Size(1536, 864), 96, id="1440p-unchanged"),
+])
+def test_supported_display_proceeds_with_60_percent_client(
+    mode: Size, expected_client: Size, dpi: int,
+) -> None:
     config = replace(
         make_config(),
         baseline_client_size=Size(2322, 1306),
-        display=DisplayConfig(Size(3120, 2080), Size(2560, 1440), 0.60),
+        display=DisplayConfig(Size(3120, 2080), Size(1920, 1080), 0.60),
     )
     windows = FakeWindowService(
         display_geometry=DisplayGeometry(
             1,
             r"\\.\DISPLAY1",
-            Rect(0, 0, 2560, 1440),
-            Size(2560, 1440),
-            96,
+            Rect(0, 0, mode.width, mode.height),
+            mode,
+            dpi,
         )
     )
 
-    final, _, _, _, _, _, _ = run_session(
-        ScriptedVision(top=[()], bottom=[()]),
+    vision = ScriptedVision(top=[()], bottom=[()])
+    final, _, _, inputs, overlay, _, _ = run_session(
+        vision,
         config=config,
         windows=windows,
     )
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
-    assert windows.resize_calls == [Size(1536, 864)]
+    assert windows.resize_calls == [expected_client]
+    assert isinstance(vision.scan_frames[0], FrameView)
+    transform = CoordinateTransform(config.baseline_client_size, expected_client)
+    assert vision.scan_frames[0].transform == transform
+    assert [point for action, point, _ in inputs.actions if action == "click"] == [
+        transform.point(config.points["shop_icon"]),
+        transform.point(config.points["shop_exit_button"]),
+    ]
+    assert overlay.calls == [
+        (windows.state.client_bounds, transform.point(config.overlay_offset))
+    ]
 
 
 def test_non_reference_run_scales_input_overlay_and_wraps_capture() -> None:

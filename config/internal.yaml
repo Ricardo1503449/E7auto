@@ -10,7 +10,7 @@ game:
 
 display:
   reference_mode: {width: 3120, height: 2080}
-  minimum_mode: {width: 2560, height: 1440}
+  minimum_mode: {width: 1920, height: 1080}
   client_width_fraction: 0.60
 
 economy:

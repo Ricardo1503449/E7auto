@@ -113,10 +113,10 @@ def _load_game(root, errors):
             errors,
         ),
     )
-    expected_display = DisplayConfig(Size(3120, 2080), Size(2560, 1440), 0.60)
+    expected_display = DisplayConfig(Size(3120, 2080), Size(1920, 1080), 0.60)
     if display != expected_display:
         errors.append(
-            "display must use reference_mode 3120x2080, minimum_mode 2560x1440, "
+            "display must use reference_mode 3120x2080, minimum_mode 1920x1080, "
             "and client_width_fraction 0.60"
         )
     return clients, window_title, baseline_size, display

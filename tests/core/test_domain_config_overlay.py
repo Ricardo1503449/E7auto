@@ -34,7 +34,7 @@ def test_default_configuration_loads_after_completed_calibration() -> None:
     assert config.rois["purchase_result"] == Rect(975, 210, 400, 300)
     assert config.template_paths["insufficient_funds"].name == "insufficient_funds.png"
     assert config.display.reference_mode == Size(3120, 2080)
-    assert config.display.minimum_mode == Size(2560, 1440)
+    assert config.display.minimum_mode == Size(1920, 1080)
     assert config.display.client_width_fraction == 0.60
 
 
@@ -102,7 +102,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "game": {"executable_path": "Game.exe", "window_title": "Game", "baseline_client_size": {"width": 100, "height": 80}},
         "display": {
             "reference_mode": {"width": 3120, "height": 2080},
-            "minimum_mode": {"width": 2560, "height": 1440},
+            "minimum_mode": {"width": 1920, "height": 1080},
             "client_width_fraction": 0.60,
         },
         "economy": {"refresh_cost": 3},
