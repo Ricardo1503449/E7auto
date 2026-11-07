@@ -19,7 +19,7 @@
 
 `validation/<主题>/` 保存验证结论、范围和限制。原始输出保存在本地 `artifacts/`，不复制到规范文档中。
 
-- [刷商店匿名统计设计](design/SHOP_STATISTICS.md)、[Cloudflare部署与GitHub每日快照](development/SHOP_STATISTICS.md)
+- [后台统计与活跃安装设计](design/SHOP_STATISTICS.md)、[统计上报与私有快照维护](development/SHOP_STATISTICS.md)
 - [刷商店匿名统计本地验证](validation/shop/SHOP_STATISTICS.md)
 
 新版本的验证记录在最终提交前集中整理；构建与上传的阶段状态留在本地产物，公开下载状态以 [GitHub Releases](https://github.com/Ricardo1503449/E7auto/releases/latest) 为准。历史版本记录保留原有验收事实。
@@ -28,6 +28,7 @@
 - [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
 - [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
+- [v1.5.2 验证记录](releases/v1.5.2/VALIDATION.md)（后台统计、网页与私有快照迁移、1080p适配）
 - [v1.5.1 工作区审查、构建与验证](releases/v1.5.1/VALIDATION.md)
 - [v1.5.0 工作区审查、构建与验证](releases/v1.5.0/VALIDATION.md)
 - [v1.4.29 工作区审查、构建与验证](releases/v1.4.29/VALIDATION.md)

@@ -4,7 +4,7 @@
 
 **[下载安装包](https://github.com/Ricardo1503449/E7auto/releases/latest)** · [使用说明](docs/user/使用说明.md) · [更新日志](CHANGELOG.md)
 
-当前检入源码版本为 `v1.5.1`，可下载版本以发布页为准。
+当前检入源码版本为 `v1.5.2`，可下载版本以发布页为准。
 
 ## 主要功能
 
@@ -16,7 +16,7 @@
 
 ## 开始使用
 
-运行需要管理员权限，游戏所在显示器的桌面分辨率至少为 **2560 × 1440**。安装版无需另装 Python。
+运行需要管理员权限，游戏所在显示器的桌面分辨率至少为 **1920 × 1080**。安装版无需另装 Python。
 
 1. 下载安装包，完成安装后打开 E7auto。
 2. 启动 STOVE 或 Steam 版《第七史诗》，只保留一个游戏窗口，登录并回到游戏主界面。
@@ -25,18 +25,6 @@
 若启动时停留在能识别右上角菜单的页面，程序会尝试经菜单中的酒馆返回主界面，再进入所选功能；无法确认页面时会停止。
 
 需要停止时，点击悬浮窗红色“停止”按钮；悬浮窗收起时先单击悬浮球展开。详细操作和常见问题见[使用说明](docs/user/使用说明.md)。
-
-## 刷商店社区统计
-
-分别展示默认转运与连续刷新的累计统计，数据来自成功上传的匿名记录，不代表游戏官方概率。统计默认开启，可在设置中关闭。
-
-<!-- shop-statistics:start -->
-[![刷商店社区统计](https://stats.e7helper.com/stats.svg)](https://stats.e7helper.com/stats)
-
-[近实时详情](https://stats.e7helper.com/stats) · [每日快照](https://github.com/Ricardo1503449/E7auto/tree/stats)
-<!-- shop-statistics:end -->
-
-每日快照保留最近365天的历史JSON，图表只保留最新一份；配置方式见[工作流说明](docs/development/SHOP_STATISTICS.md#github每日快照)。
 
 ## 注意事项
 
