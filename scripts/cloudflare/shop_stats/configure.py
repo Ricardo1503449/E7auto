@@ -7,10 +7,16 @@ import re
 from uuid import UUID
 
 from scripts.common.paths import PROJECT_ROOT
-from scripts.cloudflare.shop_stats.snapshot import endpoint_base
+from urllib.parse import urlsplit
 
-START = '<!-- shop-statistics:start -->'
-END = '<!-- shop-statistics:end -->'
+def endpoint_base(value: str) -> str:
+    if any(char.isspace() or char in '\"\'<>\\' for char in value):
+        raise ValueError('invalid HTTPS service root URL')
+    parsed = urlsplit(value)
+    if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+            or parsed.query or parsed.fragment or parsed.path not in ('','/') or parsed.port not in (None,443)):
+        raise ValueError('a real HTTPS service root URL without credentials is required')
+    return value.rstrip('/')
 
 
 def configure(*, database_id: str | None = None, endpoint: str | None = None,
@@ -32,13 +38,6 @@ def configure(*, database_id: str | None = None, endpoint: str | None = None,
         pattern = r'(?m)(^statistics:\r?\n(?:[ \t]+[^\r\n]*(?:\r?\n))*?)(^  api_base_url:[^\r\n]*)'
         text,count = re.subn(pattern,lambda match: match[1]+f'  api_base_url: "{endpoint}"',text)
         if count != 1: raise ValueError('expected one statistics API setting')
-        updates[path] = text
-        path = root/'README.md'
-        text = path.read_bytes().decode('utf-8')
-        block = (f'{START}\n[![刷商店社区统计]({endpoint}/stats.svg)]({endpoint}/stats)\n\n'
-                 f'[近实时详情]({endpoint}/stats) · [每日快照](https://github.com/Ricardo1503449/E7auto/tree/stats)\n{END}')
-        text,count = re.subn(re.escape(START)+r'.*?'+re.escape(END),lambda match: block,text,flags=re.S)
-        if count != 1: raise ValueError('expected one statistics README block')
         updates[path] = text
     if not updates: raise ValueError('provide a database ID or service endpoint')
     for path,text in updates.items():

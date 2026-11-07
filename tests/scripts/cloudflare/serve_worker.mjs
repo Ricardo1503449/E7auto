@@ -9,7 +9,7 @@ const require = createRequire(resolve(toolchainPath(),'package.json'));
 const { Miniflare,convertV4MiniflareOptions } = require('miniflare');
 const source = fileURLToPath(new URL('../../../scripts/cloudflare/shop_stats/',import.meta.url));
 const mf = new Miniflare(convertV4MiniflareOptions({modules:[
-  {type:'ESModule',path:resolve(source,'worker.mjs')},{type:'ESModule',path:resolve(source,'views.mjs')}],
+  {type:'ESModule',path:resolve(source,'worker.mjs')}],
   modulesRoot:source,compatibilityDate:'2026-10-03',d1Databases:{DB:randomUUID()},
   d1Persist:resolve(process.env.SHOP_STATS_TEST_OUTPUT,'integration-d1')}));
 try {
@@ -19,6 +19,12 @@ try {
   const statements = sql.slice(0,position).replace(/^--.*$/gm,'').split(';').map(s => s.trim()).filter(Boolean);
   await db.batch(statements.map(statement => db.prepare(statement)));
   await db.prepare(sql.slice(position)).run();
+  const usage = await readFile(resolve(source,'migrations/0002_usage_days.sql'),'utf8');
+  await db.batch(usage.split(';').map(value=>value.trim()).filter(Boolean).map(value=>db.prepare(value)));
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data',async value=>{
+    if (value.trim()==='pools') process.stdout.write(JSON.stringify((await db.prepare('SELECT * FROM pools').all()).results)+'\n');
+  });
   process.stdout.write(JSON.stringify({url:String(await mf.ready)})+'\n');
-  await new Promise(resolve => {process.stdin.once('data',resolve);process.stdin.once('end',resolve);process.stdin.resume();});
+  await new Promise(resolve => {process.stdin.on('data',value=>{if(value.trim()==='stop')resolve();});process.stdin.once('end',resolve);process.stdin.resume();});
 } finally { await mf.dispose(); }

@@ -42,21 +42,8 @@ def qt_messages():
 
 
 @pytest.fixture
-def settings_window(tmp_path):
-    window = MainWindow(tmp_path)
-    window._reporting_controller.endpoint = 'http://127.0.0.1'
-    window._settings_page._show_statistics_status('')
-    try:
-        yield window
-    finally:
-        window.close()
-        wait_for(lambda: window._reporting_controller._thread is None)
-        window.close()
-
-
-@pytest.fixture
 def server():
-    state = {'requests':[],'code':201,'ack':True,'retry_after':'','hold':threading.Event()}
+    state = {'paths':[],'requests':[],'code':201,'ack':True,'retry_after':'','hold':threading.Event()}
     state['hold'].set()
     class Handler(BaseHTTPRequestHandler):
         def log_message(self,*args):
@@ -64,6 +51,7 @@ def server():
         def do_POST(self):
             body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
             state['requests'].append((body,dict(self.headers)))
+            state['paths'].append(self.path)
             state['hold'].wait(state.get('hold_timeout',3))
             self.send_response(state['code'])
             self.send_header('Content-Type','application/json')
@@ -71,7 +59,8 @@ def server():
                 self.send_header('Retry-After',state['retry_after'])
             self.end_headers()
             try:
-                response = {'accepted':True,'run_id':body['run_id'] if state['ack'] else 'wrong'}
+                response = ({'accepted':True,'run_id':body['run_id'] if state['ack'] else 'wrong'}
+                    if 'run_id' in body else {'accepted':True,'installation_id':body['installation_id'] if state['ack'] else 'wrong','date':body['date']})
                 if state.get('padding'): response['padding'] = state['padding']
                 self.wfile.write(json.dumps(response).encode())
             except OSError:
@@ -250,27 +239,6 @@ def test_statistics_preferences_preserve_notifications_and_epoch(tmp_path):
     assert notifications.load() and preferences.load() and preferences.generation() == 1
 
 
-def test_settings_have_no_clear_or_hover_controls_and_capacity_stays_silent(tmp_path,qt_application):
-    window = MainWindow(tmp_path)
-    try:
-        controller = window._reporting_controller
-        controller.queue.capacity = 1
-        enqueue(controller.queue)
-        recorder = controller.recorder(continuous_refresh=False)
-        from e7auto.core.domain import RuntimeSnapshot,StopReason
-        recorder.observe(RuntimeSnapshot.initial('limit',(),3).finalized(StopReason.MANUAL_STOP))
-        window._settings_page._refresh_statistics()
-        assert window._settings_page.statistics_pending.text() == '待上传记录：1'
-        assert not any(word in window._settings_page.statistics_status.text() for word in ('容量','已满','上限'))
-        assert not any('清空' in button.text() for button in window._settings_page.findChildren(QPushButton))
-        assert all(not widget.toolTip() for widget in window.findChildren(QWidget))
-        window._settings_page.statistics_toggle.setChecked(False)
-        assert controller.queue.counts() == (1,0) and not controller.enabled
-        assert not window._settings_page.statistics_retry.isEnabled()
-    finally:
-        window.close()
-
-
 @pytest.mark.parametrize('value,expected',[(b'60',60),(b'-1',0),(b'nan',0),(b'inf',0),(b'bad',0)])
 def test_retry_after_numeric_values(value,expected):
     assert retry_after_seconds(value,1000) == expected
@@ -338,8 +306,9 @@ def test_desktop_to_actual_local_worker_and_d1(tmp_path,qt_application,local_pro
         recorder.observe(final)
         controller.set_running(False)
         wait_for(lambda: controller.queue.counts() == (0,0),timeout_ms=5000)
-        with urlopen(endpoint+'/v1/shop-stats',timeout=3) as response:
-            stats = json.load(response)
+        process.stdin.write('pools\n'); process.stdin.flush()
+        rows = json.loads(process.stdout.readline())
+        stats = {'pools':{row['strategy']:row for row in rows}}
         assert stats['pools']['continuous']['skystone_spent'] == 3
         assert stats['pools']['continuous']['covenant_purchases'] == 1
         assert stats['pools']['continuous']['mystic_purchases'] == 1
@@ -388,262 +357,47 @@ def test_system_proxy_is_read_per_request_without_global_changes(tmp_path,qt_app
         uploader.stop(); uploader.deleteLater(); qt_application.processEvents()
 
 
-def test_retry_feedback_is_immediate_and_recovers_after_failure_and_success(settings_window,qt_application,local_proxy_only,server):
-    window = settings_window
-    controller, page = window._reporting_controller, window._settings_page
-    endpoint, state = server
-    controller.endpoint = endpoint
-    enqueue(controller.queue)
-    state.update(code=503)
-    state['hold'].clear()
-    window.show()
-    window._show_section('settings')
-    page._refresh_statistics()
-    qt_application.processEvents()
-    button = page.statistics_retry
-    width = button.width()
-    try:
-        QTest.mouseClick(button, Qt.MouseButton.LeftButton)
-        assert controller.uploading and button.text() == '上传中…'
-        assert not button.isEnabled() and button._spinner_timer.isActive()
-        assert page.statistics_status.text() == '正在重新上传…'
-        wait_for(lambda: len(state['requests']) == 1)
-        controller.changed.emit()
-        controller.retry()
-        assert not button.isEnabled() and len(state['requests']) == 1
-        assert button.width() == width
-        window._show_section('home')
-        assert not button._spinner_timer.isActive()
-        window._show_section('settings')
-        assert button._spinner_timer.isActive() and not button.isEnabled()
-        state['hold'].set()
-        wait_for(lambda: not controller.uploading)
-        assert controller.queue.counts() == (1, 0)
-        assert page.statistics_pending.text() == '待上传记录：1'
-        assert '连接失败' in page.statistics_status.text()
-        assert button.text() == '重新上传' and button.isEnabled()
-        assert not button._spinner_timer.isActive()
-        assert not page._statistics_success_timer.isActive()
 
-        state['code'] = 200
-        state['hold'].clear()
-        QTest.mouseClick(button, Qt.MouseButton.LeftButton)
-        assert not button.isEnabled() and button._spinner_timer.isActive()
-        wait_for(lambda: len(state['requests']) == 2)
-        state['hold'].set()
-        wait_for(lambda: controller.queue.counts() == (0, 0) and not controller.uploading)
-        assert page.statistics_pending.text() == '待上传记录：0'
-        assert page.statistics_status.text() == '统计记录已上传'
-        assert page._statistics_success_timer.isActive()
-        assert not button.isEnabled() and button.text() == '重新上传'
-        assert button.width() == width and len(state['requests']) == 2
+
+def test_usage_and_shop_share_uploader_with_distinct_ack_and_busy_pause(tmp_path,qt_application,local_proxy_only,server):
+    endpoint,state=server
+    controller=ShopReportingController(tmp_path,report_usage=True)
+    controller.endpoint=endpoint
+    controller.application_shown()
+    usage=controller.usage_queue.next_due(time.time())
+    enqueue(controller.queue)
+    state['ack']=False
+    controller.start()
+    try:
+        wait_for(lambda:len(state['requests'])==1 and not controller.uploading)
+        assert state['paths']==['/v1/usage-days']
+        assert controller.usage_queue.next_due(time.time()+10000) is not None
+        state['ack']=True
+        controller.set_running(True)
+        controller._uploader._retry_not_before=0
+        controller.usage_queue.retry_later(usage,0)
+        controller.set_running(False)
+        wait_for(lambda:controller.queue.counts()==(0,0) and controller.usage_queue.next_due(time.time()+10000) is None)
+        assert '/v1/shop-runs' in state['paths']
+        assert all(set(body)=={'installation_id','date','version','features'} if path=='/v1/usage-days'
+                   else set(body)=={'run_id','strategy','skystone_spent','covenant_purchases','mystic_purchases'}
+                   for path,(body,_) in zip(state['paths'],state['requests']))
+    finally:
+        controller.cancel(); wait_for(lambda:controller._thread is None)
+
+
+def test_usage_inflight_shutdown_retains_daily_record(tmp_path,qt_application,local_proxy_only,server):
+    endpoint,state=server
+    controller=ShopReportingController(tmp_path,report_usage=True)
+    controller.endpoint=endpoint
+    controller.application_shown()
+    state['hold'].clear()
+    controller.start()
+    try:
+        wait_for(lambda:len(state['requests'])==1)
+        controller.cancel()
+        wait_for(lambda:controller._thread is None)
+        assert controller.usage_queue.next_due(time.time()) is not None
     finally:
         state['hold'].set()
         controller.cancel()
-        wait_for(lambda: controller._thread is None)
-
-
-def test_background_success_waits_until_settings_are_shown_before_expiring(settings_window,qt_application):
-    window = settings_window
-    page, controller = window._settings_page, window._reporting_controller
-    window.show()
-    qt_application.processEvents()
-    controller.status.emit('统计记录已上传', True)
-    assert not page.isVisible() and not page._statistics_success_timer.isActive()
-    QTest.qWait(3100)
-    assert page.statistics_status.text() == '统计记录已上传'
-    window._show_section('settings')
-    qt_application.processEvents()
-    assert page.statistics_status.isVisible()
-    assert page._statistics_success_timer.interval() == 3000
-    assert page._statistics_success_timer.isActive()
-    wait_for(lambda: page.statistics_status.isHidden(), timeout_ms=4000)
-    assert page.statistics_status.text() == ''
-    window._show_section('home')
-    window._show_section('settings')
-    assert page.statistics_status.isHidden()
-
-
-def test_leaving_settings_discards_seen_success_but_preserves_unseen_success(settings_window,qt_application):
-    window = settings_window
-    page, controller = window._settings_page, window._reporting_controller
-    window.show()
-    window._show_section('settings')
-    qt_application.processEvents()
-    controller.status.emit('统计记录已上传', True)
-    assert page._statistics_success_timer.isActive()
-    window._show_section('home')
-    assert page.statistics_status.text() == ''
-    assert not page._statistics_success_timer.isActive()
-    window._show_section('settings')
-    assert page.statistics_status.isHidden()
-    window._show_section('home')
-    controller.status.emit('统计记录已上传', True)
-    window.hide()
-    assert page.statistics_status.text() == '统计记录已上传'
-    window.show()
-    window._show_section('settings')
-    assert page.statistics_status.isVisible() and page._statistics_success_timer.isActive()
-
-
-def test_failure_survives_old_success_timeout_and_navigation_with_matching_style(settings_window,qt_application):
-    window = settings_window
-    page, controller = window._settings_page, window._reporting_controller
-    window.show()
-    window._show_section('settings')
-    controller.status.emit('统计记录已上传', True)
-    message = '连接失败，记录已保留，稍后自动补传'
-    controller.status.emit(message, False)
-    page._statistics_success_timer.timeout.emit()
-    qt_application.processEvents()
-    assert page.statistics_status.text() == message
-    assert not page._statistics_success_timer.isActive()
-    for label in (page.statistics_pending, page.statistics_status):
-        assert label.font().pixelSize() == 16
-        assert label.palette().color(QPalette.ColorRole.WindowText).name() == '#15181b'
-    assert page.statistics_pending.geometry().bottom() < page.statistics_status.geometry().top()
-    assert page.statistics_status.geometry().bottom() < page.statistics_retry.geometry().top()
-    window._show_section('home')
-    window._show_section('settings')
-    assert page.statistics_status.text() == message and page.statistics_status.isVisible()
-    assert all(not widget.toolTip() for widget in window.findChildren(QWidget))
-
-
-@pytest.mark.parametrize('condition,expected', [
-    ('endpoint', '尚未配置统计服务地址'),
-    ('running', '当前任务运行中'),
-    ('disabled', '匿名统计已关闭'),
-    ('empty', '没有可重试的待上传记录'),
-    ('rejected', '没有可重试的待上传记录'),
-    ('closing', '统计上传正在关闭'),
-    ('storage', '暂时无法读取本地统计记录'),
-])
-def test_retry_explains_blocked_requests_without_busy_or_network(settings_window,monkeypatch,condition,expected):
-    controller = settings_window._reporting_controller
-    if condition != 'empty':
-        report = enqueue(controller.queue)
-    if condition == 'endpoint':
-        controller.endpoint = ''
-    elif condition == 'running':
-        controller.set_running(True)
-    elif condition == 'disabled':
-        controller.set_enabled(False)
-    elif condition == 'rejected':
-        controller.queue.reject(report.run_id, 'test')
-    elif condition == 'closing':
-        controller.cancel()
-    elif condition == 'storage':
-        def fail_counts():
-            raise OSError('test')
-        monkeypatch.setattr(controller.queue, 'counts', fail_counts)
-    statuses, dispatched = [], []
-    controller.status.connect(lambda message, success: statuses.append((message, success)))
-    controller._retry_requested.connect(lambda: dispatched.append(True))
-    controller.retry()
-    assert not controller.uploading and controller._thread is None and not dispatched
-    assert expected in statuses[-1][0] and statuses[-1][1] is False
-
-
-def test_pausing_active_retry_restores_controls_and_retains_record(settings_window,qt_application,local_proxy_only,server,qt_messages):
-    window = settings_window
-    controller, page = window._reporting_controller, window._settings_page
-    endpoint, state = server
-    controller.endpoint = endpoint
-    enqueue(controller.queue)
-    state['hold'].clear()
-    window.show()
-    window._show_section('settings')
-    page._refresh_statistics()
-    try:
-        page.statistics_retry.click()
-        wait_for(lambda: bool(state['requests']))
-        controller.set_running(True)
-        wait_for(lambda: not controller.uploading)
-        assert controller.queue.counts() == (1, 0)
-        assert page.statistics_retry.text() == '重新上传'
-        assert not page.statistics_retry._spinner_timer.isActive()
-        assert page.statistics_status.text() == '当前任务运行中，结束后自动补传'
-        assert not any('device not open' in message for message in qt_messages)
-    finally:
-        state['hold'].set()
-        controller.cancel()
-        wait_for(lambda: controller._thread is None)
-
-
-def test_retry_start_failure_restores_button_and_retains_record(settings_window,monkeypatch):
-    window = settings_window
-    controller, page = window._reporting_controller, window._settings_page
-    enqueue(controller.queue)
-    def fail_start():
-        raise RuntimeError('test start failure')
-    monkeypatch.setattr(controller, 'start', fail_start)
-    window.show()
-    window._show_section('settings')
-    page._refresh_statistics()
-    page.statistics_retry.click()
-    assert not controller.uploading and controller.queue.counts() == (1, 0)
-    assert page.statistics_retry.text() == '重新上传' and page.statistics_retry.isEnabled()
-    assert not page.statistics_retry._spinner_timer.isActive()
-    assert page.statistics_status.text() == '暂时无法启动上传，记录已保留'
-    assert not page._statistics_success_timer.isActive()
-
-
-def test_statistics_count_read_failure_preserves_known_counts_and_upload_feedback(settings_window, qt_application, monkeypatch):
-    controller, page = settings_window._reporting_controller, settings_window._settings_page
-    enqueue(controller.queue)
-    page._refresh_statistics()
-    assert page.statistics_pending.text() == '待上传记录：1'
-    settings_window.show()
-    settings_window._show_section('settings')
-    qt_application.processEvents()
-    page._show_statistics_status('上传反馈保留', success=True)
-    timer_active = page._statistics_success_timer.isActive()
-    assert timer_active
-    def fail_counts():
-        raise OSError('database unavailable')
-    with monkeypatch.context() as patch:
-        patch.setattr(controller.queue, 'counts', fail_counts)
-        assert controller.counts() is None
-        page._refresh_statistics()
-        assert page.statistics_pending.text() == '上次待上传记录：1（暂时无法刷新）'
-        assert page.statistics_retry.isEnabled()
-        assert page.statistics_status.text() == '上传反馈保留'
-        assert page._statistics_success_timer.isActive() == timer_active
-        dispatched = []
-        controller._retry_requested.connect(lambda: dispatched.append(True))
-        page.statistics_retry.click()
-        assert not dispatched and not controller.uploading
-        assert page.statistics_status.text() == '暂时无法读取本地统计记录'
-    controller.queue.acknowledge(controller.queue.next_due(0).report.run_id)
-    page._refresh_statistics()
-    assert page.statistics_pending.text() == '待上传记录：0'
-    assert not page.statistics_retry.isEnabled()
-
-
-def test_statistics_first_count_read_failure_does_not_display_zero(tmp_path, qt_application, monkeypatch):
-    def fail_counts(*args):
-        raise OSError('database unavailable')
-    with monkeypatch.context() as patch:
-        patch.setattr(ReportQueue, 'counts', fail_counts)
-        window = MainWindow(tmp_path)
-        try:
-            page = window._settings_page
-            assert window._reporting_controller.counts() is None
-            assert page.statistics_pending.text() == '待上传记录：暂不可读取'
-            assert page._last_statistics_counts is None
-        finally:
-            window.close()
-    assert ReportQueue(tmp_path/'state/shop_reports.sqlite3').counts() == (0, 0)
-
-
-def test_statistics_rejected_counts_remain_visible_when_reading_fails(settings_window, monkeypatch):
-    controller, page = settings_window._reporting_controller, settings_window._settings_page
-    value = enqueue(controller.queue)
-    controller.queue.reject(value.run_id, 'http_409')
-    page._refresh_statistics()
-    assert page.statistics_pending.text() == '待上传记录：1 · 服务端拒绝：1'
-    def fail_counts():
-        raise OSError('database unavailable')
-    monkeypatch.setattr(controller.queue, 'counts', fail_counts)
-    page._refresh_statistics()
-    assert page.statistics_pending.text() == '上次待上传记录：1 · 服务端拒绝：1（暂时无法刷新）'

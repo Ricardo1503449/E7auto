@@ -17,7 +17,6 @@ from ..desktop_actions import DesktopActionThread
 from ..preferences import NotificationPreferences
 from ..widgets import AppDialog, _ToggleSwitch, _use_smooth_text
 from ..announcements import QQ_GROUP_TEXT
-from ..shop_reporting import ShopReportingController
 
 
 class _UpdateLabel(QLabel):
@@ -121,62 +120,6 @@ class _SettingsRow(QPushButton):
             painter.drawArc(QRectF(-9, -9, 18, 18), -self._spinner_angle * 16, 260 * 16)
         else:
             painter.drawPolyline(QPolygonF([QPointF(-3, -5), QPointF(2, 0), QPointF(-3, 5)]))
-
-
-class _UploadRetryButton(QPushButton):
-    def __init__(self) -> None:
-        super().__init__("重新上传")
-        _use_smooth_text(self)
-        self.setObjectName("shopStatisticsRetry")
-        self.setAccessibleName("重新上传待传统计记录")
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self._busy = False
-        self._spinner_angle = 0
-        self._spinner_timer = QTimer(self)
-        self._spinner_timer.setInterval(40)
-        self._spinner_timer.timeout.connect(self._advance_spinner)
-
-    def sizeHint(self) -> QSize:
-        size = super().sizeHint()
-        metrics = self.fontMetrics()
-        text_width = max(metrics.horizontalAdvance("重新上传"), metrics.horizontalAdvance("上传中…"))
-        return QSize(size.width() + text_width - metrics.horizontalAdvance(self.text()) + 24, size.height())
-
-    def set_busy(self, busy: bool) -> None:
-        if self._busy == busy:
-            return
-        self._busy = busy
-        self.setText("上传中…" if busy else "重新上传")
-        self.setAccessibleDescription("正在上传，请稍候" if busy else "")
-        self.setEnabled(not busy)
-        if busy and self.isVisible():
-            self._spinner_timer.start()
-        else:
-            self._spinner_timer.stop()
-        self.update()
-
-    def _advance_spinner(self) -> None:
-        self._spinner_angle = (self._spinner_angle + 18) % 360
-        self.update()
-
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        if self._busy:
-            self._spinner_timer.start()
-
-    def hideEvent(self, event) -> None:
-        self._spinner_timer.stop()
-        super().hideEvent(event)
-
-    def paintEvent(self, event) -> None:
-        super().paintEvent(event)
-        if self._busy:
-            painter = QPainter(self)
-            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-            painter.setPen(QPen(QColor(COLORS["primary"]), 1.8,
-                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
-            painter.drawArc(QRectF(self.width() - 21, self.height() / 2 - 7, 14, 14),
-                            -self._spinner_angle * 16, 260 * 16)
 
 
 class _ReleaseNotesView(QTextBrowser):
@@ -405,8 +348,7 @@ class _SettingsPage(_ApplicationPage):
     update_cancelled = Signal()
     notifications_changed = Signal(bool)
 
-    def __init__(self, project_root: Path, update_controller: UpdateController,
-                 reporting_controller: ShopReportingController | None = None) -> None:
+    def __init__(self, project_root: Path, update_controller: UpdateController) -> None:
         super().__init__("设置", "applicationSettingsPage")
         self._log_directory = project_root.resolve() / "logs"
         self._preferences = NotificationPreferences(project_root / "state" / "ui_preferences.json")
@@ -457,52 +399,6 @@ class _SettingsPage(_ApplicationPage):
         line.setObjectName("settingsDivider")
         line.setFixedHeight(1)
         rows.addWidget(line)
-        if reporting_controller is not None:
-            self._reporting_controller = reporting_controller
-            self._last_statistics_counts: tuple[int, int] | None = None
-            self._statistics_success = False
-            self._statistics_success_seen = False
-            self._statistics_success_timer = QTimer(self)
-            self._statistics_success_timer.setSingleShot(True)
-            self._statistics_success_timer.setInterval(3000)
-            self._statistics_success_timer.timeout.connect(self._clear_statistics_success)
-            statistics = QWidget()
-            statistics.setObjectName("shopStatisticsSettings")
-            statistics_layout = QVBoxLayout(statistics)
-            statistics_layout.setContentsMargins(24, 16, 24, 16)
-            heading = QHBoxLayout()
-            statistics_label = QLabel("参与刷商店匿名统计")
-            heading.addWidget(statistics_label)
-            heading.addStretch(1)
-            self.statistics_toggle = _ToggleSwitch(
-                object_name="shopStatisticsToggle", accessible_name="参与刷商店匿名统计")
-            statistics_label.setBuddy(self.statistics_toggle)
-            self.statistics_toggle.setChecked(reporting_controller.enabled)
-            self.statistics_toggle.toggled.connect(self._save_statistics)
-            heading.addWidget(self.statistics_toggle)
-            statistics_layout.addLayout(heading)
-            statistics_layout.addSpacing(12)
-            self.statistics_pending = QLabel()
-            _use_smooth_text(self.statistics_pending)
-            self.statistics_pending.setObjectName("shopStatisticsPending")
-            statistics_layout.addWidget(self.statistics_pending)
-            self.statistics_status = QLabel()
-            _use_smooth_text(self.statistics_status)
-            self.statistics_status.setObjectName("shopStatisticsStatus")
-            self.statistics_status.setWordWrap(True)
-            self.statistics_status.hide()
-            statistics_layout.addWidget(self.statistics_status)
-            self.statistics_retry = _UploadRetryButton()
-            self.statistics_retry.clicked.connect(reporting_controller.retry)
-            statistics_layout.addWidget(self.statistics_retry, 0, Qt.AlignmentFlag.AlignLeft)
-            reporting_controller.changed.connect(self._refresh_statistics)
-            reporting_controller.status.connect(self._show_statistics_status)
-            rows.addWidget(statistics)
-            line = QFrame()
-            line.setObjectName("settingsDivider")
-            line.setFixedHeight(1)
-            rows.addWidget(line)
-            self._refresh_statistics()
         version_row = QWidget()
         version_row.setMinimumHeight(76)
         version_layout = QHBoxLayout(version_row)
@@ -533,70 +429,6 @@ class _SettingsPage(_ApplicationPage):
             return
         self._show_status("")
         self.notifications_changed.emit(enabled)
-
-    def _save_statistics(self, enabled: bool) -> None:
-        try:
-            self._reporting_controller.set_enabled(enabled)
-        except Exception:
-            self.statistics_toggle.blockSignals(True)
-            self.statistics_toggle.setChecked(self._reporting_controller.enabled)
-            self.statistics_toggle.blockSignals(False)
-            self._show_statistics_status("统计设置暂时无法保存")
-        self._refresh_statistics()
-
-    def _show_statistics_status(self, message: str, success: bool = False) -> None:
-        self._statistics_success_timer.stop()
-        self._statistics_success = success and bool(message)
-        self._statistics_success_seen = False
-        self.statistics_status.setText(message)
-        self.statistics_status.setVisible(bool(message))
-        if self._statistics_success and self.isVisible():
-            self._statistics_success_seen = True
-            self._statistics_success_timer.start()
-
-    def _clear_statistics_success(self) -> None:
-        if self._statistics_success:
-            self._statistics_success_timer.stop()
-            self._statistics_success = False
-            self._statistics_success_seen = False
-            self.statistics_status.clear()
-            self.statistics_status.hide()
-
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        if getattr(self, "_statistics_success", False):
-            self._statistics_success_seen = True
-            self._statistics_success_timer.start()
-
-    def hideEvent(self, event) -> None:
-        if hasattr(self, "_statistics_success_timer"):
-            self._statistics_success_timer.stop()
-            if self._statistics_success_seen:
-                self._clear_statistics_success()
-        super().hideEvent(event)
-
-    def _refresh_statistics(self) -> None:
-        counts = self._reporting_controller.counts()
-        if counts is None:
-            if self._last_statistics_counts is None:
-                text = "待上传记录：暂不可读取"
-            else:
-                pending, rejected = self._last_statistics_counts
-                text = (f"上次待上传记录：{pending}"
-                        + (f" · 服务端拒绝：{rejected}" if rejected else "")
-                        + "（暂时无法刷新）")
-            can_retry = True  # retry() re-reads the journal before dispatching an upload.
-        else:
-            self._last_statistics_counts = counts
-            pending, rejected = counts
-            text = f"待上传记录：{pending}" + (f" · 服务端拒绝：{rejected}" if rejected else "")
-            can_retry = pending > rejected
-        self.statistics_pending.setText(text)
-        self.statistics_retry.set_busy(self._reporting_controller.uploading)
-        self.statistics_retry.setEnabled(self._reporting_controller.enabled and can_retry
-                                         and not self._reporting_controller.uploading)
-        if not self._reporting_controller.endpoint:
-            self._show_statistics_status("尚未配置统计服务地址，记录保存在本地")
 
     def _open_logs(self) -> None:
         self._open_target(self.logs_button, self._log_directory)

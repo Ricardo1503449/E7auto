@@ -1,115 +1,33 @@
-# 刷商店统计后台开发与首次部署
+# 统计上报服务维护
 
-源码在`scripts/cloudflare/shop_stats/`，属于shop的配套部署工具。客户端不导入scripts，不增加第三方运行依赖。工具需要Node.js 22及以上；Wrangler及其配套Miniflare精确版本见package.json和package-lock.json，只用于开发/部署，不打包进E7auto。
+## 所属和工具
 
-## 本地工具与测试
+公开项目仅维护客户端、上报Worker与数据库迁移；源码位于scripts/cloudflare/shop_stats。统计网页、具体域名配置和每日归档工具由私有统计仓库维护。运行源码不依赖scripts或私有仓库。
 
-统计详情网页在成功获取、校验并应用汇总后，以浏览器当前时间更新页面中的“数据更新时间（北京时间）”，统一换算UTC+8并保留到分钟；标题、布局和失败提示不变。请求失败或无效响应保留上次显示的数据与时间，自动刷新和手动刷新一致。该显示时间不写回服务端；公开JSON的updated_at、SVG和GitHub快照仍使用真实上报汇总时间。
+沿用登记的Wrangler 4.147.0及Miniflare 5.20261001.0-alpha，不新增客户端依赖。Node/npm由tools/state/tool-paths.json解析，工具和私有授权均经scripts.common.paths定位，不修改系统PATH或在源码目录安装node_modules。实际工具清单以package.json及lock为准。
 
-设置页统计计数读取失败时，控制器返回None而非零条。页面保留最近一次可信计数并明确标为上次记录；尚无可信结果时显示暂不可读取。计数区域的异常不覆盖上传反馈或其显示计时。开启统计且不忙时仍可点击重试，但必须由原retry流程实时读库确认，不能以旧显示计数授权上传；后续成功读取恢复正常显示。
+使用scripts.project.artifacts创建shop任务或maintenance任务，将实际返回的目录传给tools run --run-dir。tools locate提供Node、Wrangler及缓存路径；tools stage仅复制上报入口、配置与迁移。
 
-客户端ReportQueue的每次操作仍在调用线程创建并关闭独立SQLite连接。counts/next_due只执行读取，不申请BEGIN IMMEDIATE；新增、保存、确认删除、退避及取消等写操作继续使用BEGIN IMMEDIATE和synchronous=FULL。首次使用只读检查已有表字段与索引，完整结构不申请写锁；新库或旧结构才在独立写事务中创建/迁移，成功后记录本实例已准备的数据库文件身份，失败回滚并允许下次重试，文件被重建/替换时重新准备。容量检查与插入保持同一写事务，不跨线程共享连接，也不改变统计内容、上传协议或业务异常隔离。
+## 部署及兼容
 
-先分配shop任务，记录返回目录，以下`$statsTask`使用该实际目录。Node/npm使用tools/state/tool-paths.json中的外部路径，或显式传入--node/--npm-cli；不复制运行时、不修改系统PATH。私有配置schema_version为1，node_executable及npm_cli分别保存node.exe与npm/bin/npm-cli.js的实际路径；配置无效时修正配置，不隐式切换到其他版本。
+生产上报根地址为https://stats.e7helper.com，保留POST /v1/shop-runs及其五字段协议，新增POST /v1/usage-days。原有客户端不需要改上报地址；不删除D1或覆盖原商店迁移。
 
-```powershell
-.\.venv\Scripts\python.exe -B -m scripts.project.artifacts --kind tasks --feature shop --subject shop-statistics-tools
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.tools install --run-dir $statsTask
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.tools stage --run-dir $statsTask
-$statsPaths = .\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.tools locate | ConvertFrom-Json
-```
+0002_usage_days.sql只新增活跃日表与日期索引。先列出待执行迁移，确认仅适用新增项，再按授权remote apply；不使用模拟生产计数验收。cron每日清理90日之外的活跃明细，不处理商店去重记录和累计值。
 
-Wrangler/Miniflare安装在tools/cloudflare/shop-stats，缓存固定在tools/cache/npm。安装必须具备一致的package.json和package-lock.json，使用npm ci，没有自动npm install回退。stage、测试库和日志仍进入任务scratch，不在源码目录生成node_modules或.wrangler。工具安装不会清理私有授权状态，客户端依赖锁不变。测试环境变量和命令：
+发布使用现有tools run入口。网页服务使用私有仓库配置、同一D1绑定，通过具体配置路径部署；具体网址仅写在私有配置和私有README。两个Worker的workers.dev和版本预览均关闭。不能只增加域名别名，必须删除旧Worker的读取实现。
 
-```powershell
-$env:SHOP_STATS_TOOLCHAIN = $statsPaths.toolchain
-$env:SHOP_STATS_TEST_OUTPUT = Join-Path $statsTask 'scratch/worker-test'
-$env:SHOP_STATS_NODE = $statsPaths.node
-& $statsPaths.node --test tests/scripts/cloudflare/test_shop_stats.mjs
-.\.venv\Scripts\python.exe -B -m pytest tests/core/test_shop_report.py tests/logging/test_report_queue.py tests/automation/test_shop_reporting.py tests/ui/test_shop_reporting.py tests/scripts/cloudflare/test_snapshot.py
-.\.venv\Scripts\python.exe -B -m scripts.project.check_layout
-```
+上报域名的旧/、/stats、/stats.svg、/v1/shop-stats、dashboard.css和dashboard.js均404，无Location或新地址提示。对/v1/shop-runs的HEAD返回405及Allow: POST，可用于无数据写入的HTTPS诊断。
 
-本地D1使用真实workerd/SQLite验证，测试调用创建新测试库标识保留之前证据，不连接生产D1、不发送游戏输入、不截图。Miniflare 5通过其官方导出的选项转换器使用明确的模块列表；SQL迁移按完整语句及触发器加载，不能把多行迁移直接交给逐行解释的exec。
+configure --endpoint只更新客户端上报配置，configure --database-id只更新现有D1绑定，均不再重建公开README链接。保持游戏配置其他字节不变。
 
-## 首次部署
+## 私有历史和快照
 
-这些步骤需要维护者注册并登录自己的Cloudflare账号，并按项目授权规则批准实际部署；源码和本地测试可以先完成。仅使用Workers/D1免费方案，不购买域名，不开通付费资源。不要把账号密码、验证码或API令牌提交到仓库。
+原公开统计自动任务已退役；不得在公开项目重建统计分支或自动插入统计链接。私有仓库继续维护每日快照及页面入口，完整旧统计提交链保留。迁移须核对源/目标SHA、文件路径/模式/类型/哈希、私有可见性；成功后才删除公开引用。
 
-1. 使用登记工具目录中的Wrangler完成用户自己的登录授权，统一run入口将XDG_CONFIG_HOME指向tools/state/cloudflare，日志进入任务scratch。账号选择信息保存在同一私有状态目录的account.json，不提交、不打包。创建名为e7auto-shop-stats的D1数据库，记录平台返回的真实数据库UUID。
-2. 用配置工具回填该UUID，再重新stage：
+私有归档脚本验证只读汇总字段和比率，拒绝明细、错误版本汇总或不完整树。每天只更新latest.json、latest.svg和当天history/YYYY-MM-DD.json，并按365日边界移除旧日期JSON与旧每日SVG；原tree中的维护文件保留。每日任务在私有仓库默认分支运行，权限为contents:write，不配置个人长期令牌。
 
-```powershell
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.configure --database-id $statsDatabaseId
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.tools stage --run-dir $statsTask
-```
+## 定向验证与安装
 
-3. 仅在授权首次部署后，使用统一入口执行`tools run --run-dir <实际任务> -- d1 migrations apply e7auto-shop-stats --remote`，再执行`tools run --run-dir <实际任务> -- deploy`；完整模块前缀为`python -B -m scripts.cloudflare.shop_stats.tools`。入口使用固定工具/授权目录和任务stage，关闭Wrangler遥测，日志进入任务scratch。日常展示更新不重复执行数据库迁移。只做预检查时传入`deploy --dry-run`。不要在数据库ID尚为空时部署，也不使用临时假UUID替代生产ID。
-4. 取得平台实际返回的HTTPS workers.dev根地址，读取/v1/shop-stats和/stats.svg检查服务。再回填客户端配置及README实时图片：
+隔离D1验证商店兼容与去重、活跃原子合并、日期保留及旧路由404；私有网页验证各时间窗按安装去重、版本归类、只读接口及失败保留显示。客户端验证旧偏好迁移、日活revision回执、跨日、忙碌暂停、系统代理和退出保留。按具体变更选择测试函数，不运行全套。
 
-```powershell
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.configure --endpoint $statsEndpoint
-.\.venv\Scripts\python.exe -B -m scripts.project.check_layout
-```
-
-配置工具只改统计地址和README标记块，不重写游戏几何/YAML；初始地址为空时只保存本地记录。默认域名不保证中国大陆直连，需分别记录无代理、系统代理及雷神实际模式下的连接结果。加速游戏成功不作为统计连接成功的证据；不向生产池写人工测试计数。
-
-## 自定义域名与旧入口退役
-
-当前生产根地址为`https://stats.e7helper.com`。`wrangler.jsonc`以Custom Domain绑定现有Worker，并设置`workers_dev: false`关闭旧生产入口；`preview_urls: true`保留原有预览状态。只更新入口设置时不重新发布Worker代码或迁移D1，历史汇总及已接收run_id继续使用原数据库。
-
-关闭旧入口前，先确认新地址可用，并将GitHub仓库变量`SHOP_STATS_API_URL`切换到新根地址、读取核对。关闭后检查旧汇总GET和旧上传POST均返回404，新汇总GET仍返回200；不向生产池写入模拟计数。
-
-旧版遇到404会保留pending记录并退避重试。覆盖升级保留state；客户端使用新地址、统计开启且自动化空闲时，退避到期后自动补传，也可点击“重新上传”立即重试。卸载会清理state，不能用卸载重装代替保留队列的覆盖升级。本地最多10000条，满后保留旧记录并跳过新轮次记录。
-
-## GitHub每日快照
-
-实现由[工作流](../../.github/workflows/shop-statistics.yml)、[快照生成器](../../scripts/cloudflare/shop_stats/snapshot.py)和[分支发布器](../../scripts/cloudflare/shop_stats/publish.py)组成。工作流在GitHub托管的Ubuntu运行器上使用Python 3.12和Node.js 24执行，不需要保持开发电脑开机，不运行游戏或E7auto客户端，也不需要安装Wrangler或连接D1管理接口。
-
-每次只读请求一次服务的`/v1/shop-stats`，校验两个策略池的字段、累计值和比率，再由同一份JSON通过render.mjs及views.mjs生成SVG。保存的是执行时的累计汇总，日期按北京时间计算；不是当天新增量，也不自动补算漏跑日期。同一天重跑会更新该日期文件，之前提交仍留在Git历史中。
-
-| stats分支文件 | 内容 |
-| --- | --- |
-| latest.json、latest.svg | 最近一次成功快照的汇总及图表 |
-| history/YYYY-MM-DD.json | 最近365个日历日内对应北京时间日期的汇总 |
-| README.md | 图表入口、快照日期和统计口径 |
-
-本地生成的snapshot-files.json仅作这四个文件的发布白名单，不上传。清单不再接受每日SVG，发布前核对真实日历日期、汇总字段/比率、latest与当天JSON一致及SVG格式。首次运行创建没有源码历史父提交的独立stats分支；之后读取旧提交的完整tree，保留范围内历史，以非强制方式更新引用并核对返回提交。源码默认分支不会被发布器修改。
-
-保留期包含快照当天，最早日期为当天减364天，按日历日而非现有文件数量计算；漏跑日期不补零，数据updated_at较旧也不改变保留边界。每次成功发布在同一提交中更新四个文件，并删除history下早于边界的JSON和既有每日SVG。仅匹配有效YYYY-MM-DD日期的普通文件，其他路径、无效日期、链接和异常文件类型保留；不得递归删除整个history目录。Git提交历史仍可找到移除内容，当前文件数量受到控制不等于回收历史仓库空间。
-
-清理使用Git trees接口的base_tree和sha:null条目，目标来自完整旧tree；若递归响应truncated或读取失败，写入前终止。生成失败时发布步骤不运行；发布器不会另建一次只含清理的提交。更新分支引用前的失败不改变可见快照，引用请求结果不明确时按下文复核。[GitHub Git trees接口](https://docs.github.com/en/rest/git/trees#create-a-tree)
-
-### 启用顺序
-
-以下步骤会配置远端并产生统计提交，须先获得对应授权；文档核对或本地测试不代表已经启用。
-
-1. 将工作流及它依赖的scripts模块提交、推送到目标仓库的默认分支。不能只上传YAML：snapshot.py、publish.py、render.mjs、views.mjs、scripts.common.paths及包入口都必须可导入。定时任务使用默认分支，手动触发也要求工作流已存在于默认分支。[GitHub触发规则](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
-2. 在仓库`Settings → Secrets and variables → Actions → Variables`新增**仓库变量**`SHOP_STATS_API_URL`，值为真实HTTPS服务根地址，当前为`https://stats.e7helper.com`，不附加`/v1/shop-stats`。只在本机config中填写地址不会配置GitHub变量；变量缺失或为空时整个snapshot作业跳过。[变量配置](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables)
-3. 确认仓库允许GitHub Actions及checkout/setup-python/setup-node，保留工作流声明的`contents: write`。发布步骤使用GitHub为本次作业提供的`GITHUB_TOKEN`，不需要个人长期令牌或Cloudflare管理密钥。组织策略、分支保护或ruleset若拒绝创建/更新stats，应先由维护者审查权限，不改为强制推送。[令牌权限](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token)
-4. 在`Actions → Shop community statistics snapshot → Run workflow`选择默认分支，手动运行一次。[手动运行说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
-5. 核对任务成功、stats分支实际提交与发布器输出一致，且当次四个文件齐全；latest与当天history的JSON内容一致，范围内旧JSON保留、过期JSON和每日SVG移除，没有新增源码或逐次上报明细。比较必须使用本次快照的数据，不能要求它与之后又收到上报的实时接口完全相等。首次成功后，README中的每日快照链接才有对应分支可访问。
-
-工作流安排每日UTC 18:17，即北京时间次日02:17；日期由实际执行时的北京时间决定。同一仓库的快照作业串行排队，不取消正在运行的任务，单个作业上限5分钟。GitHub定时触发可能延迟或漏跑，公共仓库60天无活动时还可能自动禁用，不能承诺每天准点；维护者应查看Actions执行记录。[定时限制](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
-
-### 失败与复核
-
-- 请求失败、重定向、超过32 KiB的响应、非法汇总或渲染失败都会使生成步骤失败，后续发布步骤及清理均不执行，保留已发布快照，不用零值替代失败结果。
-- 发布器只接受白名单文件。更新stats引用失败时不强制覆盖；若最后的引用核对失败，先只读查看实际分支，因为分支可能已经更新，不能仅凭任务失败认定远端未改变。
-- 没有新的上报时，快照仍可成功保存相同累计值；updated_at是服务汇总更新时间，不是任务运行时间。每日快照和README实时图表是两条展示路径，图片缓存不影响stats分支里的文件记录。
-- 首次启用和后续真实执行结论记入统计验证文档，原始请求、Actions结果及引用核对留在shop管理任务的results；不要在README或通用发布检查单中逐次追加运行记录。
-
-手动生成本地快照默认进入新shop任务results，也可以明确指定项目外导出目录。`publish`不带--publish只检查文件清单，不写GitHub：
-
-```powershell
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.snapshot --endpoint $statsEndpoint --node $statsPaths.node
-.\.venv\Scripts\python.exe -B -m scripts.cloudflare.shop_stats.publish --snapshot-dir $statsSnapshot
-```
-
-这两个命令只生成本地快照并检查发布清单；真实远端执行仍以获授权后的工作流运行和分支核对为准。
-
-## 安装版交付
-
-服务地址定稿后再构建发布输入，沿用项目构建捕获/封存流程。新增模块将使SQLite扩展及运行库进入安装包，需核对实际payload并验证编译版写入、恢复队列及HTTPS上传；按现有工具判断生命周期验收范围，不能用源码测试代替安装验收。上报成功后删除记录，不删除数据库文件；升级保留、卸载清理沿用state规则。
-
-安装版`E7auto.exe --self-check`在独立临时目录验证SQLite写入、队列恢复与确认删除，并检查Qt TLS后端，不接触用户待传记录。`--self-check-statistics-https`另通过配置地址只读GET汇总接口验证真实HTTPS，跟随系统代理，超时10秒；不上传模拟记录、不发送游戏输入。网络失败须单独记录，不将源码联网通过视为安装版验证。
+编译版--self-check在临时目录验证商店队列和日活队列，不接触用户状态、不创建主窗口、不产生正式活跃上报。--self-check-statistics-https以HEAD探测保留的上报入口，不写入生产记录。安装包验收仍由发布工具判断范围，覆盖升级保留state，卸载按原规则清理state。

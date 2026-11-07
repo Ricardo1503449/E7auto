@@ -7,7 +7,6 @@ import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import vm from 'node:vm';
 import worker from '../../../scripts/cloudflare/shop_stats/worker.mjs';
-import { clientScript } from '../../../scripts/cloudflare/shop_stats/views.mjs';
 import { toolchainPath } from '../../../scripts/cloudflare/shop_stats/local_tools.mjs';
 
 // Installed tools are shared; test database/output remains task-owned.
@@ -19,12 +18,14 @@ const payload = (values = {}) => ({ run_id: randomUUID().replaceAll('-',''), str
   skystone_spent:3,covenant_purchases:1,mystic_purchases:0,...values });
 const send = data => mf.dispatchFetch('http://local/v1/shop-runs',{
   method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data) });
-const stats = async () => (await mf.dispatchFetch('http://local/v1/shop-stats')).json();
+const stats = async () => {
+  const rows=(await db.prepare('SELECT * FROM pools').all()).results;
+  return {pools:Object.fromEntries(rows.map(row=>[row.strategy,row])),updated_at:rows.map(row=>row.updated_at).filter(Boolean).sort().at(-1)??null};
+};
 
 before(async () => {
   mf = new Miniflare(convertV4MiniflareOptions({ modules:[
-    {type:'ESModule',path:resolve(source,'worker.mjs')},
-    {type:'ESModule',path:resolve(source,'views.mjs')}],modulesRoot:source,
+    {type:'ESModule',path:resolve(source,'worker.mjs')}],modulesRoot:source,
     compatibilityDate:'2026-10-03',d1Databases:{DB:randomUUID()},
     d1Persist:resolve(process.env.SHOP_STATS_TEST_OUTPUT,'d1') }));
   db = await mf.getD1Database('DB');
@@ -33,9 +34,11 @@ before(async () => {
   const statements = migration.slice(0,triggerStart).replace(/^--.*$/gm,'').split(';').map(s => s.trim()).filter(Boolean);
   await db.batch(statements.map(sql => db.prepare(sql)));
   await db.prepare(migration.slice(triggerStart)).run();
+  const usage=await readFile(resolve(source,'migrations/0002_usage_days.sql'),'utf8');
+  await db.batch(usage.split(';').map(value=>value.trim()).filter(Boolean).map(value=>db.prepare(value)));
 });
 beforeEach(async () => {
-  await db.batch([db.prepare('DELETE FROM runs'),db.prepare(
+  await db.batch([db.prepare('DELETE FROM usage_days'),db.prepare('DELETE FROM runs'),db.prepare(
     'UPDATE pools SET skystone_spent=0,covenant_purchases=0,mystic_purchases=0,updated_at=NULL')]);
 });
 after(async () => { if (mf) await mf.dispose(); });
@@ -44,7 +47,7 @@ test('fresh pools expose zero totals and null rates without fabricated update ti
   const value = await stats();
   assert.equal(value.updated_at,null);
   assert.deepEqual(Object.keys(value.pools).sort(),['continuous','transfer']);
-  assert.equal(value.pools.transfer.covenant_per_100,null);
+  assert.equal(value.pools.transfer.skystone_spent,0);
 });
 
 test('weighted totals include initial purchases and isolate strategies',async () => {
@@ -55,8 +58,6 @@ test('weighted totals include initial purchases and isolate strategies',async ()
   const value = await stats();
   assert.equal(value.pools.transfer.skystone_spent,330);
   assert.equal(value.pools.transfer.covenant_purchases,6);
-  assert.equal(value.pools.transfer.covenant_per_100,600/330);
-  assert.equal(value.pools.transfer.mystic_per_100,100/330);
   assert.equal(value.pools.continuous.skystone_spent,60);
   assert.match(value.updated_at,/Z$/);
 });
@@ -122,47 +123,56 @@ test('raw business table has only five fields and no public detail endpoint',asy
   assert.equal((await mf.dispatchFetch('http://local/runs')).status,404);
 });
 
-test('SVG and dashboard use safe headers, no external fonts or hover titles',async () => {
-  await send(payload());
-  const image = await mf.dispatchFetch('http://local/stats.svg');
-  assert.match(image.headers.get('Content-Type'),/^image\/svg\+xml/);
-  assert.equal(image.headers.get('Cache-Control'),'no-cache');
-  const svg = await image.text();
-  assert.match(svg,/转运池/);
-  assert.match(svg,/33.33/);
-  const pageResponse = await mf.dispatchFetch('http://local/stats');
-  assert.match(pageResponse.headers.get('Content-Security-Policy'),/style-src 'self'/);
-  assert.equal(pageResponse.headers.get('Cache-Control'),'no-cache');
-  const page = await pageResponse.text();
-  assert.match(page,/href="\/dashboard\.css\?v=[a-f0-9]+"/);
-  assert.match(page,/src="\/dashboard\.js\?v=[a-f0-9]+"/);
-  assert.match(page,/两种策略效果展示/);
-  assert.match(page,/continuous-mystic_per_100-bar/);
-  assert.equal((page.match(/class="pool"/g)??[]).length,2);
-  assert.doesNotMatch(page,/此数据池用于观察整体获得效率|数据来自成功上报的匿名客户端/);
-  assert.doesNotMatch(page,/<iframe|title="|\sstyle=|fonts\.google/i);
-  assert.equal((await mf.dispatchFetch('http://local/stats.svg',{method:'HEAD'})).status,200);
+const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
+const usage=(values={})=>({installation_id:'a'.repeat(32),date:today(),version:'1.5.2',features:[],...values});
+const sendUsage=value=>mf.dispatchFetch('http://local/v1/usage-days',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});
+
+test('retired read routes and static assets return 404 without redirect or data',async()=>{
+  for(const path of ['/','/stats','/stats.svg','/v1/shop-stats','/dashboard.css','/dashboard.js','/v1/statistics']) {
+    for(const method of ['GET','HEAD','POST']) {
+      const response=await mf.dispatchFetch('http://local'+path,{method});
+      assert.equal(response.status,404);
+      assert.equal(response.headers.get('Location'),null);
+      assert.doesNotMatch(await response.text(),/pools|installation|https:/);
+    }
+  }
+  const probe=await mf.dispatchFetch('http://local/v1/shop-runs',{method:'HEAD'});
+  assert.equal(probe.status,405);assert.equal(probe.headers.get('Allow'),'POST');
 });
 
-test('dashboard preserves last valid totals on failure and skips hidden polling',async () => {
-  const elements = new Map();
-  const element = id => {
-    if (!elements.has(id)) elements.set(id,{textContent:'—',style:{},disabled:false,addEventListener(){},setAttribute(){}});
-    return elements.get(id);
-  };
-  let interval, calls = 0, fail = false;
-  const document = {hidden:false,getElementById:element,addEventListener(){}};
-  const value = await stats();
-  const context = { document, AbortSignal, setInterval(callback) {interval=callback;},
-    fetch:async () => {calls++; return {ok:!fail,json:async () => value};} };
-  vm.runInNewContext(clientScript,context);
-  await new Promise(resolve => setImmediate(resolve));
-  const old = element('transfer-skystone_spent').textContent;
-  assert.equal(old,'0');
-  fail = true; interval();
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(element('transfer-skystone_spent').textContent,old);
-  assert.match(element('status').textContent,/保留上次/);
-  const before = calls; document.hidden = true; interval();
-  assert.equal(calls,before);
+test('daily usage merges duplicates and feature flags without version rollback or shop increments',async()=>{
+  for(const value of [usage(),usage({features:['shop']}),usage({version:'1.5.1',features:['penguin']}),usage({features:['chaos']})]) {
+    const response=await sendUsage(value); assert.equal(response.status,200);
+    assert.deepEqual(await response.json(),{accepted:true,installation_id:value.installation_id,date:value.date});
+  }
+  await Promise.all(Array.from({length:5},()=>sendUsage(usage())));
+  const result=(await db.prepare('SELECT * FROM usage_days').all()).results;
+  assert.equal(result.length,1); assert.equal(result[0].features,7);
+  assert.equal(result[0].version_patch,2);
+  assert.equal((await stats()).pools.transfer.skystone_spent,0);
+});
+
+test('usage refuses unknown fields invalid identities future dates and foreign features',async()=>{
+  for(const change of [{installation_id:'wrong'},{date:'2099-01-01'},{date:'2026-02-30'},
+    {version:'1.5.2-beta'},{features:['shop','shop']},{features:['other']},{account:'forbidden'}]) {
+    assert.ok([400,422].includes((await sendUsage(usage(change))).status));
+  }
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days').first()).count,0);
+});
+
+test('expired activity acknowledges without insertion and retention never deletes shop history',async()=>{
+  const response=await sendUsage(usage({date:'2020-01-01'}));
+  assert.equal((await response.json()).discarded,true);
+  await send(payload()); await sendUsage(usage({features:['shop']}));
+  await db.prepare("INSERT INTO usage_days VALUES (?,?,?,?,?,?,?)").bind('b'.repeat(32),'2020-01-01',1,5,2,1,'old').run();
+  await worker.scheduled({}, {DB:db});
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days').first()).count,1);
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM runs').first()).count,1);
+  assert.equal((await stats()).pools.transfer.skystone_spent,3);
+});
+
+test('activity limiter rejects before accessing the database',async()=>{
+  const response=await worker.fetch(new Request('http://local/v1/usage-days',{method:'POST'}),
+    {INGEST_LIMITER:{limit:async()=>({success:false})}});
+  assert.equal(response.status,429);assert.equal(response.headers.get('Retry-After'),'60');
 });

@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
     _MINIMUM_SIZE = QSize(760, 560)
     _INITIAL_SIZE = QSize(1180, 760)
 
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Path, *, report_usage: bool = False):
         super().__init__()
         self._native_frame = None
         if QApplication.platformName() == "windows":
@@ -99,12 +99,12 @@ class MainWindow(QMainWindow):
         self._about_page = _AboutPage(project_root)
         self._update_controller = UpdateController(project_root / "state" / "update_status.json", self)
         self._update_installer = UpdateInstaller(project_root, self, diagnostic=self._update_controller.log_event)
-        self._reporting_controller = ShopReportingController(project_root, self)
+        self._reporting_controller = ShopReportingController(project_root, self, report_usage=report_usage)
         self._reporting_controller.finished.connect(self._finish_deferred_close)
         settings_navigation = self._sidebar.buttons["settings"]
         settings_navigation.set_update_available(self._update_controller.available)
         self._update_controller.availability_changed.connect(settings_navigation.set_update_available)
-        self._settings_page = _SettingsPage(project_root, self._update_controller, self._reporting_controller)
+        self._settings_page = _SettingsPage(project_root, self._update_controller)
         self._settings_page.update_requested.connect(self._start_update)
         self._settings_page.update_cancelled.connect(self._update_installer.cancel)
         self._update_installer.progress.connect(self._settings_page.show_download_progress)
@@ -373,6 +373,9 @@ class MainWindow(QMainWindow):
 
     @Slot(object)
     def _on_snapshot(self, snapshot: RuntimeSnapshot) -> None:
+        if not snapshot.is_final and snapshot.state not in {RunState.IDLE, RunState.PREPARING, RunState.STOPPED}:
+            feature = {'shop_refresh': 'shop', 'penguin_exchange': 'penguin'}.get(snapshot.feature_id, snapshot.feature_id)
+            self._reporting_controller.feature_running(feature)
         self._overlay.update_snapshot(snapshot)
         if snapshot.state in {RunState.SCANNING_TOP, RunState.SCANNING_BOTTOM, RunState.PURCHASING, RunState.REFRESHING,
                               RunState.ENTERING_SANCTUARY, RunState.GROWING_PENGUINS, RunState.RETURNING_MAIN, RunState.EXPLORING_CHAOS}:
@@ -396,6 +399,7 @@ class MainWindow(QMainWindow):
             return
         self._thread = None
         self._worker = None
+        self._reporting_controller.feature_running(None)
         thread.deleteLater()
         self._set_run_controls(False)
         if not self._entered_inventory:
@@ -446,6 +450,7 @@ class MainWindow(QMainWindow):
         if self._native_frame is not None:
             self._native_frame.attach(int(self.winId()))
         super().showEvent(event)
+        self._reporting_controller.application_shown()
         self._update_controller.start()
         self._announcement_controller.start()
 

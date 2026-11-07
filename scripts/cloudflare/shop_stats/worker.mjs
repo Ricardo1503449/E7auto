@@ -1,5 +1,3 @@
-import { dashboard, stylesheet, clientScript, renderSvg } from './views.mjs';
-
 const fields = ['run_id','strategy','skystone_spent','covenant_purchases','mystic_purchases'];
 const strategies = ['transfer','continuous'];
 const counters = fields.slice(2);
@@ -36,7 +34,7 @@ export function validateReport(value) {
   return value;
 }
 
-async function readReport(request) {
+async function readBody(request) {
   if (!/^application\/json(?:\s*;|$)/i.test(request.headers.get('Content-Type') || '')) {
     throw new HttpError(400, 'json_required');
   }
@@ -60,24 +58,7 @@ async function readReport(request) {
   let value;
   try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
   catch { throw new HttpError(400, 'invalid_json'); }
-  return validateReport(value);
-}
-
-export async function getStats(db) {
-  const { results } = await db.prepare('SELECT * FROM pools ORDER BY strategy').all();
-  if (results.length !== 2 || !strategies.every(strategy => results.some(row => row.strategy === strategy))) {
-    throw new Error('missing_pool');
-  }
-  const pools = {};
-  let updated = null;
-  for (const row of results) {
-    if (!counters.every(field => Number.isSafeInteger(row[field]) && row[field] >= 0)) throw new Error('invalid_pool');
-    pools[row.strategy] = Object.fromEntries(counters.map(field => [field, row[field]]));
-    pools[row.strategy].covenant_per_100 = row.skystone_spent ? 100 * row.covenant_purchases / row.skystone_spent : null;
-    pools[row.strategy].mystic_per_100 = row.skystone_spent ? 100 * row.mystic_purchases / row.skystone_spent : null;
-    if (row.updated_at && (!updated || row.updated_at > updated)) updated = row.updated_at;
-  }
-  return { pools, updated_at: updated };
+  return value;
 }
 
 async function insertReport(db, value) {
@@ -89,40 +70,63 @@ async function insertReport(db, value) {
   return json({ accepted: true, run_id: value.run_id }, insertion.meta.changes ? 201 : 200);
 }
 
-function asset(body, type, cache = 'public, max-age=300') {
-  return new Response(body, { headers: {
-    'Content-Type': `${type}; charset=utf-8`, 'Cache-Control': cache,
-    'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
-    'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'",
-  }});
+const featureNames = ['shop','penguin','chaos'];
+export function activityDay(now = Date.now()) {
+  return new Date(now+8*60*60*1000).toISOString().slice(0,10);
 }
-
+export function validateUsage(value, today = activityDay()) {
+  const names = ['installation_id','date','version','features'];
+  if (!value || Array.isArray(value) || typeof value !== 'object'
+      || Object.keys(value).length !== names.length || !names.every(name => Object.hasOwn(value,name))) {
+    throw new HttpError(400,'invalid_fields');
+  }
+  if (typeof value.installation_id !== 'string' || !/^[a-f0-9]{32}$/.test(value.installation_id)
+      || typeof value.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value.date)
+      || typeof value.version !== 'string' || !/^(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})$/.test(value.version)
+      || !Array.isArray(value.features) || value.features.length > 3
+      || new Set(value.features).size !== value.features.length
+      || !value.features.every(name => featureNames.includes(name))) throw new HttpError(422,'invalid_usage');
+  const timestamp = Date.parse(value.date+'T00:00:00Z');
+  if (!Number.isFinite(timestamp) || new Date(timestamp).toISOString().slice(0,10) !== value.date
+      || value.date > today) throw new HttpError(422,'invalid_activity_date');
+  return value;
+}
+async function insertUsage(db, value) {
+  const cutoff = activityDay(Date.now()-89*86400000);
+  const acknowledgment = {accepted:true,installation_id:value.installation_id,date:value.date};
+  if (value.date < cutoff) return json({...acknowledgment,discarded:true});
+  const version = value.version.split('.').map(Number);
+  const mask = value.features.reduce((result,name) => result | (1 << featureNames.indexOf(name)),0);
+  const newer = '(excluded.version_major,excluded.version_minor,excluded.version_patch) > (usage_days.version_major,usage_days.version_minor,usage_days.version_patch)';
+  await db.prepare(`INSERT INTO usage_days (installation_id,day,version_major,version_minor,version_patch,features,updated_at)
+    VALUES (?,?,?,?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+    ON CONFLICT(installation_id,day) DO UPDATE SET
+      features=usage_days.features | excluded.features,
+      version_major=CASE WHEN ${newer} THEN excluded.version_major ELSE usage_days.version_major END,
+      version_minor=CASE WHEN ${newer} THEN excluded.version_minor ELSE usage_days.version_minor END,
+      version_patch=CASE WHEN ${newer} THEN excluded.version_patch ELSE usage_days.version_patch END,
+      updated_at=excluded.updated_at`).bind(value.installation_id,value.date,...version,mask).run();
+  return json(acknowledgment);
+}
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
+    const path = new URL(request.url).pathname;
+    if (!['/v1/shop-runs','/v1/usage-days'].includes(path)) return json({error:'not_found'},404);
+    if (request.method !== 'POST') return json({error:'method_not_allowed'},405,{Allow:'POST'});
     try {
-      if (url.pathname === '/v1/shop-runs') {
-        if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, { Allow: 'POST' });
-        // Anonymous source throttling is deliberately broad; shared NAT/proxy users can retry.
-        // The key is transient and never written to D1/business records.
-        const source = request.headers.get('CF-Connecting-IP') || 'local';
-        if (env.INGEST_LIMITER && !(await env.INGEST_LIMITER.limit({ key: source })).success) {
-          return json({ error: 'rate_limited' }, 429, { 'Retry-After': '60' });
-        }
-        return await insertReport(env.DB, await readReport(request));
+      const source = request.headers.get('CF-Connecting-IP') || 'local';
+      if (env.INGEST_LIMITER && !(await env.INGEST_LIMITER.limit({key:source})).success) {
+        return json({error:'rate_limited'},429,{'Retry-After':'60'});
       }
-      if (!['GET','HEAD'].includes(request.method)) return json({ error: 'method_not_allowed' }, 405, { Allow: 'GET, HEAD' });
-      let response;
-      if (url.pathname === '/v1/shop-stats') response = json(await getStats(env.DB));
-      else if (url.pathname === '/stats.svg') response = asset(renderSvg(await getStats(env.DB)), 'image/svg+xml', 'no-cache');
-      else if (url.pathname === '/' || url.pathname === '/stats') response = asset(dashboard, 'text/html', 'no-cache');
-      else if (url.pathname === '/dashboard.css') response = asset(stylesheet, 'text/css');
-      else if (url.pathname === '/dashboard.js') response = asset(clientScript, 'text/javascript');
-      else response = json({ error: 'not_found' }, 404);
-      return request.method === 'HEAD' ? new Response(null, response) : response;
-    } catch (error) {
-      return error instanceof HttpError ? json({ error: error.message }, error.status)
-        : json({ error: 'temporarily_unavailable' }, 503, { 'Retry-After': '60' });
+      const value = await readBody(request);
+      return path === '/v1/shop-runs' ? await insertReport(env.DB,validateReport(value))
+        : await insertUsage(env.DB,validateUsage(value));
+    } catch(error) {
+      return error instanceof HttpError ? json({error:error.message},error.status)
+        : json({error:'temporarily_unavailable'},503,{'Retry-After':'60'});
     }
+  },
+  async scheduled(_event,env) {
+    await env.DB.prepare('DELETE FROM usage_days WHERE day<?').bind(activityDay(Date.now()-89*86400000)).run();
   },
 };

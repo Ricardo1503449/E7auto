@@ -32,7 +32,7 @@ def log_directory(value: str | None) -> Path:
 def stage(task: Path) -> Path:
     destination = task/'scratch/worker'
     destination.mkdir(parents=True,exist_ok=True)
-    for name in ('worker.mjs','views.mjs','render.mjs','wrangler.jsonc'):
+    for name in ('worker.mjs','wrangler.jsonc'):
         shutil.copyfile(SOURCE/name,destination/name)
     (destination/'migrations').mkdir(exist_ok=True)
     for source in (SOURCE/'migrations').glob('*.sql'):

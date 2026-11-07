@@ -38,7 +38,7 @@ class NotificationPreferences:
 
 
 class ShopStatisticsPreferences(NotificationPreferences):
-    """Use the shared preference file without changing the notification setting."""
+    """Migrate the legacy switch and retain cancellation without changing other preferences."""
     def load(self) -> bool:
         value = self._read().get("shop_statistics", True)
         return value if isinstance(value, bool) else True
@@ -53,6 +53,19 @@ class ShopStatisticsPreferences(NotificationPreferences):
     def generation(self) -> int:
         value = self._read().get("shop_statistics_generation", 0)
         return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else 0
+
+    def migrate_background_policy(self) -> int:
+        """Retire the switch while retaining the cancellation epoch and other UI data."""
+        values = self._read()
+        generation = self.generation()
+        if values.get('shop_statistics') is False:
+            # Retire active rows even for legacy installations without an epoch.
+            generation += 1
+            values['shop_statistics_generation'] = generation
+        if 'shop_statistics' in values:
+            del values['shop_statistics']
+            _write_preferences(self._path, values)
+        return generation
 
 
 class AnnouncementPreferences:

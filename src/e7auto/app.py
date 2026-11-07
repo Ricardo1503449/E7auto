@@ -130,7 +130,7 @@ def main() -> int:
     update_job = next((arg.removeprefix('--after-update=') for arg in sys.argv
                        if arg.startswith('--after-update=')), None)
     with application_guard(wait_for_setup=update_job is not None):
-        window = MainWindow(root)
+        window = MainWindow(root, report_usage=bool(getattr(sys, 'frozen', False) or '__compiled__' in globals()))
         window.show()
         if update_job is not None:
             def cleanup_update():
