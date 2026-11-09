@@ -1,0 +1,1080 @@
+{
+  "schema_version": 1,
+  "kind": "native TTF canonical shared digit templates",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "font_asset": {
+    "id": "daum",
+    "resource": "font/daum.ttf",
+    "source": {
+      "path": "font/daum.ttf",
+      "md5": "0c93a9a1bfcf7d13aa61325b11ff9ba7",
+      "sha256": "2643979e008564e3b59455f7548aa6f844c155b21b3aa42d00dcba1903c3c1ab",
+      "bytes": 10561136,
+      "container": "ssra",
+      "chunk": "base_b00_0.ssrc",
+      "offset": 14819136,
+      "stored_bytes": 6270373,
+      "compression": 1,
+      "chunk_xxhash64": "5a22b1cbdd01f574",
+      "virtual_offset": 14819136
+    },
+    "local_font": "D:\\E7auto\\artifacts\\tasks\\shop\\20261108-224928-native-digit-font-e32d3f39\\inputs\\daum.ttf",
+    "family": [
+      "EpicSeven",
+      "Regular"
+    ],
+    "binding": "top_bar_token.csb txt_value"
+  },
+  "font_provenance": {
+    "game_directory": "D:/Games/EpicSeven",
+    "manifest": {
+      "ssra_manifest": "27fe64cb8ca148ddd1c88ec7039ebbee02b75abaf43bcd318f685d0b5306f166"
+    },
+    "reader_path": "D:\\data\\e7-defense-tool\\app\\core\\resource_ssra.py",
+    "reader_sha256": "dd8166c53644a21ee20d034fdfd787e07c0830da0442874bacba0b0734e8b108",
+    "layout": {
+      "path": "wnd/top_bar_token.csb",
+      "md5": "7e3bed6eb7fe169cb4ce6e413c3669e1",
+      "sha256": "b480a8afb3e7f75b28708d6902687e278b7855c8bb5f41e494e22b64a828c097",
+      "bytes": 3452,
+      "container": "ssra",
+      "chunk": "base_b00_0.ssrc",
+      "offset": 39826112,
+      "stored_bytes": 1259,
+      "compression": 1,
+      "chunk_xxhash64": "5a22b1cbdd01f574",
+      "virtual_offset": 39826112
+    },
+    "layout_defaults": {
+      "font": "font/daum.ttf",
+      "size": 24,
+      "outline_size": 1,
+      "shadow": true
+    },
+    "renderer": {
+      "python": "3.13.9",
+      "pillow": "12.0.0",
+      "freetype": "2.13.3",
+      "mode": "L coverage; no outline or shadow; exploratory raster sizes 32/34/36"
+    },
+    "fonts": [
+      {
+        "id": "daum",
+        "resource": "font/daum.ttf",
+        "source": {
+          "path": "font/daum.ttf",
+          "md5": "0c93a9a1bfcf7d13aa61325b11ff9ba7",
+          "sha256": "2643979e008564e3b59455f7548aa6f844c155b21b3aa42d00dcba1903c3c1ab",
+          "bytes": 10561136,
+          "container": "ssra",
+          "chunk": "base_b00_0.ssrc",
+          "offset": 14819136,
+          "stored_bytes": 6270373,
+          "compression": 1,
+          "chunk_xxhash64": "5a22b1cbdd01f574",
+          "virtual_offset": 14819136
+        },
+        "local_font": "D:\\E7auto\\artifacts\\tasks\\shop\\20261108-224928-native-digit-font-e32d3f39\\inputs\\daum.ttf",
+        "family": [
+          "EpicSeven",
+          "Regular"
+        ],
+        "binding": "top_bar_token.csb txt_value"
+      }
+    ],
+    "unavailable_optional_fonts": [
+      {
+        "resource": "font/zhs/daum_zl.ttf",
+        "reason": "optional language chunk is not installed",
+        "chunk": "pub_zl_b02_0.ssrc"
+      }
+    ]
+  },
+  "renderer": {
+    "font": "D:\\E7auto\\artifacts\\tasks\\shop\\20261108-224928-native-digit-font-e32d3f39\\inputs\\daum.ttf",
+    "font_sha256": "2643979e008564e3b59455f7548aa6f844c155b21b3aa42d00dcba1903c3c1ab",
+    "renderer_dll": "D:\\anaconda3\\Library\\bin\\freetype.dll",
+    "renderer_sha256": "6a3367761e22b3465f570c40a4eeb70cb035a0f81da1f9e6f276b3db89909187",
+    "renderer_version": "2.13.3",
+    "verified_client": {
+      "engine_marker": "cocos2d-x-4.0",
+      "font_create_va": "0x1405a6fa0",
+      "font_size_call_va": "0x1405a735f",
+      "font_size_formula": "truncate(64*logical_size*content_scale), 72 DPI",
+      "glyph_va": "0x1405a77a0",
+      "normal_flags": "0x8004",
+      "distance_flags": "0x8006",
+      "director_default_content_scale": 1.0,
+      "director_default_va": "0x14036d179"
+    },
+    "limitations": [
+      "Canonical raster size is an offline template-generation parameter, not an observed game font size.",
+      "The same source font, raster size and coverage cutoff apply to all ten digits.",
+      "No per-client, per-feature or per-digit template selection is used.",
+      "Uses the existing FreeType DLL; does not invoke the game renderer or read process memory."
+    ],
+    "kind": "canonical full 0-9 reference rendering grid, shared at every client size"
+  },
+  "generation": {
+    "canonical_raster_px": 42,
+    "coverage_cutoff": 224,
+    "flags": "0x8004",
+    "shared_digits": "0123456789",
+    "padding": 2,
+    "rgb": "white",
+    "mask": "FreeType grayscale coverage >= cutoff; trim, preserve source mask, pad 2px"
+  },
+  "editing_basis": "User explicitly authorized replacement of all screenshot digit templates with native resources. All ten digits use one generation rule.",
+  "shared_reference_contract": "same full 0-9 normalized glyphs for shop, penguin and every client size; no size-specific or old-image fallback",
+  "normalized_mask_sha256": {
+    "sky_stone_digit_0": "fa5c6066105a076b36ef030533891a03df6b1a60762697b0ddad9cee440684e1",
+    "sky_stone_digit_1": "94938ee62fb76292e065a5ce2843c68aa0da5f45cf6125c72b5dc2c85a197f19",
+    "sky_stone_digit_2": "938f3b9a914cfb9a10430645911e41e8ddeb70bb2fbacb4d9b30d059b1dc7c05",
+    "sky_stone_digit_3": "f5d7c008b5e2f34e2a03e7907c321ad6e3509a1bc42e8c6990346396a50af2ec",
+    "sky_stone_digit_4": "bcc2442e0371edc62a8b5260adc350614f2815e096795c3f47be164c6b4c4ad9",
+    "sky_stone_digit_5": "c27edc4917f7151427396dd9e5eeb4de0b2ee752fd7a13d706c18ad65629350a",
+    "sky_stone_digit_6": "4051a7684e5255d2f21bb4d46c2e7c400c1b12bf3a7893ff39f67a037a9be029",
+    "sky_stone_digit_7": "1bdfcd8caedc3a9db6b786189b1dc09f1dee2b2000b3f58eded1c3e719f53f06",
+    "sky_stone_digit_8": "b219fb3586e8b189811956ff8bc36fd2019ad44bec6014620bf3a39c442d6c0f",
+    "sky_stone_digit_9": "f9dbce050a3f1c3cbc97dfdb912559a5e089581c2fbb0723b13441cf48b97c4c"
+  },
+  "validation": {
+    "production_roi_replay": [
+      {
+        "name": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+        "sha256": "852a6ec67c3135249ebd0605b0e3030b4930da390c10780e27d685287caa911a",
+        "feature": "shop",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 28795,
+        "old_value": null,
+        "value": 28795,
+        "passed": true
+      },
+      {
+        "name": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261108-203500-047384-072c6531ae2e-stop.png",
+        "sha256": "c4d53ae7885026fa63aded1978a30e27950c6f0285aa96b09606ed27ac8daf59",
+        "feature": "shop",
+        "size": [
+          1152,
+          648
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 12453,
+        "old_value": 12453,
+        "value": 12453,
+        "passed": true
+      },
+      {
+        "name": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261108-210425-873997-30573ba6d94e-stop.png",
+        "sha256": "f0c4b07002d18d94054991bf556e9488a87c8c151ab554a02019c5bb25875691",
+        "feature": "shop",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 34415,
+        "old_value": null,
+        "value": 34415,
+        "passed": true
+      },
+      {
+        "name": "sky_stone_digits_2115_client_1536x864.png",
+        "path": "D:\\E7auto\\tests\\fixtures\\shop\\sky_stone_digits_2115_client_1536x864.png",
+        "sha256": "d934b5596876ab9a7c1f3d2cb350b13cd7dd920924073500ecb76ed75e58d35d",
+        "feature": "shop",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 2115,
+        "old_value": 2115,
+        "value": 2115,
+        "passed": true
+      },
+      {
+        "name": "sky_stone_digits_2118_client_1536x864.png",
+        "path": "D:\\E7auto\\tests\\fixtures\\shop\\sky_stone_digits_2118_client_1536x864.png",
+        "sha256": "77abd913ddfb53ccb537740d259f00d482c4f363fb5ef2acba1fbb61a63af8a9",
+        "feature": "shop",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 2118,
+        "old_value": 2118,
+        "value": 2118,
+        "passed": true
+      },
+      {
+        "name": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+        "path": "D:\\E7auto\\logs\\run-20261104-203145-477433-f7355faf31a5-stop.png",
+        "sha256": "c7ee2a788a84c88400f77c97d693a8d1bb2a4db5e9f890a83714e35d94f15847",
+        "feature": "shop",
+        "size": [
+          2322,
+          1306
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 1219,
+        "old_value": 1219,
+        "value": 1219,
+        "passed": true
+      },
+      {
+        "name": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+        "path": "D:\\E7auto\\logs\\run-20261104-194831-614128-abc58b99ff0f-stop.png",
+        "sha256": "09ef24505f6cadc8cd847a6a346f33e6f569eecd56c5e7fa2c7e13a2d7a9d1cd",
+        "feature": "shop",
+        "size": [
+          2322,
+          1306
+        ],
+        "kind": "original screenshot/crop",
+        "expected": 1321,
+        "old_value": 1321,
+        "value": 1321,
+        "passed": true
+      },
+      {
+        "name": "penguin-102@2322",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_102.png",
+        "sha256": "ec2e73aa68ce06d1b4b58786495e0ac5acbdd6889bf515001f946dfee4ed9545",
+        "feature": "penguin",
+        "size": [
+          2322,
+          1306
+        ],
+        "kind": "original crop placed at calibrated client coordinates",
+        "expected": 102,
+        "old_value": 102,
+        "value": 102,
+        "passed": true
+      },
+      {
+        "name": "penguin-102@1920",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_102.png",
+        "sha256": "ec2e73aa68ce06d1b4b58786495e0ac5acbdd6889bf515001f946dfee4ed9545",
+        "feature": "penguin",
+        "size": [
+          1920,
+          1080
+        ],
+        "kind": "INTER_AREA downsample of baseline crop; not a live capture",
+        "expected": 102,
+        "old_value": 102,
+        "value": 102,
+        "passed": true
+      },
+      {
+        "name": "penguin-102@1536",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_102.png",
+        "sha256": "ec2e73aa68ce06d1b4b58786495e0ac5acbdd6889bf515001f946dfee4ed9545",
+        "feature": "penguin",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "INTER_AREA downsample of baseline crop; not a live capture",
+        "expected": 102,
+        "old_value": 102,
+        "value": 102,
+        "passed": true
+      },
+      {
+        "name": "penguin-5100@2322",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_5100.png",
+        "sha256": "2775548e0eee90ea796156ae4d80263bba6c0e85c6007f1888a36a6c94ffcf72",
+        "feature": "penguin",
+        "size": [
+          2322,
+          1306
+        ],
+        "kind": "original crop placed at calibrated client coordinates",
+        "expected": 5100,
+        "old_value": 5100,
+        "value": 5100,
+        "passed": true
+      },
+      {
+        "name": "penguin-5100@1920",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_5100.png",
+        "sha256": "2775548e0eee90ea796156ae4d80263bba6c0e85c6007f1888a36a6c94ffcf72",
+        "feature": "penguin",
+        "size": [
+          1920,
+          1080
+        ],
+        "kind": "INTER_AREA downsample of baseline crop; not a live capture",
+        "expected": 5100,
+        "old_value": 5100,
+        "value": 5100,
+        "passed": true
+      },
+      {
+        "name": "penguin-5100@1536",
+        "path": "D:\\E7auto\\tests\\fixtures\\penguin\\penguin_dialog_5100.png",
+        "sha256": "2775548e0eee90ea796156ae4d80263bba6c0e85c6007f1888a36a6c94ffcf72",
+        "feature": "penguin",
+        "size": [
+          1536,
+          864
+        ],
+        "kind": "INTER_AREA downsample of baseline crop; not a live capture",
+        "expected": 5100,
+        "old_value": 5100,
+        "value": 5100,
+        "passed": true
+      }
+    ],
+    "supplemental_gold_glyphs": [
+      {
+        "sample": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+        "kind": "gold-header glyphs; supplemental context, not production sky-stone ROI",
+        "roi": [
+          1365,
+          30,
+          200,
+          60
+        ],
+        "expected": "3336386",
+        "glyphs": [
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8864761904761904,
+            "margin": 0.1447443597704925,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8828411239144529,
+            "margin": 0.14237661281993574,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8918304728846607,
+            "margin": 0.14889172844705434,
+            "passed": true
+          },
+          {
+            "truth": "6",
+            "predicted": "6",
+            "confidence": 0.9095417789757413,
+            "margin": 0.13093640080965552,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8887229894523039,
+            "margin": 0.151934127641699,
+            "passed": true
+          },
+          {
+            "truth": "8",
+            "predicted": "8",
+            "confidence": 0.9057945323505983,
+            "margin": 0.15021500308710545,
+            "passed": true
+          },
+          {
+            "truth": "6",
+            "predicted": "6",
+            "confidence": 0.9234150519410271,
+            "margin": 0.14458617707147847,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "sample": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+        "kind": "gold-header glyphs; supplemental context, not production sky-stone ROI",
+        "roi": [
+          1365,
+          30,
+          200,
+          60
+        ],
+        "expected": "4338386",
+        "glyphs": [
+          {
+            "truth": "4",
+            "predicted": "4",
+            "confidence": 0.8593320920637608,
+            "margin": 0.3901308625508153,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8779950159866232,
+            "margin": 0.12849608678617064,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8847480190174326,
+            "margin": 0.14644520923350535,
+            "passed": true
+          },
+          {
+            "truth": "8",
+            "predicted": "8",
+            "confidence": 0.9037184650897301,
+            "margin": 0.15144643623248455,
+            "passed": true
+          },
+          {
+            "truth": "3",
+            "predicted": "3",
+            "confidence": 0.8921662476309316,
+            "margin": 0.14890500300913168,
+            "passed": true
+          },
+          {
+            "truth": "8",
+            "predicted": "8",
+            "confidence": 0.9101687347585203,
+            "margin": 0.16128911644038935,
+            "passed": true
+          },
+          {
+            "truth": "6",
+            "predicted": "6",
+            "confidence": 0.9092388643911458,
+            "margin": 0.13891738675333598,
+            "passed": true
+          }
+        ]
+      }
+    ],
+    "selected_glyphs": {
+      "parameters": {
+        "canonical_raster_px": 42,
+        "coverage_cutoff": 224,
+        "flags": "0x8004",
+        "shared_digits": "0123456789"
+      },
+      "passed_cases": 13,
+      "shop_passed": 7,
+      "penguin_passed": 6,
+      "accepted_correct": 52,
+      "wrong_accepted": 0,
+      "minimum_gate_headroom": 0.012173058477601084,
+      "minimum_confidence": 0.8248481066846085,
+      "minimum_margin": 0.10409631283775667,
+      "glyphs": [
+        {
+          "sample": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8848917895057078,
+          "margin": 0.22125066797351756,
+          "accepted": true,
+          "headroom": 0.08489178950570775
+        },
+        {
+          "sample": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+          "feature": "shop",
+          "truth": "8",
+          "predicted": "8",
+          "confidence": 0.8810107912411067,
+          "margin": 0.10867098663057018,
+          "accepted": true,
+          "headroom": 0.028670986630570175
+        },
+        {
+          "sample": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+          "feature": "shop",
+          "truth": "7",
+          "predicted": "7",
+          "confidence": 0.8846129516809564,
+          "margin": 0.31624619243628593,
+          "accepted": true,
+          "headroom": 0.0846129516809564
+        },
+        {
+          "sample": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+          "feature": "shop",
+          "truth": "9",
+          "predicted": "9",
+          "confidence": 0.8608600331665203,
+          "margin": 0.14353412491153272,
+          "accepted": true,
+          "headroom": 0.06086003316652022
+        },
+        {
+          "sample": "run-20261107-152335-500097-ccf5dc25aff6-stop.png",
+          "feature": "shop",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.894936210350722,
+          "margin": 0.10806838389390172,
+          "accepted": true,
+          "headroom": 0.02806838389390172
+        },
+        {
+          "sample": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.8248481066846085,
+          "margin": 0.40680782313721725,
+          "accepted": true,
+          "headroom": 0.024848106684608462
+        },
+        {
+          "sample": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8738912846863389,
+          "margin": 0.22002553933354863,
+          "accepted": true,
+          "headroom": 0.07389128468633888
+        },
+        {
+          "sample": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+          "feature": "shop",
+          "truth": "4",
+          "predicted": "4",
+          "confidence": 0.8817133822305485,
+          "margin": 0.4215555607608251,
+          "accepted": true,
+          "headroom": 0.08171338223054847
+        },
+        {
+          "sample": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+          "feature": "shop",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.8870137963161056,
+          "margin": 0.12516627532431346,
+          "accepted": true,
+          "headroom": 0.04516627532431346
+        },
+        {
+          "sample": "run-20261108-203500-047384-072c6531ae2e-stop.png",
+          "feature": "shop",
+          "truth": "3",
+          "predicted": "3",
+          "confidence": 0.8573450558641816,
+          "margin": 0.1441735365669442,
+          "accepted": true,
+          "headroom": 0.05734505586418159
+        },
+        {
+          "sample": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+          "feature": "shop",
+          "truth": "3",
+          "predicted": "3",
+          "confidence": 0.8451357958242252,
+          "margin": 0.13636267425867143,
+          "accepted": true,
+          "headroom": 0.04513579582422511
+        },
+        {
+          "sample": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+          "feature": "shop",
+          "truth": "4",
+          "predicted": "4",
+          "confidence": 0.8253729710994921,
+          "margin": 0.3586852238296595,
+          "accepted": true,
+          "headroom": 0.025372971099492103
+        },
+        {
+          "sample": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+          "feature": "shop",
+          "truth": "4",
+          "predicted": "4",
+          "confidence": 0.8307156816146928,
+          "margin": 0.36633215301060496,
+          "accepted": true,
+          "headroom": 0.030715681614692736
+        },
+        {
+          "sample": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9443361235025813,
+          "margin": 0.5131493680869943,
+          "accepted": true,
+          "headroom": 0.1443361235025813
+        },
+        {
+          "sample": "run-20261108-210425-873997-30573ba6d94e-stop.png",
+          "feature": "shop",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.894936210350722,
+          "margin": 0.10806838389390172,
+          "accepted": true,
+          "headroom": 0.02806838389390172
+        },
+        {
+          "sample": "sky_stone_digits_2115_client_1536x864.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.898511701765088,
+          "margin": 0.23475319649434645,
+          "accepted": true,
+          "headroom": 0.09851170176508794
+        },
+        {
+          "sample": "sky_stone_digits_2115_client_1536x864.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9073529411764706,
+          "margin": 0.4392557034974087,
+          "accepted": true,
+          "headroom": 0.10735294117647054
+        },
+        {
+          "sample": "sky_stone_digits_2115_client_1536x864.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9443361235025813,
+          "margin": 0.5131493680869943,
+          "accepted": true,
+          "headroom": 0.1443361235025813
+        },
+        {
+          "sample": "sky_stone_digits_2115_client_1536x864.png",
+          "feature": "shop",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.9136137805604967,
+          "margin": 0.1374221427556439,
+          "accepted": true,
+          "headroom": 0.057422142755643904
+        },
+        {
+          "sample": "sky_stone_digits_2118_client_1536x864.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8899736275318428,
+          "margin": 0.2295373175850557,
+          "accepted": true,
+          "headroom": 0.08997362753184279
+        },
+        {
+          "sample": "sky_stone_digits_2118_client_1536x864.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9073529411764706,
+          "margin": 0.4392557034974087,
+          "accepted": true,
+          "headroom": 0.10735294117647054
+        },
+        {
+          "sample": "sky_stone_digits_2118_client_1536x864.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9108130589672837,
+          "margin": 0.4886398306854166,
+          "accepted": true,
+          "headroom": 0.11081305896728366
+        },
+        {
+          "sample": "sky_stone_digits_2118_client_1536x864.png",
+          "feature": "shop",
+          "truth": "8",
+          "predicted": "8",
+          "confidence": 0.900409260113377,
+          "margin": 0.133009792331917,
+          "accepted": true,
+          "headroom": 0.05300979233191701
+        },
+        {
+          "sample": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9561297069578052,
+          "margin": 0.4990639331791641,
+          "accepted": true,
+          "headroom": 0.15612970695780515
+        },
+        {
+          "sample": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.9090890990542558,
+          "margin": 0.2520448385308355,
+          "accepted": true,
+          "headroom": 0.10908909905425579
+        },
+        {
+          "sample": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9511527135351587,
+          "margin": 0.48049092651398473,
+          "accepted": true,
+          "headroom": 0.1511527135351587
+        },
+        {
+          "sample": "run-20261104-203145-477433-f7355faf31a5-stop.png",
+          "feature": "shop",
+          "truth": "9",
+          "predicted": "9",
+          "confidence": 0.916675403129303,
+          "margin": 0.18081461130252274,
+          "accepted": true,
+          "headroom": 0.10081461130252274
+        },
+        {
+          "sample": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9152887761057384,
+          "margin": 0.41605000516072577,
+          "accepted": true,
+          "headroom": 0.1152887761057384
+        },
+        {
+          "sample": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+          "feature": "shop",
+          "truth": "3",
+          "predicted": "3",
+          "confidence": 0.8798931290490377,
+          "margin": 0.13969520065029273,
+          "accepted": true,
+          "headroom": 0.059695200650292726
+        },
+        {
+          "sample": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+          "feature": "shop",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.9129744101030243,
+          "margin": 0.2606751531252024,
+          "accepted": true,
+          "headroom": 0.11297441010302423
+        },
+        {
+          "sample": "run-20261104-194831-614128-abc58b99ff0f-stop.png",
+          "feature": "shop",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9614973262032085,
+          "margin": 0.49832183490605775,
+          "accepted": true,
+          "headroom": 0.16149732620320845
+        },
+        {
+          "sample": "penguin-102@2322",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9394584933734895,
+          "margin": 0.4571408010889777,
+          "accepted": true,
+          "headroom": 0.09945849337348955
+        },
+        {
+          "sample": "penguin-102@2322",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.9104409301153916,
+          "margin": 0.18728678829545975,
+          "accepted": true,
+          "headroom": 0.07044093011539165
+        },
+        {
+          "sample": "penguin-102@2322",
+          "feature": "penguin",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8843522010928389,
+          "margin": 0.2569992418488465,
+          "accepted": true,
+          "headroom": 0.04435220109283888
+        },
+        {
+          "sample": "penguin-102@1920",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9492990170123623,
+          "margin": 0.4892867060749051,
+          "accepted": true,
+          "headroom": 0.10929901701236233
+        },
+        {
+          "sample": "penguin-102@1920",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.9020337720288976,
+          "margin": 0.175373929709568,
+          "accepted": true,
+          "headroom": 0.062033772028897594
+        },
+        {
+          "sample": "penguin-102@1920",
+          "feature": "penguin",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8941929974380871,
+          "margin": 0.23610852628461,
+          "accepted": true,
+          "headroom": 0.05419299743808714
+        },
+        {
+          "sample": "penguin-102@1536",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.8834842586641304,
+          "margin": 0.4159657838513857,
+          "accepted": true,
+          "headroom": 0.043484258664130415
+        },
+        {
+          "sample": "penguin-102@1536",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.852173058477601,
+          "margin": 0.15779009061868576,
+          "accepted": true,
+          "headroom": 0.012173058477601084
+        },
+        {
+          "sample": "penguin-102@1536",
+          "feature": "penguin",
+          "truth": "2",
+          "predicted": "2",
+          "confidence": 0.8635408731766707,
+          "margin": 0.20680212816333854,
+          "accepted": true,
+          "headroom": 0.02354087317667075
+        },
+        {
+          "sample": "penguin-5100@2322",
+          "feature": "penguin",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.8936476312128565,
+          "margin": 0.13419749006497605,
+          "accepted": true,
+          "headroom": 0.05364763121285654
+        },
+        {
+          "sample": "penguin-5100@2322",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9009718532012176,
+          "margin": 0.455943108447576,
+          "accepted": true,
+          "headroom": 0.060971853201217674
+        },
+        {
+          "sample": "penguin-5100@2322",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.8947938215067059,
+          "margin": 0.166350973545901,
+          "accepted": true,
+          "headroom": 0.054793821506705975
+        },
+        {
+          "sample": "penguin-5100@2322",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.9014632913119118,
+          "margin": 0.17739612125793902,
+          "accepted": true,
+          "headroom": 0.06146329131191186
+        },
+        {
+          "sample": "penguin-5100@1920",
+          "feature": "penguin",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.8643104131157463,
+          "margin": 0.13665141713701667,
+          "accepted": true,
+          "headroom": 0.024310413115746332
+        },
+        {
+          "sample": "penguin-5100@1920",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.9427141361181632,
+          "margin": 0.4907989565467453,
+          "accepted": true,
+          "headroom": 0.10271413611816327
+        },
+        {
+          "sample": "penguin-5100@1920",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.8832868784603817,
+          "margin": 0.17718189316459576,
+          "accepted": true,
+          "headroom": 0.043286878460381706
+        },
+        {
+          "sample": "penguin-5100@1920",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.8856909989441291,
+          "margin": 0.15916747165156597,
+          "accepted": true,
+          "headroom": 0.04569099894412909
+        },
+        {
+          "sample": "penguin-5100@1536",
+          "feature": "penguin",
+          "truth": "5",
+          "predicted": "5",
+          "confidence": 0.8653254987824929,
+          "margin": 0.10409631283775667,
+          "accepted": true,
+          "headroom": 0.025325498782492906
+        },
+        {
+          "sample": "penguin-5100@1536",
+          "feature": "penguin",
+          "truth": "1",
+          "predicted": "1",
+          "confidence": 0.8871483221946146,
+          "margin": 0.42125951282706653,
+          "accepted": true,
+          "headroom": 0.04714832219461462
+        },
+        {
+          "sample": "penguin-5100@1536",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.8576670602125148,
+          "margin": 0.17056013391691194,
+          "accepted": true,
+          "headroom": 0.01766706021251485
+        },
+        {
+          "sample": "penguin-5100@1536",
+          "feature": "penguin",
+          "truth": "0",
+          "predicted": "0",
+          "confidence": 0.8626994163806173,
+          "margin": 0.16800947986208414,
+          "accepted": true,
+          "headroom": 0.022699416380617343
+        }
+      ],
+      "cases": {
+        "run-20261107-152335-500097-ccf5dc25aff6-stop.png": true,
+        "run-20261108-203500-047384-072c6531ae2e-stop.png": true,
+        "run-20261108-210425-873997-30573ba6d94e-stop.png": true,
+        "sky_stone_digits_2115_client_1536x864.png": true,
+        "sky_stone_digits_2118_client_1536x864.png": true,
+        "run-20261104-203145-477433-f7355faf31a5-stop.png": true,
+        "run-20261104-194831-614128-abc58b99ff0f-stop.png": true,
+        "penguin-102@2322": true,
+        "penguin-102@1920": true,
+        "penguin-102@1536": true,
+        "penguin-5100@2322": true,
+        "penguin-5100@1920": true,
+        "penguin-5100@1536": true
+      }
+    },
+    "unchanged_gates": {
+      "shop": [
+        0.8,
+        0.08
+      ],
+      "penguin": [
+        0.84,
+        0.06
+      ]
+    },
+    "runtime_algorithm_changed": false,
+    "related_negative_rois": [
+      {
+        "name": "unsafe legal-sized foreground component in balance ROI",
+        "kind": "synthetic production-ROI boundary",
+        "value": null,
+        "passed": true
+      },
+      {
+        "name": "empty price",
+        "kind": "derived real dialog with modified actual price ROI",
+        "roi": [
+          1170,
+          1035,
+          210,
+          62
+        ],
+        "price": null,
+        "body_found": true,
+        "passed": true
+      },
+      {
+        "name": "solid yellow non-digit price",
+        "kind": "derived real dialog with modified actual price ROI",
+        "roi": [
+          1170,
+          1035,
+          210,
+          62
+        ],
+        "price": null,
+        "body_found": true,
+        "passed": true
+      }
+    ],
+    "source_and_mask_preview": "D:\\E7auto\\artifacts\\tasks\\shop\\20261108-224928-native-digit-font-e32d3f39\\previews\\unified-native-digits-final.png",
+    "preview_sha256": "e28eb4402cbb46704ce57dc6c8acf6ac0172ef30d155b4f58fd9aa35309ebff5",
+    "normalization_reference_identity": "verified identical normalized variants for every client scale"
+  },
+  "limitations": [
+    "Canonical raster size is a template-generation parameter, not an observed game font size.",
+    "Offline FreeType rendering, not an exact reproduction of native GPU composition.",
+    "Positive selection set is small and used for ranking; no independent held-out runs.",
+    "Penguin small sizes are derived INTER_AREA resizes, not native captures.",
+    "Digit 6 has supplemental gold-header evidence only; no real sky-stone/penguin 6 case.",
+    "No live input, screenshot or game-memory access."
+  ],
+  "registration_plan": null,
+  "transaction_id": null
+}

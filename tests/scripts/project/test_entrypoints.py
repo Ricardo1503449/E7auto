@@ -32,7 +32,6 @@ CLI_MODULES = [
     "calibration.extract_shop_exit_icon_template",
     "calibration.extract_shop_refresh_button_template",
     "calibration.extract_sky_stone_templates",
-    "calibration.extract_sky_stone_zero_wide_template",
     "calibration.make_network_text_templates",
     "calibration.promote_insufficient_funds_live_result",
     "validation.validate_background_mode",
@@ -52,7 +51,7 @@ def test_moved_cli_help_resolves_without_running_actions(module: str) -> None:
 
 @pytest.mark.parametrize("module", [
     "crop_network_templates", "make_network_text_templates", "extract_sky_stone_templates",
-    "extract_refresh_confirm_templates", "extract_sky_stone_zero_wide_template",
+    "extract_refresh_confirm_templates",
     "calibrate_client_frames",
 ])
 def test_source_tools_require_explicit_inputs(module: str) -> None:

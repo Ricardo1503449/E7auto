@@ -139,6 +139,7 @@ class AppConfig:
     refresh_strategy: RefreshStrategyConfig
     default_confidence: float
     anchor_confidence: float
+    digit_smoothing_sigma: float
     entry_thresholds: dict[str, EntryThresholds]
     penguin_control_confidence: float
     penguin_price_digit_confidence: float

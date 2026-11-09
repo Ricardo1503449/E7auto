@@ -27,6 +27,29 @@ def configuration(tmp_path):
     return tmp_path / "internal.yaml", raw
 
 
+@pytest.mark.parametrize("value", [None, 0, -1, True, "2", float("nan"), float("inf"), 4.01])
+def test_digit_smoothing_sigma_rejects_invalid_values(configuration, value):
+    path, raw = configuration
+    raw["vision"]["digit_smoothing_sigma"] = value
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    with pytest.raises(ConfigError, match="vision.digit_smoothing_sigma"):
+        load_config(path)
+
+
+@pytest.mark.parametrize("sigma", [1.5, 2.0, 4.0])
+def test_digit_smoothing_sigma_is_loaded_by_both_features(configuration, sigma):
+    path, raw = configuration
+    raw["vision"]["digit_smoothing_sigma"] = sigma
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    config = load_config(path)
+    shop = OpenCvGameVision(config, TemplateRepository(config))
+    penguin_config = with_penguin_config(config)
+    penguin = PenguinVision(penguin_config, TemplateRepository(penguin_config))
+    assert config.digit_smoothing_sigma == sigma
+    assert shop._digits._smoothing_sigma == sigma
+    assert penguin._digits._smoothing_sigma == sigma
+
+
 @pytest.mark.parametrize('value',[0,-1,True,1.5,'64',None])
 def test_candidate_cache_budget_rejects_invalid_values(configuration,value):
     path,raw=configuration

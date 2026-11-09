@@ -89,7 +89,6 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "friendship_points_confirm",
         "friendship_points_purchased",
         *(f"sky_stone_digit_{digit}" for digit in range(10)),
-        "sky_stone_digit_0_wide",
     }
     template_dir = tmp_path / "templates"
     template_dir.mkdir()
@@ -162,6 +161,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
         "vision": {
             "default_confidence": 0.9,
             "anchor_confidence": 0.95,
+            "digit_smoothing_sigma": 2.0,
             "entry_thresholds": {"shop": {"color": 0.93, "structure": 0.8}, "penguin": {"color": 0.96, "structure": 0.8}},
             "penguin_control_confidence": 0.96,
             "penguin_price_digit_confidence": 0.84,
@@ -192,6 +192,7 @@ def test_complete_synthetic_configuration_loads(tmp_path: Path) -> None:
     assert loaded.refresh_cost == 3
     assert loaded.game_clients == (GameClient("legacy", "Game.exe"),)
     assert loaded.sky_stone_digit_confidence == 0.8
+    assert loaded.digit_smoothing_sigma == 2.0
     assert loaded.sky_stone_digit_margin == 0.08
     assert loaded.sky_stone_digits_offset == Point(1, 2)
     assert loaded.refresh_strategy.batch_refreshes == (13, 13, 13, 10)

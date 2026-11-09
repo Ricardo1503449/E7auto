@@ -32,7 +32,7 @@ def test_penguin_loads_without_any_shop_images(installation):
     config = with_penguin_config(load_config(
         installation / "config/internal.yaml", template_profile="penguin"
     ))
-    assert len(config.template_paths) == 29
+    assert len(config.template_paths) == 28
     assert set(config.template_paths) == COMMON_TEMPLATE_KEYS | {
         key for key in config.template_paths if key.startswith("penguin_")
     }
@@ -46,7 +46,7 @@ def test_shop_loads_without_penguin_assets_or_calibration_docs(installation):
     for path in (installation / "assets/templates/penguin").iterdir():
         path.unlink()
     config = load_config(installation / "config/internal.yaml")
-    assert len(config.template_paths) == 34
+    assert len(config.template_paths) == 33
     assert not any(key.startswith("penguin_") for key in config.template_paths)
     assert TemplateRepository(config).get("main_shop_icon").image.size
 
@@ -64,7 +64,7 @@ def test_shared_column_search_configuration_is_required_for_both_features(instal
 
 @pytest.mark.parametrize("profile", ["shop", "penguin"])
 @pytest.mark.parametrize("filename", [
-    "common/digits/sky_stone_digit_0_wide.png", "common/network/network_retry.png"
+    "common/digits/sky_stone_digit_0.png", "common/network/network_retry.png"
 ])
 def test_missing_shared_image_rejects_both_features(installation, profile, filename):
     (installation / "assets/templates" / filename).unlink()
@@ -177,5 +177,12 @@ def test_provenance_outputs_match_runtime_configuration():
         data = json.loads(text) if manifest.suffix == ".json" else yaml.safe_load(text)
         paths.update((ROOT / "assets/templates" / name).resolve() for name in outputs(data))
     assert len(paths) == 29
-    assert paths <= referenced
-    assert all(path.is_file() for path in paths)
+    # Historical source records retain paths for explicitly retired assets.
+    common = ROOT / "assets/templates/common"
+    catalog = json.loads((common / "manifest.json").read_text(encoding="utf-8"))
+    retired = {(common / entry["file"]).resolve()
+               for entry in catalog.get("retired_templates", {}).values()}
+    active = paths - retired
+    assert active <= referenced
+    assert retired.isdisjoint(referenced)
+    assert all(path.is_file() for path in active)

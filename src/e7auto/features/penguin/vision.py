@@ -38,7 +38,7 @@ class PenguinVision:
         self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
                                         structure_thresholds=config.template_structure_thresholds)
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
-        self._digits = DigitMatcher(templates, config.template_paths)
+        self._digits = DigitMatcher(templates, smoothing_sigma=config.digit_smoothing_sigma)
         self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
         approved = templates.get("penguin_penguin_buy_5100")

@@ -6,7 +6,6 @@ NAVIGATION_TEMPLATE_KEYS = frozenset({
 COMMON_TEMPLATE_KEYS = frozenset({
     *NAVIGATION_TEMPLATE_KEYS,
     *(f"sky_stone_digit_{digit}" for digit in range(10)),
-    "sky_stone_digit_0_wide",
     "network_connection_abnormal",
     "network_retry",
 })
@@ -24,7 +23,6 @@ _REQUIRED_TEMPLATES = {
     "purchased_button",
     "sky_stone_icon",
     *(f"sky_stone_digit_{digit}" for digit in range(10)),
-    "sky_stone_digit_0_wide",
 }
 
 

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "operation": "retire",
+  "previous_filename": "digits/sky_stone_digit_0_wide.png",
+  "retirement_reason": "All clients/features now share one full native 0-9 set; native zero passed the existing gold/sky/price glyph and production-ROI checks without the screenshot wide-zero fallback.",
+  "original_sha256": "65b7165c5e38fa6bd31466f342cf9a1291b9e53756629cea0dc400765fdef827",
+  "replacement_source_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff",
+  "validation_report_sha256": "855bd7367709f1dcee16825fcf19341edbef691ab772a7be0a59ee01ee2a53dc"
+}

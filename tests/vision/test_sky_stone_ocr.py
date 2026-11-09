@@ -45,8 +45,9 @@ def test_existing_digit_templates_generate_cached_stroke_variants() -> None:
 
     assert first is second
     assert widths is second_widths
-    assert len(first["0"]) == 6
-    assert all(len(first[digit]) == 3 for digit in "123456789")
+    assert all(len(first[digit]) == 3 for digit in "0123456789")
+    for scale in (1152 / 2322, 1536 / 2322, 1920 / 2322):
+        assert vision._digits.template_variants(scale)[0] is first
     assert all(
         mask.shape == (48, 32)
         for variants in first.values()
@@ -54,21 +55,54 @@ def test_existing_digit_templates_generate_cached_stroke_variants() -> None:
     )
 
 
-def test_digit_query_reuses_template_dilations_and_only_prepares_nine_shifts(monkeypatch):
+def test_digit_query_reuses_reference_features_and_only_blurs_once(monkeypatch):
     config = load_config(ROOT / "config/internal.yaml")
     vision = OpenCvGameVision(config, TemplateRepository(config))
     variants, _ = vision._digits.template_variants()
     glyph = variants['8'][0][0]
     expected = vision._digits.best_match(glyph, variants)
+    references = vision._digits._references
     calls = []
-    original = cv2.dilate
+    original = cv2.GaussianBlur
     def counted(*args, **kwargs):
         calls.append(1)
         return original(*args, **kwargs)
-    monkeypatch.setattr(cv2, 'dilate', counted)
+    monkeypatch.setattr(cv2, 'GaussianBlur', counted)
     assert vision._digits.best_match(glyph, variants) == expected
-    assert len(calls) == 9
+    assert len(calls) == 1
+    for scale in (1152/2322, 1536/2322, 1920/2322):
+        scaled, _ = vision._digits.template_variants(scale)
+        assert vision._digits._reference_features(scaled) is references
+    assert not references.features.flags.writeable
+    assert not references.widths.flags.writeable
     assert all(not mask.flags.writeable for items in variants.values() for mask, _ in items)
+
+
+def test_mutable_foreign_digit_candidates_do_not_replace_cached_references():
+    config = load_config(ROOT / "config/internal.yaml")
+    vision = OpenCvGameVision(config, TemplateRepository(config))
+    variants, _ = vision._digits.template_variants()
+    glyph = variants["1"][0][0]
+    expected = vision._digits.best_match(glyph, variants)
+    references = vision._digits._references
+    foreign_mask = glyph.copy()
+    foreign = {"0": ((foreign_mask, 10),)}
+    assert vision._digits.best_match(glyph, foreign).digit == "0"
+    foreign_mask[:] = 0
+    assert vision._digits.best_match(glyph, foreign).confidence == 0
+    assert vision._digits.best_match(glyph, variants) == expected
+    assert vision._digits._references is references
+
+
+def test_empty_glyph_and_reference_set_cannot_pass_digit_acceptance():
+    config = load_config(ROOT / "config/internal.yaml")
+    vision = OpenCvGameVision(config, TemplateRepository(config))
+    variants, _ = vision._digits.template_variants()
+    glyph = np.zeros((14, 5), np.uint8)
+    match = vision._digits.best_match(glyph, variants)
+    assert match.confidence == 0 and match.margin == 0
+    assert not vision._digit_match_is_safe(match)
+    assert vision._digits.best_match(glyph, {}) == _DigitMatch("", 0., 0., 0)
 
 
 def _read_actual_digit_roi(path: Path) -> tuple[int, float] | None:

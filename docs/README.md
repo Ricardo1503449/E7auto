@@ -28,6 +28,7 @@
 - [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
 - [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
+- [v1.5.3 工作区审查与版本验证](releases/v1.5.3/VALIDATION.md)（数字模板、评分与商店参考帧）
 - [v1.5.2 验证记录](releases/v1.5.2/VALIDATION.md)（后台统计、网页与私有快照迁移、1080p适配）
 - [v1.5.1 工作区审查、构建与验证](releases/v1.5.1/VALIDATION.md)
 - [v1.5.0 工作区审查、构建与验证](releases/v1.5.0/VALIDATION.md)

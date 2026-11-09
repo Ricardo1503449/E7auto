@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from math import ceil, isfinite
 import cv2
 import numpy as np
 from e7auto.core.ports import Frame
@@ -18,27 +19,24 @@ class _DigitMatch:
 
 
 @dataclass(frozen=True, slots=True)
-class _Glyph:
-    mask: np.ndarray
-    dilated: np.ndarray
-    pixels: int
-
-    @classmethod
-    def prepare(cls, image: np.ndarray) -> _Glyph:
-        mask = (image > 0).astype(np.uint8)
-        dilated = cv2.dilate(mask, _GLYPH_KERNEL)
-        mask.setflags(write=False)
-        dilated.setflags(write=False)
-        return cls(mask, dilated, int(np.count_nonzero(mask)))
+class _DigitReferences:
+    features: np.ndarray
+    widths: np.ndarray
+    groups: tuple[tuple[str, int, int], ...]
 
 
 class DigitMatcher:
-    """Shared glyph templates; each caller retains its own color and confidence policy."""
-    def __init__(self, templates, template_keys):
+    """One smoothed glyph reference set; callers own color and acceptance policy."""
+    def __init__(self, templates, *, smoothing_sigma: float):
+        if (isinstance(smoothing_sigma, bool)
+                or not isinstance(smoothing_sigma, (int, float))
+                or not isfinite(smoothing_sigma) or not 0 < smoothing_sigma <= 4):
+            raise ValueError("digit smoothing sigma must be in (0, 4]")
         self._templates = templates
-        self._template_keys = frozenset(template_keys)
+        self._smoothing_sigma = float(smoothing_sigma)
+        self._padding = ceil(4*self._smoothing_sigma)+2
         self._variants = None
-        self._prepared_variants = None
+        self._references: _DigitReferences | None = None
 
     @staticmethod
     def neutral_bright_mask(image: Frame) -> np.ndarray:
@@ -71,37 +69,72 @@ class DigitMatcher:
 
 
     @staticmethod
-    def _glyph_similarity(left: _Glyph, right: _Glyph) -> float:
-        union = np.count_nonzero(left.mask | right.mask)
-        if union == 0 or left.pixels == 0 or right.pixels == 0:
-            return 0.0
-        strict_overlap = float(np.count_nonzero(left.mask & right.mask) / union)
-        left_coverage = float(np.count_nonzero(left.mask & right.dilated) / left.pixels)
-        right_coverage = float(np.count_nonzero(right.mask & left.dilated) / right.pixels)
-        tolerant_overlap = (
-            2.0 * left_coverage * right_coverage / (left_coverage + right_coverage)
-            if left_coverage + right_coverage else 0.0
-        )
-        return 0.60 * strict_overlap + 0.40 * tolerant_overlap
+    def _normalize_features(fields: np.ndarray) -> np.ndarray:
+        flat = fields.reshape(len(fields), -1).astype(np.float32)
+        flat -= flat.mean(axis=1, keepdims=True)
+        norm = np.sqrt(np.einsum("np,np->n", flat, flat, dtype=np.float64))
+        return np.divide(flat, norm[:, None], out=np.zeros_like(flat), where=norm[:, None] > 1e-12)
 
-    @staticmethod
-    def _shifted_glyphs(glyph: np.ndarray) -> tuple[_Glyph, ...]:
-        height, width = glyph.shape
-        variants = []
-        for offset_y in range(-1, 2):
-            for offset_x in range(-1, 2):
-                shifted = np.zeros_like(glyph)
-                dx, dy = max(0, offset_x), max(0, offset_y)
-                sx, sy = max(0, -offset_x), max(0, -offset_y)
-                w, h = width - abs(offset_x), height - abs(offset_y)
-                shifted[dy:dy+h, dx:dx+w] = glyph[sy:sy+h, sx:sx+w]
-                variants.append(_Glyph.prepare(shifted))
-        return tuple(variants)
+    def _blur(self, mask: np.ndarray) -> np.ndarray:
+        return cv2.GaussianBlur(mask.astype(np.float32), (0, 0), self._smoothing_sigma,
+                                borderType=cv2.BORDER_CONSTANT)
 
-    @staticmethod
-    def _prepare_variants(variants):
-        return {digit: tuple((_Glyph.prepare(mask), width) for mask, width in items)
-                for digit, items in variants.items()}
+    def _prepare_references(self, variants) -> _DigitReferences:
+        fields, widths, groups = [], [], []
+        p = self._padding
+        for digit, items in variants.items():
+            start = len(fields)
+            for mask, width in items:
+                mask = (mask > 0).astype(np.uint8)
+                height, columns = mask.shape
+                field = self._blur(np.pad(mask, p))
+                fields.append(field[p:p+height, p:p+columns])
+                widths.append(width)
+            groups.append((digit, start, len(fields)))
+        features = (self._normalize_features(np.stack(fields)) if fields
+                    else np.empty((0, 48*32), np.float32))
+        reference_widths = np.asarray(widths, dtype=np.int64)
+        features.setflags(write=False)
+        reference_widths.setflags(write=False)
+        return _DigitReferences(features, reference_widths, tuple(groups))
+
+    def _reference_features(self, variants) -> _DigitReferences:
+        # Only repository-owned, immutable references survive this call. Foreign
+        # candidates may be mutable and must not replace the shared reference set.
+        if self._variants is not None and variants is self._variants[0]:
+            if self._references is None:
+                self._references = self._prepare_references(variants)
+            return self._references
+        return self._prepare_references(variants)
+
+    def _score_matrix(self, glyph: np.ndarray, references: _DigitReferences) -> np.ndarray:
+        normalized = self._normalize_glyph(glyph)
+        height, width = normalized.shape
+        p = self._padding
+        # Blur once with zero support, then sample the same nine translations.
+        # This retains edge evidence when a shifted foreground reaches the canvas.
+        field = self._blur(np.pad(normalized, p))
+        shifts = np.stack([field[p-dy:p+height-dy, p-dx:p+width-dx]
+                           for dy in (-1, 0, 1) for dx in (-1, 0, 1)])
+        features = self._normalize_features(shifts)
+        return np.clip(np.einsum("qp,rp->qr", features, references.features,
+                                 dtype=np.float64, optimize=False), 0., 1.)
+
+    def _ranked_scores(self, glyph, variants, *, width_scale=1.):
+        references = self._reference_features(variants)
+        values = self._score_matrix(glyph, references).max(axis=0)
+        _, xs = np.nonzero(glyph)
+        width = int(xs.max()-xs.min()+1) if len(xs) else 0
+        errors = np.abs(width-np.maximum(1, np.rint(references.widths*width_scale).astype(np.int64)))
+        ranked = []
+        for digit, start, end in references.groups:
+            if start == end:
+                ranked.append((0., 2**31-1, digit))
+                continue
+            score = float(values[start:end].max())
+            error = int(errors[start:end][values[start:end] == score].min())
+            ranked.append((score, error, digit))
+        return sorted(ranked, key=lambda row: (-row[0], row[1], row[2]))
 
     def best_match(
         self,
@@ -109,27 +142,7 @@ class DigitMatcher:
         template_variants: dict[str, tuple[tuple[np.ndarray, int], ...]],
         *, width_scale: float = 1.,
     ) -> _DigitMatch:
-        shifted = self._shifted_glyphs(self._normalize_glyph(glyph))
-        # Only repository-owned, immutable variants are cached across calls.
-        prepared = (self._prepared_variants
-                    if self._variants is not None and template_variants is self._variants[0]
-                    else self._prepare_variants(template_variants))
-        ys, xs = np.nonzero(glyph)
-        glyph_width = int(xs.max() - xs.min() + 1) if len(xs) else 0
-        class_scores: list[tuple[float, int, str]] = []
-        for digit, variants in prepared.items():
-            best_confidence = 0.0
-            best_width_error = 2**31 - 1
-            for template, template_width in variants:
-                confidence = max(self._glyph_similarity(item, template) for item in shifted)
-                width_error = abs(glyph_width - max(1,round(template_width*width_scale)))
-                if confidence > best_confidence or (
-                    confidence == best_confidence and width_error < best_width_error
-                ):
-                    best_confidence = confidence
-                    best_width_error = width_error
-            class_scores.append((best_confidence, best_width_error, digit))
-        class_scores.sort(key=lambda item: (-item[0], item[1], item[2]))
+        class_scores = self._ranked_scores(glyph, template_variants, width_scale=width_scale)
         if not class_scores:
             return _DigitMatch("", 0.0, 0.0, 0)
         best_confidence, best_width_error, best_digit = class_scores[0]
@@ -170,8 +183,6 @@ class DigitMatcher:
         template_widths: list[int] = []
         for digit in "0123456789":
             template_keys = [f"sky_stone_digit_{digit}"]
-            if digit == "0" and "sky_stone_digit_0_wide" in self._template_keys:
-                template_keys.append("sky_stone_digit_0_wide")
             variants: list[tuple[np.ndarray, int]] = []
             for template_key in template_keys:
                 template = self._templates.get(template_key)
@@ -191,6 +202,5 @@ class DigitMatcher:
         for variants in template_variants.values():
             for mask, _ in variants:
                 mask.setflags(write=False)
-        self._prepared_variants = self._prepare_variants(template_variants)
         self._variants = template_variants, tuple(template_widths)
         return self._variants

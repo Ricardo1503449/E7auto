@@ -83,6 +83,7 @@ def make_config(
         refresh_strategy=RefreshStrategyConfig((13, 13, 13, 10), (5, 180, 5)),
         default_confidence=0.9,
         anchor_confidence=0.93,
+        digit_smoothing_sigma=2.0,
         entry_thresholds={"shop": EntryThresholds(0.93, 0.8), "penguin": EntryThresholds(0.96, 0.8)},
         penguin_control_confidence=0.96,
         penguin_price_digit_confidence=0.84,

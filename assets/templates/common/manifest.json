@@ -7,90 +7,82 @@
   "templates": {
     "sky_stone_digit_0": {
       "file": "digits/sky_stone_digit_0.png",
-      "sha256": "33df56d8f04f708d6b7f86fdee14b5d14cc5a8d835042c6960ba0581c6074852",
+      "sha256": "560cd6f6a4925d5a2d9d12a9d17a032f0ba1ff3097ee958e7c80b0461a4673c1",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
-      }
-    },
-    "sky_stone_digit_0_wide": {
-      "file": "digits/sky_stone_digit_0_wide.png",
-      "sha256": "65b7165c5e38fa6bd31466f342cf9a1291b9e53756629cea0dc400765fdef827",
-      "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_0-560cd6f6a492-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_1": {
       "file": "digits/sky_stone_digit_1.png",
-      "sha256": "a0d7ed34eb33d9a9eb6505f31923566a8fd4ae6194728e09bf6a411144690729",
+      "sha256": "1b03802f47d3d4e23e482d615f8c5c6e54c78790f763f5efbe0395790200e01b",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_1-1b03802f47d3-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_2": {
       "file": "digits/sky_stone_digit_2.png",
-      "sha256": "f0ebfcc9e33d9646afbecc3cfd88b04a28e924aad94a8b6f48f530e9ef93f34b",
+      "sha256": "afdc6611f359ad1da9a9015dca2acefe1d6a446c05fc6ddabb1097a66f6b92ec",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_2-afdc6611f359-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_3": {
       "file": "digits/sky_stone_digit_3.png",
-      "sha256": "1ad37b67facc0a095b2deebb779b55393f78039359c5ed20a4349a846310ccff",
+      "sha256": "1921f30725d1542c817c99ac8202577ccc3a8fe9f72e977c402be8a227ce3f23",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_3-1921f30725d1-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_4": {
       "file": "digits/sky_stone_digit_4.png",
-      "sha256": "7780b139a06a254660f24adead69951fed24f1493376f82d39535dbb88b432be",
+      "sha256": "2754c2ec23d362460212d006fae2f0df60696710b7211b4bcb782c5acadb16df",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_4-2754c2ec23d3-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_5": {
       "file": "digits/sky_stone_digit_5.png",
-      "sha256": "32a8f6f4bbffd9b41b5f425542e897f775fe1530431985e475cc07f4457033cf",
+      "sha256": "4800b3a10e0d691e60d6e36fd4289c674f0c47f01ad818ca15e5056c1bcbda63",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_5-4800b3a10e0d-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_6": {
       "file": "digits/sky_stone_digit_6.png",
-      "sha256": "77ef3d96ac231304675afe1f144e2486aa74ca08a6b8fe36ee46ceee73a5c270",
+      "sha256": "0e0f97949dca06f3a0bdb2071f440fe9eabc51c63171490242018f4672905113",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_6-0e0f97949dca-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_7": {
       "file": "digits/sky_stone_digit_7.png",
-      "sha256": "f18b0f048ce1c1dad4251a0366efd95cac05243ce78ad9669a98e4661f2812ff",
+      "sha256": "d1088ec97218a42ebcaa031fcb2e1fc39f2376a9cbb62ed22a8de861c73cb65f",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_7-d1088ec97218-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_8": {
       "file": "digits/sky_stone_digit_8.png",
-      "sha256": "fdc77b10554787a2767095cc738c0fa8b84f64fe755faf281795492f35dabb85",
+      "sha256": "a83c1694091fa0a025bbfccc5f2e32bf664d443f3a51cf21dd9648830a6c2018",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_8-a83c1694091f-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "sky_stone_digit_9": {
       "file": "digits/sky_stone_digit_9.png",
-      "sha256": "8ffeb31a397152a0016754d4b49d8c7fc1005481b7d01726e73849cafa32ff42",
+      "sha256": "8aeaacfc349661013c25144ac01a8204ab264fbc2ec4854abe2fafc281e2e0b1",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/common-sky_stone_digit_9-8aeaacfc3496-7c4692720bb0.json",
+        "record_sha256": "7c4692720bb026733a4188b09e3b632d7305334bf9fe29510597fcdb869699ff"
       }
     },
     "network_connection_abnormal": {
@@ -179,6 +171,16 @@
       "source": {
         "record": "docs/calibration/registrations/common-navigation_menu_notification-ca5f6e9f7af6-0b904e48e73f.json",
         "record_sha256": "0b904e48e73ffcaf7d6a7201a8eb47c8fb8e4e2108ea777acd5399294fd4b3a2"
+      }
+    }
+  },
+  "retired_templates": {
+    "sky_stone_digit_0_wide": {
+      "file": "digits/sky_stone_digit_0_wide.png",
+      "sha256": "65b7165c5e38fa6bd31466f342cf9a1291b9e53756629cea0dc400765fdef827",
+      "source": {
+        "record": "docs/calibration/registrations/common-sky_stone_digit_0_wide-65b7165c5e38-ff0a14b14247.json",
+        "record_sha256": "ff0a14b142473bdf571b68cd160d4b98419ead21a4a50d9029e3ebe921401753"
       }
     }
   }

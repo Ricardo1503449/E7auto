@@ -309,25 +309,9 @@ def test_insufficient_funds_template_uses_only_terminal_prompt_evidence() -> Non
         ).value == "insufficient_funds"
 
 
-def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> None:
+def test_native_digits_and_original_sky_stone_icon_parse_supplied_balances() -> None:
     manifest_path = calibration_record_path("sky_stone_manifest.yaml")
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["sources"]["balance_crop"]["size"] == {"width": 202, "height": 87}
-    assert manifest["sources"]["full_context"]["size"] == {"width": 2428, "height": 1512}
-    assert manifest["sources"]["balance_3924"]["size"] == {"width": 185, "height": 91}
-    assert manifest["sources"]["balance_3900"]["size"] == {"width": 194, "height": 83}
-    assert manifest["sources"]["combined_top_bar"]["size"] == {"width": 471, "height": 84}
-    assert manifest["missing_digits"] == []
-    assert min(manifest["cross_source_font_similarity"].values()) >= 0.95
-    supplemental = manifest["supplemental_validation"]
-    assert min(
-        entry["similarity"] for entry in supplemental["known_digit_similarity"]
-    ) >= supplemental["known_digit_minimum"]
-    assert supplemental["zero_repeat_similarity"] >= supplemental["zero_repeat_minimum"]
-    assert (
-        supplemental["four_cross_source_similarity"]
-        >= supplemental["four_cross_source_minimum"]
-    )
 
     icon_entry = manifest["icon"]
     icon_path = TEMPLATE_DIR / icon_entry["output_path"]
@@ -347,36 +331,25 @@ def test_sky_stone_templates_are_reproducible_and_parse_supplied_balance() -> No
     templates = {
         "sky_stone_icon": TemplateData(icon[:, :, :3], icon[:, :, 3]),
     }
-    entries = {entry["digit"]: entry for entry in manifest["digits"]}
-    assert set(entries) == set("0123456789")
+    catalog = json.loads((TEMPLATE_DIR / "common/manifest.json").read_text(encoding="utf-8"))
+    entries = {digit: {"output_path": "common/" + catalog["templates"][f"sky_stone_digit_{digit}"]["file"]}
+               for digit in "0123456789"}
+    generation_rules = set()
     for digit, entry in entries.items():
         path = TEMPLATE_DIR / entry["output_path"]
         glyph = read_png(path)
         assert set(np.unique(glyph[:, :, 3])) == {0, 255}
-        assert np.count_nonzero(glyph[:, :, 3]) == entry["foreground_pixels"]
+        registered = catalog["templates"][f"sky_stone_digit_{digit}"]
+        source = json.loads((ROOT / registered["source"]["record"]).read_text(encoding="utf-8"))
+        assert source["kind"] == "native TTF canonical shared digit templates"
+        assert source["font_asset"]["resource"] == "font/daum.ttf"
+        generation = source["generation"]
+        generation_rules.add((source["renderer"]["font_sha256"], generation["canonical_raster_px"],
+                              generation["coverage_cutoff"], generation["flags"]))
         templates[f"sky_stone_digit_{digit}"] = TemplateData(
             glyph[:, :, :3], glyph[:, :, 3]
         )
-
-    source_key_by_digit = {
-        "0": "balance_3900",
-        "4": "combined_top_bar",
-        "6": "combined_top_bar",
-    }
-    for digit, source_key in source_key_by_digit.items():
-        entry = entries[digit]
-        source_path = Path(manifest["sources"][source_key]["path"])
-        if source_path.is_file():
-            source_image = read_png(source_path)
-            crop = entry["crop"]
-            expected_rgb = source_image[
-                crop["y"] : crop["y"] + crop["height"],
-                crop["x"] : crop["x"] + crop["width"],
-                :3,
-            ]
-            assert np.array_equal(
-                read_png(TEMPLATE_DIR / entry["output_path"])[:, :, :3], expected_rgb
-            )
+    assert len(generation_rules) == 1
 
     balance_source = manifest["sources"]["balance_crop"]
     source = Path(balance_source["path"])
@@ -480,7 +453,6 @@ def test_sky_stone_alignment_tolerance_parses_supplied_4499_client() -> None:
     )
     template_paths = {
         "sky_stone_icon": TEMPLATE_DIR / template_relative_path("sky_stone_icon.png", feature="shop"),
-        "sky_stone_digit_0_wide": TEMPLATE_DIR / template_relative_path("sky_stone_digit_0_wide.png", feature="common"),
         **{
             f"sky_stone_digit_{digit}": TEMPLATE_DIR / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
             for digit in "0123456789"
@@ -513,84 +485,3 @@ def test_dynamic_sky_stone_anchor_parses_background_farming_header() -> None:
     assert observation is not None
     assert observation.value == 3405
     assert observation.confidence >= config.sky_stone_digit_confidence
-
-
-def test_sky_stone_wide_zero_variant_is_reproducible_and_parses_4501() -> None:
-    source = Path(
-        r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-f737e650-4fcb-4974-9950-5c5c9b4274eb.png"
-    )
-    manifest_path = calibration_record_path("sky_stone_zero_wide_manifest.yaml")
-    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    template = manifest["template"]
-    output = TEMPLATE_DIR / template["output_path"]
-    assert output.is_file()
-    glyph = read_png(output)
-    assert glyph.shape == (33, 23, 4)
-    assert np.count_nonzero(glyph[:, :, 3]) == template["foreground_pixels"] == 273
-    assert (
-        manifest["validation"]["wide_gold_to_sky_stone_zero_similarity"]
-        >= manifest["validation"]["wide_gold_to_sky_stone_zero_minimum"]
-    )
-    if not source.is_file():
-        return
-    config = replace(
-        make_config(),
-        rois={
-            **make_config().rois,
-            "sky_stone_icon": Rect(1555, 12, 90, 95),
-            "sky_stone_digits": Rect(1625, 38, 110, 45),
-        },
-        anchor_confidence=0.93,
-        sky_stone_digit_confidence=0.80,
-        template_paths={
-            "sky_stone_icon": TEMPLATE_DIR / template_relative_path("sky_stone_icon.png", feature="shop"),
-            "sky_stone_digit_0_wide": output,
-            **{
-                f"sky_stone_digit_{digit}": TEMPLATE_DIR / template_relative_path(f"sky_stone_digit_{digit}.png", feature="common")
-                for digit in "0123456789"
-            },
-        },
-    )
-    observation = OpenCvGameVision(
-        config, TemplateRepository(config)
-    ).sky_stone_balance(read_supplied_client(source))
-
-    assert observation is not None
-    assert observation.value == 4501
-    assert observation.confidence >= 0.80
-
-
-def test_wide_zero_extractor_reproduces_checked_in_asset(tmp_path: Path) -> None:
-    source = Path(
-        r"C:\Users\lxy\AppData\Local\Temp\codex-clipboard-f737e650-4fcb-4974-9950-5c5c9b4274eb.png"
-    )
-    if not source.is_file():
-        return
-
-    from scripts.calibration.extract_sky_stone_zero_wide_template import main
-
-    import sys
-
-    original_argv = sys.argv
-    try:
-        sys.argv = [
-            "extract_sky_stone_zero_wide_template.py",
-            "--source",
-            str(source),
-            "--output-dir",
-            str(tmp_path),
-        ]
-        assert main() == 0
-    finally:
-        sys.argv = original_argv
-
-    assert (tmp_path / "common/digits/sky_stone_digit_0_wide.png").read_bytes() == (
-        TEMPLATE_DIR / template_relative_path("sky_stone_digit_0_wide.png", feature="common")
-    ).read_bytes()
-    assert yaml.safe_load(
-        (tmp_path / "sky_stone_zero_wide_manifest.yaml").read_text(encoding="utf-8")
-    ) == yaml.safe_load(
-        (calibration_record_path("sky_stone_zero_wide_manifest.yaml")).read_text(
-            encoding="utf-8"
-        )
-    )

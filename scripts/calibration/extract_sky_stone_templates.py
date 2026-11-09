@@ -1,3 +1,4 @@
+"""Historical screenshot extraction; current shared digits use registered native-font sources."""
 from __future__ import annotations
 
 from scripts.common.candidates import write_candidate_png as write_png

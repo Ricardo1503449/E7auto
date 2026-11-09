@@ -149,7 +149,7 @@ inventory_readiness:
   minimum_band_stddev: 5.0
   reward_overlay_roi: {x: 960, y: 90, width: 250, height: 215}
   reward_overlay_confidence: 0.85
-  reference_max_age_ms: 500
+  reference_max_age_ms: 1000
 
 startup_navigation:
   navigation_menu:
@@ -236,7 +236,9 @@ vision:
     penguin_quantity_max: 0.90
     penguin_purchase_cancel: 0.90
   penguin_purchase_body_confidence: 0.90
-  penguin_price_digit_confidence: 0.84
+  # Gaussian sigma in the shared normalized 32x48 glyph canvas.
+  digit_smoothing_sigma: 2.0
+  penguin_price_digit_confidence: 0.80
   penguin_price_digit_margin: 0.06
   # Per-side button search padding: x=horizontal, y=vertical.
   purchased_button_padding: {x: 18, y: 16}

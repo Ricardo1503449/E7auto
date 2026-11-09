@@ -463,6 +463,12 @@ def _load_vision(root, errors):
     vision_raw = _mapping(root.get("vision"), "vision", errors)
     default_confidence = vision_raw.get("default_confidence")
     anchor_confidence = vision_raw.get("anchor_confidence")
+    digit_smoothing_sigma = vision_raw.get("digit_smoothing_sigma")
+    if (isinstance(digit_smoothing_sigma, bool)
+            or not isinstance(digit_smoothing_sigma, (int, float))
+            or not 0 < digit_smoothing_sigma <= 4):
+        errors.append("vision.digit_smoothing_sigma must be in (0, 4]")
+        digit_smoothing_sigma = 2.0
     entry_raw = _mapping(vision_raw.get("entry_thresholds"), "vision.entry_thresholds", errors)
     entry_thresholds: dict[str, EntryThresholds] = {}
     for feature in ("shop", "penguin"):
@@ -522,7 +528,7 @@ def _load_vision(root, errors):
         if isinstance(sky_stone_digit_margin, (int, float))
         else 1.0
     )
-    return default_confidence, anchor_confidence, entry_thresholds, penguin_control_confidence, penguin_price_digit_confidence, penguin_price_digit_margin, purchased_button_padding, penguin_price_rect, sky_stone_digit_confidence, sky_stone_digit_margin, sky_stone_digits_offset
+    return default_confidence, anchor_confidence, entry_thresholds, penguin_control_confidence, penguin_price_digit_confidence, penguin_price_digit_margin, purchased_button_padding, penguin_price_rect, sky_stone_digit_confidence, sky_stone_digit_margin, sky_stone_digits_offset, float(digit_smoothing_sigma)
 
 
 def _load_penguin_control_thresholds(raw, errors):
@@ -723,6 +729,7 @@ def load_config(
         sky_stone_digit_confidence,
         sky_stone_digit_margin,
         sky_stone_digits_offset,
+        digit_smoothing_sigma,
     ) = _load_vision(root, errors)
 
     vision_mapping = root.get("vision") if isinstance(root.get("vision"), dict) else {}
@@ -778,6 +785,7 @@ def load_config(
         refresh_strategy=refresh_strategy,
         default_confidence=default_confidence,
         anchor_confidence=anchor_confidence,
+        digit_smoothing_sigma=digit_smoothing_sigma,
         entry_thresholds=entry_thresholds,
         penguin_control_confidence=float(penguin_control_confidence),
         penguin_price_digit_confidence=float(penguin_price_digit_confidence),

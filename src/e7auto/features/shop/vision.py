@@ -28,7 +28,7 @@ class ShopVision:
         self._targets_by_id = {target.target_id: target for target in config.targets}
         self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
                                         structure_thresholds=config.template_structure_thresholds)
-        self._digits = DigitMatcher(templates, config.template_paths)
+        self._digits = DigitMatcher(templates, smoothing_sigma=config.digit_smoothing_sigma)
         self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
         self._viewport_layout_key = None
