@@ -30,14 +30,15 @@ RUN_POLICY = RunPolicy(
 
 
 def create_network_service(config, templates, feature_id):
-    """Compose shared pixels while retaining each feature text search path."""
+    """Use match for baseline network text and retain each scaled text path."""
     if feature_id not in {"shop", "penguin", "chaos"}:
         raise ValueError(f"Unknown feature: {feature_id}")
     if config.network is None:
         raise ValueError("Production sessions require shared network configuration")
     matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib * 1024 * 1024))
     detector = NetworkVision(config.network, matcher,
-                            text_search="locate_all" if feature_id == "chaos" else "match")
+                            baseline_size=config.baseline_client_size,
+                            scaled_text_search="locate_all" if feature_id == "chaos" else "match")
     return NetworkService(detector, clear_frames=config.network.clear_frames,
                           clear_ms=config.network.clear_ms, clear_cache=matcher.cache.clear)
 

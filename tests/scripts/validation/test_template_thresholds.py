@@ -38,6 +38,8 @@ def test_network_inventory_uses_shared_configuration_for_all_three_features(repo
             assert row['structure_current'] == (.60 if loading else .80)
             assert row['score_source'].endswith('network.'+name+'.color')
             assert row['structure_source'].endswith('network.'+name+'.structure')
+            if feature == 'chaos' and not loading:
+                assert '基准match，非基准locate_all(limit=1)' in row['note']
 
 
 def test_inventory_uses_effective_loot_and_special_scores_instead_of_generic_defaults(report):

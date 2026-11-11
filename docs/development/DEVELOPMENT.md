@@ -8,7 +8,8 @@ NetworkVision只处理像素，NetworkService负责等待、重试、状态恢�
 
 网络模板、ROI、颜色/结构门槛及消失确认参数统一放在internal.yaml的network区块，不再放到功能默认门槛、vision.template_structure_thresholds或chaos场景中。
 八张水晶姿态为同一身份，颜色0.90、结构0.60在同帧同候选同位置同时满足；两类原文字维持原ROI及0.90/0.80。
-原文字保留商店/企鹅match、卡厄思locate_all(limit=1)及旧场景中心取整。
+2026-11-11用户明确授权两类网络文字的基准入口统一为match，卡厄思不再走locate_all(limit=1)及旧场景中心取整；重试仍点击原配置点。
+按FrameView保存的完整客户区尺寸与配置基准2322×1306判断，子视图大小不参与分流。非基准保留商店/企鹅match、卡厄思locate_all(limit=1)，不改公共匹配算法。
 网络等待显示现有“重连中”，不设总等待超时，保留手动停止、窗口及截图异常守卫。只有无水晶且异常文字与重试文字同帧命中才允许原重试点击。
 三类信号至少三张新帧且持续500ms消失后恢复；水晶自行消失无需弹窗或重试。所有恢复出口重新取帧，不补回已用操作次数或盲目重发提交。
 验证范围和真实非基准正例限制见[网络恢复验证](../validation/common/NETWORK_RECOVERY_VALIDATION.md)。

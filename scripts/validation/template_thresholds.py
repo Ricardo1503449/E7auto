@@ -120,7 +120,9 @@ def build_inventory(root: Path, before_root: Path) -> dict:
                     'config/internal.yaml:network.'+name+'.color',
                     'config/internal.yaml:network.'+name+'.structure',
                     route='locate_all' if feature == 'chaos' and name != 'loading' else 'match',
-                    note='公共重连服务；姿态合并为同一水晶身份' if name == 'loading' else '公共重连服务；保留原文字搜索路径')
+                    note=('公共重连服务；姿态合并为同一水晶身份' if name == 'loading' else
+                          '公共重连服务；基准match，非基准locate_all(limit=1)' if feature == 'chaos' else
+                          '公共重连服务；文字match'))
     for key in ('shop_refresh_button', 'shop_exit_icon', 'refresh_confirm_button', 'confirm_button',
                 'insufficient_funds', 'purchased_button', 'sky_stone_icon'):
         structure_state = ('结构未启用' if current['vision'].get('template_structure_thresholds', {}).get(key) is None

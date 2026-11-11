@@ -8,7 +8,7 @@ import pytest
 
 from e7auto.bootstrap import create_network_service
 from e7auto.configuration.loader import load_config
-from e7auto.core.types import ClientPoint, Rect, Size
+from e7auto.core.types import Rect, Size
 from e7auto.resources.templates import TemplateRepository
 from e7auto.vision.frames import CoordinateTransform, FrameView
 from e7auto.vision.matching import TemplateMatcher
@@ -33,8 +33,9 @@ def test_shared_service_real_roi_and_original_text_results(network_resources, mo
     config, repository, samples = network_resources
     service = create_network_service(config, repository, feature)
     assert config.network.loading.color == .90 and config.network.loading.structure == .60
-    expected_strategy = "locate_all" if feature == "chaos" else "match"
-    assert service.detector.text_search == expected_strategy
+    scaled_strategy = "locate_all" if feature == "chaos" else "match"
+    assert service.detector.scaled_text_search == scaled_strategy
+    expected_strategy = "match" if size == (2322, 1306) else scaled_strategy
     calls = []
     for method in ("match", "locate_all"):
         original = getattr(service.detector.matcher, method)
@@ -72,13 +73,46 @@ def test_shared_service_real_roi_and_original_text_results(network_resources, mo
             if old is not None:
                 assert actual.bounds == old.bounds
                 assert actual.confidence == pytest.approx(old.confidence)
-                anchor = old.anchor
-                if feature == "chaos" and transform.is_identity:
-                    anchor = ClientPoint(round(old.bounds.x + old.bounds.width * .5),
-                                         round(old.bounds.y + old.bounds.height * .5))
-                assert actual.anchor == anchor
+                assert actual.anchor == old.anchor
     text_calls = [method for method, key in calls if key in {"network_connection_abnormal", "network_retry"}]
     assert text_calls == [expected_strategy] * 6
+
+
+@pytest.mark.parametrize("size", [(2322, 1306), (1536, 864), (2322, 1200)])
+def test_chaos_text_dispatch_uses_complete_client_transform(network_resources, monkeypatch, size):
+    config, repository, samples = network_resources
+    detector = create_network_service(config, repository, "chaos").detector
+    calls = []
+    for method in ("match", "locate_all"):
+        original = getattr(detector.matcher, method)
+        def record(*args, _original=original, _method=method, **kwargs):
+            calls.append((_method, args[1]))
+            return _original(*args, **kwargs)
+        monkeypatch.setattr(detector.matcher, method, record)
+    reference = TemplateMatcher(repository)
+    transform = CoordinateTransform(config.baseline_client_size, Size(*size))
+    strategy = "match" if transform.is_identity else "locate_all"
+    for name in ("retry", "clear"):
+        full = np.zeros((1306, 2322, 3), np.uint8)
+        full[533:880, 900:1440] = samples[name]
+        if not transform.is_identity:
+            full = cv2.resize(full, size, interpolation=cv2.INTER_AREA)
+        view = FrameView(full, transform).crop(Rect(900, 533, 540, 347))
+        assert view.transform.actual == Size(*size)
+        assert (view.shape[1], view.shape[0]) != size
+        for target in (config.network.error, config.network.retry):
+            key, = target.templates
+            actual = detector._text(view, target)
+            if transform.is_identity:
+                expected = reference.match(view, key, target.region, .90, structure_threshold=.80)
+            else:
+                hits = reference.locate_all(view, key, view.region(target.region, clip=True),
+                                            .90, .80, limit=1)
+                expected = hits[0] if hits else None
+            assert actual == expected
+            assert (actual is not None) == (name == "retry")
+    assert calls == [(strategy, key) for _ in range(2) for key in
+                     ("network_connection_abnormal", "network_retry")]
 
 
 @pytest.mark.parametrize("size", [(2322, 1306), (1152, 648)])

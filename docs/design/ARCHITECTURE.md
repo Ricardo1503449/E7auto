@@ -173,9 +173,13 @@ callback, not a network-service dependency on shop fields.
 Network recovery is one injected `NetworkService` for all three features. Bootstrap
 composes it with the shared `NetworkVision`; feature vision contracts no longer
 dispatch network recognition. Network pixels and configuration remain independent
-of feature implementations. Text searches retain their existing paths: shop and
-penguin use `match`, Chaos uses `locate_all(limit=1)`, including its original anchor
-rounding. Matching algorithms, text ROIs, gates and the fixed retry click remain unchanged.
+of feature implementations. Per the user's 2026-11-11 authorization, both network
+text targets use `match` in all three features when the complete client matches
+the configured 2322x1306 baseline. Cropped views retain that parent transform.
+Scaled clients keep their existing entry points: shop/penguin use `match`, Chaos
+uses `locate_all(limit=1)`. The shared matching algorithms, text ROIs, 0.90/0.80
+gates and fixed retry click are unchanged; baseline Chaos text anchors now come
+directly from `match`, without the old scene adapter's center rounding.
 
 Eight approved original-pixel crystal poses map to one loading identity at 0.90
 color / 0.60 structure, in the configured central ROI. A reliable crystal or error
