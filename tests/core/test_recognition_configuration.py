@@ -213,9 +213,9 @@ def test_structure_overrides_do_not_silently_target_unknown_or_specialized_templ
 
 def test_per_template_structure_gates_allow_explicit_pending_and_legacy_absence(configuration):
     path, raw = configuration
-    raw['vision']['template_structure_thresholds'] = {'purchased_button': .8, 'network_retry': None}
+    raw['vision']['template_structure_thresholds'] = {'purchased_button': .8, 'shop_refresh_button': None}
     path.write_text(yaml.safe_dump(raw), encoding='utf8')
-    assert load_config(path).template_structure_thresholds == {'purchased_button': .8, 'network_retry': None}
+    assert load_config(path).template_structure_thresholds == {'purchased_button': .8, 'shop_refresh_button': None}
     raw['vision'].pop('template_structure_thresholds')
     path.write_text(yaml.safe_dump(raw), encoding='utf8')
     assert load_config(path).template_structure_thresholds == {}
@@ -339,7 +339,6 @@ def test_shop_default_gate_keeps_network_and_reward_overlay_independent(monkeypa
 
     monkeypatch.setattr(vision._matcher, 'match', record)
     monkeypatch.setattr(vision._matcher, 'match_bgr', record)
-    monkeypatch.setattr(vision._network, 'match', record)
     frame = np.zeros((1306, 2322, 3), np.uint8)
     assert vision.refresh_confirm_dialog(frame) is not None
     assert calls[-2:] == [('refresh_confirm_prompt', expected), ('refresh_confirm_button', config.anchor_confidence)]
@@ -354,9 +353,9 @@ def test_shop_default_gate_keeps_network_and_reward_overlay_independent(monkeypa
     assert all(threshold == expected for _, threshold in calls)
     assert vision.inventory_scene_state(frame, 'top') == 'reward_overlay'
     assert calls[-1] == (config.targets[0].template, .87)
-    vision.network_connection_error(frame)
-    vision.network_retry(frame)
-    assert calls[-2:] == [('network_connection_abnormal', .93), ('network_retry', .93)]
+    assert not hasattr(vision, 'network_connection_error')
+    assert config.network.error.color == .90
+    assert config.network.retry.color == .90
 
 
 def test_penguin_overrides_bind_body_without_changing_other_controls(monkeypatch):

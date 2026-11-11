@@ -51,5 +51,5 @@ def capture(ctx) -> object:
         generation = ctx.network_recovery_generation
         frame = ctx.capture_raw()
         ctx.handle_network_exception(frame)
-        if not ctx.discard_interrupted_frames or generation == ctx.network_recovery_generation:
+        if generation == ctx.network_recovery_generation:
             return frame

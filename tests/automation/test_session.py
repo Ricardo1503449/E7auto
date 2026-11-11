@@ -424,18 +424,24 @@ def test_snapshot_publisher_ignores_mutation_after_final() -> None:
 
 @pytest.mark.parametrize('final_callback_fails', [False, True])
 @pytest.mark.parametrize('cache_cleanup_fails', [False, True])
-def test_initial_snapshot_failure_still_closes_session_resources(final_callback_fails, cache_cleanup_fails):
+@pytest.mark.parametrize('network_cleanup_fails', [False, True])
+def test_initial_snapshot_failure_still_closes_session_resources(final_callback_fails, cache_cleanup_fails,
+                                                                network_cleanup_fails):
     from types import SimpleNamespace
     from e7auto.runtime.contracts import RunPolicy
     from e7auto.runtime.session import RuntimeSession
     from tests.helpers import FakeCapture, FakeClock, FakeLogger
 
     capture, logger = FakeCapture(), FakeLogger()
-    cleared, snapshots = [], []
+    cleared, network_cleared, snapshots = [], [], []
     def clear():
         cleared.append(True)
         if cache_cleanup_fails:
             raise RuntimeError('cache cleanup failed')
+    def clear_network():
+        network_cleared.append(True)
+        if network_cleanup_fails:
+            raise RuntimeError('network cache cleanup failed')
     def notify(snapshot):
         snapshots.append(snapshot)
         if len(snapshots) == 1 or final_callback_fails:
@@ -443,7 +449,8 @@ def test_initial_snapshot_failure_still_closes_session_resources(final_callback_
     def create_flow(*args):
         pytest.fail('initial callback failure must not start a feature')
     dependencies = SimpleNamespace(capture=capture, logger=logger, clock=FakeClock(),
-                                   vision=SimpleNamespace(clear_template_cache=clear))
+                                   vision=SimpleNamespace(clear_template_cache=clear),
+                                   network=SimpleNamespace(clear_template_cache=clear_network))
     session = RuntimeSession(dependencies, StopController(), notify)
     initial = RuntimeSnapshot.initial('callback-failure', (), 0)
     if final_callback_fails:
@@ -452,6 +459,45 @@ def test_initial_snapshot_failure_still_closes_session_resources(final_callback_
     else:
         result = session.run(initial, create_flow, RunPolicy(frozenset(), frozenset()))
         assert result == snapshots[-1]
-    assert cleared == [True] and capture.closed and logger.closed == 1
+    assert cleared == network_cleared == [True] and capture.closed and logger.closed == 1
     assert snapshots[0] == initial and len(snapshots) == 2
     assert snapshots[-1].is_final and snapshots[-1].stop_reason is StopReason.INTERNAL_ERROR
+
+
+def test_session_releases_production_network_candidates_and_cache_owner():
+    import gc
+    from types import SimpleNamespace
+    import weakref
+    from e7auto.bootstrap import create_network_service
+    from e7auto.configuration.loader import load_config
+    from e7auto.resources.templates import TemplateRepository
+    from e7auto.runtime.contracts import RunPolicy
+    from e7auto.runtime.session import RuntimeSession
+    from e7auto.runtime.stop_control import StopExecution
+    from tests.helpers import FakeCapture, FakeClock, FakeLogger
+    from tests.helpers.paths import ROOT
+
+    config = load_config(ROOT / 'config/internal.yaml')
+    repository = TemplateRepository(config)
+    network = create_network_service(config, repository, 'chaos')
+    cache = network.detector.matcher.cache
+    candidate = cache.get(repository.get('network_retry'), (1536/2322, 864/1306))
+    assert cache.live_bytes > 0
+    del candidate
+    capture, logger = FakeCapture(), FakeLogger()
+    dependencies = SimpleNamespace(network=network, capture=capture, logger=logger, clock=FakeClock(),
+                                   vision=SimpleNamespace(clear_template_cache=lambda: None))
+    class Flow:
+        def execute(self):
+            raise StopExecution(StopReason.MANUAL_STOP)
+        def release_cached_game_frame(self):
+            pass
+    session = RuntimeSession(dependencies, StopController(), lambda _: None)
+    final = session.run(RuntimeSnapshot.chaos_run('network-cache', 1), lambda *_: Flow(),
+                        RunPolicy(frozenset(), frozenset({StopReason.MANUAL_STOP})))
+    assert final.stop_reason is StopReason.MANUAL_STOP
+    assert cache.live_bytes == 0 and capture.closed and logger.closed == 1
+    reference = weakref.ref(cache)
+    del session, dependencies, network, cache
+    gc.collect()
+    assert reference() is None

@@ -15,7 +15,6 @@ from e7auto.vision.candidates import CandidateCache
 from e7auto.vision.components import ComponentMatcher
 from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher
-from e7auto.vision.network import NetworkVision
 from e7auto.vision.navigation import StartupNavigationVision
 from e7auto.core.observations import Observation
 
@@ -39,7 +38,6 @@ class PenguinVision:
                                         structure_thresholds=config.template_structure_thresholds)
         self._components = ComponentMatcher(templates, self._matcher, config.component_layouts)
         self._digits = DigitMatcher(templates, smoothing_sigma=config.digit_smoothing_sigma)
-        self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
         approved = templates.get("penguin_penguin_buy_5100")
         mask = approved.mask.copy()
@@ -133,12 +131,6 @@ class PenguinVision:
             digits.append(match.digit)
         value = int("".join(digits))
         return value if value > 0 else None
-
-    def network_connection_error(self, frame):
-        return self._network.network_connection_error(frame)
-
-    def network_retry(self, frame):
-        return self._network.network_retry(frame)
 
     def clear_template_cache(self):
         self._matcher.cache.clear()

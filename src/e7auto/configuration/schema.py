@@ -3,11 +3,12 @@ NAVIGATION_TEMPLATE_KEYS = frozenset({
     "navigation_menu", "navigation_menu_notification", "navigation_tavern",
 })
 
+NETWORK_TEMPLATE_KEYS = frozenset({"network_connection_abnormal", "network_retry"})
+
 COMMON_TEMPLATE_KEYS = frozenset({
     *NAVIGATION_TEMPLATE_KEYS,
     *(f"sky_stone_digit_{digit}" for digit in range(10)),
-    "network_connection_abnormal",
-    "network_retry",
+    *NETWORK_TEMPLATE_KEYS,
 })
 
 

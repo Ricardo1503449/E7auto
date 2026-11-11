@@ -11,11 +11,12 @@ from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.runtime.stop_control import StopController, StopExecution
 from e7auto.vision.frames import CoordinateTransform
 from tests.helpers import FakeClock, FakeInput, FakeLogger, make_config
+from tests.helpers.network import game_network_service
 
 
 def context(inputs=None):
     deps=SimpleNamespace(inputs=inputs or FakeInput(),clock=FakeClock(),logger=FakeLogger(),
-                         vision=SimpleNamespace(network_connection_error=lambda _:None))
+                         network=game_network_service(SimpleNamespace()))
     ctx=RuntimeContext(make_config(),deps,StopController(),SnapshotPublisher(RuntimeSnapshot.chaos_run('drag',1),lambda _:None))
     ctx.window=WindowRef(123,'test','test.exe');ctx.transform=CoordinateTransform(Size(2322,1306),Size(1536,864))
     ctx.ensure_window=lambda **_:None;ctx.capture_raw=lambda:object()

@@ -13,7 +13,6 @@ from e7auto.vision.matching import TemplateMatcher
 from e7auto.vision.candidates import CandidateCache
 from e7auto.vision.frames import frame_view
 from e7auto.vision.digits import DigitMatcher, _DigitMatch
-from e7auto.vision.network import NetworkVision
 from e7auto.vision.navigation import StartupNavigationVision
 from e7auto.features.shop.scroll_vision import measure_inventory_scroll, measure_inventory_scroll_stability, _has_content_texture
 
@@ -29,7 +28,6 @@ class ShopVision:
         self._matcher = TemplateMatcher(templates, CandidateCache(config.candidate_cache_mib*1024*1024),
                                         structure_thresholds=config.template_structure_thresholds)
         self._digits = DigitMatcher(templates, smoothing_sigma=config.digit_smoothing_sigma)
-        self._network = NetworkVision(config, self._matcher)
         self._navigation = StartupNavigationVision(config, self._matcher)
         self._viewport_layout_key = None
         self._viewport_layouts: dict[str, tuple[ViewportRow, ...]] = {}
@@ -49,12 +47,6 @@ class ShopVision:
                     *, structure_threshold: float) -> Observation | None:
         return self._matcher.match_entry(frame, template_key, roi, threshold,
                                          structure_threshold=structure_threshold)
-
-    def network_connection_error(self, frame):
-        return self._network.network_connection_error(frame)
-
-    def network_retry(self, frame):
-        return self._network.network_retry(frame)
 
     def main_shop_icon(self, frame: Frame) -> Observation | None:
         thresholds = self._config.entry_thresholds["shop"]

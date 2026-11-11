@@ -297,12 +297,6 @@ class ChaosVision:
     def auto_recognition_summary(self) -> dict:
         return self._motion.summary()
 
-    def network_connection_error(self, frame):
-        return self.control(frame, "network_connection_abnormal")
-
-    def network_retry(self, frame):
-        return self.control(frame, "network_retry")
-
     def clear_template_cache(self):
         glyph=self._templates.get(self.settings.scenes['auto_static'].template_key).image
         self._motion=AutoIconState(self.settings.auto_motion,glyph)

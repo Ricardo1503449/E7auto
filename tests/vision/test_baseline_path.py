@@ -13,6 +13,7 @@ from e7auto.features.chaos.flow import ChaosFlow
 from e7auto.features.chaos.vision import ChaosVision
 from e7auto.resources.templates import TemplateRepository
 from e7auto.runtime.context import RuntimeContext
+from e7auto.bootstrap import create_network_service
 from e7auto.runtime.stop_control import StopController, StopExecution
 from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.vision.frames import FrameView, CoordinateTransform, frame_view, adapt_frame
@@ -104,6 +105,7 @@ def test_contract_observation_keeps_original_wait_contract(setup,monkeypatch,mod
         captures.append(True)
         return raw.copy()
     deps=SimpleNamespace(clock=clock,vision=vision,logger=FakeLogger(),
+        network=create_network_service(config, vision._templates, 'chaos'),
         capture=SimpleNamespace(capture_client=capture),inputs=SimpleNamespace(click=lambda *a:inputs.append(a)))
     runtime=RuntimeContext(config,deps,control,SnapshotPublisher(RuntimeSnapshot.chaos_run('baseline',1),lambda _:None))
     runtime.window=WindowRef(1,'offline','offline.exe')
@@ -113,6 +115,7 @@ def test_contract_observation_keeps_original_wait_contract(setup,monkeypatch,mod
     flow=ChaosFlow.__new__(ChaosFlow)
     flow.stages=SimpleNamespace(invalidate_start=lambda:None)
     flow.runtime,flow.vision,flow.settings=runtime,vision,config.chaos
+    flow._confirmed={};flow.state=None
     flow._battle_pending=False;flow._map_handoff=None
     original=vision.control
     def slow(frame,key,*args,**kwargs):

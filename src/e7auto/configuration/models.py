@@ -121,6 +121,22 @@ class NavigationTemplate:
 
 
 @dataclass(frozen=True, slots=True)
+class NetworkTargetConfig:
+    templates: tuple[str, ...]
+    region: Rect
+    color: float
+    structure: float | None
+
+
+@dataclass(frozen=True, slots=True)
+class NetworkConfig:
+    error: NetworkTargetConfig
+    retry: NetworkTargetConfig
+    clear_frames: int
+    clear_ms: int
+
+
+@dataclass(frozen=True, slots=True)
 class AppConfig:
     source_path: Path
     game_clients: tuple[GameClient, ...]
@@ -152,8 +168,7 @@ class AppConfig:
     overlay_offset: Point
     logging: LoggingConfig
     template_manifest_paths: dict[str, Path] = field(default_factory=dict)
-    network_error_template: str = "network_connection_abnormal"
-    network_retry_template: str = "network_retry"
+    network: NetworkConfig | None = None
     candidate_cache_mib: int = 64
     component_layouts: dict[str, ComponentLayout] = field(default_factory=dict)
     startup_navigation: dict[str, NavigationTemplate] = field(default_factory=dict)

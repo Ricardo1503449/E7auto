@@ -91,9 +91,9 @@ def drag(ctx, action: str, start: Point, end: Point, *, duration_ms: int, step_m
     if step_guard is not None and not step_guard():
         return False
     frame = ctx.capture_raw()
-    error_detector = ctx.deps.vision.network_connection_error
-    if ctx.vision_call(error_detector, frame) is not None:
-        ctx.handle_network_exception(frame)
+    detected = ctx.probe_network(frame)
+    if detected.blocked:
+        ctx.recover_network(detected)
         return False
     if frame_guard is not None and not frame_guard(frame):
         return False
@@ -138,8 +138,9 @@ def drag(ctx, action: str, start: Point, end: Point, *, duration_ms: int, step_m
                 break
             if frame_check_ms == 0 or ctx.active_monotonic()-last_checked >= frame_check_ms/1000:
                 frame = ctx.capture_raw()
-                if ctx.vision_call(error_detector, frame) is not None:
-                    interrupted = frame
+                detected = ctx.probe_network(frame)
+                if detected.blocked:
+                    interrupted = detected
                     break
                 if frame_guard is not None and not frame_guard(frame):
                     aborted = True
@@ -174,12 +175,13 @@ def drag(ctx, action: str, start: Point, end: Point, *, duration_ms: int, step_m
         # A short burst can finish before the next frame check. Recheck after
         # releasing, before its caller can treat the page as unchanged.
         frame = ctx.capture_raw()
-        if ctx.vision_call(error_detector, frame) is not None:
-            interrupted = frame
+        detected = ctx.probe_network(frame)
+        if detected.blocked:
+            interrupted = detected
         elif frame_guard is not None and not frame_guard(frame):
             aborted = True
     if interrupted is not None:
-        ctx.handle_network_exception(interrupted)
+        ctx.recover_network(interrupted)
         return False
     return not aborted
 

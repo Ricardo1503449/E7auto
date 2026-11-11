@@ -6,7 +6,7 @@ from e7auto.runtime.stop_control import StopController, T
 from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.core.types import Point
 from e7auto.core.domain import RunState
-from e7auto.core.observations import Observation
+from e7auto.core.observations import NetworkObservation, Observation
 from e7auto.core.types import Rect
 from e7auto.core.domain import OverlayActivityStatus
 from e7auto.vision.frames import CoordinateTransform
@@ -22,14 +22,12 @@ class RuntimeContext(Generic[VisionT]):
     """One run's guarded services and state; no feature-specific counters or cache."""
     def __init__(self, config: AppConfig, dependencies: AutomationDependencies[VisionT],
                  control: StopController, publisher: SnapshotPublisher, *,
-                 on_recovery: Callable[[str], None] | None = None,
-                 discard_interrupted_frames: bool = False) -> None:
+                 on_recovery: Callable[[str], None] | None = None) -> None:
         self.config = config
         self.deps = dependencies
         self.control = control
         self.publisher = publisher
         self.on_recovery = on_recovery or (lambda reason: None)
-        self.discard_interrupted_frames = discard_interrupted_frames
         self.window: WindowRef | None = None
         self.baseline_bounds: Rect | None = None
         self.display_geometry: DisplayGeometry | None = None
@@ -70,6 +68,12 @@ class RuntimeContext(Generic[VisionT]):
 
     def handle_network_exception(self, frame: object) -> None:
         return network.handle_network_exception(self, frame)
+
+    def probe_network(self, frame: object) -> NetworkObservation:
+        return self.vision_call(self.deps.network.observe, frame)
+
+    def recover_network(self, detected: NetworkObservation) -> None:
+        return self.deps.network.recover(self, detected)
 
     def restore_network_status(self) -> None:
         return network.restore_network_status(self)

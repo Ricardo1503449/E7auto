@@ -285,16 +285,6 @@ rois:
   - 350
   - 265
   - 190
-  network_error:
-  - 900
-  - 545
-  - 540
-  - 105
-  network_retry:
-  - 1060
-  - 760
-  - 300
-  - 120
   purchase_title_search:
   - 970
   - 210
@@ -2566,28 +2556,6 @@ templates:
     action:
     - 0.5
     - 0.5
-    priority: null
-    deferred: false
-    relative_roi: null
-  network_connection_abnormal:
-    resource:
-      feature: common
-      key: network_connection_abnormal
-    search_roi: network_error
-    threshold: 0.9
-    structure_threshold: 0.8
-    action: null
-    priority: null
-    deferred: false
-    relative_roi: null
-  network_retry:
-    resource:
-      feature: common
-      key: network_retry
-    search_roi: network_retry
-    threshold: 0.9
-    structure_threshold: 0.8
-    action: null
     priority: null
     deferred: false
     relative_roi: null

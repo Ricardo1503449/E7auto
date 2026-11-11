@@ -9,6 +9,7 @@ from e7auto.configuration.loader import load_config
 from tests.helpers.paths import ROOT
 from tests.helpers.services import FakeClock, FakeWindowService, FakeInput, FakeLogger, FakeOverlay, FakeRuntimeEnvironment
 from e7auto.runtime.dependencies import AutomationDependencies
+from tests.helpers.network import game_network_service
 
 
 def chaos_config(lineup_id='dark_twins'):
@@ -351,4 +352,5 @@ class ChaosGame:
 
     def dependencies(self):
         windows=FakeWindowService(display_geometry=DisplayGeometry(1,r"\\.\DISPLAY1",Rect(0,0,3120,2080),Size(3120,2080),96))
-        return AutomationDependencies(windows=windows,capture=self,inputs=self,overlay=FakeOverlay(),vision=self,clock=self.clock,logger=FakeLogger(),runtime=FakeRuntimeEnvironment())
+        return AutomationDependencies(windows=windows,capture=self,inputs=self,overlay=FakeOverlay(),vision=self,
+                                      network=game_network_service(self),clock=self.clock,logger=FakeLogger(),runtime=FakeRuntimeEnvironment())

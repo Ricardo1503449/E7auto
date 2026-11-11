@@ -11,6 +11,8 @@ from e7auto.configuration.shop_layout import visible_shop_rows
 from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.navigation import load_startup_navigation
 from e7auto.configuration.models import ClickRetryConfig
+from e7auto.configuration.models import NetworkConfig, NetworkTargetConfig
+from e7auto.configuration.schema import NETWORK_TEMPLATE_KEYS
 from e7auto.configuration.game import load_game_clients
 
 
@@ -150,7 +152,7 @@ def _load_templates(root, source_path, baseline_size, template_profile, errors):
             try:
                 registered, sizes = load_template_manifest(
                     template_manifest_paths[profile], (baseline_size.width, baseline_size.height),
-                    keys=(frozenset({"network_connection_abnormal", "network_retry"}) | NAVIGATION_TEMPLATE_KEYS
+                    keys=(NETWORK_TEMPLATE_KEYS | NAVIGATION_TEMPLATE_KEYS
                           if template_profile == "chaos" else COMMON_TEMPLATE_KEYS if profile == "common" else None),
                 )
                 if template_paths.keys() & registered.keys():
@@ -160,9 +162,11 @@ def _load_templates(root, source_path, baseline_size, template_profile, errors):
             except ValueError as exc:
                 errors.append(str(exc))
     required_templates = (
-        {"network_connection_abnormal", "network_retry"} | NAVIGATION_TEMPLATE_KEYS if template_profile == "chaos"
+        NETWORK_TEMPLATE_KEYS | NAVIGATION_TEMPLATE_KEYS if template_profile == "chaos"
         else COMMON_TEMPLATE_KEYS if template_profile == "penguin" else _REQUIRED_TEMPLATES
     )
+    if catalogs_raw is not None:
+        required_templates = set(required_templates) | NETWORK_TEMPLATE_KEYS
     selected_templates = required_templates if template_profile != "shop" else set(template_raw)
     for key in sorted((required_templates | selected_templates) if catalogs_raw is None else ()):
         value = template_raw.get(key)
@@ -552,7 +556,7 @@ def _load_template_structure_thresholds(raw, errors):
                       'vision.template_structure_thresholds', errors)
     allowed = (_REQUIRED_TEMPLATES - NAVIGATION_TEMPLATE_KEYS - {'main_shop_icon'}
                - {key for key in COMMON_TEMPLATE_KEYS if key.startswith('sky_stone_digit_')})
-    allowed |= {'network_connection_abnormal', 'network_retry'}
+    allowed -= NETWORK_TEMPLATE_KEYS
     allowed |= {f'penguin_{name}' for name in PENGUIN_CONTROLS if name != 'sanctuary_entry'}
     allowed |= {key + suffix for key in _EXPECTED_TARGET_POLICY for suffix in ('', '_confirm', '_purchased')}
     result = {}
@@ -661,6 +665,48 @@ def _validate_inventory(targets, slots, errors):
         errors.append("slots must include calibrated entries for both top and bottom screens")
 
 
+def _load_network(root, baseline_size, template_sizes, errors):
+    # Small standalone configurations without catalog resources remain readable.
+    if "network" not in root and "template_manifests" not in root:
+        return None
+    raw = _mapping(root.get("network"), "network", errors)
+    if set(raw) != {"error", "retry", "clear_frames", "clear_ms"}:
+        errors.append("network requires error, retry, clear_frames and clear_ms")
+
+    def target(name, required_keys):
+        prefix = "network." + name
+        item = _mapping(raw.get(name), prefix, errors)
+        if set(item) != {"templates", "roi", "color", "structure"}:
+            errors.append(prefix + " requires templates, roi, color and structure")
+        keys = item.get("templates")
+        if (not isinstance(keys, list) or any(not isinstance(key, str) for key in keys)
+                or len(keys) != len(required_keys) or set(keys) != set(required_keys)):
+            errors.append(prefix + ".templates must contain exactly its registered network keys")
+            keys = list(required_keys)
+        region = _rect(item.get("roi"), prefix + ".roi", errors)
+        if (region.x < 0 or region.y < 0 or region.right > baseline_size.width
+                or region.bottom > baseline_size.height):
+            errors.append(prefix + ".roi must fit inside the baseline client")
+        for key in keys:
+            if key in template_sizes:
+                width, height = template_sizes[key]
+                if width > region.width or height > region.height:
+                    errors.append(prefix + ".roi must contain the complete " + key + " template")
+        color = _positive_fraction(item.get("color"), prefix + ".color", errors)
+        structure = item.get("structure")
+        if structure is not None:
+            structure = _positive_fraction(structure, prefix + ".structure", errors)
+        return NetworkTargetConfig(tuple(keys), region, color, structure)
+
+    error = target("error", ("network_connection_abnormal",))
+    retry = target("retry", ("network_retry",))
+    clear_frames = _positive_int(raw.get("clear_frames"), "network.clear_frames", errors)
+    clear_ms = _positive_int(raw.get("clear_ms"), "network.clear_ms", errors)
+    if clear_frames < 3 or clear_ms < 500:
+        errors.append("network clear confirmation requires at least 3 frames and 500ms")
+    return NetworkConfig(error, retry, clear_frames, clear_ms)
+
+
 def load_config(
     path: str | Path, *, template_profile: Literal["shop", "penguin", "chaos"] = "shop"
 ) -> AppConfig:
@@ -694,6 +740,7 @@ def load_config(
     # remain supported for small standalone/synthetic configurations.
     template_paths, template_manifest_paths, template_sizes = _load_templates(root, source_path, baseline_size, template_profile, errors)
     startup_navigation = load_startup_navigation(root, baseline_size, template_sizes, errors)
+    network = _load_network(root, baseline_size, template_sizes, errors)
 
     rois, points = _load_coordinates(root, template_profile, errors)
 
@@ -798,6 +845,7 @@ def load_config(
         overlay_offset=overlay_offset,
         logging=logging_config,
         template_manifest_paths=template_manifest_paths,
+        network=network,
         candidate_cache_mib=candidate_cache_mib,
         startup_navigation=startup_navigation,
         click_retry=click_retry,

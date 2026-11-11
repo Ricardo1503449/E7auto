@@ -170,6 +170,16 @@ an explicit flow factory and `RunPolicy`; it does not choose or import feature i
 `RuntimeContext` carries one run's shared state. Shop cache invalidation is an injected recovery
 callback, not a network-service dependency on shop fields.
 
+Network recovery is one injected `NetworkService` for all three features. Bootstrap
+composes it with shared `NetworkVision`; feature contracts no longer dispatch network
+pixels. Text searches retain shop/penguin `match` and Chaos `locate_all(limit=1)` with
+its original anchor rounding, ROIs and 0.90/0.80 gates. Configuration lives in the
+shared network block. The read-only probe lets a drag release before recovery.
+Recovery requires all network signals absent on three fresh frames spanning 500ms;
+all exits discard interrupted frames while preserving business state and budgets.
+Bootstrap injects network cache cleanup; feature and network teardown run independently
+so either cleanup failure still permits capture and logging to close.
+
 `runtime/daily_reset.py` owns opt-in date-change recovery. It receives a runtime,
 shared settings, named observation callback and home detector; it never imports a
 feature or navigates back into one. `wait_for_ready` prioritizes the date title over
@@ -231,7 +241,7 @@ closing and battle-rank result paths remain independent and unchanged.
 `features/chaos/` owns the independent three-floor exploration flow, scene/resource bindings,
 round state, dynamic node/card recognition and continuous auto-battle motion evidence. It
 composes `RuntimeContext` and its active clock, network recovery and guarded input. The
-configuration profile loads only its active resource keys and the two shared network keys;
+configuration profile loads only its active resource keys and explicit shared network resources;
 scene aliases share pixels without merging page guards or outcome checks. The UI worker
 selects Chaos explicitly, with separate round counters and completion state.
 The selected target stage (1-5, default 1) is captured in ChaosSettings before
@@ -693,7 +703,7 @@ Text logs include aggregate `performance_stage` records for inventory scans, scr
 
 `features/penguin/flow.py` implements the separate 50-penguin batch flow. It composes `RuntimeContext` for guarded preparation/input and network recovery, selecting fresh capture after recovery and providing its own normal completion; it has no shop scan, refresh strategy or balance dependency. `AutomationSession.run_penguins` shares button stop control and resource cleanup. `RuntimeSnapshot` stores the feature id and separate successful-batch count/limit.
 
-Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including instant recovery with zero elapsed delay. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
+Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including network waits that clear without a retry. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
 
 Purchase-result waiting observes the completion title and reward-close control on the same frame.
 Three consecutive joint observations pass the last frame's close observation directly to the existing

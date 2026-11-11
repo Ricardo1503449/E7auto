@@ -197,7 +197,7 @@ def test_recovery_uses_fresh_frames_and_preserves_wake_budget(engine_state, afte
             wait_icon(engine, detect)
         assert stopped.value.reason is StopReason.RECOGNITION_TIMEOUT
         assert 13 <= engine.runtime.active_monotonic() < 13.3
-        assert 25 <= clock.monotonic() < 25.3
+        assert 25.5 <= clock.monotonic() < 25.8
     assert "error" not in seen and "clear" not in seen
     assert len(wake_events(engine)) == (int(after_wake) if recovered_visible else 2)
 
@@ -380,7 +380,8 @@ def test_network_after_second_wake_does_not_reset_attempts_or_deadline(engine_st
     assert recovered and set(seen) == {'hidden'}
     assert len(wake_events(engine)) == 2
     assert 13 <= engine.runtime.active_monotonic() < 13.3
-    assert 25 <= clock.now < 25.3
+    assert 25.5 <= clock.now < 25.8
+    assert engine.runtime.network_paused_seconds == pytest.approx(12.5)
 
 
 @pytest.mark.parametrize('previous_attempts', [0, 1, 2])

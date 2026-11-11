@@ -691,7 +691,7 @@ def test_recovery_discards_interrupted_frame_and_restarts_stability():
                            SnapshotPublisher(RuntimeSnapshot.penguins("reconnect", 1), lambda _: None), frozenset())
     # Two stable observations before interruption cannot count toward the
     # three fresh stable observations required after recovery.
-    frames = iter(["before1", "before2", "error", "cleared", "after1", "after2", "after3"])
+    frames = iter(["before1", "before2", "error"] + ["cleared"] * 51 + ["after1", "after2", "after3"])
     engine.runtime.capture_raw = lambda: next(frames)
     seen = []
     def detector(frame):

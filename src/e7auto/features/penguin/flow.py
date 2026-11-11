@@ -33,8 +33,7 @@ class PenguinFlow:
     def __init__(self, config: AppConfig, dependencies: AutomationDependencies[PenguinVisionPort],
                  control: StopController, publisher: SnapshotPublisher,
                  enabled_target_ids: frozenset[str] = frozenset()) -> None:
-        self.runtime = RuntimeContext(config, dependencies, control, publisher,
-                                      discard_interrupted_frames=True)
+        self.runtime = RuntimeContext(config, dependencies, control, publisher)
         self._location = "main"
         self._confirmed_controls: dict[str, Confirmation[Observation]] = {}
 

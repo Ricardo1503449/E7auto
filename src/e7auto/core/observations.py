@@ -32,3 +32,18 @@ class Observation:
     structure_confidence: float | None = None
     candidate_id: tuple[int, ...] | None = None
     geometry: MatchGeometry | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class NetworkObservation:
+    loading: Observation | None = None
+    error: Observation | None = None
+    retry: Observation | None = None
+
+    @property
+    def blocked(self) -> bool:
+        return self.loading is not None or self.error is not None
+
+    @property
+    def visible(self) -> bool:
+        return self.blocked or self.retry is not None

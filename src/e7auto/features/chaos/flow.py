@@ -42,7 +42,7 @@ class ChaosFlow:
     def __init__(self, config: ChaosConfig, dependencies: AutomationDependencies[ChaosVisionPort],
                  control: StopController, publisher: SnapshotPublisher):
         self.runtime = RuntimeContext(config, dependencies, control, publisher,
-                                      on_recovery=self._recovered, discard_interrupted_frames=True)
+                                      on_recovery=self._recovered)
         self.settings = config.chaos
         self.target_stage = self.settings.target_stage
         if (type(self.target_stage) is not int or not 1 <= self.target_stage <= 5

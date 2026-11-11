@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import time
 
 from e7auto.core.ports import RuntimeVisionPort
+from e7auto.runtime.network import NetworkService
 from typing import Generic, TypeVar
 VisionT = TypeVar("VisionT", bound=RuntimeVisionPort)
 from e7auto.core.ports import CaptureService, Clock, InputService, OverlayService, RuntimeEnvironment, TextRunLogger, WindowService
@@ -24,6 +25,7 @@ class AutomationDependencies(Generic[VisionT]):
     inputs: InputService
     overlay: OverlayService
     vision: VisionT
+    network: NetworkService
     clock: Clock
     logger: TextRunLogger
     runtime: RuntimeEnvironment

@@ -100,9 +100,25 @@ def build_inventory(root: Path, before_root: Path) -> dict:
                 previous['structure_threshold'], value['structure_threshold'],
                 'config/internal.yaml:startup_navigation.'+key+'.threshold',
                 'config/internal.yaml:startup_navigation.'+key+'.structure_threshold', note='三功能共享同一参数')
-        if feature != 'chaos':
-            for key in ('network_connection_abnormal', 'network_retry'):
-                single(feature, '网络/'+key, 'common', key, 'default_confidence')
+        for name in ('error', 'retry'):
+            target = current['network'][name]
+            previous = old.get('network', {}).get(name)
+            for key in target['templates']:
+                if previous is not None:
+                    before_color, before_structure = previous['color'], previous['structure']
+                elif feature == 'chaos':
+                    previous_scene = old_chaos['templates'].get(key, {})
+                    before_color = previous_scene.get('threshold')
+                    before_structure = previous_scene.get('structure_threshold')
+                else:
+                    before_color = old['vision']['default_confidence']
+                    before_structure = old['vision'].get('template_structure_thresholds', {}).get(key)
+                add(feature, '网络/'+key, 'common', key, before_color, target['color'],
+                    before_structure, target['structure'],
+                    'config/internal.yaml:network.'+name+'.color',
+                    'config/internal.yaml:network.'+name+'.structure',
+                    route='locate_all' if feature == 'chaos' and name != 'loading' else 'match',
+                    note='公共重连服务；保留原文字搜索路径')
     for key in ('shop_refresh_button', 'shop_exit_icon', 'refresh_confirm_button', 'confirm_button',
                 'insufficient_funds', 'purchased_button', 'sky_stone_icon'):
         structure_state = ('结构未启用' if current['vision'].get('template_structure_thresholds', {}).get(key) is None

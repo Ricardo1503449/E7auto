@@ -9,7 +9,7 @@ from typing import Mapping
 import yaml
 
 from e7auto.configuration.models import AppConfig, ConfigError
-from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
+from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS, NETWORK_TEMPLATE_KEYS
 from e7auto.configuration.components import load_component_layouts
 from e7auto.configuration.daily_reset import DailyResetSettings, load_daily_reset
 from e7auto.core.types import Rect
@@ -124,14 +124,10 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
                    "story_skip_confirm": "unclaimed_confirm", "abandon_confirm": "unclaimed_confirm"}
         for name, value in bindings.items():
             resource = value["resource"]
-            expected = {"feature": "common" if name in ("network_connection_abnormal", "network_retry") else "chaos",
-                        "key": aliases.get(name, name)}
+            expected = {"feature": "chaos", "key": aliases.get(name, name)}
             if resource != expected:
                 raise ValueError(f"unsupported scene/resource binding: {name}: {resource}")
-            if resource["feature"] == "chaos":
-                resource_keys.add(resource["key"])
-            elif resource != {"feature": "common", "key": "network_retry"} and resource != {"feature": "common", "key": "network_connection_abnormal"}:
-                raise ValueError(f"unsupported resource dependency: {resource}")
+            resource_keys.add(resource["key"])
         registered, sizes = load_template_manifest(
             config.template_manifest_paths["chaos"], (size.width, size.height),
             prefix="chaos:", keys=frozenset(resource_keys),
@@ -139,7 +135,7 @@ def with_chaos_config(config: AppConfig, path: Path | None = None, *, target_sta
         components = load_component_layouts(raw['component_matching'], sizes,
                                             COMPONENT_TEMPLATES, prefix='chaos:')
         paths = {k: config.template_paths[k] for k in
-                 {"network_connection_abnormal", "network_retry"} | NAVIGATION_TEMPLATE_KEYS}
+                 NETWORK_TEMPLATE_KEYS | NAVIGATION_TEMPLATE_KEYS}
         paths.update(registered)
         scenes = {}
         for name, value in bindings.items():
@@ -502,7 +498,7 @@ text_continue
 loot_selected loot_confirm loot_reroll_anchor supply_get_loot supply_loot_done supply_leave investment
 investment_insufficient_item health_restore health_restore_unavailable shop_health_entry purchase_health_restore health_restore_done
 investment_entry purchase_title purchase_item purchase_confirm investment_done shop_leave
-shop_leave_prompt shop_leave_confirm network_connection_abnormal network_retry
+shop_leave_prompt shop_leave_confirm
 stage_01 stage_02 stage_03 stage_04 stage_05 stage_selected stage_confirm
 event_trap prepare_event event_reward_close
 event_tablet event_tablet_continue

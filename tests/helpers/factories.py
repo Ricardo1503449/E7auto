@@ -3,6 +3,7 @@ from __future__ import annotations
 from tests.helpers.services import FakeClock, FakeWindowService, FakeCapture, FakeInput, FakeRuntimeEnvironment, FakeOverlay, FakeLogger
 from tests.helpers.vision import ScriptedVision
 from e7auto.runtime.dependencies import AutomationDependencies
+from tests.helpers.network import game_network_service
 
 
 def make_dependencies(
@@ -27,6 +28,7 @@ def make_dependencies(
         inputs=input_service,
         overlay=overlay_service,
         vision=vision,
+        network=game_network_service(vision),
         clock=clock_service,
         logger=run_logger,
         runtime=runtime_environment,

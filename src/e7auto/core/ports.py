@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 import numpy as np
 
 from e7auto.core.types import Point, Rect, Size
-from e7auto.core.observations import Observation
+from e7auto.core.observations import NetworkObservation, Observation
 
 Frame = NDArray[np.uint8]
 
@@ -142,8 +142,7 @@ class TextRunLogger(Protocol):
 
 
 class NetworkVisionPort(Protocol):
-    def network_connection_error(self, frame: object) -> Observation | None: ...
-    def network_retry(self, frame: object) -> Observation | None: ...
+    def observe(self, frame: object) -> NetworkObservation: ...
 
 
 class StartupNavigationVisionPort(Protocol):
@@ -151,5 +150,5 @@ class StartupNavigationVisionPort(Protocol):
     def navigation_tavern(self, frame: object) -> Observation | None: ...
 
 
-class RuntimeVisionPort(NetworkVisionPort, StartupNavigationVisionPort, Protocol):
+class RuntimeVisionPort(StartupNavigationVisionPort, Protocol):
     pass

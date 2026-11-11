@@ -87,6 +87,10 @@ class RuntimeSession:
             except Exception as exc:
                 detail = f"{detail}; template cache cleanup failed: {exc}".strip("; ")
             try:
+                self._dependencies.network.clear_template_cache()
+            except Exception as exc:
+                detail = f"{detail}; network template cache cleanup failed: {exc}".strip("; ")
+            try:
                 self._dependencies.capture.close()
             except Exception as exc:
                 detail = f"{detail}; capture close failed: {exc}".strip("; ")
