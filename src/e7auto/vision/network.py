@@ -17,6 +17,15 @@ class NetworkVision:
         self.matcher = matcher
         self.text_search = text_search
 
+    def network_loading(self, frame: object) -> Observation | None:
+        target = self.config.loading
+        for key in target.templates:
+            hit = self.matcher.match(frame, key, target.region, target.color,
+                                     structure_threshold=target.structure)
+            if hit is not None:
+                return replace(hit, object_id="network_loading")
+        return None
+
     def _text(self, frame: object, target: NetworkTargetConfig) -> Observation | None:
         key, = target.templates
         if self.text_search == "match":
@@ -36,6 +45,7 @@ class NetworkVision:
 
     def observe(self, frame: object) -> NetworkObservation:
         return NetworkObservation(
+            loading=self.network_loading(frame),
             error=self._text(frame, self.config.error),
             retry=self._text(frame, self.config.retry),
         )

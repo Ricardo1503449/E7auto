@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "feature": "common",
+  "template_key": "network_loading_crystal_06",
+  "source": {
+    "path": "C:\\Users\\lxy\\Videos\\屏幕录制\\屏幕录制 2026-11-11 165718.mp4",
+    "sha256": "60ee15de8925c6b43a24c7b6cde958fe601525b64e253003f8ee33d9676a3ad1",
+    "video_size": [
+      2326,
+      1366
+    ],
+    "fps": 30.0,
+    "frame_index_zero_based": 378,
+    "timestamp_seconds": 12.6,
+    "decoded_frame_bgr_sha256": "037b02199884631951d52d53c72ae886402c2f7d78582a2d9b1ecdfae8319949",
+    "decoded_frame_shape": [
+      1366,
+      2326,
+      3
+    ],
+    "client_rect_in_video": [
+      2,
+      54,
+      2322,
+      1306
+    ],
+    "baseline_client_size": [
+      2322,
+      1306
+    ],
+    "crop_in_video": [
+      1125,
+      620,
+      76,
+      174
+    ],
+    "crop_in_client": [
+      1123,
+      566,
+      76,
+      174
+    ],
+    "original_crop_path": "D:\\E7auto\\artifacts\\tasks\\common\\20261111-180221-network-crystal-candidates-926e7473\\inputs\\frame_0378_original_crop.png",
+    "original_crop_sha256": "70d5cc990a05cab0f4672ee665d1f48a45c27d331dabeade5e4a97025743f89d"
+  },
+  "edit_basis": {
+    "content": "Original hollow crystal outline and inner strokes; transparent holes/background.",
+    "rgb": "All RGB pixels, including pixels under zero alpha, preserved byte-for-byte from decoded video crop.",
+    "resample": false,
+    "sharpen": false,
+    "redraw": false,
+    "mask": {
+      "seed": "minimum BGR channel >= 140 and channel spread <= 50; unchanged from previous candidate",
+      "component": "largest connected original bright-stroke component",
+      "outer_edge": "Keep only the existing original-pixel outer edge ring",
+      "hollow_interiors": "Set alpha to 0 for every enclosed non-stroke pixel; no interior dilation",
+      "alpha": "binary 0/255"
+    },
+    "selection": "Eight actual frames chosen by farthest-first alpha-mask IoU coverage; sorted by frame index.",
+    "preview": "Nearest-neighbor 2x for review only; candidate PNG remains native resolution."
+  },
+  "validation": {
+    "rgb_matches_original_crop": true,
+    "png_round_trip_exact": true,
+    "alpha_binary_nonempty_connected": true,
+    "no_empty_outer_border": true,
+    "human_review": "approved_by_user",
+    "production_roi_positive_negative": {
+      "status": "passed_offline_for_8_pose_union_in_available_samples",
+      "gates": {
+        "color": 0.9,
+        "structure": 0.6
+      },
+      "roi": [
+        1061,
+        533,
+        200,
+        240
+      ],
+      "evidence_sha256": "b7348a3badf102487cad845ceee7685a7dc1762c7f5dd788293822b0ab0cf1a3",
+      "runtime_service_integration": "verified separately after implementation",
+      "limitations": "Real positive frames share one shop-video background. Native nonbaseline positive captures unavailable."
+    },
+    "native_scaled_recognition": {
+      "synthetic_scaling": "37/37 at 1920x1080, 1536x864 and 1152x648",
+      "real_nonbaseline_positive": "not available; not verified"
+    },
+    "geometry": "Frame size and baseline dimensions checked; supplied client rectangle retained explicitly.",
+    "all_hollow_interior_alpha_zero": true,
+    "all_original_bright_strokes_preserved": true,
+    "mask_only_removed_interior_background": true,
+    "mask_added_pixels": 0,
+    "rgb_changed_pixels": 0,
+    "agent_visual_review": "Original crop, corrected transparency and white mask inspected; user approval pending"
+  },
+  "correction": {
+    "reason": "User rejected background retained in hollow areas by the old all-direction edge expansion",
+    "previous_candidate": "D:\\E7auto\\artifacts\\template-candidates\\20261111-180407-2454a96b\\common\\network\\network_loading_crystal_06.png",
+    "previous_candidate_sha256": "5583d59fd80a15c3dfc9e660b7d7bf7ce13ee2046aca21ee3e0099f399e67954",
+    "previous_source_record": "D:\\E7auto\\artifacts\\template-candidates\\20261111-180407-2454a96b\\common\\network\\network_loading_crystal_06.source.json",
+    "removed_interior_background_pixels": 432,
+    "added_mask_pixels": 0,
+    "rgb_changed_pixels": 0,
+    "holes_before": 2,
+    "holes_after": 2
+  },
+  "image_approval": {
+    "candidate_sha256": "3d8ce538854516bdec28b2b6b095a118a00dbd320b67d7384e833e7163bc1f82",
+    "user_message": "可以，模板通过，但是识别门槛应该设为多少",
+    "thresholds_approved": true
+  },
+  "approved_thresholds": {
+    "color": 0.9,
+    "structure": 0.6,
+    "roi_baseline": [
+      1061,
+      533,
+      200,
+      240
+    ],
+    "authorization": "颜色分数可以降低为0.9，结构分数就用0.6不变，假如这样不会出现误识别的话就正式用这个识别门槛好了",
+    "evidence_sha256": "b7348a3badf102487cad845ceee7685a7dc1762c7f5dd788293822b0ab0cf1a3",
+    "evidence_path": "D:\\E7auto\\artifacts\\tasks\\common\\20261111-180221-network-crystal-candidates-926e7473\\results\\crystal_threshold_scores.json"
+  }
+}

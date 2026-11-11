@@ -32,7 +32,7 @@ def test_penguin_loads_without_any_shop_images(installation):
     config = with_penguin_config(load_config(
         installation / "config/internal.yaml", template_profile="penguin"
     ))
-    assert len(config.template_paths) == 28
+    assert len(config.template_paths) == 36
     assert set(config.template_paths) == COMMON_TEMPLATE_KEYS | {
         key for key in config.template_paths if key.startswith("penguin_")
     }
@@ -46,7 +46,7 @@ def test_shop_loads_without_penguin_assets_or_calibration_docs(installation):
     for path in (installation / "assets/templates/penguin").iterdir():
         path.unlink()
     config = load_config(installation / "config/internal.yaml")
-    assert len(config.template_paths) == 33
+    assert len(config.template_paths) == 41
     assert not any(key.startswith("penguin_") for key in config.template_paths)
     assert TemplateRepository(config).get("main_shop_icon").image.size
 
@@ -77,6 +77,33 @@ def test_corrupt_shared_image_is_rejected_before_vision(installation, profile):
     (installation / "assets/templates/common/digits/sky_stone_digit_1.png").write_bytes(b"invalid")
     with pytest.raises(ConfigError, match="template integrity mismatch: sky_stone_digit_1"):
         load_config(installation / "config/internal.yaml", template_profile=profile)
+
+
+@pytest.mark.parametrize("profile", ["shop", "penguin", "chaos"])
+@pytest.mark.parametrize("damage", ["missing_first_pose", "corrupt_last_pose"])
+def test_network_crystal_resource_failure_rejects_each_feature(installation, profile, damage):
+    name = 'network_loading_crystal_01' if damage == 'missing_first_pose' else 'network_loading_crystal_08'
+    path = installation / 'assets/templates/common/network' / (name + '.png')
+    if damage == 'missing_first_pose':
+        path.unlink()
+    else:
+        path.write_bytes(b'invalid PNG')
+    with pytest.raises(ConfigError, match=name):
+        load_config(installation / 'config/internal.yaml', template_profile=profile)
+
+
+def test_chaos_shared_network_does_not_load_shop_or_penguin_images(installation):
+    from e7auto.features.chaos.configuration import with_chaos_config
+    shutil.copyfile(ROOT / 'config/chaos.yaml', installation / 'config/chaos.yaml')
+    for feature in ('shop', 'penguin'):
+        for path in (installation / 'assets/templates' / feature).rglob('*.png'):
+            path.unlink()
+    config = with_chaos_config(load_config(installation / 'config/internal.yaml', template_profile='chaos'))
+    assert len(config.network.loading.templates) == 8
+    assert all(key in config.template_paths for key in config.network.loading.templates)
+    assert 'network_connection_abnormal' not in config.chaos.scenes
+    assert 'network_retry' not in config.chaos.scenes
+    assert not any(key.startswith('penguin_') for key in config.template_paths)
 
 
 def test_changed_penguin_template_is_rejected(installation):

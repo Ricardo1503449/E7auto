@@ -2,11 +2,16 @@
 
 ## 统一网络恢复
 
-三种功能通过RuntimeContext使用bootstrap显式注入的NetworkService；功能视觉类和场景表不分派网络识别。
-NetworkVision负责像素，NetworkService负责等待、重试、状态恢复和计时；拖动的只读检测先释放按键再恢复。
-文字模板、ROI、0.90/0.80与消失确认参数集中在internal.yaml的network区块。商店/企鹅保留match，卡厄思保留locate_all(limit=1)和原中心取整。
-三张新帧且持续500ms无网络信号才恢复，等待期间保留停止/窗口/截图守卫；退出后重新取帧，保留已用次数和提交状态。
-公共网络缓存通过显式回调在会话收尾独立清理；业务或网络缓存清理异常均不跳过截图和日志关闭。
+三种功能均通过RuntimeContext使用bootstrap显式注入的NetworkService；功能视觉类和场景表不分派网络识别。
+NetworkVision只处理像素，NetworkService负责等待、重试、状态恢复、恢复通知及等待耗时扣除；只读probe不点击、不改变运行状态。
+拖动发现网络阻塞时先释放按键，再调用恢复入口。运行状态由每个RuntimeContext独立保存。
+
+网络模板、ROI、颜色/结构门槛及消失确认参数统一放在internal.yaml的network区块，不再放到功能默认门槛、vision.template_structure_thresholds或chaos场景中。
+八张水晶姿态为同一身份，颜色0.90、结构0.60在同帧同候选同位置同时满足；两类原文字维持原ROI及0.90/0.80。
+原文字保留商店/企鹅match、卡厄思locate_all(limit=1)及旧场景中心取整。
+网络等待显示现有“重连中”，不设总等待超时，保留手动停止、窗口及截图异常守卫。只有无水晶且异常文字与重试文字同帧命中才允许原重试点击。
+三类信号至少三张新帧且持续500ms消失后恢复；水晶自行消失无需弹窗或重试。所有恢复出口重新取帧，不补回已用操作次数或盲目重发提交。
+验证范围和真实非基准正例限制见[网络恢复验证](../validation/common/NETWORK_RECOVERY_VALIDATION.md)。
 
 ## 三帧结果交接与同帧联合确认
 

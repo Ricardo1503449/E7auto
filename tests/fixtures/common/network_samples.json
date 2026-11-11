@@ -1,0 +1,59 @@
+{
+  "description": "Unmodified original BGR crops from the user supplied video; no resampling, drawing or alpha edits. Covers the union of the actual network ROIs.",
+  "source_video": "C:\\Users\\lxy\\Videos\\屏幕录制\\屏幕录制 2026-11-11 165718.mp4",
+  "source_video_sha256": "60ee15de8925c6b43a24c7b6cde958fe601525b64e253003f8ee33d9676a3ad1",
+  "baseline": [
+    2322,
+    1306
+  ],
+  "client_rect_in_video": [
+    2,
+    54,
+    2322,
+    1306
+  ],
+  "client_crop": [
+    900,
+    533,
+    540,
+    347
+  ],
+  "samples": {
+    "loading": {
+      "file": "network_loading_2322.png",
+      "sha256": "061380aa37511c9d9ac2b611f50a7e84db9950d068c3a509e3932e601e09cf65",
+      "source_frame_index": 373,
+      "source_seconds": 12.433333333333334,
+      "decoded_frame_bgr_sha256": "3718414abe2a69bbaf7d92c3ea18b88a6c990343f2db765ddc4020390b6b8fc9",
+      "expected": {
+        "loading": true,
+        "error": false,
+        "retry": false
+      }
+    },
+    "retry": {
+      "file": "network_retry_2322.png",
+      "sha256": "e311f49a9396ff550d1821ada6ba24408856fa9a499058f9a45db7cdb086f946",
+      "source_frame_index": 555,
+      "source_seconds": 18.5,
+      "decoded_frame_bgr_sha256": "f24b326cf837a915b9e5053da5dd6693b9c6cf68e950b4591b6dd6facb53ab9a",
+      "expected": {
+        "loading": false,
+        "error": true,
+        "retry": true
+      }
+    },
+    "clear": {
+      "file": "network_clear_2322.png",
+      "sha256": "e84461be967b098d5773eb087e096e13d4879122f1386835d64ffa08764731f1",
+      "source_frame_index": 60,
+      "source_seconds": 2.0,
+      "decoded_frame_bgr_sha256": "21563b1e15935817a77ec95fbb3f00baf27727303607b44c5429ecc5b9347322",
+      "expected": {
+        "loading": false,
+        "error": false,
+        "retry": false
+      }
+    }
+  }
+}

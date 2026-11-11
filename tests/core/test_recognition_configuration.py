@@ -221,6 +221,27 @@ def test_per_template_structure_gates_allow_explicit_pending_and_legacy_absence(
     assert load_config(path).template_structure_thresholds == {}
 
 
+@pytest.mark.parametrize("damage", ["missing_pose", "small_roi", "invalid_color", "missing_structure", "few_clear_frames", "short_clear_time"])
+def test_network_configuration_rejects_incomplete_or_unsafe_settings(configuration, damage):
+    path, raw = configuration
+    network = raw['network']
+    if damage == 'missing_pose':
+        network['loading']['templates'].pop()
+    elif damage == 'small_roi':
+        network['loading']['roi']['width'] = 1
+    elif damage == 'invalid_color':
+        network['loading']['color'] = float('nan')
+    elif damage == 'missing_structure':
+        network['loading']['structure'] = None
+    elif damage == 'few_clear_frames':
+        network['clear_frames'] = 2
+    else:
+        network['clear_ms'] = 499
+    path.write_text(yaml.safe_dump(raw), encoding='utf-8')
+    with pytest.raises(ConfigError, match='network'):
+        load_config(path)
+
+
 @pytest.mark.parametrize('value', [None, True, 0, -1, 1.01, float('nan'), float('inf'), '0.9'])
 @pytest.mark.parametrize('parameter', ['purchased_button_confidence', 'penguin_control_thresholds',
                                        'penguin_purchase_body_confidence', 'confirm_button_confidence',

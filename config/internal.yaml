@@ -29,6 +29,19 @@ template_manifests:
 network:
   clear_frames: 3
   clear_ms: 500
+  loading:
+    templates:
+      - network_loading_crystal_01
+      - network_loading_crystal_02
+      - network_loading_crystal_03
+      - network_loading_crystal_04
+      - network_loading_crystal_05
+      - network_loading_crystal_06
+      - network_loading_crystal_07
+      - network_loading_crystal_08
+    roi: {x: 1061, y: 533, width: 200, height: 240}
+    color: 0.90
+    structure: 0.60
   error:
     templates: [network_connection_abnormal]
     roi: {x: 900, y: 545, width: 540, height: 105}

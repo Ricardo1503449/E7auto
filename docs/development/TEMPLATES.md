@@ -8,7 +8,7 @@
 assets/templates/
 ├── common/
 │   ├── digits/       # 原生字体生成的共用0～9字形
-│   ├── network/      # 共用网络异常和重试文字
+│   ├── network/      # 共用旋转水晶、网络异常和重试文字
 │   └── navigation/   # 三种功能共用的启动返回菜单及酒馆
 ├── shop/             # 商店专用商品、按钮、天空石图标
 ├── penguin/          # 企鹅专用控件及运行必需的manifest.json
@@ -35,6 +35,12 @@ tests/fixtures/       # 可移植的离线回归样本
 运行只依赖登记PNG与清单，不新增字体渲染库或游戏进程依赖。旧截图来源和校准记录作为历史证据保留，旧截图导出工具不代表当前数字来源；宽0专用导出入口已退役。模板来源及登记事务见[统一替换验证](../validation/shop/SHOP_RECOGNITION_VALIDATION.md#2026-11-09-原生数字统一替换已登记)，算法接入与实际/复用验证见[当前数字验证记录](../validation/shop/SHOP_RECOGNITION_VALIDATION.md)。
 
 ## 运行时尺寸适配
+
+2026-11-11：用户逐张图审通过8张旋转水晶模板network_loading_crystal_01～08，均由同一原视频的真实姿态提取；镂空内侧误保留的背景已清除，只保留外轮廓必要原始边缘，RGB与原始尺寸未变。
+用户确认颜色0.90、结构0.60，并在现有正反例无误命中的条件下授权启用。逐项登记到common/network，三种功能由公共网络服务明确依赖这8张及原两类网络文字。
+水晶ROI为2322×1306基准下的[1061,533,200,240]；非基准继续按完整客户区比例匹配当前原图，不重采样截图到基准。
+水晶不是点击目标，不新增动作坐标。姿态身份统一为network_loading；模板具体相位不参与稳定性比较。
+实际及复用验证、候选/登记记录和样本限制见[网络恢复验证](../validation/common/NETWORK_RECOVERY_VALIDATION.md)。
 
 2026-10-23：公共启动导航登记三张已图审原像素模板：`navigation_menu`（64×64，无通知点）、`navigation_menu_notification`（73×75，带橙色通知点）、`navigation_tavern`（53×53）。后者按用户图审修正中央凹槽黏连，只删除误保留的背景Alpha，不修改RGB。无通知点菜单和酒馆颜色门槛按用户指定为0.92，通知点版本0.96，三张结构门槛均为0.80；ROI分别为菜单两版`[2190,0,132,130]`、酒馆`[1980,1000,140,150]`，均配置在`internal.yaml`的`startup_navigation`。两种菜单变体授权同一菜单状态，先查无通知点版、未命中再查通知点版，不要求三帧命中相同变体。三种功能显式依赖这三张共享图片，启动时不加载其他功能专用资源。验证与已知人工缺手柄反例限制见[启动验证](../validation/common/STARTUP_WAKE_VALIDATION.md)。
 
@@ -88,7 +94,7 @@ tests/fixtures/       # 可移植的离线回归样本
 - 卡厄思阵容资源按 `COMMON_SCENES ∪ lineup.scenes ∪ 当前目标大厅阶段场景` 计算；每队在 `lineups.py` 显式声明专用场景，不能根据途中招募策略推断另一队资源。已知场景集合由公共场景、所有已登记阵容场景及五种大厅阶段绑定组成，未知键仍拒绝。大厅只读取当前目标的数字模板，其余大厅数字缺失或损坏不影响该目标启动；阶段列表01—05及其高亮/确认资源仍按原规则加载。`recruitment_policy` 单独控制途中招募和换人，配置仅接受对应阵容声明的策略；资源保留、缺失或加载与否不能代替策略授权。
 
 - 每个功能启动时只检查、加载它的专用模板和明确依赖的共享模板。另一功能的图片缺失或损坏不得导致本功能无法启动。
-- 当前 `load_config(..., template_profile="shop")` 加载33张商店及共享模板；`template_profile="penguin"` 先加载15张共享模板，再由 `features/penguin/configuration.py` 中的 `with_penguin_config` 校验并加入13张企鹅模板。
+- 当前 `load_config(..., template_profile="shop")` 加载41张商店及共享模板；`template_profile="penguin"` 先加载23张共享模板，再由 `features/penguin/configuration.py` 中的 `with_penguin_config` 校验并加入13张企鹅模板。
 - 配置结构仍共用 `config/internal.yaml`，企鹅仍校验共用配置结构；上述隔离针对图片依赖，不表示各功能配置已经完全拆分。
 - 新功能必须增加对应加载分支及明确的依赖集合，不得通过加载所有模板再忽略多余模板实现。同步功能启动入口和资源校验；未知功能标识应报错。
 - `config/internal.yaml` 的 `template_manifests` 只登记common/shop/penguin清单路径。三个清单使用相同格式，文件名、来源与SHA-256仅在清单登记；两个功能共用 `resources/manifest.py` 加载和完整性校验。来源信息仅供追溯，不读取来源文件。

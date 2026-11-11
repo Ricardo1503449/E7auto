@@ -130,6 +130,7 @@ class NetworkTargetConfig:
 
 @dataclass(frozen=True, slots=True)
 class NetworkConfig:
+    loading: NetworkTargetConfig
     error: NetworkTargetConfig
     retry: NetworkTargetConfig
     clear_frames: int

@@ -12,7 +12,7 @@ from e7auto.configuration.schema import NAVIGATION_TEMPLATE_KEYS
 from e7auto.configuration.navigation import load_startup_navigation
 from e7auto.configuration.models import ClickRetryConfig
 from e7auto.configuration.models import NetworkConfig, NetworkTargetConfig
-from e7auto.configuration.schema import NETWORK_TEMPLATE_KEYS
+from e7auto.configuration.schema import NETWORK_LOADING_TEMPLATE_KEYS, NETWORK_TEMPLATE_KEYS
 from e7auto.configuration.game import load_game_clients
 
 
@@ -670,8 +670,8 @@ def _load_network(root, baseline_size, template_sizes, errors):
     if "network" not in root and "template_manifests" not in root:
         return None
     raw = _mapping(root.get("network"), "network", errors)
-    if set(raw) != {"error", "retry", "clear_frames", "clear_ms"}:
-        errors.append("network requires error, retry, clear_frames and clear_ms")
+    if set(raw) != {"loading", "error", "retry", "clear_frames", "clear_ms"}:
+        errors.append("network requires loading, error, retry, clear_frames and clear_ms")
 
     def target(name, required_keys):
         prefix = "network." + name
@@ -694,17 +694,18 @@ def _load_network(root, baseline_size, template_sizes, errors):
                     errors.append(prefix + ".roi must contain the complete " + key + " template")
         color = _positive_fraction(item.get("color"), prefix + ".color", errors)
         structure = item.get("structure")
-        if structure is not None:
+        if structure is not None or name == "loading":
             structure = _positive_fraction(structure, prefix + ".structure", errors)
         return NetworkTargetConfig(tuple(keys), region, color, structure)
 
+    loading = target("loading", NETWORK_LOADING_TEMPLATE_KEYS)
     error = target("error", ("network_connection_abnormal",))
     retry = target("retry", ("network_retry",))
     clear_frames = _positive_int(raw.get("clear_frames"), "network.clear_frames", errors)
     clear_ms = _positive_int(raw.get("clear_ms"), "network.clear_ms", errors)
     if clear_frames < 3 or clear_ms < 500:
         errors.append("network clear confirmation requires at least 3 frames and 500ms")
-    return NetworkConfig(error, retry, clear_frames, clear_ms)
+    return NetworkConfig(loading, error, retry, clear_frames, clear_ms)
 
 
 def load_config(

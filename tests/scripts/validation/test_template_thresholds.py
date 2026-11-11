@@ -25,6 +25,21 @@ def test_every_png_and_distinct_use_is_listed_with_blank_user_decisions(report):
     assert all(row['user_score'] is None and row['user_structure'] is None for row in rows)
 
 
+def test_network_inventory_uses_shared_configuration_for_all_three_features(report):
+    network = [row for row in report['rows'] if row['use'].startswith('网络/')]
+    assert len(network) == 30
+    for feature in ('shop', 'penguin', 'chaos'):
+        rows = [row for row in network if row['feature'] == feature]
+        assert len(rows) == 10
+        for row in rows:
+            loading = row['key'].startswith('network_loading_crystal_')
+            name = 'loading' if loading else 'retry' if row['key'] == 'network_retry' else 'error'
+            assert row['score_current'] == .90
+            assert row['structure_current'] == (.60 if loading else .80)
+            assert row['score_source'].endswith('network.'+name+'.color')
+            assert row['structure_source'].endswith('network.'+name+'.structure')
+
+
 def test_inventory_uses_effective_loot_and_special_scores_instead_of_generic_defaults(report):
     rows = report['rows']
     loot = [row for row in rows if row['use'] == 'loot_old_sword/完整名称']

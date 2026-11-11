@@ -3,7 +3,10 @@ NAVIGATION_TEMPLATE_KEYS = frozenset({
     "navigation_menu", "navigation_menu_notification", "navigation_tavern",
 })
 
-NETWORK_TEMPLATE_KEYS = frozenset({"network_connection_abnormal", "network_retry"})
+NETWORK_LOADING_TEMPLATE_KEYS = tuple(f"network_loading_crystal_{number:02d}" for number in range(1, 9))
+NETWORK_TEMPLATE_KEYS = frozenset({
+    "network_connection_abnormal", "network_retry", *NETWORK_LOADING_TEMPLATE_KEYS,
+})
 
 COMMON_TEMPLATE_KEYS = frozenset({
     *NAVIGATION_TEMPLATE_KEYS,

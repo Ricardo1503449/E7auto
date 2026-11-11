@@ -171,14 +171,24 @@ an explicit flow factory and `RunPolicy`; it does not choose or import feature i
 callback, not a network-service dependency on shop fields.
 
 Network recovery is one injected `NetworkService` for all three features. Bootstrap
-composes it with shared `NetworkVision`; feature contracts no longer dispatch network
-pixels. Text searches retain shop/penguin `match` and Chaos `locate_all(limit=1)` with
-its original anchor rounding, ROIs and 0.90/0.80 gates. Configuration lives in the
-shared network block. The read-only probe lets a drag release before recovery.
-Recovery requires all network signals absent on three fresh frames spanning 500ms;
-all exits discard interrupted frames while preserving business state and budgets.
-Bootstrap injects network cache cleanup; feature and network teardown run independently
-so either cleanup failure still permits capture and logging to close.
+composes it with the shared `NetworkVision`; feature vision contracts no longer
+dispatch network recognition. Network pixels and configuration remain independent
+of feature implementations. Text searches retain their existing paths: shop and
+penguin use `match`, Chaos uses `locate_all(limit=1)`, including its original anchor
+rounding. Matching algorithms, text ROIs, gates and the fixed retry click remain unchanged.
+
+Eight approved original-pixel crystal poses map to one loading identity at 0.90
+color / 0.60 structure, in the configured central ROI. A reliable crystal or error
+text pauses the business clock and shows the existing RECONNECTING status. The
+read-only probe is separate from recovery so drags release before any retry click.
+Recovery requires all three signals (crystal, error text, retry text) absent on at
+least three fresh frames spanning 500ms. Crystal-only automatic clearance needs no
+dialog or retry click. All exits discard the interrupted frame; recovery state,
+input budgets and completed-wait accounting remain scoped to each runtime.
+Bootstrap also injects the network matcher's cache cleanup callback. Session
+teardown clears feature and network caches in independent guarded steps, including
+when startup or either cleanup fails, before closing capture and logging.
+See [evidence and limits](../validation/common/NETWORK_RECOVERY_VALIDATION.md).
 
 `runtime/daily_reset.py` owns opt-in date-change recovery. It receives a runtime,
 shared settings, named observation callback and home detector; it never imports a
@@ -703,7 +713,7 @@ Text logs include aggregate `performance_stage` records for inventory scans, scr
 
 `features/penguin/flow.py` implements the separate 50-penguin batch flow. It composes `RuntimeContext` for guarded preparation/input and network recovery, selecting fresh capture after recovery and providing its own normal completion; it has no shop scan, refresh strategy or balance dependency. `AutomationSession.run_penguins` shares button stop control and resource cleanup. `RuntimeSnapshot` stores the feature id and separate successful-batch count/limit.
 
-Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including network waits that clear without a retry. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
+Penguin capture calls the shared network handler, discards the interrupted frame after recovery and captures anew. A recovery generation counter resets stable observations in penguin waits and shared entry confirmation/rechecks, including crystal-only waits that clear without a dialog. Penguin recognition deadlines and maximum-price settling use the shared active clock, which excludes network recovery time; the UI elapsed timer continues. Recovery temporarily shows `重连中`, restores the previous activity status and resumes the pending recognition, never replaying a purchase submission. If recovery leaves an unknown purchase outcome, the existing result timeout still stops the run.
 
 Purchase-result waiting observes the completion title and reward-close control on the same frame.
 Three consecutive joint observations pass the last frame's close observation directly to the existing

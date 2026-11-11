@@ -172,6 +172,70 @@
         "record": "docs/calibration/registrations/common-navigation_menu_notification-ca5f6e9f7af6-0b904e48e73f.json",
         "record_sha256": "0b904e48e73ffcaf7d6a7201a8eb47c8fb8e4e2108ea777acd5399294fd4b3a2"
       }
+    },
+    "network_loading_crystal_01": {
+      "file": "network/network_loading_crystal_01.png",
+      "sha256": "12d44fd65ee7866d518b9d2ded729a26b309181e87ad99884e45c0618e6e4d47",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_01-12d44fd65ee7-fb5b1c86cde4.json",
+        "record_sha256": "fb5b1c86cde4eee58216b2c0764a0ab5380c64a9c3de701777890e2b67d94e11"
+      }
+    },
+    "network_loading_crystal_02": {
+      "file": "network/network_loading_crystal_02.png",
+      "sha256": "2e3a744e66983949e366751455389cb3aa27f5424ffbf955c3663427e84641af",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_02-2e3a744e6698-daa38fa22c2b.json",
+        "record_sha256": "daa38fa22c2b4b549bf2f642de4c8cc3468a8b1f54055d0208a3fbdb7f740648"
+      }
+    },
+    "network_loading_crystal_03": {
+      "file": "network/network_loading_crystal_03.png",
+      "sha256": "988f988df83e8c51e3aa1b3b6bf05f913edac35fee513d3a4e8d593f18ce4779",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_03-988f988df83e-c46d46ccc520.json",
+        "record_sha256": "c46d46ccc520b34bd9d2a9209419bd68769bdf399c190233a9dcc285f75700b9"
+      }
+    },
+    "network_loading_crystal_04": {
+      "file": "network/network_loading_crystal_04.png",
+      "sha256": "478ad4d68b3b1b5852b040b55dd559f978573a1e234e8d2b9c0ed587042f193e",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_04-478ad4d68b3b-90a477af3487.json",
+        "record_sha256": "90a477af3487764aea894d9be5f8150a57f912dc384fd36cfcce620e004a4cab"
+      }
+    },
+    "network_loading_crystal_05": {
+      "file": "network/network_loading_crystal_05.png",
+      "sha256": "3480e06b3d50ec5ad74e41b62739157cb73a40d23eea81bc40ca67d749e5775e",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_05-3480e06b3d50-13c415d0cffa.json",
+        "record_sha256": "13c415d0cffafb73cddd69aad6f47dffd9335158671bd4cc8049f8c7b696e8cc"
+      }
+    },
+    "network_loading_crystal_06": {
+      "file": "network/network_loading_crystal_06.png",
+      "sha256": "3d8ce538854516bdec28b2b6b095a118a00dbd320b67d7384e833e7163bc1f82",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_06-3d8ce5388545-36ee5895958f.json",
+        "record_sha256": "36ee5895958f656a05d3f627622abac27155f690c1ca7b03a41650671e785f3f"
+      }
+    },
+    "network_loading_crystal_07": {
+      "file": "network/network_loading_crystal_07.png",
+      "sha256": "98912b9a3df4e3e34c05d6d0050078a96216992d822821c8430c478c4aca3a74",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_07-98912b9a3df4-4e21394fcbe8.json",
+        "record_sha256": "4e21394fcbe82e2f601c2e7791c301d02ae25862c80bcacce1955ea5ec356b80"
+      }
+    },
+    "network_loading_crystal_08": {
+      "file": "network/network_loading_crystal_08.png",
+      "sha256": "de9648e8c2ff4140dd16debc1127e185608aa217ae1e20f3586b46d429a39950",
+      "source": {
+        "record": "docs/calibration/registrations/common-network_loading_crystal_08-de9648e8c2ff-49f17ef46a13.json",
+        "record_sha256": "49f17ef46a13cac52b11b38340b3bba66dea299017417f7395950f5660126fb4"
+      }
     }
   },
   "retired_templates": {
