@@ -28,6 +28,7 @@
 - [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
 - [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
+- [v1.5.6 大厅返回修复与版本验证](releases/v1.5.6/VALIDATION.md)（卡厄思结算确认及等待接口约束）
 - [v1.5.5 重连确认与版本验证](releases/v1.5.5/VALIDATION.md)（网络恢复与当前业务确认衔接）
 - [v1.5.4 工作区审查与版本验证](releases/v1.5.4/VALIDATION.md)（旋转水晶与统一网络恢复）
 - [统一网络恢复与旋转水晶验证](validation/common/NETWORK_RECOVERY_VALIDATION.md)
