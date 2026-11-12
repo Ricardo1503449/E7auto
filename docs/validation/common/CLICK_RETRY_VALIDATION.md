@@ -1,5 +1,22 @@
 # 游戏点击有限重试验证
 
+## 2026-11-12 卡厄思结算大厅稳定确认
+
+10月31日提交`556e97f`在旅程关闭后新增`journey_closed`确认；大厅检测返回`Observation`，而`ChaosFlow._signature`仅提取`Detection`的身份和位置，导致大厅结果按完整对象比较，识别分数波动也会重置三帧计数。通关、战败和启动清理旧探查共用该关闭流程，均受影响。
+
+本次修复限定在卡厄思的稳定签名转换，复用已有`observation_signature`处理`Detection`及`Observation`。原`Detection`签名值、地图和元组处理保持；模板、ROI、颜色及结构门槛、三帧要求、点击次数、页面期限和网络/停止守卫不变。新增流程用例在2322×1306和1536×864下给大厅分数注入微小波动，并检查关闭只发送一次、确认使用三张不同的新帧。
+
+使用`.venv`中的Python以`-B -m pytest -v --tb=short -p no:cacheprovider`按函数和参数选择执行。新增的`test_chaos_confirmation.py::test_journey_return_accepts_varying_lobby_confidence[size0/size1]`在修改生产代码前均复现`journey_closed`识别超时，修复后两例通过。既有用例仅执行以下6例，全部通过：
+
+- `test_chaos.py::test_two_rounds_complete_only_after_final_home_with_all_nodes_and_swap`：通关计数、多轮继续及最终返回主界面。
+- `test_chaos_defeat.py::test_defeat_restarts_all_battle_types_without_counting_failed_round[boss-3]`：第三层首领战败后重新开始，失败不计入成功轮数。
+- `test_chaos_saved_exploration.py::test_cleanup_precedes_stage_selection_and_new_round[1]`：清理旧探查后才开始新轮，清理不计轮数。
+- `test_chaos_defeat.py::test_failed_recovery_requires_each_destination_without_reclick_or_restart[lobby]`：大厅缺失仍超时停止。
+- `test_chaos_defeat.py::test_reconnect_during_defeat_recovery_does_not_replay_inputs[journey_close]`：关闭后重连不重放关闭或重复计数。
+- `test_chaos_defeat.py::test_manual_stop_stops_without_followup_input_or_completed_round[closed]`：关闭后的手动停止阻止后续输入和完成计数。
+
+合计新增2个参数用例、复用6个既有用例，修复后8例全部通过。未运行整份测试文件或项目全套，未重复执行未变的图像识别矩阵，未做实机、构建或安装验收。
+
 ## 2026-10-31 实施范围
 
 按用户确认的方案，新接入动作至少间隔3000毫秒、含首次最多2次；总期限为原期限与6000毫秒中的较大值，并受外层期限限制。契约仍100毫秒缓冲、三选一选中仍0毫秒、通用缓冲仍300毫秒。共享模块管理重试流程，页面、身份、选中与完成条件仍由所属功能提供。

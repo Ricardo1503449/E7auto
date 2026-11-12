@@ -444,3 +444,35 @@ def test_joint_action_keeps_final_stop_and_window_guards(make_flow, monkeypatch,
     with pytest.raises(StopExecution) as stopped:execute()
     assert triggered and stopped.value.reason is (StopReason.MANUAL_STOP if boundary == 'stop' else StopReason.WINDOW_ABNORMAL)
     assert forbidden not in game.actions
+
+
+@pytest.mark.parametrize('size', [(2322, 1306), (1536, 864)])
+def test_journey_return_accepts_varying_lobby_confidence(make_flow, monkeypatch, size):
+    game, flow, _ = make_flow(size=size)
+    game.state = 'journey'
+    original = game.control
+    lobby_samples, confirmed_samples = [], []
+
+    def control(frame, key, region=None):
+        hit = original(frame, key, region)
+        if hit is not None and key == 'lobby_research':
+            hit = replace(hit, confidence=.95 + (game.captures % 2) * .000001)
+            lobby_samples.append((game.captures, hit.confidence))
+        return hit
+
+    logger = flow.runtime.deps.logger.event
+
+    def event(name, **fields):
+        logger(name, **fields)
+        if name == 'chaos_confirmed' and fields.get('stage') == 'journey_closed':
+            confirmed_samples.extend(lobby_samples)
+
+    monkeypatch.setattr(game, 'control', control)
+    monkeypatch.setattr(flow.runtime.deps.logger, 'event', event)
+    flow._close_journey()
+
+    assert game.state == 'hall' and game.actions == ['journey_close']
+    assert len(confirmed_samples) == len({capture for capture, _ in confirmed_samples}) == 3
+    assert len({confidence for _, confidence in confirmed_samples}) == 2
+    transition, = events(flow, 'click_transition')
+    assert transition['stage'] == 'journey_closed' and transition['outcome'] == 'confirmed'

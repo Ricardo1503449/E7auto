@@ -11,7 +11,7 @@ from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.daily_reset import DailyResetHandler, DailyResetResult
 from e7auto.runtime.dependencies import AutomationDependencies
 from e7auto.runtime.snapshots import SnapshotPublisher
-from e7auto.runtime.action_retry import Transition, click_and_wait
+from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
 from e7auto.runtime.confirmation import Confirmation
 from e7auto.runtime.capture import RecoveryProbe
 from e7auto.runtime.stop_control import StopExecution, StopController
@@ -149,8 +149,8 @@ class ChaosFlow:
 
     @staticmethod
     def _signature(value):
-        if isinstance(value, Detection):
-            return value.key, value.bounds.x//4, value.bounds.y//4
+        if isinstance(value, (Detection, Observation)):
+            return observation_signature(value)
         if isinstance(value, MapView):
             return value.floor, tuple(sorted((n.kind, n.detection.bounds.x//4, n.detection.bounds.y//4) for n in value.nodes))
         if isinstance(value, tuple):
