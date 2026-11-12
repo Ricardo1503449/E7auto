@@ -14,6 +14,8 @@
 
 0002_usage_days.sql只新增活跃日表与日期索引。先列出待执行迁移，确认仅适用新增项，再按授权remote apply；不使用模拟生产计数验收。cron每日清理90日之外的活跃明细，不处理商店去重记录和累计值。
 
+0003_usage_installations.sql新增仅含匿名安装标识的累计表，并从现存usage_days全部日期去重初始化，包含features=0的记录；建表和初始化可重复执行。上线按数据库迁移、上报Worker、私有汇总与网页的顺序执行，迁移及部署分别需要授权。未过期上报将累计登记和日活合并原子提交，过期但有效的上报只登记累计标识并沿用discarded回执；原90日清理仅操作usage_days。客户端和安装器无需修改，旧版上报继续有效，历史缺失数据不补造。
+
 发布使用现有tools run入口。网页服务使用私有仓库配置、同一D1绑定，通过具体配置路径部署；具体网址仅写在私有配置和私有README。两个Worker的workers.dev和版本预览均关闭。不能只增加域名别名，必须删除旧Worker的读取实现。
 
 上报域名的旧/、/stats、/stats.svg、/v1/shop-stats、dashboard.css和dashboard.js均404，无Location或新地址提示。对/v1/shop-runs的HEAD返回405及Allow: POST，可用于无数据写入的HTTPS诊断。
@@ -24,7 +26,7 @@ configure --endpoint只更新客户端上报配置，configure --database-id只�
 
 原公开统计自动任务已退役；不得在公开项目重建统计分支或自动插入统计链接。私有仓库继续维护每日快照及页面入口，完整旧统计提交链保留。迁移须核对源/目标SHA、文件路径/模式/类型/哈希、私有可见性；成功后才删除公开引用。
 
-私有归档脚本验证只读汇总字段和比率，拒绝明细、错误版本汇总或不完整树。每天只更新latest.json、latest.svg和当天history/YYYY-MM-DD.json，并按365日边界移除旧日期JSON与旧每日SVG；原tree中的维护文件保留。每日任务在私有仓库默认分支运行，权限为contents:write，不配置个人长期令牌。
+私有归档脚本验证只读汇总字段和比率，拒绝明细、错误版本汇总或不完整树；兼容新增的usage.total_users及不含累计字段的历史schema_version=2文档，不重写历史。每天只更新latest.json、latest.svg和当天history/YYYY-MM-DD.json，并按365日边界移除旧日期JSON与旧每日SVG；原tree中的维护文件保留。每日任务在私有仓库默认分支运行，权限为contents:write，不配置个人长期令牌。
 
 ## 定向验证与安装
 

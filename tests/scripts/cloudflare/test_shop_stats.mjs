@@ -22,6 +22,10 @@ const stats = async () => {
   const rows=(await db.prepare('SELECT * FROM pools').all()).results;
   return {pools:Object.fromEntries(rows.map(row=>[row.strategy,row])),updated_at:rows.map(row=>row.updated_at).filter(Boolean).sort().at(-1)??null};
 };
+const migrateInstallations = async () => {
+  const sql=await readFile(resolve(source,'migrations/0003_usage_installations.sql'),'utf8');
+  await db.batch(sql.replace(/^--.*$/gm,'').split(';').map(value=>value.trim()).filter(Boolean).map(value=>db.prepare(value)));
+};
 
 before(async () => {
   mf = new Miniflare(convertV4MiniflareOptions({ modules:[
@@ -36,9 +40,10 @@ before(async () => {
   await db.prepare(migration.slice(triggerStart)).run();
   const usage=await readFile(resolve(source,'migrations/0002_usage_days.sql'),'utf8');
   await db.batch(usage.split(';').map(value=>value.trim()).filter(Boolean).map(value=>db.prepare(value)));
+  await migrateInstallations();
 });
 beforeEach(async () => {
-  await db.batch([db.prepare('DELETE FROM usage_days'),db.prepare('DELETE FROM runs'),db.prepare(
+  await db.batch([db.prepare('DELETE FROM usage_days'),db.prepare('DELETE FROM usage_installations'),db.prepare('DELETE FROM runs'),db.prepare(
     'UPDATE pools SET skystone_spent=0,covenant_purchases=0,mystic_purchases=0,updated_at=NULL')]);
 });
 after(async () => { if (mf) await mf.dispose(); });
@@ -149,6 +154,7 @@ test('daily usage merges duplicates and feature flags without version rollback o
   const result=(await db.prepare('SELECT * FROM usage_days').all()).results;
   assert.equal(result.length,1); assert.equal(result[0].features,7);
   assert.equal(result[0].version_patch,2);
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,1);
   assert.equal((await stats()).pools.transfer.skystone_spent,0);
 });
 
@@ -158,17 +164,72 @@ test('usage refuses unknown fields invalid identities future dates and foreign f
     assert.ok([400,422].includes((await sendUsage(usage(change))).status));
   }
   assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days').first()).count,0);
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,0);
 });
 
 test('expired activity acknowledges without insertion and retention never deletes shop history',async()=>{
-  const response=await sendUsage(usage({date:'2020-01-01'}));
-  assert.equal((await response.json()).discarded,true);
+  const expired=usage({date:'2020-01-01'});
+  const response=await sendUsage(expired);
+  assert.deepEqual(await response.json(),{accepted:true,installation_id:expired.installation_id,date:expired.date,discarded:true});
+  await sendUsage(usage({installation_id:'b'.repeat(32),date:'2020-01-01'}));
   await send(payload()); await sendUsage(usage({features:['shop']}));
   await db.prepare("INSERT INTO usage_days VALUES (?,?,?,?,?,?,?)").bind('b'.repeat(32),'2020-01-01',1,5,2,1,'old').run();
   await worker.scheduled({}, {DB:db});
   assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days').first()).count,1);
   assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM runs').first()).count,1);
   assert.equal((await stats()).pools.transfer.skystone_spent,3);
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,2);
+});
+
+test('cumulative users include app-only identities across days and retention boundaries',async()=>{
+  const dayAgo=days=>new Date(Date.parse(today()+'T00:00:00Z')-days*86400000).toISOString().slice(0,10);
+  for(const [id,days] of [['a',0],['a',1],['b',89],['c',90],['d',400]]) {
+    const value=usage({installation_id:id.repeat(32),date:dayAgo(days)});
+    const response=await sendUsage(value);
+    assert.equal(response.status,200);
+    assert.equal((await response.json()).accepted,true);
+  }
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,4);
+  const rows=(await db.prepare('SELECT installation_id,day,features FROM usage_days ORDER BY day').all()).results;
+  assert.equal(rows.length,3);
+  assert.ok(rows.every(row=>row.features===0));
+  assert.equal(rows[0].day,dayAgo(89));
+});
+
+test('cumulative user migration backfills every retained identity and is repeatable',async()=>{
+  for(const [id,date,features] of [['a',today(),0],['a','2020-01-01',1],['b','2020-01-02',0]]) {
+    await db.prepare('INSERT INTO usage_days VALUES (?,?,?,?,?,?,?)').bind(id.repeat(32),date,1,5,2,features,'old').run();
+  }
+  await migrateInstallations();
+  await migrateInstallations();
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,2);
+  await sendUsage(usage({installation_id:'c'.repeat(32)}));
+  await migrateInstallations();
+  await worker.scheduled({}, {DB:db});
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations').first()).count,3);
+  assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days').first()).count,2);
+});
+
+test('cumulative and daily write failures refuse acknowledgment and remain retryable',async()=>{
+  for(const [index,[table,expired]] of [['usage_days',false],['usage_installations',false],['usage_installations',true]].entries()) {
+    const value=usage({installation_id:String(index).repeat(32),...(expired?{date:'2020-01-01'}:{})});
+    await db.prepare(`CREATE TRIGGER fail_usage BEFORE INSERT ON ${table} BEGIN SELECT RAISE(ABORT,'injected'); END`).run();
+    try {
+      const response=await sendUsage(value);
+      assert.equal(response.status,503);
+      assert.equal(response.headers.get('Retry-After'),'60');
+      for(const name of ['usage_installations','usage_days']) {
+        assert.equal((await db.prepare(`SELECT COUNT(*) AS count FROM ${name} WHERE installation_id=?`).bind(value.installation_id).first()).count,0);
+      }
+    } finally { await db.prepare('DROP TRIGGER fail_usage').run(); }
+    for(let attempt=0;attempt<2;attempt++) {
+      const response=await sendUsage(value);
+      assert.equal(response.status,200);
+      assert.deepEqual(await response.json(),{accepted:true,installation_id:value.installation_id,date:value.date,...(expired?{discarded:true}:{})});
+    }
+    assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_installations WHERE installation_id=?').bind(value.installation_id).first()).count,1);
+    assert.equal((await db.prepare('SELECT COUNT(*) AS count FROM usage_days WHERE installation_id=?').bind(value.installation_id).first()).count,expired?0:1);
+  }
 });
 
 test('activity limiter rejects before accessing the database',async()=>{

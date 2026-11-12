@@ -94,18 +94,23 @@ export function validateUsage(value, today = activityDay()) {
 async function insertUsage(db, value) {
   const cutoff = activityDay(Date.now()-89*86400000);
   const acknowledgment = {accepted:true,installation_id:value.installation_id,date:value.date};
-  if (value.date < cutoff) return json({...acknowledgment,discarded:true});
+  const installation = db.prepare(`INSERT INTO usage_installations (installation_id)
+    VALUES (?) ON CONFLICT(installation_id) DO NOTHING`).bind(value.installation_id);
+  if (value.date < cutoff) {
+    await installation.run();
+    return json({...acknowledgment,discarded:true});
+  }
   const version = value.version.split('.').map(Number);
   const mask = value.features.reduce((result,name) => result | (1 << featureNames.indexOf(name)),0);
   const newer = '(excluded.version_major,excluded.version_minor,excluded.version_patch) > (usage_days.version_major,usage_days.version_minor,usage_days.version_patch)';
-  await db.prepare(`INSERT INTO usage_days (installation_id,day,version_major,version_minor,version_patch,features,updated_at)
+  await db.batch([installation,db.prepare(`INSERT INTO usage_days (installation_id,day,version_major,version_minor,version_patch,features,updated_at)
     VALUES (?,?,?,?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'))
     ON CONFLICT(installation_id,day) DO UPDATE SET
       features=usage_days.features | excluded.features,
       version_major=CASE WHEN ${newer} THEN excluded.version_major ELSE usage_days.version_major END,
       version_minor=CASE WHEN ${newer} THEN excluded.version_minor ELSE usage_days.version_minor END,
       version_patch=CASE WHEN ${newer} THEN excluded.version_patch ELSE usage_days.version_patch END,
-      updated_at=excluded.updated_at`).bind(value.installation_id,value.date,...version,mask).run();
+      updated_at=excluded.updated_at`).bind(value.installation_id,value.date,...version,mask)]);
   return json(acknowledgment);
 }
 export default {
