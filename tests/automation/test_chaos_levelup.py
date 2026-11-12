@@ -220,7 +220,8 @@ def test_recovery_during_observation_resets_joint_evidence_without_restarting_wi
     game.on_capture = disconnect
     fight(game, flow)
     hits = [t for k, t, hit, _, _ in game.observations if k == 'levelup_close' and hit and t <= game.closed_at]
-    assert len(hits) == 5 and hits[-1]-hits[-3] == pytest.approx(.2)
+    assert len(hits) == 6 and hits[-1]-hits[-4] == pytest.approx(.3)
+    assert game.closed_at == hits[-1]
     assert game.actions.count('levelup_close') == 1
     assert phases(flow)[-1]['wall_elapsed_ms']-phases(flow)[-1]['elapsed_ms'] >= 40000
 

@@ -157,7 +157,7 @@ def test_initial_date_joint_frames_restart_after_network_recovery(config, monkey
         return hit
     monkeypatch.setattr(game, 'control', control)
     flow._wait_round_lobby()
-    assert generations == [0, 0, 1, 1, 1]
+    assert generations == [0, 0, 1, 1, 1, 1]
     assert game.actions.count('date_change_close') == 1
 
 

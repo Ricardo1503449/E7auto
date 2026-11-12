@@ -321,6 +321,8 @@ def test_recovery_rebuilds_three_frame_target_evidence(configs, size):
     generations = []
     def view(g, observed):
         generations.append(flow.runtime.network_recovery_generation)
+        if flow.runtime.handling_network:
+            assert len(selections(game)) == 1
         if len(generations) == 1:
             g.clock.sleep(1.1)
         if len(generations) == 2:
@@ -328,9 +330,10 @@ def test_recovery_rebuilds_three_frame_target_evidence(configs, size):
         return observed
     game.on_map = view
     flow._enter_node(node)
-    assert generations[:2] == [0, 0] and generations[2:] == [1, 1, 1]
+    assert generations[:2] == [0, 0] and generations[2:] == [1, 1, 1, 1]
     assert game.actions.count('network_retry') == 4
     assert len(selections(game)) == 2 and game.actions.count('node_enter') == 1
+    assert selections(game)[1][3] == game.maps[-1][0]
 
 
 @pytest.mark.parametrize('size', SIZES, ids=['baseline', 'native'])

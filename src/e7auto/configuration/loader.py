@@ -703,8 +703,8 @@ def _load_network(root, baseline_size, template_sizes, errors):
     retry = target("retry", ("network_retry",))
     clear_frames = _positive_int(raw.get("clear_frames"), "network.clear_frames", errors)
     clear_ms = _positive_int(raw.get("clear_ms"), "network.clear_ms", errors)
-    if clear_frames < 3 or clear_ms < 500:
-        errors.append("network clear confirmation requires at least 3 frames and 500ms")
+    if clear_frames < 3 or clear_ms < 300:
+        errors.append("network clear confirmation requires at least 3 frames and 300ms")
     return NetworkConfig(loading, error, retry, clear_frames, clear_ms)
 
 

@@ -23,4 +23,4 @@ class GameNetworkDetector:
 
 
 def game_network_service(game):
-    return NetworkService(GameNetworkDetector(game), clear_frames=3, clear_ms=500)
+    return NetworkService(GameNetworkDetector(game), clear_frames=3, clear_ms=300)

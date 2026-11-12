@@ -236,7 +236,7 @@ def test_network_configuration_rejects_incomplete_or_unsafe_settings(configurati
     elif damage == 'few_clear_frames':
         network['clear_frames'] = 2
     else:
-        network['clear_ms'] = 499
+        network['clear_ms'] = 299
     path.write_text(yaml.safe_dump(raw), encoding='utf-8')
     with pytest.raises(ConfigError, match='network'):
         load_config(path)

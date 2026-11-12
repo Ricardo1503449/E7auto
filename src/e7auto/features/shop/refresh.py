@@ -5,6 +5,7 @@ from e7auto.features.shop.contracts import InventoryMatch
 from e7auto.core.observations import Observation
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.runtime.context import RuntimeContext
+from e7auto.runtime.capture import RecoveryProbe
 from .contracts import ShopVisionPort
 from .state import ShopState
 from .inventory import InventoryScanner
@@ -127,14 +128,13 @@ class RefreshController:
         deadline = self.runtime.active_monotonic() + self.runtime.config.timing.dialog_timeout_ms / 1000
         stable = 0
         pending = initial_observation
-        while self.runtime.active_monotonic() <= deadline:
-            observation = pending
-            pending = None
-            if observation is None:
-                observation = self.runtime.vision_call(
-                    self.runtime.deps.vision.refresh_confirm_dialog,
-                    self.runtime.capture(),
-                )
+
+        def reset():
+            nonlocal stable
+            stable = 0
+
+        def observe_hit(observation):
+            nonlocal stable
             if observation is None:
                 stable = 0
                 self.runtime.deps.logger.event(
@@ -154,6 +154,17 @@ class RefreshController:
                     stable=stable,
                     fast_eligible=fast,
                 )
+            return observation
+
+        probe = RecoveryProbe(lambda frame: observe_hit(self.runtime.vision_call(
+            self.runtime.deps.vision.refresh_confirm_dialog, frame)), reset)
+        while self.runtime.active_monotonic() <= deadline:
+            observation = observe_hit(pending) if pending is not None else probe.capture(self.runtime)
+            pending = None
+            if self.runtime.active_monotonic() > deadline:
+                break
+            if observation is not None:
+                fast = observation.confidence >= _REFRESH_CONFIRM_FAST_CONFIDENCE
                 if fast or stable >= self.runtime.config.timing.stable_frames:
                     mode = "fast" if fast else "stable"
                     self.runtime.deps.logger.event(
@@ -208,7 +219,6 @@ class RefreshController:
             if generation != self.runtime.network_recovery_generation:
                 candidate, stable = None, 0
                 generation = self.runtime.network_recovery_generation
-                return None  # The frame that triggered recovery cannot contribute.
             ready = self.runtime.deps.vision.shop_ready(frame)
             balance = self.runtime.deps.vision.sky_stone_balance(frame) if ready is not None else None
             if balance is None:
@@ -342,34 +352,36 @@ class RefreshController:
         stable_count = 0
         frames = 0
         outcome = "timeout"
+
+        def reset():
+            nonlocal candidate, stable_count
+            candidate, stable_count = None, 0
+
+        def observe(frame):
+            nonlocal candidate, stable_count, frames
+            frames += 1
+            observation = self.runtime.vision_call(self.runtime.deps.vision.sky_stone_balance, frame)
+            if observation is not None:
+                stable_count = stable_count + 1 if observation.value == candidate else 1
+                candidate = observation.value
+                self.runtime.deps.logger.event(
+                    "sky_stone_observation", stage=stage, value=observation.value,
+                    confidence=f"{observation.confidence:.6f}",
+                    roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
+                    stable=stable_count)
+            else:
+                candidate, stable_count = None, 0
+            return observation
+
+        probe = RecoveryProbe(observe, reset)
         try:
             while self.runtime.active_monotonic() <= deadline:
-                frame = self.runtime.capture()
-                frames += 1
-                observation = self.runtime.vision_call(
-                    self.runtime.deps.vision.sky_stone_balance,
-                    frame,
-                )
-                if observation is not None:
-                    if observation.value == candidate:
-                        stable_count += 1
-                    else:
-                        candidate = observation.value
-                        stable_count = 1
-                    self.runtime.deps.logger.event(
-                        "sky_stone_observation",
-                        stage=stage,
-                        value=observation.value,
-                        confidence=f"{observation.confidence:.6f}",
-                        roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
-                        stable=stable_count,
-                    )
-                    if stable_count >= self.runtime.config.timing.stable_frames:
-                        outcome = "stable"
-                        return observation.value
-                else:
-                    candidate = None
-                    stable_count = 0
+                observation = probe.capture(self.runtime)
+                if self.runtime.active_monotonic() > deadline:
+                    break
+                if observation is not None and stable_count >= self.runtime.config.timing.stable_frames:
+                    outcome = "stable"
+                    return observation.value
                 self.runtime.control.checkpoint()
                 self.runtime.deps.clock.sleep(self.runtime.config.timing.poll_interval_ms / 1000)
             raise StopExecution(
@@ -408,100 +420,73 @@ class RefreshController:
         skipped: dict[tuple[str, str, str, str], tuple[int, float]] = {}
         frames = 0
         outcome = "timeout"
+
+        def reset():
+            nonlocal candidate, stable_count, top_previous_key, top_stable, top_candidate
+            candidate, stable_count = None, 0
+            top_previous_key, top_stable, top_candidate = None, 0, None
+            scene_window.reset("network_recovery")
+            self.inventory.reference = None
+
+        def observe(frame):
+            nonlocal candidate, stable_count, top_previous_key, top_stable, top_candidate, frames, next_capture_at
+            generation = self.runtime.network_recovery_generation
+            captured_at = self.runtime.deps.clock.monotonic()
+            next_capture_at = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
+            frames += 1
+            observation = self.runtime.vision_call(self.runtime.deps.vision.sky_stone_balance, frame)
+            if observation is None or observation.value == before:
+                reset()
+            else:
+                stable_count = stable_count + 1 if observation.value == candidate else 1
+                candidate = observation.value
+                self.runtime.deps.logger.event(
+                    "sky_stone_observation", stage="after_refresh", value=observation.value, expected=expected,
+                    confidence=f"{observation.confidence:.6f}",
+                    roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
+                    stable=stable_count)
+                if observation.value == expected:
+                    scene_ready = self.inventory.observe_scene(scene_window, frame, captured_at, generation, "top")
+                    if scene_window.count <= 1:
+                        top_previous_key, top_stable, top_candidate = None, 0, None
+                    top_matches = (self.inventory.detect_actionable_inventory(frame, "top", set(), skipped)
+                                   if scene_window.count else ())
+                    top_key = tuple((match.slot_id, match.target_id) for match in top_matches)
+                    if not scene_window.count:
+                        top_stable = 0
+                    else:
+                        top_stable = top_stable + 1 if top_key == top_previous_key else 1
+                        top_previous_key = top_key
+                    self.inventory.log_inventory_frame("top", top_matches, top_stable, source="after_refresh_balance")
+                    if top_stable >= self.runtime.config.timing.stable_frames and scene_ready:
+                        top_candidate = top_matches
+                        self.inventory.reference = FrameSample(frame, captured_at, generation)
+                else:
+                    top_previous_key, top_stable, top_candidate = None, 0, None
+                    scene_window.reset()
+                    self.inventory.reference = None
+            return observation
+
+        probe = RecoveryProbe(observe, reset)
         try:
             while self.runtime.active_monotonic() <= deadline:
                 sample_wait_ms += self.inventory.wait_for_sample(next_capture_at, deadline) * 1000
                 if self.runtime.active_monotonic() >= deadline:
                     break
-                generation = self.runtime.network_recovery_generation
-                frame = self.runtime.capture()
-                captured_at = self.runtime.active_monotonic()
-                next_capture_at = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
-                frames += 1
-                if generation != self.runtime.network_recovery_generation:
-                    candidate, stable_count = None, 0
-                    top_previous_key, top_stable, top_candidate = None, 0, None
-                    scene_window.reset("network_recovery")
-                    self.inventory.invalidate()
-                    self.runtime.control.checkpoint()
-                    continue
-                observation = self.runtime.vision_call(
-                    self.runtime.deps.vision.sky_stone_balance,
-                    frame,
-                )
-                if observation is None or observation.value == before:
-                    candidate = None
-                    stable_count = 0
-                    top_previous_key = None
-                    top_stable = 0
-                    top_candidate = None
-                    scene_window.reset()
-                    self.inventory.reference = None
-                else:
-                    if observation.value == candidate:
-                        stable_count += 1
-                    else:
-                        candidate = observation.value
-                        stable_count = 1
-                    self.runtime.deps.logger.event(
-                        "sky_stone_observation",
-                        stage="after_refresh",
-                        value=observation.value,
-                        expected=expected,
-                        confidence=f"{observation.confidence:.6f}",
-                        roi=f"{observation.roi.x},{observation.roi.y},{observation.roi.width},{observation.roi.height}",
-                        stable=stable_count,
-                    )
-
-                    if observation.value == expected:
-                        scene_ready = self.inventory.observe_scene(scene_window, frame, captured_at, generation, "top")
-                        if scene_window.count <= 1:
-                            top_previous_key, top_stable, top_candidate = None, 0, None
-                        top_matches = (self.inventory.detect_actionable_inventory(frame, "top", set(), skipped)
-                                       if scene_window.count else ())
-                        top_key = tuple(
-                            (match.slot_id, match.target_id)
-                            for match in top_matches
-                        )
-                        if not scene_window.count:
-                            top_stable = 0
-                        elif top_key == top_previous_key:
-                            top_stable += 1
-                        else:
-                            top_previous_key = top_key
-                            top_stable = 1
-                        self.inventory.log_inventory_frame(
-                            "top",
-                            top_matches,
-                            top_stable,
-                            source="after_refresh_balance",
-                        )
-                        if top_stable >= self.runtime.config.timing.stable_frames and scene_ready:
-                            top_candidate = top_matches
-                            self.inventory.reference = FrameSample(frame, captured_at, generation)
-                    else:
-                        top_previous_key = None
-                        top_stable = 0
-                        top_candidate = None
-                        scene_window.reset()
-                        self.inventory.reference = None
-
-                    self.runtime.control.checkpoint()
-                    if self.runtime.active_monotonic() > deadline:
-                        break
-                    if stable_count >= self.runtime.config.timing.stable_frames:
-                        if observation.value != expected:
-                            outcome = "mismatch"
-                            raise StopExecution(
-                                StopReason.REFRESH_BALANCE_MISMATCH,
-                                f"expected Sky Stone balance {expected}, observed {observation.value}",
-                            )
-                        outcome = "stable"
-                        if top_candidate is None:
-                            top_continuation_frames = self.inventory.retain_top_continuation(
-                                scene_window, top_previous_key, top_stable,
-                            )
-                        return top_candidate
+                observation = probe.capture(self.runtime)
+                self.runtime.control.checkpoint()
+                if self.runtime.active_monotonic() > deadline:
+                    break
+                if observation is not None and stable_count >= self.runtime.config.timing.stable_frames:
+                    if observation.value != expected:
+                        outcome = "mismatch"
+                        raise StopExecution(StopReason.REFRESH_BALANCE_MISMATCH,
+                                            f"expected Sky Stone balance {expected}, observed {observation.value}")
+                    outcome = "stable"
+                    if top_candidate is None:
+                        top_continuation_frames = self.inventory.retain_top_continuation(
+                            scene_window, top_previous_key, top_stable)
+                    return top_candidate
                 self.runtime.control.checkpoint()
             raise StopExecution(
                 StopReason.RECOGNITION_TIMEOUT,

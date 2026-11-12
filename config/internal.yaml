@@ -28,7 +28,7 @@ template_manifests:
 
 network:
   clear_frames: 3
-  clear_ms: 500
+  clear_ms: 300
   loading:
     templates:
       - network_loading_crystal_01

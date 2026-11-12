@@ -163,7 +163,8 @@ def test_network_recovery_resets_failed_stability(monkeypatch):
     final=session.run_chaos(1)
     assert final.stop_reason is StopReason.CHAOS_COMPLETE
     hits=[t for t,_,hit in game.failure_reads if hit]
-    assert len(hits)==5 and hits[2]-hits[1]>=10
+    assert len(hits)==6 and hits[2]-hits[1]>=10
+    assert hits[-1]-hits[2] == pytest.approx(.3)
     assert final.defeats == 1
 
 

@@ -605,7 +605,9 @@ def test_joint_reward_confirmation_restarts_after_recovery_without_recounting(af
     final, snapshots, game = run(ResultRecoveryGame(clock), 1, config=config, clock=clock)
     assert final.stop_reason == StopReason.PENGUIN_LIMIT_COMPLETE
     assert final.purchases_completed == 1
-    assert game.result_samples == (6 if after_count else 5)
+    # The 10ms test poll contributes all 31 clear-window samples; no second
+    # three-frame result/close window is captured after network recovery.
+    assert game.result_samples == (34 if after_count else 33)
     assert game.actions.count('network_retry') == game.actions.count('penguin_buy_5100') == 1
     assert game.actions.count('reward_close') == 1
     reconnect = next(i for i, snapshot in enumerate(snapshots)
@@ -678,7 +680,7 @@ def test_manual_stop_interrupts_network_recovery_before_retry_button_is_ready():
     assert clock.monotonic() < 1.1
 
 
-def test_recovery_discards_interrupted_frame_and_restarts_stability():
+def test_recovery_uses_clear_frames_without_restarting_business_stability():
     class FrameVision(PenguinGame):
         def network_connection_error(self, frame):
             return self.obs("sanctuary_entry") if frame == "error" else None
@@ -687,15 +689,17 @@ def test_recovery_discards_interrupted_frame_and_restarts_stability():
             return None
 
     deps, *_ = make_dependencies(FrameVision())
-    engine = PenguinEngine(make_config(stable_frames=3), deps, StopController(),
+    config = make_config(stable_frames=3)
+    config = replace(config, timing=replace(config.timing, poll_interval_ms=100))
+    engine = PenguinEngine(config, deps, StopController(),
                            SnapshotPublisher(RuntimeSnapshot.penguins("reconnect", 1), lambda _: None), frozenset())
     # Two stable observations before interruption cannot count toward the
     # three fresh stable observations required after recovery.
-    frames = iter(["before1", "before2", "error"] + ["cleared"] * 51 + ["after1", "after2", "after3"])
+    frames = iter(["before1", "before2", "error", "clear1", "clear2", "clear3", "clear4"])
     engine.runtime.capture_raw = lambda: next(frames)
     seen = []
     def detector(frame):
         seen.append(frame)
         return "same_state"
-    assert engine._wait("fresh", detector, timeout_ms=100) == "same_state"
-    assert seen == ["before1", "before2", "after1", "after2", "after3"]
+    assert engine._wait("fresh", detector, timeout_ms=500) == "same_state"
+    assert seen == ["before1", "before2", "clear1", "clear2", "clear3", "clear4"]

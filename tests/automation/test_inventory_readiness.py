@@ -243,6 +243,30 @@ def test_ready_refresh_result_carries_the_same_validated_frame_into_scan_and_scr
     assert flow.runtime.deps.capture.calls == calls
 
 
+@pytest.mark.parametrize('stage', ['scan', 'balance'])
+def test_network_clear_scene_frames_supply_scan_and_scroll_reference(stage):
+    vision = ScriptedVision(top=[()] * 4, bottom=[()] * 3, balances=[97] * 4)
+    config = window_config()
+    config = replace(config, timing=replace(config.timing, poll_interval_ms=100),
+                     inventory_readiness=replace(config.inventory_readiness, minimum_stable_ms=200))
+    flow, clock, _, _ = engine(vision, config)
+    vision.network_loading = lambda _: vision._observation('network_loading') if flow.runtime.capture_count == 1 else None
+    if stage == 'balance':
+        flow.state.pending_top_scan = flow.refresh.wait_for_refresh_balance(100, 97)
+        assert flow.state.pending_top_scan == ()
+    else:
+        assert flow.inventory.stable_scan('top', set()) == ()
+    assert flow.runtime.capture_count == 5 and len(vision.scan_frames) == 4
+    assert flow.runtime.active_monotonic() == pytest.approx(0)
+    assert flow.inventory.reference.captured_at == pytest.approx(.3)
+    assert flow.inventory.reference_is_valid()
+    samples = flow._scroll_to_bottom()
+    assert len(samples) == 3 and samples[-1].captured_at == pytest.approx(clock.now)
+    captures = flow.runtime.capture_count
+    assert flow.inventory.stable_scan('bottom', set(), initial_samples=samples) == ()
+    assert flow.runtime.capture_count == captures
+
+
 def test_identical_empty_inventory_keys_cannot_hide_a_changing_scene():
     vision = ScriptedVision(top=[()] * 5)
     flow, _, _, _ = engine(vision)

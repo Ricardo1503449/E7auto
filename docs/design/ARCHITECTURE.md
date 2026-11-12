@@ -186,9 +186,21 @@ color / 0.60 structure, in the configured central ROI. A reliable crystal or err
 text pauses the business clock and shows the existing RECONNECTING status. The
 read-only probe is separate from recovery so drags release before any retry click.
 Recovery requires all three signals (crystal, error text, retry text) absent on at
-least three fresh frames spanning 500ms. Crystal-only automatic clearance needs no
-dialog or retry click. All exits discard the interrupted frame; recovery state,
-input budgets and completed-wait accounting remain scoped to each runtime.
+least three fresh frames spanning 300ms. Crystal-only automatic clearance needs no
+dialog or retry click. An active business wait registers a scoped `RecoveryProbe`
+from `runtime/capture.py`; its existing detector samples those same clear frames.
+Any reappearing network signal resets both consecutive windows. The latest result
+uses the existing single-use `Confirmation` binding, so completed or partial business
+confirmation continues without replaying a frame or starting a second stable window.
+Unregistered captures still discard the interrupted frame and capture again.
+Network clearance ends the pause even if the business state is unknown; the original
+business deadline then continues. Ongoing battles require no clickable control.
+Business time is frozen during the current wait and deducted once on exit. Visual
+stability uses continuous monotonic observation time. Recovery callbacks only inspect
+frames; counters, retries and stage changes execute after recovery returns. Normal
+captures and business detector calls, input admission, click APIs, response latches
+and source-frame freshness checks retain their existing behavior. Recovery state
+and input budgets remain scoped to each runtime.
 Bootstrap also injects the network matcher's cache cleanup callback. Session
 teardown clears feature and network caches in independent guarded steps, including
 when startup or either cleanup fails, before closing capture and logging.

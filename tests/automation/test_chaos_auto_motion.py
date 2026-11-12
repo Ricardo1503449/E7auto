@@ -2,6 +2,8 @@
 import pytest
 
 from e7auto.core.domain import RuntimeSnapshot, StopReason
+from e7auto.core.observations import Observation
+from e7auto.core.types import Point, Rect
 from e7auto.features.chaos.auto_motion import AutoStateEvidence
 from e7auto.features.chaos.flow import BattleDefeated, ChaosFlow
 from e7auto.features.chaos.state import RoundState
@@ -102,11 +104,15 @@ def test_result_preempts_unknown_auto_without_click():
     assert summaries(flow)[0]['outcome'] == hit.key
 
 
-def test_network_recovery_breaks_evidence_without_replaying_auto():
+@pytest.mark.parametrize('signal', ['text', 'crystal'])
+def test_network_recovery_breaks_evidence_without_replaying_auto(signal):
     game, flow = setup_flow('static')
+    before = flow.runtime.publisher.snapshot.overlay_status
+    game.network_loading = lambda _: (Observation('network_loading', 1., Rect(0, 0, 1, 1), Point(0, 0))
+        if signal == 'crystal' and game.network_injected and game.clock.now < .5-1e-9 else None)
     def capture(g):
         if g.clock.now >= .1 and not g.network_injected:
-            g.network_remaining, g.network_injected = 1, True
+            g.network_remaining, g.network_injected = int(signal == 'text'), True
             g.auto = True
     game.on_capture = capture
     flow._ensure_auto(('levelup', 'victory'))
@@ -114,6 +120,10 @@ def test_network_recovery_breaks_evidence_without_replaying_auto():
     record, = summaries(flow)
     assert record['evidence_resets'] == 1 and record['outcome'] == 'rotating'
     assert record['elapsed_ms'] >= 100
+    assert flow.runtime.publisher.snapshot.overlay_status == before
+    if signal == 'crystal':
+        assert game.actions == [] and flow.state.auto_confirmed
+        assert flow.runtime.network_paused_seconds == pytest.approx(.7)
 
 
 def test_stop_during_static_confirmation_never_clicks():

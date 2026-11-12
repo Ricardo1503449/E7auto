@@ -1,11 +1,54 @@
 from __future__ import annotations
-from typing import TypeVar
+from typing import Callable, Generic, TypeVar
 from datetime import datetime
 import time
 from e7auto.core.domain import StopReason
 from e7auto.vision.frames import adapt_frame
 from e7auto.core.ports import CachedGameFrame, CaptureError, CaptureTiming
 from e7auto.runtime.stop_control import StopExecution
+from e7auto.runtime.confirmation import Confirmation
+
+T = TypeVar("T")
+
+
+class RecoveryProbe(Generic[T]):
+    """Sample one wait's existing detector on network-clear frames as well.
+
+    Callbacks only inspect the supplied frame and update local evidence. They
+    must not capture, send input, or advance a business stage. The last result
+    uses the existing single-use confirmation contract; no old frame is replayed.
+    """
+    def __init__(self, observe: Callable[[object], T], reset: Callable[[], None]):
+        self.observe, self._reset = observe, reset
+        self._handoff: Confirmation[tuple[T]] | None = None
+
+    def reset(self) -> None:
+        self._handoff = None
+        self._reset()
+
+    def sample(self, ctx, frame: object) -> None:
+        self._handoff = Confirmation.record(ctx, (self.observe(frame),))
+
+    def capture(self, ctx, capture: Callable[[], object] | None = None) -> T:
+        previous = getattr(ctx, "recovery_probe", None)
+        ctx.recovery_probe = self
+        self._handoff = None
+        try:
+            while True:
+                generation = ctx.network_recovery_generation
+                frame = (capture or ctx.capture)()
+                handoff, self._handoff = self._handoff, None
+                value = handoff.take(ctx) if handoff is not None else None
+                if value is not None:
+                    return value[0]
+                if handoff is not None or generation != ctx.network_recovery_generation:
+                    self.reset()
+                    continue  # Only a bound recovery handoff may replace a new capture.
+                ctx.recovery_probe = previous
+                return self.observe(frame)
+        finally:
+            self._handoff = None
+            ctx.recovery_probe = previous
 
 
 def capture_raw(ctx) -> object:
@@ -50,6 +93,8 @@ def capture(ctx) -> object:
     while True:
         generation = ctx.network_recovery_generation
         frame = ctx.capture_raw()
-        ctx.handle_network_exception(frame)
+        recovered = ctx.handle_network_exception(frame)
         if generation == ctx.network_recovery_generation:
             return frame
+        if ctx.recovery_probe is not None and recovered is not None:
+            return recovered

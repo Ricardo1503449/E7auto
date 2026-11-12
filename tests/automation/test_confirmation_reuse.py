@@ -186,18 +186,22 @@ def test_new_frame_forces_a_reused_control_to_reconfirm(config, monkeypatch):
     assert game.captures >= before+3 and game.actions == ['intro_enter']
 
 
-def test_reward_card_overlaps_result_confirmation_but_keeps_six_hundred_ms(config, monkeypatch):
+@pytest.mark.parametrize('recovery', [False, True])
+def test_reward_card_overlaps_result_confirmation_but_keeps_six_hundred_ms(config, monkeypatch, recovery):
     game, flow = prepared(config, event='event_backpack')
     original, times, clicked = game.control, [], []
     def control(frame, key, region=None):
         hit = original(frame, key, region)
-        if key == 'event_reward_close' and hit is not None: times.append(game.clock.now)
+        if key == 'event_reward_close' and hit is not None:
+            times.append(game.clock.now)
+            if recovery and len(times) == 2:
+                game.network_remaining, game.network_injected = 1, True
         return hit
     monkeypatch.setattr(game, 'control', control)
     game.on_click = lambda g, key: clicked.append(g.clock.now) if key == 'event_reward_close' else None
     flow._event()
-    assert len(times) == 7
-    assert .6-1e-9 <= clicked[0]-times[0] < .7
+    assert len(times) == (9 if recovery else 7)
+    assert .6-1e-9 <= clicked[0]-times[2 if recovery else 0] < .7
     assert game.actions.count('event_reward_close') == 1
 
 

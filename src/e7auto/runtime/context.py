@@ -34,6 +34,8 @@ class RuntimeContext(Generic[VisionT]):
         self.transform: CoordinateTransform | None = None
         self.last_captured_frame: CachedGameFrame | None = None
         self.handling_network = False
+        self.recovery_probe: capture.RecoveryProbe | None = None
+        self.network_pause_started: float | None = None
         self.network_recovery_generation = 0
         self.startup_wake_attempts = 0
         self.startup_last_wake_at: float | None = None
@@ -66,13 +68,13 @@ class RuntimeContext(Generic[VisionT]):
     def capture(self) -> object:
         return capture.capture(self)
 
-    def handle_network_exception(self, frame: object) -> None:
+    def handle_network_exception(self, frame: object) -> object | None:
         return network.handle_network_exception(self, frame)
 
     def probe_network(self, frame: object) -> NetworkObservation:
         return self.vision_call(self.deps.network.observe, frame)
 
-    def recover_network(self, detected: NetworkObservation) -> None:
+    def recover_network(self, detected: NetworkObservation) -> object | None:
         return self.deps.network.recover(self, detected)
 
     def restore_network_status(self) -> None:

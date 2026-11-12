@@ -11,6 +11,7 @@ from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
 from e7auto.runtime.confirmation import Confirmation
+from e7auto.runtime.capture import RecoveryProbe
 
 T = TypeVar("T")
 
@@ -56,15 +57,25 @@ class PenguinFlow:
         ) / 1000
         previous = None
         stable = 0
-        while self.runtime.active_monotonic() <= deadline:
-            self.runtime.control.checkpoint()
-            generation = self.runtime.network_recovery_generation
-            value = detector(self.runtime.capture())
-            if generation != self.runtime.network_recovery_generation:
-                previous, stable = None, 0
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+
+        def observe(frame):
+            nonlocal previous, stable
+            value = detector(frame)
             key = signature(value) if value is not None else None
             stable = stable + 1 if key is not None and key == previous else int(key is not None)
             previous = key
+            return value
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            self.runtime.control.checkpoint()
+            value = probe.capture(self.runtime)
+            if self.runtime.active_monotonic() > deadline:
+                break
             if value is not None and stable >= max(2, self.runtime.config.timing.stable_frames):
                 self.runtime.deps.logger.event("penguin_state_confirmed", stage=name)
                 return value
@@ -151,20 +162,28 @@ class PenguinFlow:
         runtime, vision = self.runtime, self.runtime.deps.vision
         required = max(2, runtime.config.timing.stable_frames)
         deadline = runtime.active_monotonic() + runtime.config.timing.purchase_result_timeout_ms / 1000
-        generation = runtime.network_recovery_generation
         title_stable = joint_stable = 0
         counted = False
-        while runtime.active_monotonic() <= deadline:
-            runtime.control.checkpoint()
-            frame = runtime.capture()
-            if generation != runtime.network_recovery_generation:
-                generation = runtime.network_recovery_generation
-                title_stable = joint_stable = 0
+
+        def reset():
+            nonlocal title_stable, joint_stable
+            title_stable = joint_stable = 0
+
+        def observe(frame):
+            nonlocal title_stable, joint_stable
             title = vision.control(frame, "penguin_complete")
             close = vision.control(frame, "reward_close") if title is not None else None
             runtime.control.checkpoint()
             title_stable = title_stable + 1 if title is not None else 0
             joint_stable = joint_stable + 1 if close is not None else 0
+            return close
+
+        probe = RecoveryProbe(observe, reset)
+        while runtime.active_monotonic() <= deadline:
+            runtime.control.checkpoint()
+            close = probe.capture(runtime)
+            if runtime.active_monotonic() > deadline:
+                break
             if not counted and title_stable >= required:
                 runtime.deps.logger.event("penguin_state_confirmed", stage="purchase_complete")
                 runtime.publisher.mutate(lambda snapshot: snapshot.with_penguin_purchase())

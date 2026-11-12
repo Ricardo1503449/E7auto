@@ -3,6 +3,7 @@ from typing import Callable, TypeVar
 from e7auto.core.domain import StopReason
 from e7auto.core.observations import Observation
 from e7auto.runtime.stop_control import StopExecution
+from e7auto.runtime.capture import RecoveryProbe
 
 _ENTRY_MAX_ATTEMPTS = 2
 _STARTUP_MAIN_ICON_TIMEOUT_MS = 10_000
@@ -44,11 +45,13 @@ def wait_stable_observation(
         return _wait_startup_observation(ctx, name, detector, timeout_ms, minimum_stable_frames)
     deadline = ctx.active_monotonic() + timeout_ms / 1000
     stable = 0
-    while ctx.active_monotonic() <= deadline:
-        generation = ctx.network_recovery_generation
-        frame = ctx.capture()
-        if generation != ctx.network_recovery_generation:
-            stable = 0
+
+    def reset():
+        nonlocal stable
+        stable = 0
+
+    def observe(frame):
+        nonlocal stable
         observation = ctx.vision_call(detector, frame)
         if observation is None:
             stable = 0
@@ -63,8 +66,14 @@ def wait_stable_observation(
                 roi=f"{observation.bounds.x},{observation.bounds.y},{observation.bounds.width},{observation.bounds.height}",
                 stable=stable,
             )
-            if stable >= max(minimum_stable_frames, ctx.config.timing.stable_frames):
-                return observation
+        return observation
+
+    probe = RecoveryProbe(observe, reset)
+    while ctx.active_monotonic() <= deadline:
+        observation = probe.capture(ctx)
+        if (observation is not None and stable >= max(minimum_stable_frames, ctx.config.timing.stable_frames)
+                and ctx.active_monotonic() <= deadline):
+            return observation
         ctx.control.checkpoint()
         ctx.deps.clock.sleep(ctx.config.timing.poll_interval_ms / 1000)
     raise StopExecution(StopReason.RECOGNITION_TIMEOUT, f"timeout waiting for {name}")
@@ -76,14 +85,13 @@ def _wait_startup_observation(ctx, name, detector, timeout_ms, minimum_stable_fr
     deadline = ctx.active_monotonic() + timeout_ms / 1000
     required = max(minimum_stable_frames, ctx.config.timing.stable_frames)
     stable = menu_stable = 0
-    while ctx.active_monotonic() <= deadline:
-        generation = ctx.network_recovery_generation
-        frame = ctx.capture()
-        if generation != ctx.network_recovery_generation:
-            stable = menu_stable = 0
-            ctx.control.checkpoint()
-            ctx.deps.clock.sleep(ctx.config.timing.poll_interval_ms / 1000)
-            continue
+
+    def reset():
+        nonlocal stable, menu_stable
+        stable = menu_stable = 0
+
+    def observe(frame):
+        nonlocal stable, menu_stable
         observation = ctx.vision_call(detector, frame)
         if observation is not None:
             stable += 1
@@ -91,25 +99,32 @@ def _wait_startup_observation(ctx, name, detector, timeout_ms, minimum_stable_fr
             ctx.deps.logger.event("recognition", object=name, detected=True,
                                   confidence=f"{observation.confidence:.6f}", stable=stable,
                                   roi=f"{observation.bounds.x},{observation.bounds.y},{observation.bounds.width},{observation.bounds.height}")
+            return observation, None
+        else:
+            stable = 0
+            menu = ctx.vision_call(ctx.deps.vision.navigation_menu, frame)
+            ctx.deps.logger.event("recognition", object=name, detected=False)
+            menu_stable = menu_stable + 1 if menu is not None else 0
+            return None, menu
+
+    probe = RecoveryProbe(observe, reset)
+    while ctx.active_monotonic() <= deadline:
+        observation, menu = probe.capture(ctx)
+        if observation is not None:
             ctx.control.checkpoint()
             if ctx.active_monotonic() > deadline:
                 break
             if stable >= required:
                 return observation
         else:
-            stable = 0
-            menu = ctx.vision_call(ctx.deps.vision.navigation_menu, frame)
-            ctx.deps.logger.event("recognition", object=name, detected=False)
             ctx.control.checkpoint()
             now = ctx.active_monotonic()
             if now > deadline:
                 break
             if menu is not None:
-                menu_stable += 1
                 if menu_stable >= required:
                     return _return_startup_home(ctx, name, detector, menu, required)
             else:
-                menu_stable = 0
                 due = ctx.startup_wake_attempts == 0 or (
                     ctx.startup_last_wake_at is not None and
                     now - ctx.startup_last_wake_at >= _STARTUP_WAKE_RETRY_MS / 1000)
@@ -137,13 +152,13 @@ def _return_startup_home(ctx, name, home_detector, menu, required):
         deadline = ctx.active_monotonic() + _STARTUP_RETURN_TIMEOUT_SECONDS
         home_stable = target_stable = source_stable = 0
         ctx.deps.logger.event("startup_navigation", phase=stage, attempt=attempt, status="waiting")
-        while True:
-            ctx.control.checkpoint()
-            generation = ctx.network_recovery_generation
-            frame = ctx.capture()
-            if generation != ctx.network_recovery_generation:
-                home_stable = target_stable = source_stable = 0
-                continue  # Recovery neither renews the deadline nor authorizes a click.
+
+        def reset():
+            nonlocal home_stable, target_stable, source_stable
+            home_stable = target_stable = source_stable = 0
+
+        def observe(frame):
+            nonlocal home_stable, target_stable, source_stable
             home = ctx.vision_call(home_detector, frame)
             target = source = None
             if home is not None:
@@ -162,6 +177,12 @@ def _return_startup_home(ctx, name, home_detector, menu, required):
                                        else ctx.deps.vision.navigation_tavern)
                     source = ctx.vision_call(source_detector, frame)
                     source_stable = source_stable + 1 if source is not None else 0
+            return home, target, source
+
+        probe = RecoveryProbe(observe, reset)
+        while True:
+            ctx.control.checkpoint()
+            home, target, source = probe.capture(ctx)
             ctx.control.checkpoint()
             now = ctx.active_monotonic()
             if now <= deadline and home_stable >= required:
@@ -224,15 +245,22 @@ def _reconfirm_startup_home(ctx, name, detector, required):
     """Discard pre-recovery evidence without restarting navigation or waking."""
     deadline = ctx.active_monotonic() + ctx.config.timing.entry_timeout_ms / 1000
     stable = 0
+
+    def reset():
+        nonlocal stable
+        stable = 0
+
+    def observe(frame):
+        nonlocal stable
+        home = ctx.vision_call(detector, frame)
+        stable = stable + 1 if home is not None else 0
+        return home
+
+    probe = RecoveryProbe(observe, reset)
     while ctx.active_monotonic() <= deadline:
         ctx.control.checkpoint()
-        generation = ctx.network_recovery_generation
-        frame = ctx.capture()
-        if generation != ctx.network_recovery_generation:
-            stable = 0
-        elif ctx.active_monotonic() <= deadline:
-            home = ctx.vision_call(detector, frame)
-            stable = stable + 1 if home is not None else 0
+        home = probe.capture(ctx)
+        if ctx.active_monotonic() <= deadline:
             ctx.control.checkpoint()
             if ctx.active_monotonic() <= deadline and stable >= required:
                 ctx.deps.logger.event(
@@ -264,11 +292,13 @@ def confirm_destination_or_main_after_entry_timeout(
     ) / 1000
     destination_stable = 0
     main_stable = 0
-    while ctx.active_monotonic() <= deadline:
-        generation = ctx.network_recovery_generation
-        frame = ctx.capture()
-        if generation != ctx.network_recovery_generation:
-            destination_stable = main_stable = 0
+
+    def reset():
+        nonlocal destination_stable, main_stable
+        destination_stable = main_stable = 0
+
+    def observe(frame):
+        nonlocal destination_stable, main_stable
         destination = ctx.vision_call(destination_detector, frame)
         if destination is None:
             destination_stable = 0
@@ -284,6 +314,13 @@ def confirm_destination_or_main_after_entry_timeout(
             main_stable += 1
             if main_stable >= ctx.config.timing.stable_frames:
                 return False, main
+        return None
+
+    probe = RecoveryProbe(observe, reset)
+    while ctx.active_monotonic() <= deadline:
+        result = probe.capture(ctx)
+        if result is not None and ctx.active_monotonic() <= deadline:
+            return result
         ctx.control.checkpoint()
         ctx.deps.clock.sleep(ctx.config.timing.poll_interval_ms / 1000)
     raise StopExecution(

@@ -9,6 +9,7 @@ from e7auto.features.shop.scrolling import FrameSample
 from e7auto.runtime.context import RuntimeContext
 from e7auto.runtime.action_retry import Transition, click_and_wait, observation_signature
 from e7auto.runtime.confirmation import Confirmation
+from e7auto.runtime.capture import RecoveryProbe
 from .contracts import ShopVisionPort
 from .state import ShopState
 from .readiness import SceneSampleEvidence, SceneWindow, format_row_regions, format_row_changes
@@ -72,15 +73,14 @@ class InventoryScanner:
             nonlocal previous, stable, matches, context, last_capture
             current = (self.runtime.input_generation, self.runtime.network_recovery_generation,
                        self._evidence_epoch, self.runtime.transform)
-            interrupted = context is not None and current[1] != context[1]
             if current != context or ready is None:
                 window.reset('entry_context_changed')
                 previous, stable, matches = None, 0, ()
             context = current
             last_capture = self.runtime.capture_count
-            if ready is None or interrupted:
+            if ready is None:
                 return
-            captured_at = self.runtime.active_monotonic()
+            captured_at = self.runtime.deps.clock.monotonic()
             self.observe_scene(window, frame, captured_at, current[1], 'top')
             if window.count <= 1:
                 previous, stable = None, 0
@@ -131,7 +131,7 @@ class InventoryScanner:
         )
 
     def _evidence_is_current(self, captured_at: float, generation: int, epoch: int) -> bool:
-        age_ms = (self.runtime.active_monotonic() - captured_at) * 1000
+        age_ms = (self.runtime.deps.clock.monotonic() - captured_at) * 1000
         return (epoch == self._evidence_epoch and generation == self.runtime.network_recovery_generation
                 and isfinite(age_ms) and 0 <= age_ms <= self.runtime.config.inventory_readiness.reference_max_age_ms)
 
@@ -151,7 +151,8 @@ class InventoryScanner:
     def wait_for_sample(self, next_capture_at: float | None, deadline: float) -> float:
         self.runtime.control.checkpoint()
         wait = (0.0 if next_capture_at is None else
-                max(0.0, min(next_capture_at, deadline) - self.runtime.active_monotonic()))
+                max(0.0, min(next_capture_at - self.runtime.deps.clock.monotonic(),
+                             deadline - self.runtime.active_monotonic())))
         if wait:
             self.runtime.deps.clock.sleep(wait)
         self.runtime.control.checkpoint()
@@ -205,7 +206,7 @@ class InventoryScanner:
     def reference_is_valid(self) -> bool:
         sample = self.reference
         return (sample is not None and sample.generation == self.runtime.network_recovery_generation
-                and 0 <= (self.runtime.active_monotonic() - sample.captured_at) * 1000
+                and 0 <= (self.runtime.deps.clock.monotonic() - sample.captured_at) * 1000
                 <= self.runtime.config.inventory_readiness.reference_max_age_ms)
 
     def take_scroll_reference(self) -> FrameSample:
@@ -383,6 +384,59 @@ class InventoryScanner:
             window.reset("post_purchase_scope_invalidated")
             previous_key, stable, next_capture_not_before = None, 0, None
 
+        def reset():
+            nonlocal previous_key, stable, certified_scroll, next_capture_not_before
+            cached_samples.clear()
+            certified_scroll = False
+            window.reset("network_recovery")
+            previous_key, stable, next_capture_not_before = None, 0, None
+            self.reference = None
+
+        def observe(frame, captured_at, generation, evidence=None, source=None):
+            nonlocal previous_key, stable, next_capture_not_before, scene_frames_reused, frames, certified_scroll
+            if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
+                discard_scope(reason)
+            next_capture_not_before = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
+            if evidence is not None:
+                scene_frames_reused += 1
+            slot_ids = None if scope is None else scope.slot_ids
+            scene_ready = self.observe_scene(window, frame, captured_at, generation, screen, evidence,
+                                             slot_ids=slot_ids)
+            if window.count <= 1:
+                previous_key, stable = None, 0
+            if window.count == 0:
+                self.runtime.control.checkpoint()
+                return None
+            matches = self.detect_actionable_inventory(frame, screen, completed_slot_ids, skipped, slot_ids=slot_ids)
+            frames += 1
+            key = tuple((match.slot_id, match.target_id) for match in matches)
+            stable = stable + 1 if key == previous_key else 1
+            previous_key = key
+            self.log_inventory_frame(screen, matches, stable, source=source)
+            self.runtime.control.checkpoint()
+            if self.runtime.active_monotonic() > deadline:
+                return None
+            if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
+                discard_scope(reason)
+                return None
+            if (evidence is not None
+                    and not self._evidence_is_current(initial_samples[-1].captured_at,
+                                                     initial_samples[-1].generation, scroll_epoch)):
+                cached_samples.clear()
+                window.reset("invalidated_scroll_evidence")
+                previous_key, stable = None, 0
+                certified_scroll = False
+                return None
+            return matches if stable >= self.runtime.config.timing.stable_frames and scene_ready else None
+
+        def observe_fresh(frame):
+            nonlocal fresh_frames
+            fresh_frames += 1
+            return observe(frame, self.runtime.deps.clock.monotonic(), self.runtime.network_recovery_generation,
+                           source="scroll_cache_fallback" if reuse_capture_schedule else None)
+
+        probe = RecoveryProbe(observe_fresh, reset)
+
         try:
             while self.runtime.active_monotonic() <= deadline:
                 self.runtime.control.checkpoint()
@@ -395,16 +449,11 @@ class InventoryScanner:
                     window.reset("invalidated_scroll_evidence")
                     previous_key, stable = None, 0
                     certified_scroll = False
-                evidence = None
                 if cached_samples:
                     sample = cached_samples.pop(0)
-                    frame = sample.frame
-                    captured_at = sample.captured_at
                     cached_frames_used += 1
-                    source = "scroll_settle_cache"
-                    generation = sample.generation
-                    if certified_scroll:
-                        evidence = sample.scene_evidence
+                    matches = observe(sample.frame, sample.captured_at, sample.generation,
+                                      sample.scene_evidence if certified_scroll else None, "scroll_settle_cache")
                 else:
                     waited = self.wait_for_sample(next_capture_not_before, deadline) * 1000
                     sample_wait_ms += waited
@@ -412,67 +461,18 @@ class InventoryScanner:
                         cache_wait_ms += waited
                     if self.runtime.active_monotonic() >= deadline:
                         break
-                    generation = self.runtime.network_recovery_generation
-                    frame = self.runtime.capture()
-                    captured_at = self.runtime.active_monotonic()
-                    fresh_frames += 1
-                    source = "scroll_cache_fallback" if reuse_capture_schedule else None
-                if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
-                    discard_scope(reason)
-                    continue  # Do not mix a capture interrupted by recovery with the new full window.
-                next_capture_not_before = captured_at + self.runtime.config.timing.poll_interval_ms / 1000
-                if evidence is not None:
-                    scene_frames_reused += 1
-                slot_ids = None if scope is None else scope.slot_ids
-                scene_ready = self.observe_scene(window, frame, captured_at, generation, screen, evidence,
-                                                 slot_ids=slot_ids)
-                if window.count <= 1:
-                    previous_key, stable = None, 0
-                if window.count == 0:
-                    self.runtime.control.checkpoint()
-                    continue
-                matches = self.detect_actionable_inventory(
-                    frame,
-                    screen,
-                    completed_slot_ids,
-                    skipped,
-                    slot_ids=slot_ids,
-                )
-                frames += 1
-                key = tuple((match.slot_id, match.target_id) for match in matches)
-                if key == previous_key:
-                    stable += 1
-                else:
-                    previous_key = key
-                    stable = 1
-
-                self.log_inventory_frame(screen, matches, stable, source=source)
-
-                self.runtime.control.checkpoint()
-                if self.runtime.active_monotonic() > deadline:
-                    break
-                if scope is not None and (reason := self._scope_invalid_reason(scope)) is not None:
-                    discard_scope(reason)
-                    continue
-                if (evidence is not None
-                        and not self._evidence_is_current(initial_samples[-1].captured_at,
-                                                         initial_samples[-1].generation, scroll_epoch)):
-                    cached_samples.clear()
-                    window.reset("invalidated_scroll_evidence")
-                    previous_key, stable = None, 0
-                    certified_scroll = False
-                    continue
-                if stable >= self.runtime.config.timing.stable_frames and scene_ready:
+                    matches = probe.capture(self.runtime)
+                if matches is not None and self.runtime.active_monotonic() <= deadline:
                     if reuse_capture_schedule:
                         cache_outcome = "hit" if fresh_frames == 0 else "suffix_fallback"
                         if cached_stable_suffix is None:
                             cached_stable_suffix = stable
                     outcome = "stable"
                     if screen == "top" and scope is None:
-                        self.reference = FrameSample(frame, captured_at, generation)
+                        self.reference = FrameSample(window.previous, window.previous_at, window.generation)
                     return matches
                 self.runtime.control.checkpoint()
-                if reuse_capture_schedule and not cached_samples and cached_stable_suffix is None:
+                if window.count and reuse_capture_schedule and not cached_samples and cached_stable_suffix is None:
                     cached_stable_suffix = stable
             if reuse_capture_schedule:
                 cache_outcome = "timeout"
@@ -574,7 +574,7 @@ class InventoryScanner:
                 if self.runtime.active_monotonic() >= deadline:
                     break
                 frame = self.runtime.capture()
-                captured_at = self.runtime.active_monotonic()
+                captured_at = self.runtime.deps.clock.monotonic()
                 frames += 1
                 if (reason := self._scope_invalid_reason(scope)) is not None:
                     self._log_scope_fallback(scope, reason)
@@ -700,12 +700,13 @@ class InventoryScanner:
         insufficient_stable = 0
         button_stable = 0
         joint_stable = 0
-        while self.runtime.active_monotonic() <= deadline:
-            generation = self.runtime.network_recovery_generation
-            frame = self.runtime.capture()
-            if generation != self.runtime.network_recovery_generation:
-                insufficient_stable = button_stable = joint_stable = 0
-                continue
+
+        def reset():
+            nonlocal insufficient_stable, button_stable, joint_stable
+            insufficient_stable = button_stable = joint_stable = 0
+
+        def observe(frame):
+            nonlocal insufficient_stable, button_stable, joint_stable
             outcome = self.runtime.vision_call(
                 self.runtime.deps.vision.purchase_outcome,
                 frame,
@@ -734,6 +735,13 @@ class InventoryScanner:
                 insufficient_stable=insufficient_stable,
                 button_stable=button_stable,
             )
+            return outcome
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            outcome = probe.capture(self.runtime)
+            if self.runtime.active_monotonic() > deadline:
+                break
             if outcome is PurchaseOutcome.INSUFFICIENT_FUNDS:
                 if insufficient_stable >= self.runtime.config.timing.stable_frames:
                     raise StopExecution(StopReason.PURCHASE_FUNDS_INSUFFICIENT)

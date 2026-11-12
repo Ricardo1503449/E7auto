@@ -46,6 +46,7 @@ class ScrollServices:
     logger: TextRunLogger
     scene_state: Callable[[object], str]
     recovery_generation: Callable[[], int] = lambda: 0
+    observation_monotonic: Callable[[], float] | None = None
 
 
 def scroll_to_bottom(scroll: ScrollConfig, stable_frames: int, services: ScrollServices,
@@ -53,7 +54,8 @@ def scroll_to_bottom(scroll: ScrollConfig, stable_frames: int, services: ScrollS
                      readiness: InventoryReadinessConfig) -> tuple[FrameSample, ...]:
     """One content-verification path; all work shares the original active deadline."""
     services.checkpoint()
-    age_ms = (services.active_monotonic() - reference.captured_at) * 1000
+    observed_at = services.observation_monotonic or services.active_monotonic
+    age_ms = (observed_at() - reference.captured_at) * 1000
     if (reference.generation != services.recovery_generation() or not isfinite(age_ms)
             or age_ms < 0 or age_ms > readiness.reference_max_age_ms):
         raise StopExecution(StopReason.RECOGNITION_TIMEOUT, "scroll reference is stale or invalidated")
@@ -93,13 +95,14 @@ def scroll_to_bottom(scroll: ScrollConfig, stable_frames: int, services: ScrollS
 
     while services.active_monotonic() <= deadline + 1e-9:
         services.checkpoint()
-        capture_started = services.active_monotonic()
+        capture_started = observed_at()
         current = services.capture()
         services.checkpoint()
-        captured_at = services.active_monotonic()
+        captured_at = observed_at()
+        active_at = services.active_monotonic()
         progress.samples += 1
-        progress.elapsed_ms = max(0, round((captured_at - started) * 1000))
-        elapsed.append(str(max(0, round((captured_at - started) * 1000))))
+        progress.elapsed_ms = max(0, round((active_at - started) * 1000))
+        elapsed.append(str(progress.elapsed_ms))
         if services.recovery_generation() != generation:
             raise StopExecution(StopReason.SCROLL_VERIFICATION_FAILED, "network recovery invalidated the scroll reference")
         sample = FrameSample(current, captured_at, generation)
@@ -108,7 +111,7 @@ def scroll_to_bottom(scroll: ScrollConfig, stable_frames: int, services: ScrollS
         samples.append(sample)
         samples = samples[-max(stable_frames, readiness.minimum_frames):]
         fresh = previous is None or captured_at > previous.captured_at
-        if captured_at > deadline + 1e-9:
+        if active_at > deadline + 1e-9:
             shifts.append("na"); responses.append("na"); changes.append("na")
             row_changes.append("na")
             scene_states.append("deadline")
@@ -192,7 +195,7 @@ def scroll_to_bottom(scroll: ScrollConfig, stable_frames: int, services: ScrollS
             # including the second capture's work in the sampling interval.
             next_capture_at = max(samples[0].captured_at + readiness.minimum_stable_ms / 1000,
                                   capture_started + interval)
-        wait = min(next_capture_at, deadline) - now
+        wait = min(next_capture_at - observed_at(), deadline - now)
         if wait > 0:
             services.sleep(wait)
 

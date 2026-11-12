@@ -25,6 +25,7 @@ def choose(context: EventContext, choice: Detection, *, next_page: Callable[[obj
     last_click = runtime.active_monotonic()
     generation = runtime.network_recovery_generation
     previous, stable = None, 0
+    pending_retry = None
 
     def fail(detail: str) -> None:
         raise StopExecution(reason,
@@ -32,14 +33,15 @@ def choose(context: EventContext, choice: Detection, *, next_page: Callable[[obj
                             f"{timing['event_choice_max_attempts']}; phase={name}; {detail}")
 
     def check_deadline() -> None:
-        if runtime.active_monotonic() >= deadline:
+        if not runtime.handling_network and runtime.active_monotonic() >= deadline:
             fail("timed out")
 
     context.tap(choice)
     check_deadline()
 
     def transition(frame):
-        nonlocal attempts, last_click, generation, previous, stable
+        nonlocal generation, previous, stable, pending_retry
+        pending_retry = None
         check_deadline()
         if generation != runtime.network_recovery_generation:
             generation = runtime.network_recovery_generation
@@ -64,21 +66,35 @@ def choose(context: EventContext, choice: Detection, *, next_page: Callable[[obj
         now = runtime.active_monotonic()
         if (stable >= timing["stable_frames"]
                 and now - last_click >= timing["event_choice_retry_ms"] / 1000):
+            pending_retry = current
+        return None
+
+    def retry():
+        nonlocal pending_retry, attempts, last_click, previous, stable
+        current, pending_retry = pending_retry, None
+        if current is not None:
+            check_deadline()
             if attempts >= timing["event_choice_max_attempts"]:
                 fail("same option remains visible after maximum attempts")
             runtime.deps.logger.event("chaos_event_choice_retry", choice=choice.key,
                                       stage=name, next_attempt=attempts + 1)
+            check_deadline()
             # Current pixels own the retry anchor; never replay the initial point.
             attempts += 1
-            last_click = now
+            last_click = runtime.active_monotonic()
             context.tap(current)
             previous, stable = None, 0
-        return None
 
     remaining_ms = max(1, ceil((deadline - runtime.active_monotonic()) * 1000))
+    def reset():
+        nonlocal generation, previous, stable, pending_retry
+        generation = runtime.network_recovery_generation
+        previous, stable = None, 0
+        pending_retry = None
     try:
         return context.wait(name, transition, timeout_ms=remaining_ms,
-                            reason=reason, moving_text=moving_text, alongside=alongside)
+                            reason=reason, moving_text=moving_text, alongside=alongside,
+                            reset_detector=reset, after_sample=retry)
     except StopExecution as exc:
         if exc.reason == reason and exc.detail == f"chaos timeout: {name}":
             fail("timed out")

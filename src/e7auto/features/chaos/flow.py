@@ -13,6 +13,7 @@ from e7auto.runtime.dependencies import AutomationDependencies
 from e7auto.runtime.snapshots import SnapshotPublisher
 from e7auto.runtime.action_retry import Transition, click_and_wait
 from e7auto.runtime.confirmation import Confirmation
+from e7auto.runtime.capture import RecoveryProbe
 from e7auto.runtime.stop_control import StopExecution, StopController
 from .configuration import ChaosConfig
 from .contracts import AutoState, Detection, MapView, Node, ChaosVisionPort
@@ -110,26 +111,35 @@ class ChaosFlow:
         return self._checked_frame(self.runtime.capture())
 
     def _checked_frame(self, frame):
-        frame = self.vision.prepare_frame(frame)
         if not self._battle_pending:
-            return frame
+            return self.vision.prepare_frame(frame)
         previous, stable = None, 0
-        while (hit := self.vision.control(frame, "failed")) is not None:
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+
+        def observe(current):
+            nonlocal previous, stable
+            current = self.vision.prepare_frame(current)
+            hit = self.vision.control(current, "failed")
+            signature = self._signature(hit) if hit is not None else None
+            stable = stable + 1 if signature is not None and signature == previous else int(signature is not None)
+            previous = signature
+            return current, hit
+
+        probe = RecoveryProbe(observe, reset)
+        frame, hit = observe(frame)
+        while hit is not None:
             # While FAILED is suspected, no result/auto detection may authorize input.
             if self.runtime.active_monotonic() >= self._battle_deadline:
                 raise StopExecution(StopReason.CHAOS_BATTLE_TIMEOUT)
-            signature = self._signature(hit)
-            stable = stable+1 if signature == previous else 1
-            previous = signature
             if stable >= self.settings.timing["stable_frames"]:
                 raise BattleDefeated(hit)
             self.runtime.control.checkpoint()
             self.runtime.deps.clock.sleep(min(self.settings.timing["poll_ms"]/1000,
                                              self._battle_deadline-self.runtime.active_monotonic()))
-            generation = self.runtime.network_recovery_generation
-            frame = self.vision.prepare_frame(self.runtime.capture())
-            if generation != self.runtime.network_recovery_generation:
-                previous, stable = None, 0
+            frame, hit = probe.capture(self.runtime)
         return frame
 
     def _entry_observation(self, frame, key):
@@ -164,6 +174,10 @@ class ChaosFlow:
 
     def _joint_probe(self, detector, handoff=None):
         previous, stable, generation, last = None, 0, self.runtime.network_recovery_generation, None
+        def reset():
+            nonlocal previous, stable, generation, last
+            previous, stable, last = None, 0, None
+            generation = self.runtime.network_recovery_generation
         def observe(frame, value):
             nonlocal previous, stable, generation, last
             if generation != self.runtime.network_recovery_generation:
@@ -178,20 +192,45 @@ class ChaosFlow:
                 self._remember(last)
                 if handoff is not None:
                     self._remember(last, name=handoff)
-        return observe, retain
+        return observe, retain, reset
+
+    def _recovery_frame(self, frame):
+        """Single-frame preparation only; the normal frame guard owns FAILED confirmation."""
+        frame = self.vision.prepare_frame(frame)
+        if self._battle_pending and self.vision.control(frame, "failed") is not None:
+            return None
+        return frame
 
     def _wait(self, name, detector, *, timeout_ms=None, reason=StopReason.RECOGNITION_TIMEOUT,
               moving_text=False, single_detection=False, confirmed_auto_state=False,
-              alongside=None, handoff=None):
+              alongside=None, handoff=None, reset_detector=None, after_sample=None):
         timeout_ms = timeout_ms or self.settings.timing["page_timeout_ms"]
         deadline = self.runtime.active_monotonic()+timeout_ms/1000
         previous, stable = None, 0
-        observe_joint, retain_joint = self._joint_probe(alongside, handoff)
+        observe_joint, retain_joint, reset_joint = self._joint_probe(alongside, handoff)
         card_window = None
-        while self.runtime.active_monotonic() <= deadline:
-            sampled_at = self.runtime.active_monotonic()
-            generation = self.runtime.network_recovery_generation
-            frame = self._frame()
+        sampled_recovery = False
+
+        def reset():
+            nonlocal previous, stable, sampled_recovery
+            previous, stable = None, 0
+            reset_joint()
+            if card_window is not None:
+                card_window.reset()
+            if sampled_recovery:
+                self.vision.reset_temporal()
+            sampled_recovery = False
+            if reset_detector is not None:
+                reset_detector()
+
+        def observe(frame):
+            nonlocal previous, stable, card_window, sampled_recovery
+            if self.runtime.handling_network:
+                sampled_recovery = True
+                frame = self._recovery_frame(frame)
+                if frame is None:
+                    reset()
+                    return None
             value = detector(frame)
             observe_joint(frame, value)
             if isinstance(value, Detection) and value.key == 'event_reward_close':
@@ -200,11 +239,19 @@ class ChaosFlow:
                 card_window.observe(self.runtime, frame, value)
             elif card_window is not None:
                 card_window.reset()
-            if generation != self.runtime.network_recovery_generation:
-                previous, stable = None, 0
             signature = self._signature(value) if value is not None else None
             stable = stable+1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return value
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            sampled_at = self.runtime.active_monotonic()
+            value = probe.capture(self.runtime, self._frame)
+            if self.runtime.active_monotonic() > deadline:
+                break
+            if after_sample is not None:
+                after_sample()
             text_hit = moving_text and isinstance(value, Detection) and value.key == "text_continue"
             signal_hit = single_detection and isinstance(value, Detection)
             auto_hit = confirmed_auto_state and (value is AutoState.ROTATING or value is AutoState.STATIC)
@@ -275,8 +322,22 @@ class ChaosFlow:
                 return None
             hits = self.vision.controls(frame, hit.key)
             return hits[0] if len(hits) == 1 else None
-        observe_joint, retain_joint = self._joint_probe(alongside, handoff)
+        observe_joint, retain_joint, reset_joint = self._joint_probe(alongside, handoff)
+        sampled_recovery = False
+        def reset_observation():
+            nonlocal sampled_recovery
+            reset_joint()
+            if sampled_recovery:
+                self.vision.reset_temporal()
+            sampled_recovery = False
         def observe(frame):
+            nonlocal sampled_recovery
+            if self.runtime.handling_network:
+                sampled_recovery = True
+                frame = self._recovery_frame(frame)
+                if frame is None:
+                    reset_joint()
+                    return Transition(blocked=True)
             value = detector(frame)
             observe_joint(frame, value)
             return Transition(value, responded=value is not None or bool(responded and responded(frame)))
@@ -293,7 +354,7 @@ class ChaosFlow:
             settle_ms=self.settings.timing["action_settle_ms"] if settle_ms is None else settle_ms,
             timeout_ms=timeout_ms or self.settings.timing["page_timeout_ms"],
             outer_deadline=deadline, stable_frames=self.settings.timing["stable_frames"],
-            single_success=single_success, reason=reason)
+            single_success=single_success, reason=reason, reset_observation=reset_observation)
         if isinstance(result, MapView):
             self._map_handoff = result, self.state, self.runtime.capture_count
         if single_success is None or not single_success(result):
@@ -310,6 +371,8 @@ class ChaosFlow:
             key, lambda f: self.vision.control(f, key) if guard(f) else None)
         def destination(frame):
             if watch_date and self.vision.control(frame, "date_change_title") is not None:
+                if self.runtime.handling_network:
+                    return None
                 raise DateChangePending()
             return self.vision.control(frame, next_key)
         companion = self._rank_companion if next_key == 'rank_title' else (
@@ -437,6 +500,8 @@ class ChaosFlow:
 
             def observe(frame):
                 if self.vision.control(frame, 'date_change_title') is not None:
+                    if self.runtime.handling_network:
+                        return None
                     raise DateChangePending()
                 return detector(frame)
 
@@ -462,6 +527,8 @@ class ChaosFlow:
         def confirmation(frame):
             nonlocal prompt_seen
             if self.vision.control(frame, 'date_change_title') is not None:
+                if self.runtime.handling_network:
+                    return None
                 raise DateChangePending()
             prompt = self.vision.control(frame, 'abandon_prompt')
             prompt_seen = prompt is not None
@@ -498,6 +565,8 @@ class ChaosFlow:
     def _lobby_guard(self, frame):
         # Even a suspected popup blocks the next underlying lobby input.
         if self.vision.control(frame, 'date_change_title') is not None:
+            if self.runtime.handling_network:
+                return False
             raise DateChangePending()
         return self.vision.control(frame, 'lobby_research') is not None
 
@@ -556,6 +625,7 @@ class ChaosFlow:
         generation = runtime.network_recovery_generation
         enter_seen = False
         previous, stable = None, 0
+        pending_retry = None
 
         def fail(detail):
             phase = 'enter_button' if enter_seen else 'node_selection'
@@ -565,14 +635,15 @@ class ChaosFlow:
                                 f'phase={phase}; {detail}')
 
         def check_deadline():
-            if runtime.active_monotonic() >= deadline:
+            if not runtime.handling_network and runtime.active_monotonic() >= deadline:
                 fail('timed out')
 
         self._tap(node.detection)
         check_deadline()
 
         def observe(frame):
-            nonlocal attempts, last_click, generation, enter_seen, previous, stable
+            nonlocal generation, enter_seen, previous, stable, pending_retry
+            pending_retry = None
             check_deadline()
             if generation != runtime.network_recovery_generation:
                 generation = runtime.network_recovery_generation
@@ -600,6 +671,13 @@ class ChaosFlow:
             now = runtime.active_monotonic()
             if (stable >= timing['stable_frames']
                     and now-last_click >= timing['map_node_retry_ms']/1000):
+                pending_retry = current
+            return None
+
+        def retry():
+            nonlocal pending_retry, attempts, last_click, previous, stable
+            current, pending_retry = pending_retry, None
+            if current is not None:
                 if attempts >= timing['map_node_max_attempts']:
                     fail('same selectable node remains after maximum attempts')
                 runtime.deps.logger.event('chaos_node_click_retry', node=node.kind, floor=floor,
@@ -612,10 +690,14 @@ class ChaosFlow:
                 self._tap(current)
                 previous, stable = None, 0
                 check_deadline()
-            return None
 
         try:
-            button = self._wait('node_enter', observe,
+            def reset_node():
+                nonlocal previous, stable, generation, pending_retry
+                previous, stable = None, 0
+                pending_retry = None
+                generation = runtime.network_recovery_generation
+            button = self._wait('node_enter', observe, reset_detector=reset_node, after_sample=retry,
                                 timeout_ms=max(1, ceil((deadline-runtime.active_monotonic())*1000)))
         except StopExecution as exc:
             if exc.reason == StopReason.RECOGNITION_TIMEOUT and exc.detail == 'chaos timeout: node_enter':
@@ -676,21 +758,22 @@ class ChaosFlow:
         self._wait("teacher_deployed", lambda f: self.vision.control(f, "bench_arowell") if self.vision.control(f, "bench_teacher") is None else None)
         self.state.pending_teacher = False
 
-    def _ensure_auto(self, result_names, *, result_detector=None):
+    def _ensure_auto(self, result_names, *, result_detector=None, reset_result=None):
         def observe(frame, *, rotating_only=False):
             result = (self._first(frame, result_names) if result_detector is None
                       else result_detector(frame))
             if result is not None:
                 return result
-            mode = self.vision.auto_state(frame, self.runtime.active_monotonic())
+            mode = self.vision.auto_state(frame, self.runtime.deps.clock.monotonic())
             return mode if mode == AutoState.ROTATING or (mode == AutoState.STATIC and not rotating_only) else None
         single_signal = any(key in result_names for key in ("levelup", "victory", "story_skip"))
         def wait_auto(name, detector):
             started = self.runtime.active_monotonic()
-            self.vision.begin_auto_recognition(started)
+            self.vision.begin_auto_recognition(self.runtime.deps.clock.monotonic())
             outcome = "interrupted"
             try:
-                result = self._wait(name, detector, single_detection=single_signal, confirmed_auto_state=True)
+                result = self._wait(name, detector, single_detection=single_signal, confirmed_auto_state=True,
+                                    reset_detector=reset_result)
                 outcome = result.key if isinstance(result, Detection) else result.value
                 return result
             except StopExecution as exc:
@@ -712,8 +795,23 @@ class ChaosFlow:
             # The motion recognizer still owns fixed-centre/reference confirmation.
             # Retry only a freshly confirmed STATIC state, never a missing ROTATING hit.
             static_anchor = None
+            sampled_recovery = False
+            def reset_auto():
+                nonlocal static_anchor, sampled_recovery
+                static_anchor = None
+                if sampled_recovery:
+                    self.vision.reset_temporal()
+                sampled_recovery = False
+                if reset_result is not None:
+                    reset_result()
             def auto_observation(frame):
-                nonlocal static_anchor
+                nonlocal static_anchor, sampled_recovery
+                if self.runtime.handling_network:
+                    sampled_recovery = True
+                    frame = self._recovery_frame(frame)
+                    if frame is None:
+                        static_anchor = None
+                        return Transition(blocked=True)
                 value = observe(frame)
                 static_anchor = self.vision.auto_anchor() if value is AutoState.STATIC else None
                 if value is AutoState.STATIC:
@@ -722,7 +820,7 @@ class ChaosFlow:
             def click_auto(point):
                 self.runtime.click("chaos_enable_auto", point)
                 self.vision.reset_temporal()
-                self.vision.begin_auto_recognition(self.runtime.active_monotonic())
+                self.vision.begin_auto_recognition(self.runtime.deps.clock.monotonic())
             auto_started, auto_outcome = self.runtime.active_monotonic(), "interrupted"
             try:
                 mode = click_and_wait(self.runtime, name="chaos_enable_auto", initial=anchor,
@@ -731,6 +829,7 @@ class ChaosFlow:
                                       target_signature=lambda p: (p.x//4, p.y//4), capture=self._frame,
                                       timeout_ms=self.settings.timing["page_timeout_ms"],
                                       outer_deadline=self._battle_deadline,
+                                      reset_observation=reset_auto,
                                       single_success=lambda value: value is AutoState.ROTATING or
                                       (single_signal and isinstance(value, Detection)))
                 auto_outcome = mode.key if isinstance(mode, Detection) else mode.value
@@ -773,15 +872,13 @@ class ChaosFlow:
         # The approved single-frame skip signal itself authorizes this click.
         if first.key == "story_skip":
             send(first, "opening")
-        while self.runtime.active_monotonic() < deadline - 1e-6:
-            sampled_at = self.runtime.active_monotonic()
-            generation = self.runtime.network_recovery_generation
-            frame = self._frame()
-            if generation != self.runtime.network_recovery_generation:
-                previous, stable = None, 0
-            now = self.runtime.active_monotonic()
-            if now >= deadline:
-                break
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+
+        def observe(frame):
+            nonlocal previous, stable
             prompt = self.vision.control(frame, "story_skip_prompt")
             hit, signature = None, None
             if prompt is not None:
@@ -795,16 +892,27 @@ class ChaosFlow:
             else:
                 hit = self.vision.control(frame, "story_skip")
                 if hit is not None:
-                    if phase == "observe":
-                        send(hit, "opening")
-                        continue
                     signature = self._signature(hit)
                 else:
                     result = self._first(frame, result_names)
                     if result is not None:
-                        return result  # Caller starts its original settlement delay.
+                        return prompt, hit, signature, result
             stable = stable+1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return prompt, hit, signature, None
+
+        observation = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() < deadline - 1e-6:
+            sampled_at = self.runtime.active_monotonic()
+            prompt, hit, signature, result = observation.capture(self.runtime, self._frame)
+            now = self.runtime.active_monotonic()
+            if now >= deadline:
+                break
+            if result is not None:
+                return result  # Caller starts its original settlement delay.
+            if prompt is None and phase == "observe" and hit is not None:
+                send(hit, "opening")
+                continue
             if stable >= self.settings.timing["stable_frames"]:
                 if signature == "dismissed":
                     phase, attempts, previous, stable = "observe", 0, None, 0
@@ -895,6 +1003,7 @@ class ChaosFlow:
         probes = dict.fromkeys(("levelup", "victory"), 0)
         match_seconds = dict.fromkeys(probes, 0.)
         outcome, last_phase = "interrupted", started
+        signal = None
 
         def mark(phase, **fields):
             nonlocal last_phase
@@ -908,17 +1017,21 @@ class ChaosFlow:
             last_phase = now
 
         def probe(frame):
-            nonlocal next_probe, generation, probes, match_seconds, resuming
+            nonlocal next_probe, generation, probes, match_seconds, resuming, signal
             now = runtime.active_monotonic()
-            if now >= deadline:
+            if not runtime.handling_network and now >= deadline:
                 raise StopExecution(StopReason.CHAOS_BATTLE_TIMEOUT)
             recovered = generation != runtime.network_recovery_generation
             generation = runtime.network_recovery_generation
             resuming = resuming or recovered
+            if signal is not None and signal.key not in story_names:
+                return signal  # A result trigger is followed by fresh settlement confirmation.
+            signal = None  # A story skip may authorize input, so keep its current-frame hit.
             story = self._first(frame, story_names)
             if story is not None:
-                return story
-            if recovered or now >= next_probe-1e-6:
+                signal = story
+                return signal
+            if recovered or runtime.handling_network or now >= next_probe-1e-6:
                 next_probe = now+self.settings.timing["battle_signal_poll_ms"]/1000
                 # A popup can obscure VICTORY before the next scheduled probe.
                 # Never make a transient/background banner the only entry gate.
@@ -928,18 +1041,37 @@ class ChaosFlow:
                     match_seconds[key] += perf_counter()-measured
                     probes[key] += 1
                     if hit is not None:
-                        return hit
+                        signal = hit
+                        return signal
                 # Recovery can miss VICTORY and initially return a transition
                 # frame. Only this recovery phase also accepts popup/results.
                 if resuming:
-                    return self._first(frame, resume_names)
+                    signal = self._first(frame, resume_names)
+                    return signal
             return None
+
+        def reset_signal():
+            nonlocal signal, generation, next_probe, resuming
+            signal = None
+            generation = runtime.network_recovery_generation
+            next_probe = runtime.active_monotonic()
+            resuming = True
+
+        def observe_signal(frame):
+            if runtime.handling_network:
+                frame = self._recovery_frame(frame)
+                if frame is None:
+                    reset_signal()
+                    return None
+            return probe(frame)
+
+        observation = RecoveryProbe(observe_signal, reset_signal)
 
         try:
             result = None if self.state.auto_confirmed else self._ensure_auto(
-                story_names+("levelup", "victory"), result_detector=probe)
+                story_names+("levelup", "victory"), result_detector=probe, reset_result=reset_signal)
             while result is None:
-                result = probe(self._frame())
+                result = observation.capture(runtime, self._frame)
                 if result is None:
                     pause = min(deadline, next_probe, runtime.active_monotonic()
                                 + self.settings.timing["network_poll_ms"]/1000)-runtime.active_monotonic()
@@ -976,15 +1108,19 @@ class ChaosFlow:
         final_names = tuple(key for key in result_names if key != "levelup")
         previous, stable = None, 0
         closed = seen = complete = False
-        while runtime.active_monotonic() < deadline-1e-6:
-            sampled_at = runtime.active_monotonic()
-            generation = runtime.network_recovery_generation
-            frame = self._frame()
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+
+        def observe(frame):
+            nonlocal previous, stable, seen, complete
+            if runtime.handling_network:
+                frame = self._recovery_frame(frame)
+                if frame is None:
+                    reset()
+                    return None
             now = runtime.active_monotonic()
-            if now >= deadline:
-                break
-            if generation != runtime.network_recovery_generation:
-                previous, stable = None, 0
             title = self.vision.control(frame, "levelup")
             close = self.vision.control(frame, "levelup_close")
             value, signature = None, None
@@ -1002,6 +1138,12 @@ class ChaosFlow:
                 signature = None if value is None else self._signature(value)
             stable = stable+1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return value
+
+        observation = RecoveryProbe(observe, reset)
+        while runtime.active_monotonic() < deadline-1e-6:
+            sampled_at = runtime.active_monotonic()
+            value = observation.capture(runtime, self._frame)
             if runtime.active_monotonic() >= deadline:
                 break
             if stable >= self.settings.timing["stable_frames"]:
@@ -1150,12 +1292,19 @@ class ChaosFlow:
         retry_settle_ms = self.settings.timing["action_settle_ms"] if retry_settle_ms is None else retry_settle_ms
         previous, stable = None, 0
         resume_action = False
-        while runtime.active_monotonic() < deadline-1e-6:
-            sampled_at = runtime.active_monotonic()
-            generation = runtime.network_recovery_generation
-            frame = self._frame()
-            if generation != runtime.network_recovery_generation:
-                previous, stable = None, 0
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+            self.vision.invalidate_loot_recognition()
+
+        def observe(frame):
+            nonlocal previous, stable
+            if runtime.handling_network:
+                frame = self._recovery_frame(frame)
+                if frame is None:
+                    reset()
+                    return None, name
             title = self.vision.control(frame, "levelup")
             close = self.vision.control(frame, "levelup_close")
             value, stage = None, name
@@ -1170,6 +1319,12 @@ class ChaosFlow:
             signature = (stage, self._signature(value)) if value is not None else None
             stable = stable+1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return value, stage
+
+        observation = RecoveryProbe(observe, reset)
+        while runtime.active_monotonic() < deadline-1e-6:
+            sampled_at = runtime.active_monotonic()
+            value, stage = observation.capture(runtime, self._frame)
             if runtime.active_monotonic() >= deadline:
                 break
             if stable >= self.settings.timing["stable_frames"]:
@@ -1283,7 +1438,8 @@ class ChaosFlow:
                 close = self.vision.control(frame, 'rank_close') if observed == (rank, expected) else None
                 card_window.observe(self.runtime, frame, close)
                 return observed if observed == (rank, expected) else None
-            _, after = self._wait(f"rank_result_{rank}_to_{expected}", result)
+            _, after = self._wait(f"rank_result_{rank}_to_{expected}", result,
+                                  reset_detector=card_window.reset)
             if card_window.frames:
                 self._card_handoff = Confirmation.record(self.runtime, (self.state, card_window))
         self.state.ranks[hero] = after
@@ -1306,16 +1462,17 @@ class ChaosFlow:
         result_previous = joint_previous = None
         result_stable = joint_stable = 0
         recorded = False
-        while self.runtime.active_monotonic() <= deadline:
-            sampled_at = self.runtime.active_monotonic()
-            generation = self.runtime.network_recovery_generation
-            frame = self._frame()
+
+        def reset():
+            nonlocal result_previous, joint_previous, result_stable, joint_stable
+            result_previous = joint_previous = None
+            result_stable = joint_stable = 0
+
+        def observe(frame):
+            nonlocal result_previous, joint_previous, result_stable, joint_stable
             observed = self.vision.rank_result(frame)
             valid = observed == (rank, expected)
             button = self.vision.control(frame, "rank_close") if valid else None
-            if generation != self.runtime.network_recovery_generation:
-                result_previous = joint_previous = None
-                result_stable = joint_stable = 0
             result_signature = observed if valid else None
             result_stable = (result_stable+1 if result_signature is not None and result_signature == result_previous
                              else int(result_signature is not None))
@@ -1324,6 +1481,14 @@ class ChaosFlow:
             joint_stable = (joint_stable+1 if joint_signature is not None and joint_signature == joint_previous
                             else int(joint_signature is not None))
             joint_previous = joint_signature
+            return button
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            sampled_at = self.runtime.active_monotonic()
+            button = probe.capture(self.runtime, self._frame)
+            if self.runtime.active_monotonic() > deadline:
+                break
             if not recorded and result_stable >= self.settings.timing["stable_frames"]:
                 self.state.ranks[hero] = expected
                 self.runtime.deps.logger.event("chaos_rank_changed", hero=hero, rank_before=rank,

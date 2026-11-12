@@ -86,6 +86,7 @@ class ShopFlow:
             checkpoint=self.runtime.control.checkpoint,
             sleep=self.runtime.deps.clock.sleep,
             active_monotonic=self.runtime.active_monotonic,
+            observation_monotonic=self.runtime.deps.clock.monotonic,
             measure_stability=lambda before, after: self.runtime.vision_call(
                 self.runtime.deps.vision.inventory_scroll_stability, before, after
             ),

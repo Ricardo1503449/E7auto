@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Callable
 
 from e7auto.core.domain import StopReason
 from e7auto.runtime.stop_control import StopExecution
+from e7auto.runtime.capture import RecoveryProbe
 
 if TYPE_CHECKING:
     from .context import EventContext
@@ -31,7 +32,7 @@ class CardWindow:
         key = close.key, close.bounds.x // 4, close.bounds.y // 4
         if self.card is None or key != self.key or not self.vision.event_card_stable(frame, self.card):
             self.card = self.vision.event_card_snapshot(frame)
-            self.key, self.since, self.frames = key, runtime.active_monotonic(), 1
+            self.key, self.since, self.frames = key, runtime.deps.clock.monotonic(), 1
         else:
             self.frames += 1
         self.close = close
@@ -65,20 +66,17 @@ def close_reward_cards(context: EventContext, *, count: int, close_key: str,
                             f"event reward close failed: {close_key}; page={page}/{count}; "
                             f"attempts={attempts}; phase={phase}; {detail}")
 
-    while runtime.active_monotonic() <= deadline:
-        sampled_at = runtime.active_monotonic()
-        generation = runtime.network_recovery_generation
-        frame = None if pending else context.frame()
-        now = runtime.active_monotonic()
-        if not pending and generation != runtime.network_recovery_generation:
-            # Keep submitted inputs, but rebuild stability entirely from fresh frames.
-            window.reset()
-            terminal_key, terminal_frames = None, 0
-            absent_frames = 0
-        close = window.close if pending else vision.control(frame, close_key)
-        if not pending:
+    def reset():
+        nonlocal terminal_key, terminal_frames, absent_frames
+        window.reset()
+        terminal_key, terminal_frames, absent_frames = None, 0, 0
+
+    def observe(frame, *, retained=False):
+        nonlocal terminal_key, terminal_frames, absent_frames
+        close = window.close if retained else vision.control(frame, close_key)
+        if not retained:
             window.observe(runtime, frame, close)
-        pending = False
+        key, result = None, None
         if close is None:
             absent_frames += 1
             hit = view = text = None
@@ -94,6 +92,21 @@ def close_reward_cards(context: EventContext, *, count: int, close_key: str,
                        ("map", view.floor) if view is not None and view.floor == context.floor else None)
             terminal_frames = terminal_frames + 1 if key is not None and key == terminal_key else int(key is not None)
             terminal_key = key
+            result = hit if next_page is not None else text if text is not None else view
+        else:
+            terminal_key, terminal_frames, absent_frames = None, 0, 0
+        return frame, close, key, result
+
+    probe = RecoveryProbe(observe, reset)
+    while runtime.active_monotonic() <= deadline:
+        sampled_at = runtime.active_monotonic()
+        frame, close, key, result = (observe(None, retained=True) if pending else
+                                     probe.capture(runtime, context.frame))
+        pending = False
+        now = runtime.active_monotonic()
+        if now > deadline:
+            break
+        if close is None:
             # Moving text triangles retain their single reliable hit semantics;
             # it is the close prompt's absence that must remain stable.
             finished = (key is not None and key[0] == "text" and absent_frames >= timing["stable_frames"])
@@ -102,14 +115,11 @@ def close_reward_cards(context: EventContext, *, count: int, close_key: str,
                     fail("returned before the expected next card")
                 runtime.deps.logger.event("chaos_event_close_confirmed", control=close_key,
                                           pages=count, attempts=total_attempts, outcome=key[0])
-                result = hit if next_page is not None else text if text is not None else view
                 if next_page is None:
                     context.remember_terminal(result)
                 return result
         else:
-            terminal_key, terminal_frames = None, 0
-            absent_frames = 0
-            ready = window.ready(now)
+            ready = window.ready(runtime.deps.clock.monotonic())
             click = ready and attempts == 0
             if ready and attempts:
                 if vision.event_card_changed(frame, clicked_card):

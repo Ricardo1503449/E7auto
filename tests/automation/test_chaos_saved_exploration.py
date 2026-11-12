@@ -196,14 +196,23 @@ def test_stop_and_window_guards_block_next_input(config, phase, failure):
 
 
 @pytest.mark.parametrize('phase', ['hall', 'abandon_prompt'])
-def test_date_popup_preempts_underlying_abandonment(config, phase):
+@pytest.mark.parametrize('recovery', [False, True])
+def test_date_popup_preempts_underlying_abandonment(config, phase, recovery):
     game = SavedGame(config)
     flow, _ = prepared(game)
-    game.on_capture = lambda g: setattr(g, 'state', 'date') if g.state == phase else None
+    def capture(g):
+        if g.state == phase:
+            g.state = 'date'
+            if recovery:
+                g.network_remaining = 1
+    game.on_capture = capture
+    def clicked(g, key):
+        assert not flow.runtime.handling_network
+    game.on_click = clicked
     flow._prepare_entry_lobby()
     assert flow._at_home_after_reset and game.state == 'home'
     expected = [] if phase == 'hall' else ['lobby_abandon']
-    assert game.actions == expected+['date_change_close', 'daily_signin_confirm']
+    assert game.actions == expected+(['network_retry'] if recovery else [])+['date_change_close', 'daily_signin_confirm']
 
 
 def test_confirmation_needs_three_consecutive_complete_new_frames(config, monkeypatch):

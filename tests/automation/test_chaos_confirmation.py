@@ -383,7 +383,7 @@ def test_camp_network_discards_old_joint_frames_without_repeating_progress(make_
         return original(frame)
     monkeypatch.setattr(game, 'rank_result', result)
     flow._rank_up('xiaochun')
-    assert generations == ([0, 0, 1, 1, 1] if when == 'during_result' else [0, 0, 0])
+    assert generations == ([0, 0, 1, 1, 1, 1] if when == 'during_result' else [0, 0, 0])
     assert game.actions.count('rank_confirm') == game.actions.count('rank_close') == len(events(flow, 'chaos_rank_changed')) == 1
 
 

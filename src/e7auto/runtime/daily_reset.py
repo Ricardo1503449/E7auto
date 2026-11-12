@@ -7,6 +7,7 @@ from e7auto.core.domain import StopReason
 from e7auto.core.observations import Observation
 from e7auto.runtime.stop_control import StopExecution
 from e7auto.runtime.confirmation import Confirmation
+from e7auto.runtime.capture import RecoveryProbe
 
 Detector = Callable[[object], Observation | None]
 
@@ -26,12 +27,6 @@ class DailyResetHandler:
         self.runtime, self.settings = runtime, settings
         self.observe, self.home = observe, home
 
-    def _frame(self):
-        self.runtime.control.checkpoint()
-        generation = self.runtime.network_recovery_generation
-        frame = self.runtime.capture()
-        return frame, generation != self.runtime.network_recovery_generation
-
     def _pause(self):
         self.runtime.control.checkpoint()
         self.runtime.deps.clock.sleep(self.settings.poll_ms / 1000)
@@ -48,13 +43,14 @@ class DailyResetHandler:
         first_ready = None
         previous, stable = None, 0
         joint_previous, joint_stable = None, 0
-        while self.runtime.active_monotonic() <= deadline:
-            frame, recovered = self._frame()
-            if recovered:
-                previous, stable = None, 0
-                joint_previous, joint_stable = None, 0
-                self._pause()
-                continue
+
+        def reset():
+            nonlocal previous, stable, joint_previous, joint_stable
+            previous, stable = None, 0
+            joint_previous, joint_stable = None, 0
+
+        def observe(frame):
+            nonlocal previous, stable, joint_previous, joint_stable
             date = self.observe(frame, 'date_change_title')
             close = self.observe(frame, 'date_change_close') if date is not None else None
             joint = (_signature(date), _signature(close)) if date is not None and close is not None else None
@@ -64,6 +60,14 @@ class DailyResetHandler:
             signature = ('date' if date is not None else 'ready', _signature(hit)) if hit is not None else None
             stable = stable + 1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return date, close
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            self.runtime.control.checkpoint()
+            date, close = probe.capture(self.runtime)
+            if self.runtime.active_monotonic() > deadline:
+                break
             if stable >= self.settings.stable_frames:
                 if date is not None:
                     initial = Confirmation.record(self.runtime, (date, close)) if joint_stable >= self.settings.stable_frames else None
@@ -95,12 +99,13 @@ class DailyResetHandler:
             attempts['date'] = 1
             sent_signatures['date'] = ('date', _signature(button), _signature(title))
             sent_times['date'] = self.runtime.active_monotonic()
-        while self.runtime.active_monotonic() <= deadline:
-            frame, recovered = self._frame()
-            if recovered:
-                previous, stable = None, 0
-                self._pause()
-                continue
+
+        def reset():
+            nonlocal previous, stable
+            previous, stable = None, 0
+
+        def observe(frame):
+            nonlocal previous, stable
             date = self.observe(frame, 'date_change_title')
             date_close = self.observe(frame, 'date_change_close')
             reward = self.observe(frame, 'login_reward_title')
@@ -135,6 +140,14 @@ class DailyResetHandler:
             signature = (event, _signature(hit), _signature(title)) if hit is not None else None
             stable = stable + 1 if signature is not None and signature == previous else int(signature is not None)
             previous = signature
+            return event, hit, signature
+
+        probe = RecoveryProbe(observe, reset)
+        while self.runtime.active_monotonic() <= deadline:
+            self.runtime.control.checkpoint()
+            event, hit, signature = probe.capture(self.runtime)
+            if self.runtime.active_monotonic() > deadline:
+                break
             if stable >= self.settings.stable_frames:
                 if event == 'home':
                     self.runtime.deps.logger.event('daily_reset_completed')
