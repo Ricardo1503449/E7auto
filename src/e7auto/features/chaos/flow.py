@@ -155,7 +155,9 @@ class ChaosFlow:
             return value.floor, tuple(sorted((n.kind, n.detection.bounds.x//4, n.detection.bounds.y//4) for n in value.nodes))
         if isinstance(value, tuple):
             return tuple(ChaosFlow._signature(v) for v in value)
-        return value
+        if value is None or isinstance(value, (str, int)):
+            return value
+        raise TypeError(f"unsupported chaos stability value type: {type(value).__name__}")
 
     def _remember(self, value, *, name=None):
         if name is not None:

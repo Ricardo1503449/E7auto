@@ -23,6 +23,14 @@
 
 实际按函数执行`test_penguin.py::test_recovery_uses_clear_frames_without_restarting_business_stability`及`test_all_penguin_navigation_and_altar_handoffs_use_three_frames`，两例通过。前者是调整后的既有测试，后者复用原导航与三帧交接覆盖；未新增仅检查必填参数语法的测试。
 
+## 2026-11-12 卡厄思等待结果类型约束
+
+卡厄思`ChaosFlow._signature`只接收已定义比较规则的`Detection`、`Observation`、`MapView`、递归元组、`None`、字符串（含`AutoState`）及整数（含布尔值）。未支持的结果类型直接抛出带类型名的`TypeError`，不再退回完整对象比较。新增用例从实际等待入口检查未知对象及嵌套未知对象在第一帧报错，且不发送输入。
+
+新增`test_chaos_confirmation.py::test_unknown_wait_result_fails_on_first_frame[False/True]`在加固前均因未抛出`TypeError`而失败，加固后两例通过。既有`test_chaos_confirmation.py::test_camp_rank_and_close_use_same_fresh_frames[None-size0]`及`test_chaos_auto_motion.py::test_static_three_frames_clicks_once_without_outer_wait_and_reconfirms_rotation`通过，分别覆盖阶数整数元组及`AutoState`的原稳定比较语义。
+
+本轮实际执行新增2例、既有4例，全部通过。上节大厅分数波动修复及三条返回入口的相关分支未变，复用其8例通过结果，不因接口加固重复运行。未运行完整测试文件或项目全套，未做图像矩阵、实机、构建或安装验收。
+
 ## 2026-10-31 实施范围
 
 按用户确认的方案，新接入动作至少间隔3000毫秒、含首次最多2次；总期限为原期限与6000毫秒中的较大值，并受外层期限限制。契约仍100毫秒缓冲、三选一选中仍0毫秒、通用缓冲仍300毫秒。共享模块管理重试流程，页面、身份、选中与完成条件仍由所属功能提供。

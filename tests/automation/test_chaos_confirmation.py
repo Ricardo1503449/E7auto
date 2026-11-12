@@ -1,6 +1,7 @@
 """Joint selection/action boundaries with fake services and client coordinates."""
 from collections import Counter
 from dataclasses import replace
+from types import SimpleNamespace
 
 import pytest
 
@@ -66,6 +67,19 @@ def record_input(game, monkeypatch):
         submitted.append(point);original(window, point)
     monkeypatch.setattr(game, 'click', click)
     return submitted
+
+
+@pytest.mark.parametrize('nested', [False, True])
+def test_unknown_wait_result_fails_on_first_frame(make_flow, nested):
+    game, flow, _ = make_flow()
+    unsupported = SimpleNamespace(object_id='new_state', confidence=.95)
+    value = ('new_state', (None, 1, unsupported)) if nested else unsupported
+    before = game.captures
+
+    with pytest.raises(TypeError, match='unsupported chaos stability value type: SimpleNamespace'):
+        flow._wait('new_result', lambda _: value)
+
+    assert game.captures == before + 1 and game.actions == []
 
 
 @pytest.mark.parametrize('size', [(2322, 1306), (1536, 864)])
