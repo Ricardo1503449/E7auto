@@ -701,5 +701,6 @@ def test_recovery_uses_clear_frames_without_restarting_business_stability():
     def detector(frame):
         seen.append(frame)
         return "same_state"
-    assert engine._wait("fresh", detector, timeout_ms=500) == "same_state"
+    assert engine._wait("fresh", detector, signature=lambda value: value,
+                        timeout_ms=500) == "same_state"
     assert seen == ["before1", "before2", "clear1", "clear2", "clear3", "clear4"]

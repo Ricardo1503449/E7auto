@@ -49,7 +49,7 @@ class PenguinFlow:
         self.runtime.publisher.mutate(lambda snapshot: snapshot.with_overlay_status(status))
 
     def _wait(self, name: str, detector: Callable[[object], T | None], *,
-              signature: Callable[[T], object] = lambda value: value,
+              signature: Callable[[T], object],
               timeout_ms: int | None = None,
               reason: StopReason = StopReason.RECOGNITION_TIMEOUT) -> T:
         deadline = self.runtime.active_monotonic() + (
