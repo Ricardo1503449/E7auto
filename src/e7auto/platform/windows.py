@@ -3,7 +3,9 @@ from __future__ import annotations
 import ctypes
 import os
 import time
+from contextlib import contextmanager
 from ctypes import wintypes
+from functools import lru_cache
 from pathlib import Path
 
 import win32api
@@ -12,11 +14,54 @@ import win32gui
 import win32process
 
 from e7auto.core.types import Rect, Size
-from e7auto.core.ports import DisplayGeometry, GameClient, WindowLookupError, WindowRef, WindowState
+from e7auto.core.ports import (
+    DisplayGeometry, GameClient, WindowGeometry, WindowGeometryChanged,
+    WindowLookupError, WindowRef, WindowState,
+)
 
 
 class WindowOperationError(RuntimeError):
     pass
+
+
+@lru_cache(maxsize=1)
+def _dpi_api():
+    api = ctypes.WinDLL("user32", use_last_error=True)
+    signatures = {
+        "SetThreadDpiAwarenessContext": ([wintypes.HANDLE], wintypes.HANDLE),
+        "GetThreadDpiAwarenessContext": ([], wintypes.HANDLE),
+        "GetWindowDpiAwarenessContext": ([wintypes.HWND], wintypes.HANDLE),
+        "GetAwarenessFromDpiAwarenessContext": ([wintypes.HANDLE], ctypes.c_int),
+        "GetDpiForWindow": ([wintypes.HWND], wintypes.UINT),
+    }
+    for name, (arguments, result) in signatures.items():
+        function = getattr(api, name)
+        function.argtypes, function.restype = arguments, result
+    return api
+
+
+@contextmanager
+def _physical_dpi_context():
+    api = _dpi_api()
+    previous = api.SetThreadDpiAwarenessContext(ctypes.c_void_p(-4))
+    if not previous:
+        raise WindowOperationError("cannot enter per-monitor physical-pixel DPI context")
+    failed = False
+    try:
+        awareness = api.GetAwarenessFromDpiAwarenessContext(api.GetThreadDpiAwarenessContext())
+        if awareness != 2:
+            raise WindowOperationError(f"unexpected measurement thread DPI awareness: {awareness}")
+        yield api
+    except BaseException:
+        failed = True
+        raise
+    finally:
+        try:
+            if not api.SetThreadDpiAwarenessContext(previous):
+                raise WindowOperationError("cannot restore thread DPI context")
+        except Exception:
+            if not failed:
+                raise
 
 
 def enable_per_monitor_dpi_awareness() -> None:
@@ -97,19 +142,6 @@ class Win32WindowService:
                 )
             time.sleep(self._RESTORE_POLL_SECONDS)
 
-    @staticmethod
-    def _adjusted_outer_rect(hwnd: int, size: Size) -> wintypes.RECT:
-        style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
-        ex_style = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
-        dpi = ctypes.windll.user32.GetDpiForWindow(hwnd)
-        rect = wintypes.RECT(0, 0, size.width, size.height)
-        ok = ctypes.windll.user32.AdjustWindowRectExForDpi(
-            ctypes.byref(rect), style, False, ex_style, dpi
-        )
-        if not ok:
-            raise WindowOperationError("AdjustWindowRectExForDpi failed")
-        return rect
-
     def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry:
         monitor = int(
             win32api.MonitorFromWindow(
@@ -148,57 +180,58 @@ class Win32WindowService:
                 )
         return DisplayGeometry(monitor, device, bounds, current_mode, dpi)
 
-    def fit_client_size(
-        self,
-        window: WindowRef,
-        desired: Size,
-        baseline: Size,
-        monitor_bounds: Rect,
-    ) -> Size:
-        def client_for_width(width: int) -> Size:
-            height = max(1, int(width * baseline.height / baseline.width + 0.5))
-            return Size(width, height)
-
-        if desired.width <= 0 or desired.height <= 0:
-            raise WindowOperationError("desired client dimensions must be positive")
-        outer = self._adjusted_outer_rect(window.hwnd, desired)
-        if outer.bottom - outer.top <= monitor_bounds.height:
-            return desired
-        low, high = 1, desired.width
-        best: Size | None = None
-        while low <= high:
-            middle = (low + high) // 2
-            candidate = client_for_width(middle)
-            adjusted = self._adjusted_outer_rect(window.hwnd, candidate)
-            if adjusted.bottom - adjusted.top <= monitor_bounds.height:
-                best = candidate
-                low = middle + 1
-            else:
-                high = middle - 1
-        if best is None:
-            raise WindowOperationError("no positive fixed-aspect client fits monitor height")
-        return best
-
-    def resize_client(self, window: WindowRef, size: Size, monitor_bounds: Rect) -> None:
-        rect = self._adjusted_outer_rect(window.hwnd, size)
-        current_left, current_top, _, _ = win32gui.GetWindowRect(window.hwnd)
-        outer_width = rect.right - rect.left
-        outer_height = rect.bottom - rect.top
-        if outer_width > monitor_bounds.width or outer_height > monitor_bounds.height:
-            raise WindowOperationError("complete outer window does not fit monitor")
-        left = min(max(current_left, monitor_bounds.x), monitor_bounds.right - outer_width)
-        top = min(max(current_top, monitor_bounds.y), monitor_bounds.bottom - outer_height)
-        win32gui.SetWindowPos(
-            window.hwnd,
-            None,
-            left,
-            top,
-            outer_width,
-            outer_height,
-            win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE,
+    def _geometry_sample(self, window: WindowRef, api) -> WindowGeometry:
+        state = self._inspect_physical(window)
+        if not state.exists or state.minimized:
+            raise WindowOperationError(f"game window unavailable during measurement: {state}")
+        return WindowGeometry(
+            state=state,
+            style=win32gui.GetWindowLong(window.hwnd, win32con.GWL_STYLE),
+            ex_style=win32gui.GetWindowLong(window.hwnd, win32con.GWL_EXSTYLE),
+            window_dpi=int(api.GetDpiForWindow(window.hwnd)),
+            window_dpi_awareness=int(api.GetAwarenessFromDpiAwarenessContext(
+                api.GetWindowDpiAwarenessContext(window.hwnd),
+            )),
+            thread_dpi_awareness=int(api.GetAwarenessFromDpiAwarenessContext(
+                api.GetThreadDpiAwarenessContext(),
+            )),
         )
 
+    def measure_geometry(self, window: WindowRef) -> WindowGeometry:
+        with _physical_dpi_context() as api:
+            first = self._geometry_sample(window, api)
+            second = self._geometry_sample(window, api)
+            if first.stability_key != second.stability_key:
+                raise WindowGeometryChanged(f"window changed during measurement: {first} -> {second}")
+            try:
+                second.frame_margins
+            except ValueError as exc:
+                raise WindowOperationError(str(exc)) from exc
+            if second.window_dpi <= 0 or second.window_dpi_awareness not in (0, 1, 2):
+                raise WindowOperationError(f"invalid window DPI information: {second}")
+            return second
+
+    def set_outer_rect(self, window: WindowRef, rect: Rect, monitor_bounds: Rect) -> None:
+        if (
+            min(rect.width, rect.height, monitor_bounds.width, monitor_bounds.height) <= 0
+            or rect.x < monitor_bounds.x or rect.y < monitor_bounds.y
+            or rect.right > monitor_bounds.right or rect.bottom > monitor_bounds.bottom
+        ):
+            raise WindowOperationError(f"complete outer window does not fit monitor: {rect}")
+        with _physical_dpi_context():
+            state = self._inspect_physical(window)
+            if not state.exists or state.minimized:
+                raise WindowOperationError(f"game window unavailable before resizing: {state}")
+            win32gui.SetWindowPos(
+                window.hwnd, None, rect.x, rect.y, rect.width, rect.height,
+                win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE,
+            )
+
     def inspect(self, window: WindowRef) -> WindowState:
+        with _physical_dpi_context():
+            return self._inspect_physical(window)
+
+    def _inspect_physical(self, window: WindowRef) -> WindowState:
         exists = bool(win32gui.IsWindow(window.hwnd))
         if not exists:
             return WindowState(False, False, False, Rect(0, 0, 0, 0))
@@ -210,7 +243,8 @@ class Win32WindowService:
             return WindowState(False, False, False, Rect(0, 0, 0, 0))
         client = win32gui.GetClientRect(window.hwnd)
         origin = win32gui.ClientToScreen(window.hwnd, (client[0], client[1]))
-        bounds = Rect(origin[0], origin[1], client[2] - client[0], client[3] - client[1])
+        end = win32gui.ClientToScreen(window.hwnd, (client[2], client[3]))
+        bounds = Rect(origin[0], origin[1], end[0] - origin[0], end[1] - origin[1])
         outer = win32gui.GetWindowRect(window.hwnd)
         return WindowState(
             True,

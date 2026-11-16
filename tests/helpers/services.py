@@ -5,7 +5,7 @@ from typing import Callable
 import numpy as np
 
 from e7auto.core.types import Point, Rect, Size
-from e7auto.core.ports import CachedGameFrame, DisplayGeometry, GameClient, WindowRef, WindowState
+from e7auto.core.ports import CachedGameFrame, DisplayGeometry, GameClient, WindowGeometry, WindowRef, WindowState
 
 
 class FakeClock:
@@ -50,7 +50,8 @@ class FakeWindowService:
         self.abnormal_state = abnormal_state or WindowState(True, False, True, Rect(101, 200, 100, 80))
         self.inspect_count = 0
         self.resize_calls: list[Size] = []
-        self.fit_calls: list[tuple[Size, Size, Rect]] = []
+        self.outer_rect_calls: list[Rect] = []
+        self.geometry_calls = 0
         self.display_inspections: list[bool] = []
         self.locate_calls = 0
         self.restore_calls = 0
@@ -86,31 +87,27 @@ class FakeWindowService:
             self.display_geometry.dpi,
         )
 
-    def fit_client_size(
-        self,
-        window: WindowRef,
-        desired: Size,
-        baseline: Size,
-        monitor_bounds: Rect,
-    ) -> Size:
+    def measure_geometry(self, window: WindowRef) -> WindowGeometry:
         assert window == self.ref
-        self.fit_calls.append((desired, baseline, monitor_bounds))
-        return desired
+        self.geometry_calls += 1
+        return WindowGeometry(self.inspect(window), 0, 0, self.display_geometry.dpi, 2, 2)
 
-    def resize_client(self, window: WindowRef, size: Size, monitor_bounds: Rect) -> None:
+    def set_outer_rect(self, window: WindowRef, rect: Rect, monitor_bounds: Rect) -> None:
+        assert window == self.ref
         assert monitor_bounds == self.display_geometry.monitor_bounds
+        margins = WindowGeometry(self.state, 0, 0, self.display_geometry.dpi, 2, 2).frame_margins
+        left, top, right, bottom = margins
+        size = Size(rect.width - left - right, rect.height - top - bottom)
         self.resize_calls.append(size)
+        self.outer_rect_calls.append(rect)
         if self.resize_succeeds:
-            monitor = self.display_geometry.monitor_bounds
-            x = min(max(100, monitor.x), monitor.right - size.width)
-            y = min(max(200, monitor.y), monitor.bottom - size.height)
-            bounds = Rect(x, y, size.width, size.height)
+            bounds = Rect(rect.x + left, rect.y + top, size.width, size.height)
             self.state = WindowState(
                 True,
                 False,
                 self.state.foreground,
                 bounds,
-                bounds,
+                rect,
             )
 
     def inspect(self, window: WindowRef) -> WindowState:

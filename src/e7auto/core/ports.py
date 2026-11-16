@@ -68,6 +68,48 @@ class WindowState:
 
 
 @dataclass(frozen=True, slots=True)
+class WindowGeometry:
+    """One measured window in physical screen pixels, including its full frame."""
+
+    state: WindowState
+    style: int
+    ex_style: int
+    window_dpi: int
+    window_dpi_awareness: int
+    thread_dpi_awareness: int
+
+    @property
+    def frame_margins(self) -> tuple[int, int, int, int]:
+        client, outer = self.state.client_bounds, self.state.outer_bounds
+        if (
+            not self.state.exists or self.state.minimized or outer is None
+            or min(client.width, client.height, outer.width, outer.height) <= 0
+        ):
+            raise ValueError(f"invalid window geometry: {self.state}")
+        margins = (
+            client.x - outer.x, client.y - outer.y,
+            outer.right - client.right, outer.bottom - client.bottom,
+        )
+        if min(margins) < 0:
+            raise ValueError(f"client lies outside complete window: {self.state}")
+        return margins
+
+    @property
+    def stability_key(self) -> tuple[object, ...]:
+        # Foreground changes do not invalidate background-window preparation.
+        return (
+            self.state.exists, self.state.minimized,
+            self.state.client_bounds, self.state.outer_bounds,
+            self.style, self.ex_style, self.window_dpi,
+            self.window_dpi_awareness, self.thread_dpi_awareness,
+        )
+
+
+class WindowGeometryChanged(RuntimeError):
+    """The window changed while sampling; discard this sample and measure again."""
+
+
+@dataclass(frozen=True, slots=True)
 class DisplayGeometry:
     monitor_id: int
     device_name: str
@@ -83,15 +125,9 @@ class WindowService(Protocol):
 
     def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry: ...
 
-    def fit_client_size(
-        self,
-        window: WindowRef,
-        desired: Size,
-        baseline: Size,
-        monitor_bounds: Rect,
-    ) -> Size: ...
+    def measure_geometry(self, window: WindowRef) -> WindowGeometry: ...
 
-    def resize_client(self, window: WindowRef, size: Size, monitor_bounds: Rect) -> None: ...
+    def set_outer_rect(self, window: WindowRef, rect: Rect, monitor_bounds: Rect) -> None: ...
 
     def inspect(self, window: WindowRef) -> WindowState: ...
 

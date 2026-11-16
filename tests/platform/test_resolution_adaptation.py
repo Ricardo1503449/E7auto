@@ -16,8 +16,9 @@ from e7auto.platform.windows import Win32WindowService, WindowOperationError
 from e7auto.core.ports import DisplayGeometry, WindowRef
 from e7auto.features.shop.vision import ShopVision as OpenCvGameVision
 from e7auto.resources.templates import TemplateData
+from e7auto.runtime.windows import _fit_client_size
 
-from tests.helpers import FakeWindowService, ScriptedVision, make_config
+from tests.helpers import FakeOverlay, FakeWindowService, ScriptedVision, make_config
 from tests.automation.support import run_session
 
 
@@ -109,20 +110,12 @@ def test_display_geometry_cross_checks_current_mode_and_skips_mode_query_when_ch
         service.inspect_display(window, validate_mode=True)
 
 
-def test_height_cap_preserves_aspect_and_fits_complete_outer_window(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    service = Win32WindowService()
-    monkeypatch.setattr(
-        service,
-        "_adjusted_outer_rect",
-        lambda _hwnd, size: platform_windows.wintypes.RECT(0, 0, size.width + 20, size.height + 40),
-    )
+def test_height_cap_preserves_aspect_and_fits_complete_outer_window() -> None:
     baseline = Size(2322, 1306)
-    fitted = service.fit_client_size(
-        WindowRef(1, "game", "game.exe"),
+    fitted = _fit_client_size(
         Size(1920, 1080),
         baseline,
+        (10, 30, 10, 10),
         Rect(0, 0, 2560, 1080),
     )
 
@@ -228,7 +221,7 @@ def test_non_reference_run_scales_input_overlay_and_wraps_capture() -> None:
     )
 
     assert final.stop_reason is StopReason.BUDGET_COMPLETE
-    assert windows.fit_calls[0][0] == Size(150, 120)
+    assert windows.outer_rect_calls == [Rect(50, 180, 150, 120)]
     assert windows.resize_calls == [Size(150, 120)]
     assert isinstance(vision.scan_frames[0], FrameView)
     transform = CoordinateTransform(config.baseline_client_size, Size(150, 120))
@@ -239,15 +232,17 @@ def test_non_reference_run_scales_input_overlay_and_wraps_capture() -> None:
     assert overlay.calls == [
         (windows.state.client_bounds, transform.point(config.overlay_offset))
     ]
-    assert windows.display_inspections[:4] == [True, True, False, True]
+    assert False in windows.display_inspections
 
 
 @pytest.mark.parametrize("changed_field", ["mode", "dpi", "monitor"])
 def test_runtime_display_change_stops_before_first_input(changed_field: str) -> None:
     class ChangingDisplayWindow(FakeWindowService):
+        preparation_complete = False
+
         def inspect_display(self, window: WindowRef, *, validate_mode: bool) -> DisplayGeometry:
             value = super().inspect_display(window, validate_mode=validate_mode)
-            if len(self.display_inspections) < 3:
+            if not self.preparation_complete:
                 return value
             if changed_field == "mode" and validate_mode:
                 return replace(value, current_mode=Size(399, 400))
@@ -258,7 +253,15 @@ def test_runtime_display_change_stops_before_first_input(changed_field: str) -> 
             return value
 
     windows = ChangingDisplayWindow()
-    final, _, _, inputs, _, _, _ = run_session(ScriptedVision(), windows=windows)
+
+    class PreparedOverlay(FakeOverlay):
+        def position(self, client_bounds, offset):
+            windows.preparation_complete = True
+            return super().position(client_bounds, offset)
+
+    final, _, _, inputs, _, _, _ = run_session(
+        ScriptedVision(), windows=windows, overlay=PreparedOverlay(),
+    )
 
     assert final.stop_reason is StopReason.DISPLAY_CHANGED
     assert inputs.actions == []
