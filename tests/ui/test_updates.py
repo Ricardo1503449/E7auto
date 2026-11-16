@@ -5,7 +5,7 @@ from PySide6.QtNetwork import QNetworkReply
 
 from e7auto import __version__
 from e7auto.ui.updates import UpdateChecker, UpdateController, release_details
-from e7auto.core.update_feed import FEED_URLS
+from e7auto.core.update_feed import FEED_URLS, decode_feed
 from tests.helpers.updates import FeedReply as FakeReply, feed, verify_test_signature
 
 LATEST_RELEASE_API = FEED_URLS[0]
@@ -379,10 +379,12 @@ def test_release_asset_is_delivered_with_notes_and_older_feed_preserves_reminder
     reply.complete()
     assert results[0][0] == ('v9.0.0', True, 'same response notes')
     assert results[0][1].sha256 == 'a' * 64
+    assert controller.offer.asset == results[0][1]
+    assert controller.offer.release == decode_feed(controller.offer.signed_feed, verify_test_signature)
     controller.checked_at -= 61
     next_reply = FakeReply(feed('v1.4.0'))
     monkeypatch.setattr(controller.checker._manager, 'get', lambda request: next_reply)
     controller.check(manual=True)
     next_reply.complete()
-    assert controller.asset is None and controller.available and controller.latest_version == 'v9.0.0'
+    assert controller.asset is None and controller.offer is None and controller.available and controller.latest_version == 'v9.0.0'
     controller.cancel()

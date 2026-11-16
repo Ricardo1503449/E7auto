@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 import re
 import subprocess
@@ -16,6 +17,8 @@ from win32com.shell import shell, shellcon
 
 from e7auto import __version__
 from e7auto.platform.installation import is_installed_build
+from e7auto.core.update_feed import MAX_FEED_BYTES, VerifiedUpdateOffer, decode_feed, load_json
+from e7auto.platform.update_signing import verify_signature
 
 PRODUCT_ID = "{438C8C44-EB0D-48EA-BA98-6B4589FE35B2}"
 UNINSTALL_KEY = rf"Software\Microsoft\Windows\CurrentVersion\Uninstall\{PRODUCT_ID}_is1"
@@ -59,9 +62,9 @@ def _job(root: Path, job_id: str) -> Path:
     return directory
 
 
-def launch_update(root: Path, installer: Path, version: str, size: int, digest: str,
-                  cancelled: Event) -> bool:
-    """Called on a COM-initialized worker; never kills the running application."""
+def verify_update_package(root: Path, installer: Path, version: str, size: int, digest: str,
+                          cancelled: Event) -> bool:
+    """Verify an owned package without starting setup; run off the GUI thread."""
     validate_installation(root)
     if not re.fullmatch(r"v\d+\.\d+\.\d+", version):
         raise ValueError("安装版本无效。")
@@ -90,6 +93,15 @@ def launch_update(root: Path, installer: Path, version: str, size: int, digest: 
                       info['FileVersionLS'] >> 16, info['FileVersionLS'] & 0xFFFF)
     if actual_version != (*map(int, version[1:].split('.')), 0):
         raise ValueError("安装包内的版本与发布版本不一致，请重新检查更新。")
+    return not cancelled.is_set()
+
+
+def launch_update(root: Path, installer: Path, version: str, size: int, digest: str,
+                  cancelled: Event) -> bool:
+    """Called on a worker; never kills the running application."""
+    if not verify_update_package(root, installer, version, size, digest, cancelled):
+        return False
+    directory = _job(root, installer.parent.name)
     if cancelled.is_set():
         return False
     arguments = ['/SP-', '/SILENT', '/NORESTART', '/NOCLOSEAPPLICATIONS', '/NORESTARTAPPLICATIONS',
@@ -112,6 +124,90 @@ def launch_update(root: Path, installer: Path, version: str, size: int, digest: 
         return True
     finally:
         pythoncom.CoUninitialize()
+
+
+@dataclass(frozen=True)
+class PreparedUpdate:
+    offer: VerifiedUpdateOffer
+    path: Path
+
+
+def _ready_pointer(root: Path) -> Path:
+    path = root / 'state' / 'updates' / 'ready.json'
+    ordinary_path(path)
+    return path
+
+
+def _read_small_json(path: Path):
+    ordinary_path(path)
+    with path.open('rb') as stream:
+        data = stream.read(4097)
+    if len(data) > 4096:
+        raise ValueError('更新缓存记录过大。')
+    return load_json(data)
+
+
+def forget_prepared_update(root: Path, job_id: str | None = None) -> None:
+    """Invalidate only the selected pointer; never scan historical jobs."""
+    pointer = _ready_pointer(root)
+    if not pointer.exists():
+        return
+    value = _read_small_json(pointer) if job_id is not None else None
+    if job_id is None or isinstance(value, dict) and value.get('job_id') == job_id:
+        validate_installation(root)
+        pointer.unlink(missing_ok=True)
+
+
+def store_prepared_update(root: Path, offer: VerifiedUpdateOffer, installer: Path,
+                          cancelled: Event) -> PreparedUpdate | None:
+    release = decode_feed(offer.signed_feed, verify_signature)
+    if release != offer.release:
+        raise ValueError('安装包与签名清单不一致。')
+    asset = release.asset
+    if not verify_update_package(root, installer, asset.version, asset.size, asset.sha256, cancelled):
+        return None
+    feed_path = installer.parent / 'feed.json'
+    ordinary_path(feed_path)
+    feed_path.write_bytes(offer.signed_feed)
+    pointer = _ready_pointer(root)
+    temporary = pointer.with_suffix('.json.tmp')
+    ordinary_path(temporary)
+    if cancelled.is_set():
+        return None
+    try:
+        temporary.write_text(json.dumps({'schema_version': 1, 'job_id': installer.parent.name}), encoding='utf-8')
+        if cancelled.is_set():
+            return None
+        temporary.replace(pointer)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return PreparedUpdate(offer, installer)
+
+
+def load_prepared_update(root: Path, cancelled: Event) -> PreparedUpdate | None:
+    validate_installation(root)
+    pointer = _ready_pointer(root)
+    if not pointer.exists():
+        return None
+    value = _read_small_json(pointer)
+    if (not isinstance(value, dict) or set(value) != {'schema_version', 'job_id'}
+            or type(value['schema_version']) is not int or value['schema_version'] != 1
+            or not isinstance(value['job_id'], str)):
+        raise ValueError('待安装更新记录无效。')
+    directory = _job(root, value['job_id'])
+    feed_path = directory / 'feed.json'
+    ordinary_path(feed_path)
+    with feed_path.open('rb') as stream:
+        signed_feed = stream.read(MAX_FEED_BYTES + 1)
+    release = decode_feed(signed_feed, verify_signature)
+    asset = release.asset
+    request = _read_small_json(directory / 'request.json')
+    if request != {'version': asset.version, 'name': asset.name, 'size': asset.size, 'sha256': asset.sha256}:
+        raise ValueError('更新请求记录与签名清单不一致。')
+    installer = directory / asset.name
+    if not verify_update_package(root, installer, asset.version, asset.size, asset.sha256, cancelled):
+        return None
+    return PreparedUpdate(VerifiedUpdateOffer(release, signed_feed), installer)
 
 
 def cleanup_applied_update(root: Path, job_id: str) -> None:
@@ -142,4 +238,5 @@ def cleanup_applied_update(root: Path, job_id: str) -> None:
                 if attempt == 19:
                     raise
                 time.sleep(0.25)
+        forget_prepared_update(root, job_id)
     # request.json and install.log remain as small, per-update diagnostic records.

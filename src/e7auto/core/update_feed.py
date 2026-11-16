@@ -35,6 +35,16 @@ class UpdateRelease:
     published_at: str
 
 
+@dataclass(frozen=True)
+class VerifiedUpdateOffer:
+    release: UpdateRelease
+    signed_feed: bytes
+
+    @property
+    def asset(self) -> ReleaseAsset:
+        return self.release.asset
+
+
 def version_parts(tag: str) -> tuple[int, int, int]:
     match = re.fullmatch(r'v?(\d+)\.(\d+)\.(\d+)', tag) if isinstance(tag, str) else None
     if match is None:

@@ -151,8 +151,15 @@ UpdateInstaller downloads the same immutable ReleaseAsset through the accelerato
 file URL in order. Each source is tried at most once, with clean partial bytes/hash/progress,
 restricted HTTPS redirects and the existing transfer/total deadlines. Network, HTTP and integrity
 failures permit fallback; disk errors, cancellation and overall timeout stop the operation.
-The same size/digest/PE-version/installation checks still guard the Windows handoff. Only an
-explicit user action downloads and installs. See [delivery protocol](../development/UPDATE_DELIVERY.md).
+The same size/digest/PE-version/installation checks still guard the Windows handoff. An opt-in
+BackgroundUpdates coordinator prepares packages after the first 60 seconds without occupying
+the automation guard. Prepared updates retain the exact signed feed, recover off-thread from
+one scoped disk pointer, and require explicit installation. Manual updates can adopt an in-flight
+download. Foreground update intent, including a queued request behind cache-worker teardown,
+blocks new automation immediately; transfer and verification alone do not. The embedded ready
+card waits for idle, visible, dialog-free UI and remembers Later per version. Settings retains a
+manual cached-package entry even when auto download or the prompt is dismissed. See
+[delivery protocol](../development/UPDATE_DELIVERY.md).
 
 The existing installer owns replacement and user-data preservation. Its explicit update mode
 waits at most 60 seconds for the running mutex without terminating a process, then follows

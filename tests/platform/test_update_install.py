@@ -74,6 +74,8 @@ def test_success_cleanup_removes_only_matching_package_and_retains_records(packa
     monkeypatch.setattr(update_install, '__version__', '9.0.0' if changed != 'version' else '8.0.0')
     unrelated = path.parent / 'user-file.txt'
     unrelated.write_text('keep', encoding='utf-8')
+    pointer = root / 'state/updates/ready.json'
+    pointer.write_text(json.dumps({'schema_version': 1, 'job_id': path.parent.name}), encoding='utf-8')
     metadata = path.parent / 'request.json'
     data = json.loads(metadata.read_text(encoding='utf-8'))
     if changed == 'digest': data['sha256'] = '0' * 64
@@ -81,6 +83,7 @@ def test_success_cleanup_removes_only_matching_package_and_retains_records(packa
     metadata.write_text(json.dumps(data), encoding='utf-8')
     update_install.cleanup_applied_update(root, path.parent.name)
     assert path.exists() is (changed is not None)
+    assert pointer.exists() is (changed is not None)
     assert unrelated.read_text(encoding='utf-8') == 'keep'
     assert (path.parent / 'install.log').is_file() and metadata.is_file()
 
@@ -91,6 +94,16 @@ def test_cleanup_rejects_non_job_paths(package, job):
     with pytest.raises(ValueError):
         update_install.cleanup_applied_update(root, job)
     assert path.exists()
+
+
+def test_cleanup_preserves_a_different_pending_update_pointer(package, monkeypatch):
+    root, path, _, _ = package
+    monkeypatch.setattr(update_install, '__version__', '9.0.0')
+    pointer = root / 'state/updates/ready.json'
+    data = {'schema_version': 1, 'job_id': 'v10.0.0-' + 'b' * 32}
+    pointer.write_text(json.dumps(data), encoding='utf-8')
+    update_install.cleanup_applied_update(root, path.parent.name)
+    assert not path.exists() and json.loads(pointer.read_text(encoding='utf-8')) == data
 
 
 def test_launch_cancelled_by_windows_preserves_package_and_balances_com(package, monkeypatch):

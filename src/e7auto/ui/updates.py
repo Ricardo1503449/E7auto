@@ -14,7 +14,7 @@ from tempfile import NamedTemporaryFile
 from PySide6.QtCore import QObject, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from e7auto.core.update_feed import (FEED_URLS, MAX_FEED_BYTES, PROJECT_URL, ReleaseAsset,
+from e7auto.core.update_feed import (FEED_URLS, MAX_FEED_BYTES, PROJECT_URL, ReleaseAsset, VerifiedUpdateOffer,
                                    decode_feed, version_parts)
 from e7auto.platform.update_signing import verify_signature
 from e7auto.configuration.models import LoggingConfig
@@ -79,6 +79,7 @@ class UpdateChecker(QObject):
         self.source_cooldowns = {}
         self.retry_not_before = 0.0
         self.asset = None
+        self.offer = None
         self.diagnostic = lambda event, **fields: None
         self._timeout = QTimer(self)
         self._timeout.setSingleShot(True)
@@ -91,6 +92,7 @@ class UpdateChecker(QObject):
         self._active = True
         self._valid = []
         self.asset = None
+        self.offer = None
         now = time.time()
         self.retry_not_before = 0.0
         for source in self.SOURCE_URLS:
@@ -174,8 +176,9 @@ class UpdateChecker(QObject):
                 return
             if status != 200 or reply.error() != QNetworkReply.NetworkError.NoError:
                 raise ValueError(f'HTTP {status}')
-            release = decode_feed(bytes(self._buffers[source]), verify_signature)
-            self._valid.append((source, release))
+            signed_feed = bytes(self._buffers[source])
+            release = decode_feed(signed_feed, verify_signature)
+            self._valid.append((source, release, signed_feed))
             self.source_cooldowns.pop(source, None)
             self.cooldowns_changed.emit()
         except (ValueError, TypeError, UnicodeError, OverflowError) as exc:
@@ -196,14 +199,15 @@ class UpdateChecker(QObject):
         if not self._valid:
             self.failed.emit('检查失败，请检查网络后重试，或打开 GitHub 项目查看发布页面。')
             return
-        candidates = [release for source, release in self._valid]
+        candidates = [release for source, release, data in self._valid]
         if any(a.version == b.version and a.asset != b.asset for a in candidates for b in candidates):
             self.failed.emit('更新来源提供的同版本安装包信息不一致，已停止更新，请稍后重试。')
             return
-        _, release = max(self._valid, key=lambda item: (version_parts(item[1].version),
+        _, release, signed_feed = max(self._valid, key=lambda item: (version_parts(item[1].version),
                                                         item[0] == self.SOURCE_URLS[-1]))
         available = version_parts(release.version) > version_parts(__version__)
         self.asset = release.asset if available else None
+        self.offer = VerifiedUpdateOffer(release, signed_feed) if available else None
         self.completed.emit(release.version, available, release.notes)
 
     def _abort(self):
@@ -253,6 +257,8 @@ class UpdateController(QObject):
     completed = Signal(str, bool, str)
     failed = Signal(str)
     availability_changed = Signal(bool)
+    offer_changed = Signal(object)
+    check_failed = Signal(str)
     _CHECK_INTERVAL = 6 * 60 * 60
     _RETRY_DELAYS = (1800, 3600, 7200, 14400, 21600)
 
@@ -260,6 +266,7 @@ class UpdateController(QObject):
         super().__init__(parent)
         self._cache_path, self._clock = cache_path, clock
         self.latest_version, self.notes, self.asset = None, '', None
+        self.offer = None
         self.checked_at = self.next_check_at = self.retry_not_before = 0.0
         self._failure_count = 0
         self._checking = self._manual = self._started = self._closed = False
@@ -322,6 +329,29 @@ class UpdateController(QObject):
         self.log_event('update_check_started', manual=manual)
         self.checker.check()
 
+    def ensure_offer(self):
+        """Confirm an executable offer; persisted reminders cannot supply one."""
+        if self._closed or self._checking or self._fresh_result:
+            return
+        if self._failure_count and self._clock() < self.next_check_at:
+            return
+        self.check()
+
+    def remember_prepared(self, offer):
+        """A reverified signed disk package can raise the confirmed version floor."""
+        if self.latest_version and version_parts(offer.asset.version) < version_parts(self.latest_version):
+            return False
+        if self.offer is not None:
+            if self.offer.asset == offer.asset:
+                return True
+            if self.offer.asset.version == offer.asset.version:
+                return False
+        self.latest_version, self.notes = offer.asset.version, offer.release.notes
+        self.asset, self.offer = offer.asset, offer
+        self._save_cache()
+        self.availability_changed.emit(self.available)
+        return True
+
     def _check_automatically(self):
         if not self._closed:
             if self._clock() < max(self.next_check_at, self.retry_not_before):
@@ -344,6 +374,7 @@ class UpdateController(QObject):
         self._checking = self._manual = False
         self.latest_version, self.notes = version, notes
         self.asset = self.checker.asset if self.checker.asset is not None and self.checker.asset.version == version else None
+        self.offer = self.checker.offer if self.checker.offer is not None and self.checker.offer.asset == self.asset else None
         self.checked_at = self._clock()
         self.next_check_at = self.checked_at + self._CHECK_INTERVAL
         self.retry_not_before = 0.0
@@ -352,6 +383,7 @@ class UpdateController(QObject):
         self._save_cache()
         self._schedule()
         self.availability_changed.emit(self.available)
+        self.offer_changed.emit(self.offer)
         if manual:
             self.completed.emit(version, self.available, notes)
 
@@ -361,12 +393,14 @@ class UpdateController(QObject):
         now, manual = self._clock(), self._manual
         self._checking = self._manual = self._fresh_result = False
         self.asset = None
+        self.offer = None
         delay = self._RETRY_DELAYS[min(self._failure_count, len(self._RETRY_DELAYS) - 1)]
         self._failure_count = min(self._failure_count + 1, len(self._RETRY_DELAYS))
         self.retry_not_before = self.checker.retry_not_before
         self.next_check_at = max(now + delay, self.retry_not_before)
         self._save_cache()
         self._schedule()
+        self.check_failed.emit(message)
         if manual:
             self.failed.emit(self._rate_limit_message(now, cached=False) if self.retry_not_before > now else message)
 

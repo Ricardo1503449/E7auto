@@ -85,3 +85,78 @@ results/download-probe.json；下载文件以.bin保留在本任务scratch中，
 最终28个文件中的18个Python文件通过AST检查；Git差异空白、工作区布局、源码
 依赖及Markdown本地链接检查通过，暂存区为空。收尾Git远端读取遇到TLS握手失败，
 随后通过官方GitHub API只读确认updates分支不存在；没有远端写入。
+
+## 2026-11-16 后台自动下载实现与离线验证
+
+新增默认关闭的“自动下载更新”，不显示常驻说明或悬浮提示。后台准备与明确授权的
+安装交接分开；运行期间允许下载，准备及运行线程完全退出后才显示内容区提示卡。
+完整包保留原始签名清单及唯一任务指针，跨重启重新验签和核验后提供离线安装入口。
+本版本的“稍后”跨重启记忆，保留红点及设置安装入口。手动更新仍一次点击完成。
+
+最终用例清单去重：新增33个用例（UI文件32个、平台清理边界1个），既有23个测试函数
+的53个参数用例，共86个不同用例通过。多轮仅按具体函数/参数运行，未运行完整套件；
+复跑限于新修改或此前失败所涉及的用例。新增UI文件仅首次集中执行，之后按函数选择。
+
+新增覆盖：启动延迟、开关写入失败及其他偏好保留；后台准备不安装、运行期间可启动任务；
+线程原生退出后才提示、键盘确认、小/正常窗口布局及无悬浮提示；缓存离线恢复、签名重验、
+请求/摘要/大小/路径/PE/已安装版本/部分文件异常拒绝；稍后按版本记忆及关闭开关保留包；
+手动接管、UAC失败复用、核验期间排队立即阻止新任务、关闭等待缓存线程；新目标切换、
+已核验高版本不被旧来源覆盖、目标变化后重新确认、取消与迟到回调、限定任务清理。
+
+既有实际选择范围：
+
+- `tests/ui/test_updates.py`：`test_automatic_check_is_silent_and_manual_request_joins_it`、
+  `test_failure_preserves_confirmed_result_and_only_manual_check_reports_it`、
+  `test_fresh_cache_is_reused_then_checked_at_six_hours`、
+  `test_backoff_survives_restart_caps_at_six_hours_and_resets_after_success`、
+  `test_release_asset_is_delivered_with_notes_and_older_feed_preserves_reminder`。
+- `tests/ui/test_update_sources.py`：`test_parallel_sources_choose_verified_version_and_emit_once`、
+  `test_download_failover_restarts_bytes_and_keeps_the_same_asset`、
+  `test_failover_is_bounded_and_cancel_never_installs`。
+- `tests/ui/test_update_install.py`：`test_verified_native_reply_download_hands_off_exact_file_once`、
+  `test_failed_or_cancelled_download_never_installs_and_discards_partial`、
+  `test_cancelled_uac_keeps_verified_package_and_retry_does_not_download_again`、
+  `test_changed_verified_package_is_not_reused_forever`、
+  `test_dialog_download_progress_escape_cancellation_and_run_guard`、
+  `test_ui_failed_download_keeps_notes_and_reenables_retry`、
+  `test_successful_installer_launch_closes_application_only_after_handoff`、
+  `test_real_loopback_http_stream_reaches_verified_handoff`、
+  `test_window_close_waits_for_installer_thread_and_does_not_kill_it`、
+  `test_update_ui_objects_are_released_with_window`、
+  `test_update_progress_and_buttons_fit_small_and_normal_window`。
+- `tests/platform/test_update_install.py`：`test_launch_verifies_file_and_passes_quoted_update_only_arguments`、
+  `test_bad_package_or_cancellation_never_invokes_windows`、
+  `test_success_cleanup_removes_only_matching_package_and_retains_records`、
+  `test_installer_embedded_version_must_match_release_metadata`。
+
+既有清单凭据和成功清理函数补充断言，其余既有用例直接复用。新增用例使用合成签名、
+隔离安装身份与PE版本边界，并拦截安装交接；文件、下载、包核验和状态流程使用生产函数。
+原验签算法及信任锚点未变化，不重跑此前未受影响的原生验签或Qt/WGC回归。
+
+首轮新增用例有17个等待超时、3个通过。检查确认包核验线程已正常工作，但测试的Qt等待
+没有充分释放Python执行时间；仅在新增测试的等待适配中增加让出执行时间，未放宽生产
+核验或超时。定向复测通过。之后新加入的竞争/取消用例分别运行；没有将首轮超时计为通过。
+
+源码AST、差异空白及工作区布局检查通过。布局检查沿用已批准的只读权限读取既有冻结归档，
+没有改动归档或权限。未构建、运行真实安装器、创建测试安装、操作游戏、提交、推送或发布；
+版本仍为1.5.6。安装版完整后台下载—重启恢复—确认升级—成功清理链路尚未实测，不用离线
+结果替代。原窗口尺寸与悬浮窗中心改动、pip.ini及其他本地产物保留。
+
+本次后台更新共18个文件，建议作为窗口尺寸修复、悬浮窗中心定位之后的独立逻辑提交；
+共享BEHAVIOR.md按对应段落拆分，不包含此前任务的其他改动：
+
+- 核心与平台：[update_feed.py](../../../src/e7auto/core/update_feed.py)、
+  [update_install.py](../../../src/e7auto/platform/update_install.py)。
+- 更新调度及下载：[updates.py](../../../src/e7auto/ui/updates.py)、
+  [update_install.py](../../../src/e7auto/ui/update_install.py)、
+  [auto_updates.py](../../../src/e7auto/ui/auto_updates.py)、
+  [preferences.py](../../../src/e7auto/ui/preferences.py)。
+- 界面接入：[main_window.py](../../../src/e7auto/ui/main_window.py)、
+  [application.py](../../../src/e7auto/ui/pages/application.py)、
+  [styles.py](../../../src/e7auto/ui/styles.py)。
+- 测试：[test_auto_updates.py](../../../tests/ui/test_auto_updates.py)、
+  [test_updates.py](../../../tests/ui/test_updates.py)、
+  [test_update_install.py](../../../tests/platform/test_update_install.py)。
+- 说明：[ARCHITECTURE.md](../../design/ARCHITECTURE.md)、[BEHAVIOR.md](../../design/BEHAVIOR.md)、
+  [INSTALLER.md](../../development/INSTALLER.md)、[UPDATE_DELIVERY.md](../../development/UPDATE_DELIVERY.md)、
+  [使用说明.md](../../user/使用说明.md)，及本验证记录。

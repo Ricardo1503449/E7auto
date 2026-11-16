@@ -37,6 +37,28 @@ class NotificationPreferences:
         _write_preferences(self._path, values)
 
 
+class UpdatePreferences(NotificationPreferences):
+    """Device-local background download and per-version prompt choices."""
+
+    def load(self) -> bool:
+        value = self._read().get("auto_download_updates", False)
+        return value if isinstance(value, bool) else False
+
+    def save(self, enabled: bool) -> None:
+        values = self._read()
+        values["auto_download_updates"] = enabled
+        _write_preferences(self._path, values)
+
+    def dismissed_version(self) -> str | None:
+        value = self._read().get("update_prompt_dismissed_version")
+        return value if isinstance(value, str) else None
+
+    def dismiss(self, version: str) -> None:
+        values = self._read()
+        values["update_prompt_dismissed_version"] = version
+        _write_preferences(self._path, values)
+
+
 class ShopStatisticsPreferences(NotificationPreferences):
     """Migrate the legacy switch and retain cancellation without changing other preferences."""
     def load(self) -> bool:

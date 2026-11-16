@@ -22,6 +22,7 @@ from e7auto.ui.worker import AutomationWorker
 from e7auto.ui.notifications import RunEndNotifier
 from e7auto.ui.updates import UpdateController
 from e7auto.ui.update_install import UpdateInstaller
+from e7auto.ui.auto_updates import BackgroundUpdates, UpdateReadyCard
 from e7auto.ui.shop_reporting import ShopReportingController
 from e7auto.ui.announcements import AnnouncementController
 from e7auto.ui.widgets import AppDialogHost
@@ -99,19 +100,21 @@ class MainWindow(QMainWindow):
         self._about_page = _AboutPage(project_root)
         self._update_controller = UpdateController(project_root / "state" / "update_status.json", self)
         self._update_installer = UpdateInstaller(project_root, self, diagnostic=self._update_controller.log_event)
+        self._background_updates = BackgroundUpdates(project_root / 'state' / 'ui_preferences.json',
+                                                     self._update_controller, self._update_installer, self)
         self._reporting_controller = ShopReportingController(project_root, self, report_usage=report_usage)
         self._reporting_controller.finished.connect(self._finish_deferred_close)
         settings_navigation = self._sidebar.buttons["settings"]
         settings_navigation.set_update_available(self._update_controller.available)
-        self._update_controller.availability_changed.connect(settings_navigation.set_update_available)
-        self._settings_page = _SettingsPage(project_root, self._update_controller)
+        self._update_controller.availability_changed.connect(self._sync_update_ui)
+        self._settings_page = _SettingsPage(project_root, self._update_controller, self._background_updates)
         self._settings_page.update_requested.connect(self._start_update)
-        self._settings_page.update_cancelled.connect(self._update_installer.cancel)
-        self._update_installer.progress.connect(self._settings_page.show_download_progress)
-        self._update_installer.status.connect(self._settings_page.show_install_status)
+        self._settings_page.update_cancelled.connect(self._cancel_manual_update)
+        self._update_installer.progress.connect(self._update_progress)
+        self._update_installer.status.connect(self._update_status)
         self._update_installer.failed.connect(self._settings_page.show_install_error)
-        self._update_installer.busy_changed.connect(self._settings_page.set_install_busy)
-        self._update_installer.busy_changed.connect(self._on_update_busy_changed)
+        self._update_installer.blocking_changed.connect(self._settings_page.set_install_busy)
+        self._update_installer.blocking_changed.connect(self._on_update_busy_changed)
         self._update_installer.launching_changed.connect(self._settings_page.set_install_launching)
         self._update_installer.install_started.connect(self._close_for_update)
         self._update_installer.finished.connect(self._finish_deferred_close)
@@ -134,6 +137,10 @@ class MainWindow(QMainWindow):
         body.installEventFilter(self)
         self._dialog_host = AppDialogHost(self, body)
         self._dialog_host.active_changed.connect(self._set_dialog_visible)
+        self._update_ready_card = UpdateReadyCard(body)
+        self._update_ready_card.install_requested.connect(self._install_prepared_update)
+        self._update_ready_card.later_requested.connect(self._background_updates.dismiss)
+        self._background_updates.changed.connect(self._sync_update_ui)
         self._announcement_controller = AnnouncementController(project_root / "state" / "ui_preferences.json", self)
         self._desktop_action_pages = (self._settings_page, self._about_page)
         for page in self._desktop_action_pages:
@@ -232,13 +239,54 @@ class MainWindow(QMainWindow):
             self._show_section("home")
 
     def _is_busy(self) -> bool:
-        return self._thread is not None or self._preparation_thread is not None or self._update_installer.busy
+        return self._thread is not None or self._preparation_thread is not None or self._update_installer.blocking
 
     def _start_update(self, asset) -> None:
         if self._is_busy() or self._close_requested:
             self._settings_page.show_install_error("请先结束当前任务，再执行更新。")
             return
-        self._update_installer.start(asset)
+        ready = self._update_installer.ready
+        if ready is not None and ready.offer.asset == asset:
+            self._update_installer.install_ready(asset)
+        elif asset is not None and asset == self._update_controller.asset:
+            self._update_installer.start(asset, offer=self._update_controller.offer)
+        else:
+            self._settings_page.show_install_error('更新目标已经变化，请重新检查更新。')
+
+    def _install_prepared_update(self, asset):
+        self._start_update(asset)
+
+    def _cancel_manual_update(self):
+        if self._update_installer.blocking:
+            self._update_installer.cancel()
+
+    def _update_progress(self, received, total):
+        if self._update_installer.blocking:
+            self._settings_page.show_download_progress(received, total)
+        else:
+            self._settings_page._show_status(f'正在后台下载安装包：{received / 1048576:.1f} / {total / 1048576:.1f} MB')
+
+    def _update_status(self, message):
+        if self._update_installer.blocking:
+            self._settings_page.show_install_status(message)
+        else:
+            self._settings_page._show_status(message)
+
+    def _sync_update_ui(self, _value=None):
+        if not hasattr(self, '_update_ready_card'):
+            return
+        ready = self._update_installer.ready
+        self._sidebar.buttons['settings'].set_update_available(self._update_controller.available or ready is not None)
+        visible = (self._background_updates.should_prompt and not self._is_busy()
+                   and not self._close_requested and self.isVisible() and not self.isMinimized()
+                   and not self._dialog_host.active)
+        self._update_ready_card.setVisible(visible)
+        if visible:
+            self._update_ready_card.set_update(ready)
+            parent = self._update_ready_card.parentWidget()
+            self._update_ready_card.move(parent.width() - self._update_ready_card.width() - 20,
+                                         parent.height() - self._update_ready_card.height() - 20)
+            self._update_ready_card.raise_()
 
     def _close_for_update(self) -> None:
         self._close_requested = True
@@ -247,6 +295,7 @@ class MainWindow(QMainWindow):
     @Slot(bool)
     def _on_update_busy_changed(self, _busy: bool) -> None:
         self._set_run_controls(self._is_busy())
+        self._sync_update_ui()
 
     @Slot(str)
     def _on_limit_text_changed(self, _text: str) -> None:
@@ -263,6 +312,7 @@ class MainWindow(QMainWindow):
         self._sidebar.set_navigation_enabled(not busy)
         if not busy:
             self._on_limit_text_changed("")
+        self._sync_update_ui()
 
     @Slot()
     def _start_run(self) -> None:
@@ -419,7 +469,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def _finish_deferred_close(self) -> None:
-        if self._close_requested and not self._is_busy() and not self._reporting_controller.closing and not any(
+        if self._close_requested and not self._is_busy() and not self._update_installer.settling and not self._reporting_controller.closing and not any(
             page.has_pending_actions() for page in self._desktop_action_pages
         ):
             self.close()
@@ -432,10 +482,12 @@ class MainWindow(QMainWindow):
         if visible:
             backdrop.raise_()
         self._title_bar.back_button.setEnabled(not visible and not self._is_busy())
+        self._sync_update_ui()
 
     def eventFilter(self, watched, event: QEvent) -> bool:
         if event.type() == QEvent.Type.Resize and watched.objectName() == "appBody":
             self._dialog_backdrop.setGeometry(watched.rect())
+            self._sync_update_ui()
         return super().eventFilter(watched, event)
 
     def nativeEvent(self, event_type, message):
@@ -452,11 +504,14 @@ class MainWindow(QMainWindow):
         super().showEvent(event)
         self._reporting_controller.application_shown()
         self._update_controller.start()
+        self._background_updates.start()
+        self._sync_update_ui()
         self._announcement_controller.start()
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
         self._layout_resize_handles()
+        self._sync_update_ui()
 
     def changeEvent(self, event: QEvent) -> None:
         super().changeEvent(event)
@@ -472,14 +527,16 @@ class MainWindow(QMainWindow):
             widget.update()
         self._title_bar.sync_maximize_state()
         self._layout_resize_handles()
+        self._sync_update_ui()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self._thread is not None:
             event.ignore()
             return
         self._announcement_controller.cancel()
+        self._background_updates.cancel()
         self._update_installer.cancel()
-        if self._update_installer.launching:
+        if self._update_installer.settling:
             self._close_requested = True
             event.ignore()
             return

@@ -246,10 +246,16 @@ class _UpdateResultDialog(AppDialog):
 
     def set_install_busy(self, busy: bool) -> None:
         self.action_button.setEnabled(not busy)
-        self.action_button.setText("下载中…" if busy else "更新")
+        self.action_button.setText("下载中…" if busy else getattr(self, '_install_label', '下载并安装'))
         self.close_button.setText("取消" if busy else "关闭")
         if not busy:
             self.download_progress.hide()
+
+    def set_package_ready(self, ready: bool) -> None:
+        self._install_label = '安装并重启' if ready else '下载并安装'
+        self.action_button.setText(self._install_label)
+        if ready:
+            self.set_install_status('安装包已下载，安装后将重启并保留用户设置和记录。')
 
     def set_install_status(self, message: str) -> None:
         self.install_status.setText(message)
@@ -299,6 +305,7 @@ class _ApplicationPage(QWidget):
 
     def _add_status_label(self) -> None:
         self.status_label = QLabel()
+        _use_smooth_text(self.status_label)
         self.status_label.setObjectName("settingsStatus")
         self.status_label.setTextFormat(Qt.TextFormat.PlainText)
         self.status_label.setWordWrap(True)
@@ -348,12 +355,13 @@ class _SettingsPage(_ApplicationPage):
     update_cancelled = Signal()
     notifications_changed = Signal(bool)
 
-    def __init__(self, project_root: Path, update_controller: UpdateController) -> None:
+    def __init__(self, project_root: Path, update_controller: UpdateController, background_updates) -> None:
         super().__init__("设置", "applicationSettingsPage")
         self._log_directory = project_root.resolve() / "logs"
         self._preferences = NotificationPreferences(project_root / "state" / "ui_preferences.json")
         self._update_dialog: _UpdateResultDialog | None = None
         self._update_controller = update_controller
+        self._background_updates = background_updates
         self.update_checker = update_controller.checker
         update_controller.completed.connect(self._update_completed)
         update_controller.failed.connect(self._update_failed)
@@ -372,13 +380,43 @@ class _SettingsPage(_ApplicationPage):
         self.update_button.action_requested.connect(self._check_updates)
         self.update_button.clicked.connect(self._join_background_check)
         self.update_button.set_update_available(update_controller.available)
-        update_controller.availability_changed.connect(self.update_button.set_update_available)
+        update_controller.availability_changed.connect(self._refresh_update_entry)
         for button in (self.logs_button, self.github_button, self.update_button):
             rows.addWidget(button)
             line = QFrame()
             line.setObjectName("settingsDivider")
             line.setFixedHeight(1)
             rows.addWidget(line)
+        update_row = QWidget()
+        update_row.setObjectName('autoDownloadUpdatesRow')
+        update_row.setMinimumHeight(76)
+        update_layout = QHBoxLayout(update_row)
+        update_layout.setContentsMargins(24, 16, 24, 16)
+        update_label = QLabel('自动下载更新')
+        _use_smooth_text(update_label)
+        update_layout.addWidget(update_label)
+        update_layout.addStretch(1)
+        self.auto_updates_toggle = _ToggleSwitch(
+            object_name='autoDownloadUpdatesToggle', accessible_name='自动下载更新',
+        )
+        update_label.setBuddy(self.auto_updates_toggle)
+        self.auto_updates_toggle.setChecked(background_updates.enabled)
+        self.auto_updates_toggle.setEnabled(background_updates.supported)
+        self.auto_updates_toggle.toggled.connect(background_updates.set_enabled)
+        background_updates.enabled_changed.connect(self._set_auto_download_checked)
+        background_updates.status_changed.connect(self._show_status)
+        update_layout.addWidget(self.auto_updates_toggle)
+        rows.addWidget(update_row)
+        line = QFrame()
+        line.setObjectName('settingsDivider')
+        line.setFixedHeight(1)
+        rows.addWidget(line)
+        self.install_downloaded_button = _SettingsRow('安装已下载的更新', 'installDownloadedUpdateButton')
+        _use_smooth_text(self.install_downloaded_button._title_label)
+        self.install_downloaded_button.action_requested.connect(self._install_downloaded)
+        self.install_downloaded_button.hide()
+        rows.addWidget(self.install_downloaded_button)
+        background_updates.installer.ready_changed.connect(self._refresh_update_entry)
         notification_row = QWidget()
         notification_row.setObjectName("runEndNotificationsRow")
         notification_row.setMinimumHeight(76)
@@ -413,6 +451,30 @@ class _SettingsPage(_ApplicationPage):
         self.content_layout.addWidget(card)
         self._add_status_label()
         self.content_layout.addStretch(1)
+        if not background_updates.supported:
+            self._show_status('源码运行不支持自动下载更新，请使用安装版。')
+
+    def _set_auto_download_checked(self, enabled):
+        self.auto_updates_toggle.blockSignals(True)
+        self.auto_updates_toggle.setChecked(enabled)
+        self.auto_updates_toggle.blockSignals(False)
+
+    def _refresh_update_entry(self, _value=None):
+        ready = self._background_updates.installer.ready
+        self.update_button.set_update_available(self._update_controller.available or ready is not None)
+        self.install_downloaded_button.setVisible(ready is not None)
+        if ready is not None:
+            self.install_downloaded_button._title_label.setText(f'安装已下载的 {ready.offer.asset.version}')
+            self.install_downloaded_button.setAccessibleName(f'安装已下载的 {ready.offer.asset.version}')
+        dialog = self._update_dialog
+        if (dialog is not None and hasattr(dialog, 'release_asset')
+                and not self._background_updates.installer.blocking):
+            dialog.set_package_ready(ready is not None and dialog.release_asset == ready.offer.asset)
+
+    def _install_downloaded(self):
+        ready = self._background_updates.installer.ready
+        if ready is not None:
+            self.update_requested.emit(ready.offer.asset)
 
     @property
     def notifications_enabled(self) -> bool:
@@ -483,6 +545,8 @@ class _SettingsPage(_ApplicationPage):
             dialog.accepted.connect(self._check_updates)
         elif action == "更新":
             dialog.release_asset = asset
+            ready = self._background_updates.installer.ready
+            dialog.set_package_ready(ready is not None and ready.offer.asset == asset)
             dialog.update_requested.connect(self._request_install)
             dialog.rejected.connect(self.update_cancelled)
         dialog.finished.connect(self._dispose_update_dialog)

@@ -152,6 +152,11 @@ QLabel#aboutVersion { color: ${muted}; }
 QLabel#applicationHeading { font-size: ${heading_size}px; font-weight: 700; }
 QLabel#aboutTitle { font-size: ${heading_size}px; font-weight: 600; }
 QFrame#settingsDivider { background: #f0f1f3; border: none; }
+QFrame#updateReadyCard { background: ${surface}; border: 1px solid #dce4ed; border-radius: 12px; }
+QLabel#updateReadyTitle { color: ${text}; font-size: 14px; background: transparent; border: none; }
+QFrame#updateReadyCard QPushButton { color: ${text}; background: #eef2f6; border: none; border-radius: 6px; padding: 6px 12px; font-size: 14px; }
+QFrame#updateReadyCard QPushButton:hover { background: #e1e8ef; }
+QFrame#updateReadyCard QPushButton:focus { border: 1px solid ${primary}; }
 QFrame#updateResultCard, QFrame#announcementCard {
     background: ${surface};
     border: 1px solid #dfe3e8;
