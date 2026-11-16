@@ -459,6 +459,11 @@ class StatsOverlay(QWidget):
     def _set_collapsed(self, collapsed: bool) -> None:
         if collapsed and self._position_calibration_origin is not None:
             return
+        center = (
+            self.mapToGlobal(self.rect().center())
+            if collapsed != self._collapsed
+            else None
+        )
         self._collapsed = collapsed
         if collapsed:
             self._panel.hide()
@@ -479,6 +484,12 @@ class StatsOverlay(QWidget):
             self._collapse_button.show()
             self._close_button.setVisible(self._dismissible and self.isVisible())
             self._position_corner_buttons()
+        if center is not None:
+            self._move_center(center)
+
+    def _move_center(self, center: QPoint) -> None:
+        # Round in local coordinates so negative screen positions do not drift.
+        self.move(center - self.rect().center())
 
     @Slot()
     def _dismiss_stopped_overlay(self) -> None:
@@ -520,16 +531,19 @@ class StatsOverlay(QWidget):
         self._stop_button.show()
 
     def _saved_position(self) -> QPoint | None:
+        """Read a visible center, converting legacy top-left records on load."""
         saved = self._position_store.load() if self._position_store is not None else None
         if saved is None:
             return None
-        candidate = QRect(saved.x, saved.y, self.width(), self.height())
+        position = QPoint(saved.x, saved.y)
+        top_left = position - self.rect().center() if saved.anchor == "center" else position
+        candidate = QRect(top_left, self.size())
         if not any(
             candidate.intersects(screen.availableGeometry())
             for screen in self.screen().virtualSiblings()
         ):
             return None
-        return QPoint(saved.x, saved.y)
+        return top_left + self.rect().center()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -586,10 +600,10 @@ class StatsOverlay(QWidget):
 
     def _save_position(self) -> None:
         if self._position_store is not None:
-            top_left = self.frameGeometry().topLeft()
+            center = self.mapToGlobal(self.rect().center())
             try:
                 self._position_store.save(
-                    SavedOverlayPosition(top_left.x(), top_left.y())
+                    SavedOverlayPosition(center.x(), center.y())
                 )
             except OSError:
                 pass
@@ -611,14 +625,13 @@ class StatsOverlay(QWidget):
             if command.offset is not None:
                 self._offset = QPoint(command.offset.x, command.offset.y)
             saved = self._saved_position()
-            self.move(
-                saved
-                if saved is not None
-                else QPoint(
+            if saved is not None:
+                self._move_center(saved)
+            else:
+                self.move(
                     command.client_bounds.x + self._offset.x(),
                     command.client_bounds.y + self._offset.y(),
                 )
-            )
             self.show()
             self.raise_()
             hwnd = int(self.winId())

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import threading
 
 from PySide6.QtCore import QPoint, QSize, Qt
@@ -177,8 +178,10 @@ def test_stats_overlay_close_button_is_available_only_after_stop() -> None:
         application.processEvents()
 
 
+@pytest.mark.parametrize("start_position", [(100, 100), (-1000, -500)])
 def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
     tmp_path: Path,
+    start_position: tuple[int, int],
 ) -> None:
     application = QApplication.instance() or QApplication([])
     store = OverlayPositionStore(tmp_path / "overlay.json")
@@ -208,7 +211,9 @@ def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
         assert panel.isVisible()
         assert not icon.isVisible()
 
-        overlay.move(100, 100)
+        overlay.move(*start_position)
+        expanded_position = overlay.pos()
+        expanded_center = overlay.mapToGlobal(overlay.rect().center())
         QTest.mouseClick(collapse, Qt.MouseButton.LeftButton)
         application.processEvents()
 
@@ -220,6 +225,9 @@ def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
             overlay._COLLAPSED_DIAMETER_PX,
         )
         assert not overlay._collapsed_icon._logo.isNull()
+        assert overlay.mapToGlobal(overlay.rect().center()) == expanded_center
+        assert store.load() == SavedOverlayPosition(expanded_center.x(), expanded_center.y())
+        collapsed_position = overlay.pos()
 
         QTest.mousePress(
             overlay,
@@ -234,9 +242,11 @@ def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
         )
         application.processEvents()
 
-        assert overlay.pos() == QPoint(120, 120)
+        drag_delta = QPoint(20, 20)
+        moved_center = expanded_center + drag_delta
+        assert overlay.pos() == collapsed_position + drag_delta
         assert overlay._collapsed
-        assert store.load() == SavedOverlayPosition(120, 120)
+        assert store.load() == SavedOverlayPosition(moved_center.x(), moved_center.y())
 
         QTest.mouseClick(
             overlay,
@@ -248,6 +258,14 @@ def test_stats_overlay_collapses_to_draggable_logo_and_click_restores(
         assert not overlay._collapsed
         assert panel.isVisible()
         assert not icon.isVisible()
+        assert overlay.pos() == expanded_position + drag_delta
+        assert overlay.mapToGlobal(overlay.rect().center()) == moved_center
+
+        for _ in range(5):
+            collapse.click()
+            assert overlay.mapToGlobal(overlay.rect().center()) == moved_center
+            QTest.mouseClick(overlay, Qt.MouseButton.LeftButton, pos=overlay.rect().center())
+            assert overlay.pos() == expanded_position + drag_delta
     finally:
         overlay.close()
         application.processEvents()
@@ -296,26 +314,30 @@ def test_collapsed_logo_uses_physical_pixels_for_200_percent_dpi() -> None:
         application.processEvents()
 
 
-def test_each_overlay_configuration_restores_the_full_panel() -> None:
+@pytest.mark.parametrize("configuration", ["configure", "configure_penguins", "configure_chaos"])
+def test_each_overlay_configuration_restores_the_full_panel(configuration: str) -> None:
     application = QApplication.instance() or QApplication([])
     overlay = StatsOverlay(
         logo_path=ROOT / "assets" / "ui" / "e7auto-icon-256.png"
     )
     config = make_config()
     try:
-        overlay.configure(config)
+        configure = getattr(overlay, configuration)
+        configure(config)
         overlay.show()
+        expanded_center = overlay.mapToGlobal(overlay.rect().center())
         overlay._collapse_overlay()
         application.processEvents()
         assert overlay._collapsed
 
-        overlay.configure(config)
+        configure(config)
         application.processEvents()
 
         assert not overlay._collapsed
         assert overlay._panel.isVisible()
         assert not overlay._collapsed_icon.isVisible()
         assert overlay.size() == overlay._expanded_size
+        assert overlay.mapToGlobal(overlay.rect().center()) == expanded_center
     finally:
         overlay.close()
         application.processEvents()
@@ -417,25 +439,55 @@ def test_overlay_position_store_round_trips_and_rejects_invalid_data(tmp_path: P
     assert store.load() is None
     store.save(SavedOverlayPosition(321, -45))
     assert store.load() == SavedOverlayPosition(321, -45)
+    assert json.loads(path.read_text(encoding="utf-8")) == {
+        "x": 321, "y": -45, "anchor": "center",
+    }
+
+    path.write_text('{"x": 321, "y": -45}', encoding="utf-8")
+    assert store.load() == SavedOverlayPosition(321, -45, "top_left")
 
     path.write_text('{"x": true, "y": 2}', encoding="utf-8")
     assert store.load() is None
+    path.write_text('{"x": 1, "y": 2, "anchor": "unknown"}', encoding="utf-8")
+    assert store.load() is None
 
 
+@pytest.mark.parametrize("anchor", ["center", "top_left"])
 def test_overlay_uses_saved_position_then_falls_back_for_offscreen_state(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    anchor: str,
 ) -> None:
     application = QApplication.instance() or QApplication([])
     store = OverlayPositionStore(tmp_path / "overlay.json")
     overlay = StatsOverlay(store)
     config = make_config()
     overlay.configure(config)
+    monkeypatch.setattr(overlay_module.win32gui, "GetWindowLong", lambda *_args: 0)
+    monkeypatch.setattr(overlay_module.win32gui, "SetWindowLong", lambda *_args: None)
     try:
-        store.save(SavedOverlayPosition(10, 20))
-        assert overlay._saved_position() == QPoint(10, 20)
+        if anchor == "top_left":
+            (tmp_path / "overlay.json").write_text('{"x": 10, "y": 20}', encoding="utf-8")
+            expected_center = QPoint(10, 20) + overlay.rect().center()
+        else:
+            store.save(SavedOverlayPosition(10, 20))
+            expected_center = QPoint(10, 20)
+        assert overlay._saved_position() == expected_center
+
+        command = OverlayCommand(Rect(100, 200, 100, 80), threading.Event())
+        overlay._apply_command(command)
+        application.processEvents()
+        assert command.result
+        assert overlay.mapToGlobal(overlay.rect().center()) == expected_center
+        if anchor == "top_left":
+            assert overlay.pos() == QPoint(10, 20)
+        overlay._save_position()
+        assert store.load() == SavedOverlayPosition(expected_center.x(), expected_center.y())
 
         store.save(SavedOverlayPosition(100_000, 100_000))
         assert overlay._saved_position() is None
+        overlay._apply_command(command)
+        assert overlay.pos() == QPoint(100 + config.overlay_offset.x, 200 + config.overlay_offset.y)
     finally:
         overlay.close()
         application.processEvents()
@@ -448,6 +500,7 @@ def test_overlay_is_always_draggable_and_saves_position_after_move(
     application = QApplication.instance() or QApplication([])
     store = OverlayPositionStore(tmp_path / "overlay.json")
     overlay = StatsOverlay(store)
+    restored = StatsOverlay(store)
     overlay.configure(make_config())
     styles = [overlay_module.win32con.WS_EX_TRANSPARENT]
     monkeypatch.setattr(overlay_module.win32gui, "GetWindowLong", lambda *_args: styles[-1])
@@ -470,9 +523,17 @@ def test_overlay_is_always_draggable_and_saves_position_after_move(
         saved = store.load()
         assert saved is not None
         assert (saved.x, saved.y) == (
-            overlay.frameGeometry().x(),
-            overlay.frameGeometry().y(),
+            overlay.mapToGlobal(overlay.rect().center()).x(),
+            overlay.mapToGlobal(overlay.rect().center()).y(),
         )
+
+        # A new, differently sized panel restores the saved center.
+        restored.configure_penguins(make_config())
+        assert restored.size() != overlay.size()
+        restored._apply_command(command)
+        application.processEvents()
+        assert restored.mapToGlobal(restored.rect().center()) == QPoint(saved.x, saved.y)
     finally:
         overlay.close()
+        restored.close()
         application.processEvents()
