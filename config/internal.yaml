@@ -147,7 +147,7 @@ scroll:
   delta: -120
   repetitions: 6
   interval_ms: 10
-  settle_ms: 1000
+  settle_ms: 2000
   minimum_settle_ms: 100
   settle_poll_interval_ms: 100
   stable_observations: 2
