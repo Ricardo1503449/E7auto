@@ -197,7 +197,7 @@ timing:
   capture_rebuild_window_ms: 600000
   capture_rebuild_max_attempts: 3
   poll_interval_ms: 100
-  entry_timeout_ms: 5000
+  entry_timeout_ms: 10000
   scan_timeout_ms: 3000
   dialog_timeout_ms: 3000
   purchase_result_timeout_ms: 5000
