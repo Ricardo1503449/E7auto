@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 import yaml
 
-from e7auto.features.chaos.auto_motion import AutoStateEvidence, AutoIconState
+from e7auto.features.chaos.auto_motion import AutoStateEvidence, AutoIconState, _place_scaled_reference
 from e7auto.features.chaos.contracts import AutoState
 from tests.helpers.paths import ROOT
 from tests.helpers.chaos_images import auto_icon_image
@@ -125,6 +125,28 @@ def test_reference_pose_needs_three_frames_and_bad_frame_breaks_off_evidence(ico
     assert detector.center_offset is None
     assert detector.observe(auto_icon_image(base,30),.4) is AutoState.ROTATING
     assert detector.observe(base,.5) is AutoState.UNKNOWN
+
+
+@pytest.mark.parametrize(
+    ('offset', 'destination', 'source'),
+    [
+        pytest.param((-1, -1), np.s_[:2, :3], np.s_[1:, 1:], id='top-left'),
+        pytest.param((3, 2), np.s_[2:, 3:], np.s_[:2, :2], id='bottom-right'),
+        pytest.param((1, 1), np.s_[1:, 1:], np.s_[:, :], id='fits-exactly'),
+        pytest.param((-5, 0), None, None, id='disjoint-left'),
+        pytest.param((0, 4), None, None, id='touches-bottom'),
+    ],
+)
+def test_scaled_reference_placement_preserves_pixel_positions(offset, destination, source):
+    image = np.arange(1, 37, dtype=np.uint8).reshape(3, 4, 3)
+    canvas = np.zeros((4, 5, 3), dtype=np.uint8)
+    expected = np.zeros_like(canvas)
+    if destination is not None:
+        expected[destination] = image[source]
+
+    _place_scaled_reference(canvas, image, *offset)
+
+    np.testing.assert_array_equal(canvas, expected)
 
 
 @pytest.mark.parametrize('offset',[(-3,-3),(3,3),(0,-1)])

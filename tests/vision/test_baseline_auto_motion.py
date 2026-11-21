@@ -62,7 +62,10 @@ def test_real_nonreference_offset_confirms_immediately_and_geometry_switch_clear
     vision.clear_template_cache()
 
 
-@pytest.mark.parametrize('size',[(2322,1306),(1920,1080),(1536,864)])
+@pytest.mark.parametrize('size', [
+    (2322, 1306), (1920, 1080), (1536, 864),
+    (1152, 648), (1161, 653), (1162, 654),
+])
 def test_real_off_reference_never_reports_active_at_supported_sizes(setup,size):
     config,templates,_=setup;vision=ChaosVision(config,templates)
     path=ROOT/'tests/fixtures/chaos/auto_motion/reference_off.png'

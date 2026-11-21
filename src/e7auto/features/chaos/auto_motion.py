@@ -90,6 +90,20 @@ class AutoStateEvidence:
                 'static_max_gap_ms','static_max_angle_deg')})
 
 
+def _place_scaled_reference(canvas, image, offset_x, offset_y):
+    """Clip both arrays together to preserve the candidate's projected position."""
+    height, width = canvas.shape[:2]
+    image_height, image_width = image.shape[:2]
+    left, top = max(0, offset_x), max(0, offset_y)
+    right, bottom = min(width, offset_x + image_width), min(height, offset_y + image_height)
+    if left >= right or top >= bottom:
+        return
+    canvas[top:bottom, left:right] = image[
+        top - offset_y : bottom - offset_y,
+        left - offset_x : right - offset_x,
+    ]
+
+
 class AutoIconState:
     """Shared reference-angle recognition, optionally locating a scaled centre."""
     def __init__(self, settings, template, *, localize=False, alternatives=()):
@@ -110,8 +124,11 @@ class AutoIconState:
         dx, dy = settings['template_offset']
         for image in (template, *alternatives):
             base = np.zeros((height,width,3),np.uint8)
-            h,w = min(len(image),height-dy),min(image.shape[1],width-dx)
-            base[dy:dy+h,dx:dx+w] = image[:h,:w]
+            if localize:
+                _place_scaled_reference(base, image, dx, dy)
+            else:
+                h,w = min(len(image),height-dy),min(image.shape[1],width-dx)
+                base[dy:dy+h,dx:dx+w] = image[:h,:w]
             white = self._white(base)
             cores.append(white[self.core_mask])
             rings.append(self._polar(white))
