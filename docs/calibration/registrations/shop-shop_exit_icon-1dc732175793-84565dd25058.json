@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "feature": "shop",
+  "template_key": "shop_exit_icon",
+  "source_kind": "original screenshot RGB plane preserved in all pixels of the registered PNG",
+  "source_path": "assets/templates/shop/shop_exit_icon.png",
+  "source_sha256": "1d9674ce9a050310d25b8e9959927370b8bda5748d88bdf260711f435d98b800",
+  "source_rgb_pixel_sha256": "9055a215ec813f337f114d306a89b6fe6273fef66a6b15ae8c2be38cebfb7ebe",
+  "historical_source_record": "docs/calibration/shop/shop_exit_icon_manifest.yaml",
+  "previous_candidate_path": "artifacts/template-candidates/20261121-234344-b377b979/shop/shop_exit_icon.png",
+  "previous_candidate_sha256": "f43e1c5a2e2bcc00095b74052c7ed5a2cd777b9a269a8a0a5a43f40d064e788d",
+  "previous_candidate_source": "artifacts/template-candidates/20261121-234344-b377b979/shop_exit_icon_darker_text_edge.source.json",
+  "previous_candidate_source_sha256": "ca152125855a49a011ec3c20b048ca446ff3fed5bd455f08bd6ef4ed8888bd51",
+  "candidate_path": "shop/shop_exit_icon.png",
+  "candidate_sha256": "1dc732175793ecfda0598469e530be5304c1a4139e0509a98a145bc3afd05c78",
+  "crop_size": [
+    267,
+    70
+  ],
+  "mask": {
+    "title_only_outer_ring_pixels": 1,
+    "neighborhood": "8-connected",
+    "all_original_pixels_in_ring": true,
+    "added_since_previous_candidate": 1015,
+    "added_pixels": 1609,
+    "removed_pixels": 0,
+    "rgb_untouched": true
+  },
+  "verification": {
+    "production_detector": "ShopVision.shop_exit_icon",
+    "configured_roi": [
+      19,
+      5,
+      307,
+      110
+    ],
+    "color_threshold": 0.85,
+    "structure_threshold": 0.8,
+    "candidate_loaded_by": "TemplateRepository",
+    "previous_candidate_comparison_reused_from": "artifacts/template-candidates/20261121-234344-b377b979/shop_exit_icon_darker_text_edge.source.json",
+    "samples": [
+      {
+        "label": "exit_timeout_182242",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261121-182242-177367-6557cd7010bf-stop.png",
+        "sha256": "07d809f2b028aef3a448b9c0e1a32214f008e335fea78df9e79b97e9807d8fab",
+        "shop": true,
+        "client_size": [
+          1536,
+          864
+        ],
+        "roi_sha256": "273f5c430654a630790c09e88454c90a2c07909597ae9c9bb90bcd66013c0063",
+        "configured_exit_click": [
+          114,
+          40
+        ],
+        "previous_candidate": {
+          "production": {
+            "color": 0.9854337573051453,
+            "structure": 0.8297339081764221,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9907082915306091,
+            "structure": 0.890635073184967,
+            "bounds": [
+              25,
+              15,
+              178,
+              48
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              3
+            ]
+          },
+          "click_within_hit": true
+        },
+        "candidate": {
+          "production": {
+            "color": 0.9842633605003357,
+            "structure": 0.9342861175537109,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9919224977493286,
+            "structure": 0.9708462953567505,
+            "bounds": [
+              25,
+              16,
+              178,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              0
+            ]
+          },
+          "click_within_hit": true
+        }
+      },
+      {
+        "label": "exit_timeout_182425",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261121-182425-826514-4fc4a7bc60f1-stop.png",
+        "sha256": "5a61789134e011ade85e03207022c430d304c0ea07106e1972eb6decad5e1411",
+        "shop": true,
+        "client_size": [
+          1536,
+          864
+        ],
+        "roi_sha256": "273f5c430654a630790c09e88454c90a2c07909597ae9c9bb90bcd66013c0063",
+        "configured_exit_click": [
+          114,
+          40
+        ],
+        "previous_candidate": {
+          "production": {
+            "color": 0.9854337573051453,
+            "structure": 0.8297339081764221,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9907082915306091,
+            "structure": 0.890635073184967,
+            "bounds": [
+              25,
+              15,
+              178,
+              48
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              3
+            ]
+          },
+          "click_within_hit": true
+        },
+        "candidate": {
+          "production": {
+            "color": 0.9842633605003357,
+            "structure": 0.9342861175537109,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9919224977493286,
+            "structure": 0.9708462953567505,
+            "bounds": [
+              25,
+              16,
+              178,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              0
+            ]
+          },
+          "click_within_hit": true
+        }
+      },
+      {
+        "label": "shop_other_run_183149",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261121-183149-816432-2bdee418ad0c-stop.png",
+        "sha256": "c25483b8f8c243b6f1613e846ae79648965410a29f360d2711193889ac1fccef",
+        "shop": true,
+        "client_size": [
+          1536,
+          864
+        ],
+        "roi_sha256": "273f5c430654a630790c09e88454c90a2c07909597ae9c9bb90bcd66013c0063",
+        "configured_exit_click": [
+          114,
+          40
+        ],
+        "previous_candidate": {
+          "production": {
+            "color": 0.9854337573051453,
+            "structure": 0.8297339081764221,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9907082915306091,
+            "structure": 0.890635073184967,
+            "bounds": [
+              25,
+              15,
+              178,
+              48
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              3
+            ]
+          },
+          "click_within_hit": true
+        },
+        "candidate": {
+          "production": {
+            "color": 0.9842633605003357,
+            "structure": 0.9342861175537109,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9919224977493286,
+            "structure": 0.9708462953567505,
+            "bounds": [
+              25,
+              16,
+              178,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              0
+            ]
+          },
+          "click_within_hit": true
+        }
+      },
+      {
+        "label": "shop_other_run_193451",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261121-193451-617847-e213e9f827c4-stop.png",
+        "sha256": "7c80dbfbe770ae090c3bfdb6040bca8470f6b46ed0b8f9f6fae05411f17dfd5a",
+        "shop": true,
+        "client_size": [
+          1536,
+          864
+        ],
+        "roi_sha256": "d92e76eb731cb2e4b33aa3225b0cd500f3535b24bc9afe1dbddf3d9db2de6525",
+        "configured_exit_click": [
+          114,
+          40
+        ],
+        "previous_candidate": {
+          "production": {
+            "color": 0.9854336977005005,
+            "structure": 0.8297390937805176,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9907087087631226,
+            "structure": 0.8906391263008118,
+            "bounds": [
+              25,
+              15,
+              178,
+              48
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              3
+            ]
+          },
+          "click_within_hit": true
+        },
+        "candidate": {
+          "production": {
+            "color": 0.9842636585235596,
+            "structure": 0.9342869520187378,
+            "bounds": [
+              26,
+              16,
+              177,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              0,
+              0
+            ]
+          },
+          "best_structure_where_color_passes": {
+            "color": 0.9919226169586182,
+            "structure": 0.9708467125892639,
+            "bounds": [
+              25,
+              16,
+              178,
+              47
+            ],
+            "anchor": [
+              114,
+              39
+            ],
+            "candidate": [
+              180,
+              50,
+              3,
+              0
+            ]
+          },
+          "click_within_hit": true
+        }
+      },
+      {
+        "label": "sanctuary_negative",
+        "path": "D:\\QQ\\2941565803\\FileRecv\\run-20261121-181726-121216-122027d84ace-stop.png",
+        "sha256": "64ce60b674a8309594a51468c2f73c6cb6fc97bd0e79c944407ffc01a22df065",
+        "shop": false,
+        "client_size": [
+          1536,
+          864
+        ],
+        "roi_sha256": "b7307a00de6ae21abbb8174cb1a377ffb7138eeeec0e3c8a153eefa9b197a242",
+        "configured_exit_click": [
+          114,
+          40
+        ],
+        "previous_candidate": {
+          "production": null,
+          "best_structure_where_color_passes": null,
+          "click_within_hit": null
+        },
+        "candidate": {
+          "production": null,
+          "best_structure_where_color_passes": null,
+          "click_within_hit": null
+        }
+      }
+    ],
+    "real_baseline_shop_sample_available": false,
+    "live_game_verified": false
+  },
+  "preview": "artifacts/tasks/shop/20261121-233731-shop-exit-text-edge-trial-681f4f9a/previews/shop-exit-full-text-edge-comparison.png"
+}

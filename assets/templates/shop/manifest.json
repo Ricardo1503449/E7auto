@@ -39,10 +39,10 @@
     },
     "shop_exit_icon": {
       "file": "shop_exit_icon.png",
-      "sha256": "1d9674ce9a050310d25b8e9959927370b8bda5748d88bdf260711f435d98b800",
+      "sha256": "1dc732175793ecfda0598469e530be5304c1a4139e0509a98a145bc3afd05c78",
       "source": {
-        "calibration_records": "docs/calibration",
-        "registered_from": "config/internal.yaml before catalog migration"
+        "record": "docs/calibration/registrations/shop-shop_exit_icon-1dc732175793-84565dd25058.json",
+        "record_sha256": "84565dd2505889c7a2638dff8db7452e16d83685b53b9767901ab5edbf82f2c3"
       }
     },
     "confirm_button": {
