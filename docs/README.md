@@ -28,6 +28,7 @@
 - [更新清单与安装包分发](development/UPDATE_DELIVERY.md)
 - [更新分发验证](validation/common/UPDATE_DELIVERY_VALIDATION.md)
 
+- [v1.5.8 工作区审查与版本验证](releases/v1.5.8/VALIDATION.md)（小窗口自动战斗和商店返回、滚动及页面确认）
 - [v1.5.7 工作区审查与版本验证](releases/v1.5.7/VALIDATION.md)（窗口准备、悬浮窗中心与后台更新）
 - [v1.5.6 大厅返回修复与版本验证](releases/v1.5.6/VALIDATION.md)（卡厄思结算确认及等待接口约束）
 - [v1.5.5 重连确认与版本验证](releases/v1.5.5/VALIDATION.md)（网络恢复与当前业务确认衔接）
